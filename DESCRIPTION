@@ -1,0 +1,26 @@
+Package: SoilDataR
+Type: Package
+Title: This package contains scripts to read in and harmonize different digital soil 
+  data archives.
+Version: 0.0.1
+Authors@R: c(person("Todd-Brown", "K", email = "ktoddbrown@gmail.com",
+  role = c("aut", "cre")))
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+URL: https://github.com/ktoddbrown/soilDataR
+BugReport: https://github.com/ktoddbrown/soilDataR/issues
+License: TBD
+Encoding: UTF-8
+LazyData: true
+Imports: xlsx (>= 0.5),
+    plyr (>= 1.8),
+    reshape2 (>= 1.4)
+Suggests: ggplot2 (>= 2.2),
+    ggmap (>= 2.6),
+    maps (>= 3.1),
+    mapdata (>= 2.2),
+    fiftystater (>= 1.0),
+    knitr (>= 1.10),
+    rmarkdown (>= 1.5)
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
