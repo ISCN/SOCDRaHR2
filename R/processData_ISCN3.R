@@ -5,32 +5,33 @@
 #' @return a data frame with all data in the correct format
 
 #' @export
-processData_ISCN3 <- function(dir='repoData/ISCN_3'){
+processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 
+  cat('Warning: ISCN3 is a large data set and will take some time...')
   data1.ls <- processWorksheet(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv', dir),
-                               verbose=TRUE)
+                               verbose=verbose)
 
   data2.ls <- processWorksheet(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C2_1-1.csv', dir),
-                               verbose=TRUE)
+                               verbose=verbose)
 
   data3.ls <- processWorksheet(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C3_1-1.csv', dir),
-                               verbose=TRUE)
+                               verbose=verbose)
 
   data4.ls <- processWorksheet(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C4_1-1.csv', dir),
-                               verbose=TRUE)
+                               verbose=verbose)
   #merge easy========
   study.df <- data1.ls$study
   fieldTreatment.df <- data1.ls$fieldTreatment
   labTreatment.df <- data1.ls$labTreatment
 
-  lab.df <- unique(rbind.fill(rbind.fill(rbind.fill(data1.ls$lab,data2.ls$lab),
+  lab.df <- unique(plyr::rbind.fill(plyr::rbind.fill(plyr::rbind.fill(data1.ls$lab,data2.ls$lab),
                                          data3.ls$lab), data4.ls$lab))
 
-  field.df <- unique(rbind.fill(rbind.fill(rbind.fill(data1.ls$field,data2.ls$field),
+  field.df <- unique(plyr::rbind.fill(plyr::rbind.fill(plyr::rbind.fill(data1.ls$field,data2.ls$field),
                                            data3.ls$field), data4.ls$field))
   field.df$value <- as.factor(field.df$value)
   field.df$layer_units <- as.factor(field.df$layer_units)
@@ -46,14 +47,14 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3'){
           merge(data3.ls$measurement, data4.ls$measurement, by=c('type', 'method'),
                 suffixes=c('.data3', '.data4'), all=TRUE), all=TRUE)
 
-  measureTemp.df <- ddply(measureTemp.df, c('type'), function(xx){
+  measureTemp.df <- plyr::ddply(measureTemp.df, c('type'), function(xx){
     xx$measurementID <- sprintf('%s_%02d', xx$type, 1:nrow(xx))
     return(xx)
   })
   measurement.df <- measureTemp.df[,c('type', 'method', 'measurementID')]
 
   #Construct samples========
-  sample.df <- ddply(data1.ls$samples, 'measurementID', function(xx){
+  sample.df <- plyr::ddply(data1.ls$samples, 'measurementID', function(xx){
     #cat('replacing [', xx$measurementID[1])
     xx$measurementID <- subset(measureTemp.df,
                                xx$measurementID[1] == measurementID.data1)$measurementID
@@ -61,8 +62,8 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3'){
     return(xx)
   })
 
-  sample.df <- rbind.fill(sample.df,
-                          ddply(data2.ls$samples, 'measurementID', function(xx){
+  sample.df <- plyr::rbind.fill(sample.df,
+                          plyr::ddply(data2.ls$samples, 'measurementID', function(xx){
                             #cat('replacing [', xx$measurementID[1])
                             xx$measurementID <- subset(measureTemp.df,
                                                        xx$measurementID[1] ==
@@ -71,8 +72,8 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3'){
                             return(xx)
                           }))
 
-  sample.df <- rbind.fill(sample.df,
-                          ddply(data3.ls$samples, 'measurementID', function(xx){
+  sample.df <- plyr::rbind.fill(sample.df,
+                          plyr::ddply(data3.ls$samples, 'measurementID', function(xx){
                             #cat('replacing [', xx$measurementID[1])
                             xx$measurementID <- subset(measureTemp.df,
                                                        xx$measurementID[1] ==
@@ -81,8 +82,8 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3'){
                             return(xx)
                           }))
 
-  sample.df <- rbind.fill(sample.df,
-                          ddply(data4.ls$samples, 'measurementID', function(xx){
+  sample.df <- plyr::rbind.fill(sample.df,
+                          plyr::ddply(data4.ls$samples, 'measurementID', function(xx){
                             #cat('replacing [', xx$measurementID[1])
                             xx$measurementID <- subset(measureTemp.df,
                                                        xx$measurementID[1] == measurementID.data4)$measurementID
@@ -93,6 +94,7 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3'){
   sample.df$measurementID <- as.factor(sample.df$measurementID)
   sample.df$unit <- as.factor(sample.df$unit)
 
+  cat(' done!\n')
   return(list(study=study.df, labTreatment=labTreatment.df, fieldTreatment=fieldTreatment.df,
               field=field.df, fieldNotes=fieldNotes.df, measurement=measurement.df,
               sample=sample.df))
@@ -151,8 +153,9 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   field.df <- unique(data.df[,c(4:22, c(84, 94, 95))])
   names(field.df) <- as.character(header.df$measurement[c(4:22, c(84, 94, 95))])
   field.df$fieldID <- field.df$layer_name
-  field.df <- melt(field.df, id.vars=c('fieldID', 'lat', 'long', 'observation_date',
-                                       'layer_top', 'layer_bot'),
+  field.df <- reshape2::melt(field.df, id.vars=c('fieldID', 'lat', 'long',
+                                                 'observation_date',
+                                                 'layer_top', 'layer_bot'),
                    variable.name='measurement', factorsAsStrings=TRUE)
   field.df$layer_units <- 'cm'
   field.df$layer_top <- as.numeric(as.character(field.df$layer_top))
@@ -190,8 +193,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                                sampleTemp=sampleTemp,
                                unit.df=header.df[c(31:33), c('measurement', 'unit')])
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   #Nitrogen=============================
   if(verbose) cat('Nitrogen \n')
@@ -204,8 +207,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(34:35), c('measurement', 'unit')])
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   #SOC==================
   if(verbose) cat('SOC\n')
@@ -218,8 +221,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(36), c('measurement', 'unit')])
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   ##pH, columns 39-42
   if(verbose) cat('pH\n')
@@ -230,8 +233,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(40:42), c('measurement', 'unit')])
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   ##CaCO3 + Texture + CAT exchange, column 43:46, 49
   if(verbose) cat('CaCO3, texture, cat exchange \n')
@@ -242,8 +245,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(43:46, 49), c('measurement', 'unit')])
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   ##WPG2, columns 47 48
   if(verbose) cat('wpg2\n')
@@ -254,8 +257,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(47:48), c('measurement', 'unit')])
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   ##Al, columns 50, 52, 59, 60
   ##Fe, columns 53, 55, 59, 60
@@ -268,8 +271,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              unitName=header.df$measurement[59],
                              sampleTemp=sampleTemp)
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   #BC===============
   if(verbose) cat('Bc\n')
@@ -281,8 +284,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              unitName=header.df$measurement[66],
                              sampleTemp=sampleTemp)
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   #CEC===========
   if(verbose) cat('CEC\n')
@@ -294,8 +297,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              unitName=header.df$measurement[71],
                              sampleTemp=sampleTemp)
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
   #BS=======
   if(verbose) cat('BS\n')
   ##bs, columns 72:73
@@ -306,8 +309,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              unit.df=header.df[c(72:73), c('measurement', 'unit')],
                              sampleTemp=sampleTemp)
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   #Metal==========
   if(verbose) cat('metals \n')
@@ -319,8 +322,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              unit.df=NULL,
                              sampleTemp=sampleTemp)
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   #P ============
   if(verbose) cat('P\n')
@@ -332,8 +335,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              unit.df=NULL,
                              sampleTemp=sampleTemp)
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   #Roots + Isotope + texture + locator
   ##Root, column 84:85 84is TEXT move to field description
@@ -348,8 +351,8 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              unit.df=header.df[c(85:93),],
                              sampleTemp=sampleTemp)
   #merge results
-  measurement.df <- rbind.fill(measurement.df, temp$measurement)
-  sample.df <- rbind.fill(sample.df, temp$sample)
+  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
+  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   if(verbose) cat('done with processWorksheet\n')
   return(list(study=study.df, field=field.df, lab=lab.df,
@@ -382,8 +385,8 @@ processMethodBlock <- function(methodNames=NULL, unitName=NULL,
     sampleTemp[,methodStr] <- NULL
   }
   if(verbose) cat('flag1')
-  #melt values
-  sampleTemp <- unique(melt(sampleTemp, id.vars=c(c('fieldID', 'method'), unitName),
+  #reshape2::melt values
+  sampleTemp <- unique(reshape2::melt(sampleTemp, id.vars=c(c('fieldID', 'method'), unitName),
                             variable.name='measurement',
                             na.rm=TRUE, forceNumericValue=TRUE))
   if(verbose) cat('flag2')
