@@ -1,9 +1,9 @@
 #' Primary function to load all of ISCN3 data
 #'
 #' @param dir string identifying the folder the data is in. Should have a subfolder 'Layers' containing all ISCN_ALL_DATA_LAYER_C*_1-1.csv files.
+#' @param verbose boolean flag for verbose outputs
 #'
 #' @return a data frame with all data in the correct format
-
 #' @export
 processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 
@@ -114,20 +114,20 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
 
   #Load file========
   if(verbose) cat('loading csv:', csvFile, '\n')
-  data.df <- read.csv(csvFile, stringsAsFactors=FALSE)
-  if(verbose) cat('inital size: ', format(object.size(data.df), units='Mb'), '\n')
+  data.df <- utils::read.csv(csvFile, stringsAsFactors=FALSE)
+  if(verbose) cat('inital size: ', format(utils::object.size(data.df), units='Mb'), '\n')
 
   #trim replicates
   #data.df <- subset(data.df, !grepl('ISCN SOC stock', dataset_name_soc))
-  #if(verbose) cat('trim ISCN SOC stocks: ', format(object.size(data.df), units='Mb'), '\n')
+  #if(verbose) cat('trim ISCN SOC stocks: ', format(utils::object.size(data.df), units='Mb'), '\n')
 
   data.df <- unique(data.df)
-  if(verbose) cat('trim non-unique: ', format(object.size(data.df), units='Mb'), '\n')
+  if(verbose) cat('trim non-unique: ', format(utils::object.size(data.df), units='Mb'), '\n')
 
   #Process header column =============
   ##process the header for units
   if(verbose) cat('setting up header\n')
-  header <- read.csv(csvFile, nrows=1, header=FALSE)
+  header <- utils::read.csv(csvFile, nrows=1, header=FALSE)
 
   header.df <- data.frame(header=unlist(header),
                           measurement=gsub(' \\(.*\\)', '', unlist(header)),
