@@ -382,10 +382,12 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              unitName=NULL,
                              unit.df=header.df[c(85:93),],
                              sampleTemp=sampleTemp)
-  temp$measurement$method <- sprintf('varName:%s; %s',
-                                     as.character(temp$measurement$type),
-                                     as.character(temp$measurement$method))
-  temp$measurement$type <- gsub('_.*$', '', temp$measurement$type)
+  #take out the methods notes from the variable name
+  #temp$measurement$method <- sprintf('varName:%s; %s',
+  #                                   as.character(temp$measurement$type),
+  #                                   as.character(temp$measurement$method))
+  #temp$measurement$type <- gsub('_.*$', '', temp$measurement$type)
+
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
