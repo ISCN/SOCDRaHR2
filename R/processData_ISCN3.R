@@ -8,19 +8,19 @@
 processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 
   cat('Warning: ISCN3 is a large data set and will take some time...')
-  data1.ls <- processWorksheet(csvFile=
+  data1.ls <- processWorksheet_ISCN3(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv', dir),
                                verbose=verbose)
 
-  data2.ls <- processWorksheet(csvFile=
+  data2.ls <- processWorksheet_ISCN3(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C2_1-1.csv', dir),
                                verbose=verbose)
 
-  data3.ls <- processWorksheet(csvFile=
+  data3.ls <- processWorksheet_ISCN3(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C3_1-1.csv', dir),
                                verbose=verbose)
 
-  data4.ls <- processWorksheet(csvFile=
+  data4.ls <- processWorksheet_ISCN3(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C4_1-1.csv', dir),
                                verbose=verbose)
   #merge easy========
@@ -33,11 +33,7 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 
   field.df <- unique(plyr::rbind.fill(plyr::rbind.fill(plyr::rbind.fill(data1.ls$field,data2.ls$field),
                                            data3.ls$field), data4.ls$field))
-  #field.df$value <- as.factor(field.df$value)
-  #field.df$layer_units <- as.factor(field.df$layer_units)
 
-
-  #fieldNotes.df <- field.df[,c('fieldID', 'measurement', 'value')]
 
   field.df <- unique(field.df)
   #mergeMeasures====
@@ -96,8 +92,7 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 
   cat(' done!\n')
   return(list(study=study.df, labTreatment=labTreatment.df, fieldTreatment=fieldTreatment.df,
-              field=field.df, measurement=measurement.df,
-              sample=sample.df))
+              field=field.df, measurement=measurement.df, sample=sample.df))
 }
 
 #' Process each ISCN worksheet
@@ -106,7 +101,7 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 #' @param verbose boolean if you want LOTS of messages
 #'
 #' @return a list of data frames
-processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
+processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              verbose=TRUE){
   ##Out of memory erros
   #header <- read.xlsx('Layers/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', sheetIndex=1, startRow=1, endRow=2)
@@ -173,14 +168,10 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   names(sampleTemp) <- header.df$measurement[c(12,23:28)]
   names(sampleTemp)[1] <- 'fieldID'
 
-  temp <- processMethodBlock(methodNames=header.df$measurement[c(23, 28)],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[c(23, 28)],
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(24:27), c('measurement', 'unit')],
                              verbose=FALSE)
-  temp$measurement$method <- sprintf('varName:%s; %s',
-                                     as.character(temp$measurement$type),
-                                     as.character(temp$measurement$method))
-  temp$measurement$type <- gsub('_.*$', '', temp$measurement$type)
 
   #merge results
   measurement.df <- temp$measurement
@@ -194,7 +185,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   names(sampleTemp) <- header.df$measurement[c(12,29:33)]
   names(sampleTemp)[1] <- 'fieldID'
 
-  temp <- processMethodBlock(methodNames=header.df$measurement[29:30],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[29:30],
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(31:33), c('measurement', 'unit')])
   #no need for the finer type splits
@@ -209,7 +200,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   sampleTemp <- data.df[, c(12, 34:35)]
   names(sampleTemp) <- header.df$measurement[c(12,34:35)]
   names(sampleTemp)[1] <- 'fieldID'
-  temp <- processMethodBlock(methodNames=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL,
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(34:35), c('measurement', 'unit')])
   #no need for the finner type splits
@@ -225,7 +216,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   sampleTemp <- data.df[, c(12, 36:38)]
   names(sampleTemp) <- header.df$measurement[c(12,36:38)]
   names(sampleTemp)[1] <- 'fieldID'
-  temp <- processMethodBlock(methodNames=header.df$measurement[c(37:38)],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[c(37:38)],
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(36), c('measurement', 'unit')])
   ##no need for finer type splits
@@ -238,13 +229,10 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   #header.df[c(12, 39:42),]
   sampleTemp <- data.df[, c(12, 39:42)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(39:42)])
-  temp <- processMethodBlock(methodNames=header.df$measurement[c(39)],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[c(39)],
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(40:42), c('measurement', 'unit')])
-  temp$measurement$method <- sprintf('varName:%s; %s',
-                                     as.character(temp$measurement$type),
-                                     as.character(temp$measurement$method))
-  temp$measurement$type <- gsub('_.*$', '', temp$measurement$type)
+
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
@@ -254,7 +242,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   #header.df[c(12, 43:46, 49),]
   sampleTemp <- data.df[, c(12, 43:46, 49)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(43:46, 49)])
-  temp <- processMethodBlock(methodNames=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL,
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(43:46, 49), c('measurement', 'unit')])
   #no need for finner splits
@@ -267,7 +255,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   #header.df[c(12, 47, 48),]
   sampleTemp <- data.df[, c(12, 47, 48)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(47:48)])
-  temp <- processMethodBlock(methodNames=header.df$measurement[47],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[47],
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(47:48), c('measurement', 'unit')])
   ##No need for finer splits
@@ -282,14 +270,10 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   if(verbose) cat('Al Fe Mn\n')
   sampleTemp <- data.df[, c(12, 50:60)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(50:60)])
-  temp <- processMethodBlock(methodNames=header.df$measurement[60],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[60],
                              unitName=header.df$measurement[59],
                              sampleTemp=sampleTemp)
 
-  temp$measurement$method <- sprintf('varName:%s; %s',
-                                     as.character(temp$measurement$type),
-                                     as.character(temp$measurement$method))
-  temp$measurement$type <- gsub('_.*$', '', temp$measurement$type)
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
@@ -300,14 +284,10 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   #header.df[c(12, 61:67),]
   sampleTemp <- data.df[, c(12, 61:67)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(61:67)])
-  temp <- processMethodBlock(methodNames=header.df$measurement[67],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[67],
                              unitName=header.df$measurement[66],
                              sampleTemp=sampleTemp)
 
-  temp$measurement$method <- sprintf('varName:%s; %s',
-                                     as.character(temp$measurement$type),
-                                     as.character(temp$measurement$method))
-  temp$measurement$type <- gsub('_.*$', '', temp$measurement$type)
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
@@ -318,7 +298,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   #header.df[c(12, 68:71),]
   sampleTemp <- data.df[, c(12, 68:71)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(68:71)])
-  temp <- processMethodBlock(methodNames=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL,
                              unitName=header.df$measurement[71],
                              sampleTemp=sampleTemp)
   #merge results
@@ -330,7 +310,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   ##bs, columns 72:73
   sampleTemp <- data.df[, c(12, 72:73)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(72:73)])
-  temp <- processMethodBlock(methodNames=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL,
                              unitName=NULL,
                              unit.df=header.df[c(72:73), c('measurement', 'unit')],
                              sampleTemp=sampleTemp)
@@ -343,7 +323,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   ##metal_ext, columns 74:77
   sampleTemp <- data.df[, c(12, 74:77)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(74:77)])
-  temp <- processMethodBlock(methodNames=header.df$measurement[77],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[77],
                              unitName=header.df$measurement[76],
                              unit.df=NULL,
                              sampleTemp=sampleTemp)
@@ -357,15 +337,11 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   ##P, columns 78:83
   sampleTemp <- data.df[, c(12, 78:83)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(78:83)])
-  temp <- processMethodBlock(methodNames=header.df$measurement[83],
+  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[83],
                              unitName=header.df$measurement[82],
                              unit.df=NULL,
                              sampleTemp=sampleTemp)
 
-  temp$measurement$method <- sprintf('varName:%s; %s',
-                                     as.character(temp$measurement$type),
-                                     as.character(temp$measurement$method))
-  temp$measurement$type <- gsub('_.*$', '', temp$measurement$type)
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
@@ -378,21 +354,16 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
   if(verbose) cat('roots isotope texture locator\n')
   sampleTemp <- data.df[, c(12, 85:93)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(85:93)])
-  temp <- processMethodBlock(methodNames=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL,
                              unitName=NULL,
                              unit.df=header.df[c(85:93),],
                              sampleTemp=sampleTemp)
-  #take out the methods notes from the variable name
-  #temp$measurement$method <- sprintf('varName:%s; %s',
-  #                                   as.character(temp$measurement$type),
-  #                                   as.character(temp$measurement$method))
-  #temp$measurement$type <- gsub('_.*$', '', temp$measurement$type)
 
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
-  if(verbose) cat('done with processWorksheet\n')
+  if(verbose) cat('done with processWorksheet_ISCN3\n')
   return(list(study=study.df, field=field.df, lab=lab.df,
               fieldTreatment=fieldTreatment.df, labTreatment=labTreatment.df,
               measurement=measurement.df, samples=sample.df))
@@ -409,7 +380,7 @@ processWorksheet <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
 #' @param verbose boolean if you want lots of error messages
 #'
 #' @return a list of data frames with the sample data and measurement information
-processMethodBlock <- function(methodNames=NULL, unitName=NULL,
+processMethodBlock_ISCN3 <- function(methodNames=NULL, unitName=NULL,
                                sampleTemp, unit.df=NULL, verbose=FALSE){
 
   ##Merge methods
