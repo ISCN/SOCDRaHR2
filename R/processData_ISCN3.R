@@ -8,13 +8,16 @@
 processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 
   cat('Warning: ISCN3 is a large data set and will take some time...')
+  #' cat Will export the said character string to the console for the user
   data1.ls <- processWorksheet_ISCN3(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv', dir),
+                                 #'Creates a file directory path by replacing %s with the current directory
+                                 #'Locates the data from layer 1_1
                                verbose=verbose)
-
   data2.ls <- processWorksheet_ISCN3(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C2_1-1.csv', dir),
                                verbose=verbose)
+  #' Same process as for data1, only for layer 2
 
   data3.ls <- processWorksheet_ISCN3(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C3_1-1.csv', dir),
@@ -25,30 +28,41 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
                                verbose=verbose)
   #merge easy========
   study.df <- data1.ls$study
+  #' creates the dataframe 'study' based off data1's study column
   fieldTreatment.df <- data1.ls$fieldTreatment
+  #' creates the dataframe 'fieldTreatment' based off data1's fieldTreatment column
   labTreatment.df <- data1.ls$labTreatment
+  #' creates the dataframe labTreatment based off data1's labTreatment column
 
   lab.df <- unique(plyr::rbind.fill(plyr::rbind.fill(plyr::rbind.fill(data1.ls$lab,data2.ls$lab),
                                          data3.ls$lab), data4.ls$lab))
+  #' creates a lab dataframe based off the unique inputs from the lab reports of data1, data2, data3, and data4
 
   field.df <- unique(plyr::rbind.fill(plyr::rbind.fill(plyr::rbind.fill(data1.ls$field,data2.ls$field),
                                            data3.ls$field), data4.ls$field))
-
+  #' creates a field dataframe from the same concept, only with the field data instead
 
   field.df <- unique(field.df)
+  #' removes any repeated pieces of information
   #mergeMeasures====
   measureTemp.df <-
+  #' creates an open measureTemp dataframe  
     merge(merge(data1.ls$measurement, data2.ls$measurement, by=c('type', 'method'),
                 suffixes=c('.data1', '.data2'), all=TRUE),
           merge(data3.ls$measurement, data4.ls$measurement, by=c('type', 'method'),
                 suffixes=c('.data3', '.data4'), all=TRUE), all=TRUE)
+  #' merges the measurements between method and type for data1 and data2
+  #' repeats the process for data3 and data4
 
   measureTemp.df <- plyr::ddply(measureTemp.df, c('type'), function(xx){
     xx$measurementID <- sprintf('%s_%02d', xx$type, 1:nrow(xx))
     return(xx)
   })
+  #' the measurementTemp dataframe is split by type
+  #' measurementID='xx', 'xx''s class, new row:'xx'
   measurement.df <- measureTemp.df[,c('type', 'method', 'measurementID')]
-
+  #' new measurement dataframe with the set columns 'type', 'method', 'measurementID'
+  
   #Construct samples========
   sample.df <- plyr::ddply(data1.ls$samples, 'measurementID', function(xx){
     #cat('replacing [', xx$measurementID[1])
@@ -57,7 +71,10 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
     #cat('] with [',xx$measurementID[1],']\n')
     return(xx)
   })
-
+  #' The console exports the explanation that the measurementID is being replaced
+  #' First measurementID is replaced by the measurementID from data1
+  #' Returns new measurementID in the sample dataframe
+  
   sample.df <- plyr::rbind.fill(sample.df,
                           plyr::ddply(data2.ls$samples, 'measurementID', function(xx){
                             #cat('replacing [', xx$measurementID[1])
@@ -67,7 +84,11 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
                             #cat('] with [',xx$measurementID[1],']\n')
                             return(xx)
                           }))
-
+  #' A new 'sample' dataframe is created and inputted with the data from data2
+  #' The information from data2 is split by the measurementID
+  #' MeasurementID from data1 is replaced by the ID from data2
+  #' Data2 measurementID returned in the sample dataframe
+  
   sample.df <- plyr::rbind.fill(sample.df,
                           plyr::ddply(data3.ls$samples, 'measurementID', function(xx){
                             #cat('replacing [', xx$measurementID[1])
@@ -86,14 +107,21 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
                             #cat('] with [',xx$measurementID[1],']\n')
                             return(xx)
                           }))
+  
+  #' Lines 94-111 repeat the same process as the last two inputs into the sample dataframe
+  #' The sample dataframe now has data4's measurement ID
+  
   sample.df$fieldID <- as.factor(sample.df$fieldID)
   sample.df$measurementID <- as.factor(sample.df$measurementID)
   sample.df$unit <- as.factor(sample.df$unit)
+  #' The fieldID, measurmentID, and units of the sample are converted to a factor
 
   cat(' done!\n')
   return(list(study=study.df, labTreatment=labTreatment.df, fieldTreatment=fieldTreatment.df,
               field=field.df, measurement=measurement.df, sample=sample.df))
 }
+#' First function is done, returns a list of the study, lab and field treament, field,
+#' measurement, and sample dataframe
 
 #' Process each ISCN worksheet
 #'
@@ -103,7 +131,7 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 #' @return a list of data frames
 processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
                              verbose=TRUE){
-  ##Out of memory erros
+  ##Out of memory errors
   #header <- read.xlsx('Layers/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', sheetIndex=1, startRow=1, endRow=2)
   #data.df <- read.xlsx2('Layers/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', sheetIndex=1)
 
@@ -112,6 +140,8 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   data.df <- utils::read.csv(csvFile, stringsAsFactors=FALSE)
   if(verbose) cat('inital size: ', format(utils::object.size(data.df), units='Mb'),
                   'at', nrow(data.df), 'rows\n')
+  #' If true: Console states beginning of loading process
+  #' Repeats the size of the file
 
   #trim replicates
   #data.df <- subset(data.df, !grepl('ISCN SOC stock', dataset_name_soc))
@@ -120,6 +150,8 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   data.df <- unique(data.df)
   if(verbose) cat('trim non-unique: ', format(utils::object.size(data.df), units='Mb'),
                   'at', nrow(data.df), 'rows\n')
+  #' Trims the repeated numbers when placed into the new data frame
+  #' Shows user where repeated numbers were
 
   #Process header column =============
   ##process the header for units
@@ -135,13 +167,14 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   header.df$unit[grepl('root_quant_size', header.df$measurement)] <- 'unitless'
   header.df$unit[92:95] <- 'unitless'
   header.df$index <- 1:nrow(header.df)
-
+  #'Grep1 searches for any unitless matches between $unit and $measurement
+  
   #Set up study, lab, and treatment ===========
   ##Set up the easy data frame
   if(verbose) cat('reading study/lab/treatment information\n')
   study.df <- data.frame(studyID = header[1], doi='10.17040/ISCN/1305039',
                          permissions='acknowledgement')
-
+  
   lab.df <- data.frame(labID=unique(data.df[,2])) #ignore dataset_name_SOC, back out SOC later
 
   fieldTreatment.df <- data.frame(fieldTreatmentID=NA) #no field treatment
@@ -150,10 +183,13 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   #set up field IDs============
   if(verbose) cat('setting up field ID\n')
   field.df <- unique(data.df[,c(4:22, c(84, 94, 95))])
+  #' All unique data from lines 4-22, 84, 94, 95
   names(field.df) <- as.character(header.df$measurement[c(4:22, c(84, 94, 95))])
   field.df$fieldID <- field.df$layer_name
+  #' fieldID labeled as layer_name
   field.df$layer_top <- as.numeric(as.character(field.df$layer_top))
-  field.df$layer_units <- 'cm'
+  #' field layers labeled as a number, converted from being converted as a character
+  field.df$layer_units <- 'cm' #'setting up units
   field.df[,(lapply(field.df, class) == 'character')] <- lapply(field.df[,(lapply(field.df, class) == 'character')], as.factor)
 
   #field.df <- field.df[!grepl('^\\s*$',field.df$value),]
@@ -164,18 +200,21 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   if(verbose) cat('Bulk density \n')
   ##Bulk density columns 23:28
   #header.df[c(12, 23:28),]
-  sampleTemp <- data.df[, c(12, 23:28)]
-  names(sampleTemp) <- header.df$measurement[c(12,23:28)]
+  sampleTemp <- data.df[, c(12, 23:28)] #Taking data from stated lines
+  names(sampleTemp) <- header.df$measurement[c(12,23:28)] #Labels data
   names(sampleTemp)[1] <- 'fieldID'
 
   temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[c(23, 28)],
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(24:27), c('measurement', 'unit')],
                              verbose=FALSE)
+  #' Checks the data before placing in the unit df
+  #' Sorted into 'measurement' and 'unit'
 
   #merge results
   measurement.df <- temp$measurement
   sample.df <- temp$sample
+  #'Temp data is appended to the sample and measurement dataframe
 
   #CARBON=====================
   if(verbose) cat('Carbon \n')
@@ -183,11 +222,14 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   #header.df[c(12, 29:33),]
   sampleTemp <- data.df[, c(12, 29:33)]
   names(sampleTemp) <- header.df$measurement[c(12,29:33)]
+  #'Renames sampleTemp to $measurement(c(12,29:33))
   names(sampleTemp)[1] <- 'fieldID'
+  #'Renames 1st in sampleTemp to 'fieldID'
 
   temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[29:30],
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(31:33), c('measurement', 'unit')])
+  #'Splits carbon data between measurement and unit
   #no need for the finer type splits
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
@@ -204,6 +246,7 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(34:35), c('measurement', 'unit')])
   #no need for the finner type splits
+  #'Same process asfor carbon
 
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
@@ -220,6 +263,7 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(36), c('measurement', 'unit')])
   ##no need for finer type splits
+  
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
@@ -242,10 +286,13 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   #header.df[c(12, 43:46, 49),]
   sampleTemp <- data.df[, c(12, 43:46, 49)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(43:46, 49)])
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL, #'Holds no value
                              sampleTemp=sampleTemp,
                              unit.df=header.df[c(43:46, 49), c('measurement', 'unit')])
-  #no need for finner splits
+  #'CaCO uses a null value to sort in the function pro_ISCN3
+  #'Unlike Nitrogen, Carbon, PH, and WPG2
+  
+  #no need for finer splits
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
@@ -266,6 +313,7 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   ##Al, columns 50, 52, 59, 60
   ##Fe, columns 53, 55, 59, 60
   ##Mn, columns 56, 58, 59 ??60
+  #'Pre-searched data and labeled locations
   #header.df[c(12, 50:60),]
   if(verbose) cat('Al Fe Mn\n')
   sampleTemp <- data.df[, c(12, 50:60)]
@@ -298,7 +346,7 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   #header.df[c(12, 68:71),]
   sampleTemp <- data.df[, c(12, 68:71)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(68:71)])
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL, #'Just as CaCO3-no method name, holds no value
                              unitName=header.df$measurement[71],
                              sampleTemp=sampleTemp)
   #merge results
@@ -310,8 +358,8 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   ##bs, columns 72:73
   sampleTemp <- data.df[, c(12, 72:73)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(72:73)])
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
-                             unitName=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL, #'no method name, holds no value
+                             unitName=NULL, #'No unit name, holds no value
                              unit.df=header.df[c(72:73), c('measurement', 'unit')],
                              sampleTemp=sampleTemp)
   #merge results
@@ -325,7 +373,7 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(74:77)])
   temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[77],
                              unitName=header.df$measurement[76],
-                             unit.df=NULL,
+                             unit.df=NULL, #'No units, holds no value
                              sampleTemp=sampleTemp)
 
   #merge results
@@ -339,7 +387,7 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(78:83)])
   temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[83],
                              unitName=header.df$measurement[82],
-                             unit.df=NULL,
+                             unit.df=NULL, #'No units, holds no value
                              sampleTemp=sampleTemp)
 
   #merge results
@@ -347,26 +395,29 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
 
   #Roots + Isotope + texture + locator
-  ##Root, column 84:85 84is TEXT move to field description
+  ##Root, column 84:85 84 is TEXT move to field description
   ##Isotope, 86:93
   ##textureClass, 94 TEXT move to field description
   ##locator, 95 TEXT move to field description
   if(verbose) cat('roots isotope texture locator\n')
   sampleTemp <- data.df[, c(12, 85:93)]
   names(sampleTemp) <- c('fieldID', header.df$measurement[c(85:93)])
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
-                             unitName=NULL,
+  temp <- processMethodBlock_ISCN3(methodNames=NULL, #'no method, holds no value
+                             unitName=NULL, #' no unit name, holds no value
                              unit.df=header.df[c(85:93),],
                              sampleTemp=sampleTemp)
 
   #merge results
   measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
   sample.df <- plyr::rbind.fill(sample.df, temp$sample)
+  #'All data is appended to the sample and measure datafiles
 
   if(verbose) cat('done with processWorksheet_ISCN3\n')
   return(list(study=study.df, field=field.df, lab=lab.df,
               fieldTreatment=fieldTreatment.df, labTreatment=labTreatment.df,
               measurement=measurement.df, samples=sample.df))
+  #'@Return study, field, lab. fieldtratment, labtreatment, measure
+  #'and sample datafiles
 }
 
 #' Process a methods block
@@ -389,16 +440,20 @@ processMethodBlock_ISCN3 <- function(methodNames=NULL, unitName=NULL,
     patternStr <- sprintf('%%s %s: %%s', methodStr)
     emptyStr <- sprintf('\\s+%s:\\s+$', methodStr)
     sampleTemp$method <- sprintf(patternStr, sampleTemp$method, sampleTemp[,methodStr])
+    #sprintf('sprintf('%%s %s: %%s', methodStr), sampleTemp$method,sampleTemp[,methodStr])
     sampleTemp$method <- gsub(emptyStr, '', sampleTemp$method)
+    #'Replaces all string matches ('') with sample$method
     sampleTemp$method <- gsub('^\\s+', '', sampleTemp$method)
-    sampleTemp[,methodStr] <- NULL
+    #'Replaces'^//s+' and '' with sampleTemp$method
+    sampleTemp[,methodStr] <- NULL #'[,methodStr] now is null
   }
-  if(verbose) cat('flag1')
+  if(verbose) cat('flag1') #'Flags to check for errors
   #reshape2::melt values
+  #takes sampleTemp data and melts it into long-format data
   sampleTemp <- unique(reshape2::melt(sampleTemp, id.vars=c(c('fieldID', 'method'), unitName),
                             variable.name='measurement',
                             na.rm=TRUE, forceNumericValue=TRUE))
-  if(verbose) cat('flag2')
+  if(verbose) cat('flag2') #'Checks for unspecified units
   if(!is.null(unitName)){
     names(sampleTemp)[3] <- 'unit'
   }else if(is.null(unitName) & !is.null(unit.df)){
@@ -407,12 +462,12 @@ processMethodBlock_ISCN3 <- function(methodNames=NULL, unitName=NULL,
   }else{
     warning('units not specified')
   }
-  if(verbose) cat('flag3')
-  #issolate unique measurements
+  if(verbose) cat('flag3') 
+  #isolate unique measurements
   measurementTemp <- unique(sampleTemp[c('measurement','method')])
   measurementTemp$measurementID <- sprintf('%s_%02d', measurementTemp$measurement,
-                                           1:nrow(measurementTemp))
-  if(verbose) cat('flag4')
+                                           1:nrow(measurementTemp)) 
+  if(verbose) cat('flag4') #'Merge all data together by ID's, values, units
   sampleTemp <- merge(sampleTemp, measurementTemp)[, c('fieldID', 'measurementID',
                                                        'value', 'unit')]
 
@@ -420,9 +475,9 @@ processMethodBlock_ISCN3 <- function(methodNames=NULL, unitName=NULL,
   names(measurementTemp)[1] <- 'type'
 
   sampleTemp$value <- as.numeric(sampleTemp$value)
-  if(verbose) cat('flag5')
+  if(verbose) cat('flag5') #'Check for outlandish value
   sampleTemp <- sampleTemp[sampleTemp$value != -999, ]
-  if(verbose) cat('flag6')
+  if(verbose) cat('flag6') #'@Return list of sample and measurements
   return(list(sample=sampleTemp, measurement=measurementTemp))
-
+#'processData_ISCN3 finished
 }
