@@ -4,10 +4,12 @@
 \alias{processData_ISCN3}
 \title{Primary function to load all of ISCN3 data}
 \usage{
-processData_ISCN3(dir = "repoData/ISCN_3")
+processData_ISCN3(dir = "repoData/ISCN_3", verbose = FALSE)
 }
 \arguments{
 \item{dir}{string identifying the folder the data is in. Should have a subfolder 'Layers' containing all ISCN_ALL_DATA_LAYER_C*_1-1.csv files.}
+
+\item{verbose}{boolean flag for verbose outputs}
 }
 \value{
 a data frame with all data in the correct format
