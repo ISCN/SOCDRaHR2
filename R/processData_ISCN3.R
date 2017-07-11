@@ -373,6 +373,8 @@ processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.cs
 #'
 #' Force the samples to discard repeats
 #'
+#' TODO Update this to use convert_MMU_Block
+#'
 #' @param methodNames strings identifying the metods name for the block
 #' @param unitName strings identifying the unit name for the block
 #' @param sampleTemp stirngs identifying the samples for the block

@@ -10,6 +10,7 @@ processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
   meta.df <- meta.df[,!is.na(meta.df[4,])]
   names(meta.df) <- as.character(meta.df[1,])
   meta.df <- meta.df[-1,]
+  row.names(meta.df) <- NULL
 
   ##Read in site level info
   site.df <- readxl::read_excel(path=sprintf('%s/ISCNtemplate_Treat_peatProps_v2.xlsx', dir),
