@@ -1,3 +1,13 @@
+#' Process data from Treat 2015
+#'
+#' Process data from Treat, C. C. et al (2015). "Effects of permafrost aggradation on peat properties as determined from a pan-arctic synthesis of plant macrofossils." Journal of Geophysical Research: Biogeosciences: in press. doi: 10.1002/2015JG003061, accessed http://iscn.fluxdata.org/wp-content/uploads/sites/15/ISCNtemplate_Treat_peatProps_v2.xlsx
+#' This dataset is a synthesis of literature and site-level data on peat properties, C, N, 14C, and vegetation from 366 sites worldwide. Data are available for nearly 16,000 layers from 659 profiles. Data contributed by Claire Treat.
+#'
+#' @param dir directory containing ISCNtemplate_Treat_peatProps_v2.xlsx file
+#' @param verbose print out error/debugging message
+#'
+#' @return a list of data.frames in project format
+#' @export
 processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
 
   library(readxl)

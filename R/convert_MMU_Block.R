@@ -9,9 +9,6 @@
 #' @param verbose
 #'
 #' @return
-#' @export
-#'
-#' @examples
 convert_MMU_Block <- function(methodColStrs=NULL, unitName=NULL,
            org.df, unit.df=NULL, verbose=FALSE){
 
