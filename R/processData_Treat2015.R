@@ -12,7 +12,8 @@ processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
 
   library(readxl)
   library(plyr)
-  #dir <- '../soils-long-tail-recovery/repoData/Treat_2015'
+  #dir <- '~/Documents/CurrentProjects/soils-long-tail-recovery/repoData/Treat_2015/'
+  #dir <- 'tests/data/Treat_2015/'
 
   ########################
   ##Read in meta info
@@ -36,10 +37,16 @@ processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
   #########################
   ##Read in site level info
   #########################
+  siteColStr <- c('site_name', 'country', 'state', 'county', 'lat',	'long',	'datum'
+                  )#location_acc	elevation	vegclass_nat	vegclass	vegclass_local	vegclass_local_type	veg_note	landscape	landform	2d_position	landform_note	parent	aspect_deg	aspect_cl	slope	stand_age	stand_maturity	successional_status	drainagecl	depth_water	thaw_depth_site	bedrock_depth	climate_station	ffdays	flood_freq	geo_form	map	mat	mast	pond_freq	runoff	site_perm	water_table_duration	cflux_note	climate_note	eco_note	photo_note	soiltemp_note	add_note	soc	soc_type	soc_pcount	soc_depth	soc_sigma	soc_method')
   site.df <- readxl::read_excel(path=sprintf('%s/ISCNtemplate_Treat_peatProps_v2.xlsx',
                                              dir),
                                 sheet='site')
-  siteCols <- unlist(plyr::llply(site.df[-1:-2,], function(xx){return(!all(is.na(xx)))}))
+  #siteCols <- unlist(plyr::llply(site.df[-1:-2,], function(xx){return(!all(is.na(xx)))}))
+  #print(names(siteCols)[siteCols])
+  siteCols <- c("site_name", "country", "state", "lat", "long",
+                "datum", "elevation", "landform_note", "slope", "drainagecl",
+                "climate_note", "eco_note", "soiltemp_note", "add_note")
   site.header <- site.df[1:2, siteCols]
   site.df <- site.df[-1:-2, siteCols]
 
@@ -49,7 +56,11 @@ processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
   profile.df <- readxl::read_excel(path=sprintf('%s/ISCNtemplate_Treat_peatProps_v2.xlsx',
                                                 dir),
                                    sheet='profile')
-  profileCols <- unlist(plyr::llply(profile.df[-1:-2,], function(xx){return(!all(is.na(xx)))}))
+  #profileCols <- unlist(plyr::llply(profile.df[-1:-2,], function(xx){return(!all(is.na(xx)))}))
+  #print(names(profileCols)[profileCols])
+  profileCols <- c("site_name", "profile_name", "observation_date", "surface_veg",
+                   "sampler_names", "soc", "soc_lcount", "soc_depth")
+
   profile.header <- profile.df[1:2,profileCols]
   profile.df <- profile.df[-1:-2,profileCols]
 
@@ -58,7 +69,8 @@ processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
   siteProfileKey <- c('Lama Lake'= 'Lama_Lake_peat',
                'Lek Vorkuta profile LVPS4+5B'='LVPS_4+5B_Lek_Vorkuta',
                "Sasapimakwanistik 1" = "Sasapimakwananistik 1")
-  profile.df$site_name <- plyr::revalue(profile.df$site_name, siteProfileKey)
+  profile.df$site_name <- plyr::revalue(profile.df$site_name, siteProfileKey,
+                                        warn_missing=FALSE)
 
   ##Not in site definitions nor in the layers
   profileOnlySites <- c('07-SA-LY-B', '1973-31', "1973-32", "1973-33",
@@ -70,7 +82,11 @@ processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
   ##########################
   layer.df <- readxl::read_excel(path=sprintf('%s/ISCNtemplate_Treat_peatProps_v2.xlsx',
                                               dir), sheet='layer')
-  layerCols <- unlist(plyr::llply(layer.df[-1:-2,], function(xx){return(!all(is.na(xx)))}))
+  #layerCols <- unlist(plyr::llply(layer.df[-1:-2,], function(xx){return(!all(is.na(xx)))}))
+  layerCols <- c("site_name", "profile_name", "layer_name", "layer_top", "layer_bot",
+                 "hzn_desgn", "layer_note", "bd_method", "bd_samp" , "soc",
+                 "c_tot", "n_tot", "c_to_n", "loi", "rc_lab",
+                 "rc_lab_number", "14c_age", "14c_age_sigma", "210Pb_age", "210Pb_error")
   layer.header <- layer.df[1:2, layerCols]
   layer.df <- layer.df[-1:-2, layerCols]
   #setdiff( layer.df$site_name, site.df$site_name)
@@ -78,7 +94,8 @@ processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
                     'Lek Vorkuta profile LVPS4+5B'='LVPS_4+5B_Lek_Vorkuta',
                     "Sasapimakwanistik 1" = "Sasapimakwananistik 1",
                     "Lac_le_Caron" = "Lac_Le_Caron")
-  layer.df$site_name <- plyr::revalue(layer.df$site_name, siteLayerKey)
+  layer.df$site_name <- plyr::revalue(layer.df$site_name, siteLayerKey,
+                                      warn_missing=FALSE)
 
   ###################
   ##Convert numerics
