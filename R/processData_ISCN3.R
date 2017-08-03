@@ -26,7 +26,7 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C4_1-1.csv', dir),
                                verbose=verbose)
   #merge easy========
-  study.df <- data1.ls$study
+  study.df <- plyr::rename(data1.ls$study, c('V1'='studyID'))
   fieldTreatment.df <- data1.ls$fieldTreatment
   labTreatment.df <- data1.ls$labTreatment
 
@@ -38,6 +38,7 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
 
 
   field.df <- unique(field.df)
+  field.df <- plyr::rename(field.df, c('layer_bot' ='layer_bottom'))
   #mergeMeasures====
   measureTemp.df <-
     merge(merge(data1.ls$measurement, data2.ls$measurement, by=c('type', 'method'),
