@@ -2,7 +2,7 @@ library(SoilDataR)
 library(testthat)
 
 #devtools::test() ##to run
-context('Testing dummy ISCN3 data')
+context('Testing structure of dummy data')
 
 test_that("known empty standard", {
   empty_snd <- processData_emptyStandard()
@@ -10,13 +10,13 @@ test_that("known empty standard", {
 
 
 test_that("does data load",{
-  temp <- processData_ISCN3('../data/ISCN3')
+  temp <- processData_ISCN3('../data/ISCN3', warningMsg=FALSE)
 })
 
 
 empty_snd <- processData_emptyStandard()
 
-testFormat <- list(ISCN3 = processData_ISCN3('../data/ISCN3'),
+testFormat <- list(ISCN3 = processData_ISCN3('../data/ISCN3', warningMsg=FALSE),
                    Treat2015 = processData_Treat2015('../data/Treat_2015'))
 
 for(testCaseStr in names(testFormat)){
