@@ -168,11 +168,25 @@ processData_Treat2015 <- function(dir='repoData/Treat_2015', verbose=FALSE){
   measurement.df <- data.frame(type=c('bd_samp', 'soc', 'c_tot', 'n_tot', 'c_to_n',
                                       'loi', '14c_age', '210Pb_age'),
                                method=c('Volumetric', rep('', 7)),
-                               units=c('g cm-3', 'g cm-2', '%', '%', 'mass %',
+                               unit=c('g cm-3', 'g cm-2', '%', '%', 'mass %',
                                        '%', 'permill', ''),
                                uncertainty_type=c(rep('', 6), c('sigma', 'error')))
 
-  ans <- list(study=study.df, sample=sample.df, site=field.df, measurement=measurement.df)
+  emptyStandard <- processData_emptyStandard()
+
+  field.df <- plyr::rename(field.df, c('layer_bot'='layer_bottom'))
+  field.df$layer_units <- 'cm'
+
+  measurement.df$measurementID <- measurement.df$type #only one of each type
+
+  sample.df <- plyr::rename(sample.df, c('variable'='measurementID'))
+  sample.df <- merge(sample.df, measurement.df[,c('measurementID', 'unit')])
+  ans <- list(study=study.df,
+              labTreatment = emptyStandard$labTreatment,
+              fieldTreatment=emptyStandard$fieldTreatment,
+              measurement=measurement.df,
+              sample=sample.df,
+              field=field.df)
 
   return(ans)
 }
