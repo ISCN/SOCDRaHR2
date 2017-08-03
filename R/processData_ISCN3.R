@@ -7,9 +7,10 @@
 #'
 #' @return a data frame with all data in the correct format
 #' @export
-processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
+processData_ISCN3 <- function(dir='repoData/ISCN_3',
+                              warningMsg=TRUE, verbose=FALSE){
 
-  cat('Warning: ISCN3 is a large data set and will take some time...')
+  if(warningMsg) cat('Warning: ISCN3 is a large data set and will take some time...')
   data1.ls <- processWorksheet_ISCN3(csvFile=
                                  sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv', dir),
                                verbose=verbose)
@@ -93,7 +94,7 @@ processData_ISCN3 <- function(dir='repoData/ISCN_3', verbose=FALSE){
   sample.df$measurementID <- as.factor(sample.df$measurementID)
   sample.df$unit <- as.factor(sample.df$unit)
 
-  cat(' done!\n')
+  if(warningMsg) cat(' done!\n')
   return(list(study=study.df, labTreatment=labTreatment.df, fieldTreatment=fieldTreatment.df,
               field=field.df, measurement=measurement.df, sample=sample.df))
 }
