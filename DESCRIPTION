@@ -14,7 +14,8 @@ Encoding: UTF-8
 LazyData: true
 Imports: plyr (>= 1.8),
     reshape2 (>= 1.4),
-    readxl (>= 1.0.0)
+    readxl (>= 1.0.0),
+    stringr (>= 1.2.0)
 Suggests: 
     knitr (>= 1.10),
     rmarkdown (>= 1.5),
