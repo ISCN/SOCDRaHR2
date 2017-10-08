@@ -2,434 +2,393 @@
 #'
 #' ISCN vs 3 (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C2_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C3_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C4_1-1.xlsx
 #'
-#' @param dir string identifying the folder the data is in. Should have a subfolder 'Layers' containing all ISCN_ALL_DATA_LAYER_C[1-4]_1-1.csv files.
-#' @param warmingMsg boolean flag to turn off long runtime warning
-#' @param verbose boolean flag for verbose outputs
-#'
-#' @return a data frame with all data in the correct format
-#' @export
-processData_ISCN3 <- function(dir='repoData/ISCN_3',
-                              warningMsg=TRUE, verbose=FALSE){
+processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
 
-  if(warningMsg) cat('Warning: ISCN3 is a large data set and will take some time...')
-  data1.ls <- processWorksheet_ISCN3(csvFile=
-                                 sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv', dir),
-                               verbose=verbose)
+  library(dplyr)
+  library(tidyr)
 
-  data2.ls <- processWorksheet_ISCN3(csvFile=
-                                 sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C2_1-1.csv', dir),
-                               verbose=verbose)
+  #### Make ISCN Key ####
+  ISCNKey <- bind_rows( ##Sub-Study data
+    list(header="ISCN 1-1 (2015-12-10)", var='dataset_name', dataframe='study',
+         class='factor'),
+    list(header="dataset_name_sub", var='dataset_name_sub', dataframe='study',
+         class='factor'),
+    list(header="dataset_name_soc", var='dataset_name_soc',
+         class='factor'),
+    ##Field data
+    list(header="lat (dec. deg)", var='lat', dataframe='field', unit='dec. deg',
+         class='numeric'),
+    list(header="long (dec. deg)", var='lon', dataframe='field', unit='dec. deg',
+         class='numeric'),
+    list(header="datum (datum)", var='datum', dataframe='field', controlVocab=TRUE,
+         class='factor'),
+    list(header="state (state_province)", var='state', dataframe='field',
+         class='factor'),
+    list(header="country (country)", var='country', dataframe='field',
+         class='factor'),
+    list(header="site_name", var='site_name', dataframe='field',
+         class='character'),
+    list(header="observation_date (YYYY-MM-DD)", var='observation_date',
+         dataframe='field', unit = 'YYYY-MM-DD',
+         class='character'),
+    list(header="profile_name", var='profile_name', dataframe='field',
+         class='character'),
+    list(header="layer_name", var='layer_name', dataframe='field',
+         class='character'),
+    list(header="layer_top (cm)", var='layer_top', dataframe='field', unit='cm',
+         class='numeric'),
+    list(header="layer_bot (cm)", var='layer_bottom', dataframe='field', unit='cm',
+         class='numeric'),
+    list(header="hzn_desgn_other", var='hzn_desgn_other', dataframe='field',
+         class='character'),
+    list(header="hzn", var='hzn', dataframe='field',
+         class='factor'),
+    list(header="hzn_desgn", var='hzn_desgn', dataframe='field',
+         class='factor'),
+    list(header="layer_note", var='layer_note', dataframe='field',
+         class='character'),
+    list(header="color", var='color', dataframe='field',
+         class='factor'),
+    list(header="vegclass_local", var='vegclass_local', dataframe='field',
+         class='character'),
+    list(header="soil_taxon", var='soil_taxon', dataframe='field',
+         class='factor'),
+    list(header="soil_series", var='soil_series', dataframe='field',
+         class='character'),
+    ##measurements
+    #### Bulk density
+    list(header="bd_method", var='(bd_sample)|(bd_tot)|(bd_other)|(bd_whole)',
+         type='method', dataframe='sample', class='character'),
+    list(header="bd_samp (g cm-3)", var='bd_sample', type='value', unit='g cm-3',
+         dataframe='sample', method='(bd_method)|(bdNRCS_prep_code)', class='numeric'),
+    list(header="bd_tot (g cm-3)", var='bd_tot', type='value', unit='g cm-3',
+         dataframe='sample', method='(bd_method)|(bdNRCS_prep_code)', class='numeric'),
+    list(header="bd_whole (g cm-3)", var='bd_whole', type='value', unit='g cm-3',
+         dataframe='sample', method='(bd_method)|(bdNRCS_prep_code)', class='numeric'),
+    list(header="bd_other (g cm-3)", var='bd_other', type='value', unit='g cm=3',
+         dataframe='sample', method='(bd_method)|(bdNRCS_prep_code)', class='numeric'),
+    list(header="bdNRCS_prep_code", var='(bd_sample)|(bd_tot)|(bd_other)|(bd_whole)',
+         type='method', dataframe='sample', class='factor'),
+    #### Carbon and Nitrogen
+    list(header="cNRCS_prep_code", var='c_tot', type='method', class='factor'), ##TODO
+    list(header="c_method", var='c_tot', type='method', dataframe='sample',
+         class='character'),
+    list(header="c_tot (percent)", var='c_tot', type='value', unit='percent',
+         dataframe='sample', method='(c_method)|(cNRCS_prep_code)', class='numeric'),
+    list(header="oc (percent)", var='oc', type='value', unit='percent', dataframe='sample',
+         class='numeric'),
+    list(header="loi (percent)", var='loi', type='value', unit='percent',
+         dataframe='sample', class='numeric'),
+    list(header="n_tot (percent)", var='n_tot', type='value', unit ='percent', dataframe='sample', class='numeric'),
+    list(header="c_to_n (mass ratio)", var='c_to_n', type='value', unit='mass ratio', dataframe='sample', class='numeric'),
+    list(header="soc (g cm-2)", var='soc', type='value', unit='g cm-2', dataframe='sample',
+         method='(soc_carbon_flag)|(soc_method)', class='numeric'),
+    list(header="soc_carbon_flag", var='soc', type='method', dataframe='sample',
+         class='factor'),
+    list(header="soc_method", var='soc', type='method', dataframe='sample',
+         class='character'),
+    ###pH
+    list(header="ph_method", var='(ph_cacl)|(ph_h2o)|(ph_other)', type='method',
+         dataframe='sample', class='character'),
+    list(header="ph_cacl", var='ph_cacl', type='value', dataframe='sample',
+         method='ph_method', class='numeric'),
+    list(header="ph_h2o", var='ph_h2o', type='value', dataframe='sample',
+         method='ph_method', class='numeric'),
+    list(header="ph_other", var='ph_other', type='value', dataframe='sample',
+         method='ph_method', class='numeric'),
+    list(header="caco3 (percent)", var='caco3', type='value', dataframe='sample',
+         class='numeric'),
+    ###Texture
+    list(header="sand_tot_psa (percent)", var='sand_tot_psa', type='value', unit='percent',
+         dataframe='sample', class='numeric'),
+    list(header="silt_tot_psa (percent)", var='silt_tot_psa', type='value', unit='percent',
+         dataframe='sample', class='numeric'),
+    list(header="clay_tot_psa (percent)", var='clay_tot_psa', type='value', unit='percent',
+         dataframe='sample', class='numeric'),
+    list(header="wpg2_method", var='wpg2', type='method', dataframe='sample',
+         class='character'),
+    list(header="wpg2 (percent)", var='wpg2', type='value', unit='percent',
+         dataframe='sample', method='wpg2_method', class='numeric'),
+    ###Metals
+    #### al fe mn
+    list(header="cat_exch (cmol H+ kg-1)", var='cat_exch', type='value',
+         unit='cmol H+ kg-1', dataframe='sample', class='numeric'),
+    list(header="al_dith (specified by al_fe_units)", var='al_dith', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="al_ox (specified by al_fe_units)", var='al_ox', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="al_other (specified by al_fe_units)", var='al_other', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="fe_dith (specified by al_fe_units)", var='fe_dith', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="fe_ox (specified by al_fe_units)", var='fe_ox', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="fe_other (specified by al_fe_units)", var='fe_other', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="mn_dith (specified by al_fe_units)", var='mn_dith', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="mn_ox (specified by al_fe_units)", var='mn_ox', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="mn_other (specified by al_fe_units)", var='mn_other', type='value',
+         unit='al_fe_units', method='al_fe_method', dataframe='sample', class='numeric'),
+    list(header="al_fe_units (extract_units)", var='(^al_)|(^fe_)|(^mn_)', type='unit',
+         dataframe='sample', class='factor'),
+    list(header="al_fe_method",var='(^al_)|(^fe_)|(^mn_)', type='method',
+         dataframe='sample', class='character'),
+    #### bc
+    list(header="ca_al (specified by bc_units)", var='ca_al', type='value',
+         unit='bc_units', method='bc_method', dataframe='sample', class='numeric'),
+    list(header="ca_ext (specified by bc_units)", var='ca_ext', type='value',
+         unit='bc_units',  method='bc_method', dataframe='sample', class='numeric'),
+    list(header="k_ext (specified by bc_units)", var='k_ext', type='value',
+         unit='bc_units',  method='bc_method', dataframe='sample', class='numeric'),
+    list(header="mg_ext (specified by bc_units)", var='mg_ext', type='value',
+         unit='bc_units',  method='bc_method', dataframe='sample', class='numeric'),
+    list(header="na_ext (specified by bc_units)", var='na_ext', type='value',
+         unit='bc_units',  method='bc_method', dataframe='sample', class='numeric'),
+    list(header="bc_units (extract_units)", var='(^ca_)|(^k_)|(^mg_)|(^na_)', type='unit',
+         dataframe='sample', class='factor'),
+    list(header="bc_method", var= '(^ca_)|(^k_)|(^mg_)|(^na_)', type='method',
+         dataframe='sample', class='character'),
+    #### cec_h
+    list(header = "base_sum (specified by cec_h_units)", var='base_sum',
+         unit='cec_h_units', type='value', dataframe='sample', class='numeric'),
+    list(header = "cec_sum (specified by cec_h_units)", var='cec_sum',
+         unit='cec_h_units', type='value', dataframe='sample', class='numeric'),
+    list(header = "ecec (specified by cec_h_units)", var='ecec',
+         unit='cec_h_units', type='value', dataframe='sample', class='numeric'),
+    list(header="cec_h_units (extract_units)", var='(base_sum)|(cec_sum)|(ecec)',
+         type='unit', dataframe='sample', class='numeric'),
+    list(header="bs (percent)", var='bs', type='value', unit='percent', dataframe='sample',
+         class='numeric'),
+    list(header="bs_sum (percent)", var='bs_sum', type='value', unit='percent',
+         dataframe='sample', class='numeric'),
+    #### metal_ext
+    list(header="h_ext (specified by metal_ext_units)", var='h_ext',
+         type='value', unit='metal_ext_units', dataframe='sample',
+         method="metal_ext_method", class='numeric'),
+    list(header="zn_ext (specified by metal_ext_units)", var='zn_ext',
+         type='value', unit='metal_ext_units', dataframe='sample',
+         method="metal_ext_method", class='numeric'),
+    list(header="metal_ext_units (extract_units)", var='(h_ext)|(zn_ext)',
+         type='unit', dataframe='sample', class='factor'),
+    list(header="metal_ext_method",  var='(h_ext)|(zn_ext)',
+         type='method', dataframe='sample', class='character'),
+    ###P
+    list(header="p_bray (specified by p_units)", var='p_bray',
+         type='value', unit='p_units', method='p_method', dataframe='sample',
+         class='numeric'),
+    list(header="p_ox (specified by p_units)", var='p_ox',
+         type='value', unit='p_units', method='p_method', dataframe='sample',
+         class='numeric'),
+    list(header="p_meh (specified by p_units)", var='p_meh',
+         type='value', unit='p_units', method='p_method', dataframe='sample',
+         class='numeric'),
+    list(header="p_other (specified by p_units)", var='p_other',
+         type='value', unit='p_units', method='p_method', dataframe='sample',
+         class='numeric'),
+    list(header="p_units (extract_units)", var='^p_',
+         type='unit', dataframe='sample', class='factor'),
+    list(header="p_method", var='^p_',
+         type='method', dataframe='sample', class='character'),
+    ###Roots
+    list(header="root_quant_size", var='root_quant_size', class='character'), ##TODO
+    list(header="root_weight (g)", var='root_weight', type='value',
+         unit='g', dataframe='sample', class='numeric'),
+    ###isotopes
+    list(header="15n (‰)", var='15n', type='value', unit='permille', dataframe='sample',
+         class='numeric'),
+    list(header="13c (‰)", var='13c', type='value', unit='permille', dataframe='sample',
+         class='numeric'),
+    list(header="14c (‰)", var='14c', type='value', unit='permille', dataframe='sample',
+         class='numeric'),
+    list(header="14c_sigma (‰)", var='14c', type='sigma', unit='permille',
+         dataframe='sample', class='numeric'),
+    list(header="14c_age (BP)", var='14c_age', type='value', unit='BP', dataframe='sample',
+         class='numeric'),
+    list(header="14c_age_sigma (BP)", var='14c_age', type='sigma', unit='BP',
+         dataframe='sample', class='numeric'),
+    list(header='fraction_modern', var='fraction_modern', class='numeric'),
+    list(header="fraction_modern_sigma", var='fraction_modern', type='sigma',
+         class='numeric'),
+    ###texture
+    list(header="textureClass", var='textureClass', dataframe='field', class='factor'),
+    list(header="locator_parent_alias", var='locator_parent_alias', dataframe='field',
+         class='character'))
 
-  data3.ls <- processWorksheet_ISCN3(csvFile=
-                                 sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C3_1-1.csv', dir),
-                               verbose=verbose)
+  ##Be very careful changing any of this since it was coded by hand, the permill ascii
+  ##... is throwing off some of the dplyr functions
+  ISCNKey <- ISCNKey %>%
+    mutate(colIndex = 1:nrow(ISCNKey),
+           #Create a safe header name
+           headerName = if_else(grepl('^\\d', header), sprintf('X%s',#put x's on digits
+                                                               gsub('_+$', '',
+                                                                    gsub('\\W', '_',
+                                                                         header))),
+                                gsub('_+$', '', gsub('\\W', '_', header))))
+  #replace non alnum w/ _
+  defaultDatasetName <- as.character(ISCNKey[1, 'header'])
+  ISCNKey[1, 'headerName'] <- 'dataset_name'
 
-  data4.ls <- processWorksheet_ISCN3(csvFile=
-                                 sprintf('%s/Layers/ISCN_ALL_DATA_LAYER_C4_1-1.csv', dir),
-                               verbose=verbose)
-  #merge easy========
-  study.df <- plyr::rename(data1.ls$study, c('V1'='studyID'))
-  fieldTreatment.df <- data1.ls$fieldTreatment
-  labTreatment.df <- data1.ls$labTreatment
+  ###Collapse variables, methods and units ###
+  SMU.df <- ISCNKey %>%
+    filter(dataframe == 'sample' & type == 'value') %>%
+    select(header, headerName, var, method, unit) %>%
+    group_by(var) %>%
+    mutate(methodCount = length(unlist(strsplit(method, '|', fixed=TRUE)))) %>%
+    mutate(method.headerName.1 = gsub('\\(|\\)', '',
+                                      if_else(methodCount == 1, method,
+                                              unlist(strsplit(method, '|',
+                                                              fixed=TRUE))[1])),
+           method.headerName.2 = gsub('\\(|\\)', '',
+                                      if_else(methodCount == 1, as.character(NA),
+                                              unlist(strsplit(method, '|',
+                                                              fixed=TRUE))[2])),
+           unit.headerName = if_else(sum(grepl(sprintf('^%s', unit),
+                                               ISCNKey$headerName)) == 0,
+                                     as.character(NA),
+                                     paste0('', ISCNKey$headerName[grepl(
+                                       sprintf('^%s', unit),
+                                       ISCNKey$headerName)])))
+  #Hack: no idea why we need paste on unit.headerNaem.
+  #...Was throwing a length ==0 error otherwise
 
-  lab.df <- unique(plyr::rbind.fill(plyr::rbind.fill(plyr::rbind.fill(data1.ls$lab,data2.ls$lab),
-                                         data3.ls$lab), data4.ls$lab))
+  simpleUnit.df <- SMU.df %>%
+    filter(is.na(unit.headerName)) %>%
+    select(var, unit) %>%
+    rename(simpleUnit=unit)
 
-  field.df <- unique(plyr::rbind.fill(plyr::rbind.fill(plyr::rbind.fill(data1.ls$field,data2.ls$field),
-                                           data3.ls$field), data4.ls$field))
+
+  #### files to read in ####
+  if(verbose) print('Get file names')
+  files.arr <- list.files(path='../soils-long-tail-recovery/repoData/ISCN_3/Layers/',
+                          pattern='\\.csv$', full.names=TRUE)
+
+  for(fileNum in 1:length(files.arr)){
+    if(verbose) print(paste('Reading', files.arr[fileNum]))
+
+    #### read in files ####
+
+    test <- read.csv(file=files.arr[fileNum], stringsAsFactors=FALSE)
+    test[,ISCNKey$colIndex[ISCNKey$class == 'numeric']] <-
+      lapply(test[,ISCNKey$colIndex[ISCNKey$class == 'numeric']], as.numeric)
+    test[,ISCNKey$colIndex[ISCNKey$class == 'factor']] <- ##Note cast the factors for nice merging
+      lapply(test[,ISCNKey$colIndex[ISCNKey$class == 'factor']], as.character)
+    test[,ISCNKey$colIndex[ISCNKey$class == 'character']] <-
+      lapply(test[,ISCNKey$colIndex[ISCNKey$class == 'character']], as.character)
+    names(test) <- ISCNKey$headerName[ISCNKey$colIndex]
+
+    if(verbose) print('Constructing IDs')
+    ##fill with pervious values and add keys
+    test <- test %>%
+      fill_(filter(ISCNKey, dataframe == 'study')$headerName) %>%
+      mutate(dataset_name=if_else(is.na(dataset_name), defaultDatasetName,
+                                  as.character(dataset_name)),
+             studyID=sprintf('%s:%s', dataset_name, dataset_name_sub),
+             fieldID=sprintf('%s:%s:%s', site_name, profile_name, layer_name),
+             sampleID = sprintf('ISCN3-%d-%.6d', fileNum, 1:length(dataset_name)))
+
+    if(verbose) print('Create study dataframe')
+    ####Create study dataframe ####
+    study.df <- test[c('studyID',
+                       filter(filter(ISCNKey, dataframe == 'study'))$headerName)] %>%
+      unique
+
+    if(verbose) print('Create field dataframe')
+    ####Create field dataframe ####
+    field.df <- test[,c('studyID', 'fieldID',
+                        filter(ISCNKey, dataframe == 'field')$headerName)] %>%
+      unique
+
+    if(verbose) print('Create methods dataframe')
+    method1.df <- test[,c('studyID', 'fieldID', 'sampleID',
+                          filter(ISCNKey, dataframe == 'sample' &
+                                   type=='method')$headerName)] %>%
+      gather(headerName, methodStr, -studyID, -fieldID, -sampleID, na.rm=TRUE) %>%
+      filter(grepl('\\S', methodStr)) %>%
+      rename(method.headerName.1=headerName) %>%
+      inner_join(select(SMU.df, var, method.headerName.1), by='method.headerName.1') %>%
+      rename(methodStr.1=methodStr)
+
+    method2.df <- test[,c('studyID', 'fieldID', 'sampleID',
+                          filter(ISCNKey, dataframe == 'sample' &
+                                   type=='method')$headerName)] %>%
+      gather(headerName, methodStr, -studyID, -fieldID, -sampleID, na.rm=TRUE) %>%
+      filter(grepl('\\S', methodStr)) %>%
+      rename(method.headerName.2=headerName) %>%
+      inner_join(select(SMU.df, var, method.headerName.2), by='method.headerName.2') %>%
+      rename(methodStr.2=methodStr)
+
+    method.df <- method1.df %>%
+      full_join(method2.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
+      mutate(method = if_else(is.na(method.headerName.2),
+                              paste(method.headerName.1, ':', methodStr.1),
+                              paste(method.headerName.1, ':', methodStr.1, ';',
+                                    method.headerName.2, ':', methodStr.2))) %>%
+      select(contains('ID'), var, method)
 
 
-  field.df <- unique(field.df)
-  field.df <- plyr::rename(field.df, c('layer_bot' ='layer_bottom'))
-  #mergeMeasures====
-  measureTemp.df <-
-    merge(merge(data1.ls$measurement, data2.ls$measurement, by=c('type', 'method'),
-                suffixes=c('.data1', '.data2'), all=TRUE),
-          merge(data3.ls$measurement, data4.ls$measurement, by=c('type', 'method'),
-                suffixes=c('.data3', '.data4'), all=TRUE), all=TRUE)
+    if(verbose) print('Create units dataframes')
+    unit.df <- test[,c('studyID', 'fieldID', 'sampleID',
+                       filter(ISCNKey, dataframe == 'sample' &
+                                type=='unit')$headerName)] %>%
+      gather(headerName, unitStr, -studyID, -fieldID, -sampleID, na.rm=TRUE) %>%
+      filter(grepl('\\S', unitStr)) %>%
+      rename(unit.headerName=headerName) %>%
+      inner_join(select(SMU.df, var, unit.headerName), by='unit.headerName') %>%
+      select(-unit.headerName) %>%
+      rename(unit=unitStr) %>%
+      select(contains('ID'), var, unit)
 
-  measureTemp.df <- plyr::ddply(measureTemp.df, c('type'), function(xx){
-    xx$measurementID <- sprintf('%s_%02d', xx$type, 1:nrow(xx))
-    return(xx)
-  })
-  measurement.df <- measureTemp.df[,c('type', 'method', 'measurementID')]
+    if(verbose) print('Create sigma dataframes')
+    sigma.df <- test[,c('studyID', 'fieldID', 'sampleID',
+                        filter(ISCNKey, dataframe == 'sample' &
+                                 type=='sigma')$headerName)] %>%
+      unique %>%
+      gather(headerName, sigma, -studyID, -fieldID, -sampleID, na.rm=TRUE) %>%
+      left_join(ISCNKey[,c('headerName', 'var')], by='headerName') %>%
+      select(-headerName)
 
-  #Construct samples========
-  sample.df <- plyr::ddply(data1.ls$samples, 'measurementID', function(xx){
-    #cat('replacing [', xx$measurementID[1])
-    xx$measurementID <- subset(measureTemp.df,
-                               xx$measurementID[1] == measurementID.data1)$measurementID
-    #cat('] with [',xx$measurementID[1],']\n')
-    return(xx)
-  })
+    if(verbose) print('Create full sample dataframe')
+    sample.df <- test[,c('studyID', 'fieldID', 'sampleID',
+                         filter(ISCNKey, dataframe == 'sample' &
+                                  type=='value')$headerName)] %>%
+      unique %>%
+      gather(headerName, value, -studyID, -fieldID, -sampleID, na.rm=TRUE) %>%
+      left_join(ISCNKey[,c('headerName', 'var')], by='headerName') %>%
+      select(-headerName) %>%
+      left_join(method.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
+      left_join(unit.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
+      left_join(sigma.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
+      left_join(simpleUnit.df, by='var') %>%
+      mutate(unit = if_else(is.na(unit), simpleUnit, unit)) %>%
+      select(-simpleUnit)
 
-  sample.df <- plyr::rbind.fill(sample.df,
-                          plyr::ddply(data2.ls$samples, 'measurementID', function(xx){
-                            #cat('replacing [', xx$measurementID[1])
-                            xx$measurementID <- subset(measureTemp.df,
-                                                       xx$measurementID[1] ==
-                                                         measurementID.data2)$measurementID
-                            #cat('] with [',xx$measurementID[1],']\n')
-                            return(xx)
-                          }))
-
-  sample.df <- plyr::rbind.fill(sample.df,
-                          plyr::ddply(data3.ls$samples, 'measurementID', function(xx){
-                            #cat('replacing [', xx$measurementID[1])
-                            xx$measurementID <- subset(measureTemp.df,
-                                                       xx$measurementID[1] ==
-                                                         measurementID.data3)$measurementID
-                            #cat('] with [',xx$measurementID[1],']\n')
-                            return(xx)
-                          }))
-
-  sample.df <- plyr::rbind.fill(sample.df,
-                          plyr::ddply(data4.ls$samples, 'measurementID', function(xx){
-                            #cat('replacing [', xx$measurementID[1])
-                            xx$measurementID <- subset(measureTemp.df,
-                                                       xx$measurementID[1] == measurementID.data4)$measurementID
-                            #cat('] with [',xx$measurementID[1],']\n')
-                            return(xx)
-                          }))
-  sample.df$fieldID <- as.factor(sample.df$fieldID)
-  sample.df$measurementID <- as.factor(sample.df$measurementID)
-  sample.df$unit <- as.factor(sample.df$unit)
-
-  if(warningMsg) cat(' done!\n')
-  return(list(study=study.df, labTreatment=labTreatment.df, fieldTreatment=fieldTreatment.df,
-              field=field.df, measurement=measurement.df, sample=sample.df))
-}
-
-#' Process each ISCN worksheet
-#'
-#' @param csvFile string identifying the CSV file
-#' @param verbose boolean if you want LOTS of messages
-#'
-#' @return a list of data frames
-processWorksheet_ISCN3 <- function(csvFile='Layers/ISCN_ALL_DATA_LAYER_C1_1-1.csv',
-                             verbose=TRUE){
-  ##Out of memory erros
-  #header <- read.xlsx('Layers/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', sheetIndex=1, startRow=1, endRow=2)
-  #data.df <- read.xlsx2('Layers/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', sheetIndex=1)
-
-  #Load file========
-  if(verbose) cat('loading csv:', csvFile, '\n')
-  data.df <- utils::read.csv(csvFile, stringsAsFactors=FALSE)
-  if(verbose) cat('inital size: ', format(utils::object.size(data.df), units='Mb'),
-                  'at', nrow(data.df), 'rows\n')
-
-  #trim replicates
-  #data.df <- subset(data.df, !grepl('ISCN SOC stock', dataset_name_soc))
-  #if(verbose) cat('trim ISCN SOC stocks: ', format(utils::object.size(data.df), units='Mb'), '\n')
-
-  data.df <- unique(data.df)
-  if(verbose) cat('trim non-unique: ', format(utils::object.size(data.df), units='Mb'),
-                  'at', nrow(data.df), 'rows\n')
-
-  #Process header column =============
-  ##process the header for units
-  if(verbose) cat('setting up header\n')
-  header <- utils::read.csv(csvFile, nrows=1, header=FALSE)
-
-  header.df <- data.frame(header=unlist(header),
-                          measurement=gsub(' \\(.*\\)', '', unlist(header)),
-                          unit=gsub('\\)', '', gsub('.* \\(', '', unlist(header))),
-                          stringsAsFactors=FALSE)
-  header.df$unit[header.df$measurement == header.df$unit] <- NA
-  header.df$unit[grepl('ph_(cacl|h2o|other)', header.df$measurement)] <- 'unitless'
-  header.df$unit[grepl('root_quant_size', header.df$measurement)] <- 'unitless'
-  header.df$unit[92:95] <- 'unitless'
-  header.df$index <- 1:nrow(header.df)
-
-  #Set up study, lab, and treatment ===========
-  ##Set up the easy data frame
-  if(verbose) cat('reading study/lab/treatment information\n')
-  study.df <- data.frame(studyID = header[1], doi='10.17040/ISCN/1305039',
-                         permissions='acknowledgement')
-
-  lab.df <- data.frame(labID=unique(data.df[,2])) #ignore dataset_name_SOC, back out SOC later
-
-  fieldTreatment.df <- data.frame(fieldTreatmentID=NA) #no field treatment
-  labTreatment.df <- data.frame(labTreatmentID=NA) #no lab treatment
-
-  #set up field IDs============
-  if(verbose) cat('setting up field ID\n')
-  field.df <- unique(data.df[,c(4:22, c(84, 94, 95))])
-  names(field.df) <- as.character(header.df$measurement[c(4:22, c(84, 94, 95))])
-  field.df$fieldID <- field.df$layer_name
-  field.df$layer_top <- as.numeric(as.character(field.df$layer_top))
-  field.df$layer_units <- 'cm'
-  field.df[,(lapply(field.df, class) == 'character')] <- lapply(field.df[,(lapply(field.df, class) == 'character')], as.factor)
-
-  #field.df <- field.df[!grepl('^\\s*$',field.df$value),]
-
-  ####Pull data subsets, sampleID = fieldID = layer_name [12]
-  if(verbose) cat('pulling data\n')
-  #BulkDensity===================
-  if(verbose) cat('Bulk density \n')
-  ##Bulk density columns 23:28
-  #header.df[c(12, 23:28),]
-  sampleTemp <- data.df[, c(12, 23:28)]
-  names(sampleTemp) <- header.df$measurement[c(12,23:28)]
-  names(sampleTemp)[1] <- 'fieldID'
-
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[c(23, 28)],
-                             sampleTemp=sampleTemp,
-                             unit.df=header.df[c(24:27), c('measurement', 'unit')],
-                             verbose=FALSE)
-
-  #merge results
-  measurement.df <- temp$measurement
-  sample.df <- temp$sample
-
-  #CARBON=====================
-  if(verbose) cat('Carbon \n')
-  ##Carbon, columns 29-33
-  #header.df[c(12, 29:33),]
-  sampleTemp <- data.df[, c(12, 29:33)]
-  names(sampleTemp) <- header.df$measurement[c(12,29:33)]
-  names(sampleTemp)[1] <- 'fieldID'
-
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[29:30],
-                             sampleTemp=sampleTemp,
-                             unit.df=header.df[c(31:33), c('measurement', 'unit')])
-  #no need for the finer type splits
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  #Nitrogen=============================
-  if(verbose) cat('Nitrogen \n')
-  ##Nitrogen, columns 34-35
-  #header.df[c(12, 34:35),]
-  sampleTemp <- data.df[, c(12, 34:35)]
-  names(sampleTemp) <- header.df$measurement[c(12,34:35)]
-  names(sampleTemp)[1] <- 'fieldID'
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
-                             sampleTemp=sampleTemp,
-                             unit.df=header.df[c(34:35), c('measurement', 'unit')])
-  #no need for the finner type splits
-
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  #SOC==================
-  if(verbose) cat('SOC\n')
-  ##SOC, columns 36-38
-  #header.df[c(12, 36:38),]
-  sampleTemp <- data.df[, c(12, 36:38)]
-  names(sampleTemp) <- header.df$measurement[c(12,36:38)]
-  names(sampleTemp)[1] <- 'fieldID'
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[c(37:38)],
-                             sampleTemp=sampleTemp,
-                             unit.df=header.df[c(36), c('measurement', 'unit')])
-  ##no need for finer type splits
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  ##pH, columns 39-42
-  if(verbose) cat('pH\n')
-  #header.df[c(12, 39:42),]
-  sampleTemp <- data.df[, c(12, 39:42)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(39:42)])
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[c(39)],
-                             sampleTemp=sampleTemp,
-                             unit.df=header.df[c(40:42), c('measurement', 'unit')])
-
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  ##CaCO3 + Texture, column 43:46, 49
-  if(verbose) cat('CaCO3, texture\n')
-  #header.df[c(12, 43:46, 49),]
-  sampleTemp <- data.df[, c(12, 43:46, 49)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(43:46, 49)])
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
-                             sampleTemp=sampleTemp,
-                             unit.df=header.df[c(43:46, 49), c('measurement', 'unit')])
-  #no need for finner splits
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  ##WPG2, columns 47 48
-  if(verbose) cat('wpg2\n')
-  #header.df[c(12, 47, 48),]
-  sampleTemp <- data.df[, c(12, 47, 48)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(47:48)])
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[47],
-                             sampleTemp=sampleTemp,
-                             unit.df=header.df[c(47:48), c('measurement', 'unit')])
-  ##No need for finer splits
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  ##Al, columns 50, 52, 59, 60
-  ##Fe, columns 53, 55, 59, 60
-  ##Mn, columns 56, 58, 59 ??60
-  #header.df[c(12, 50:60),]
-  if(verbose) cat('Al Fe Mn\n')
-  sampleTemp <- data.df[, c(12, 50:60)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(50:60)])
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[60],
-                             unitName=header.df$measurement[59],
-                             sampleTemp=sampleTemp)
-
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  #BC===============
-  if(verbose) cat('Bc\n')
-  ##BC, columns 61:67
-  #header.df[c(12, 61:67),]
-  sampleTemp <- data.df[, c(12, 61:67)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(61:67)])
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[67],
-                             unitName=header.df$measurement[66],
-                             sampleTemp=sampleTemp)
-
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  #CEC  ===========
-  if(verbose) cat('CEC\n')
-  ##CEC_h, columns 68:71
-  #header.df[c(12, 68:71),]
-  sampleTemp <- data.df[, c(12, 68:71)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(68:71)])
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
-                             unitName=header.df$measurement[71],
-                             sampleTemp=sampleTemp)
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  #BS + CAT exchange=======
-  if(verbose) cat('BS, cat exchange \n')
-  ##bs, columns 72:73
-  sampleTemp <- data.df[, c(12, 72:73)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(72:73)])
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
-                             unitName=NULL,
-                             unit.df=header.df[c(72:73), c('measurement', 'unit')],
-                             sampleTemp=sampleTemp)
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  #Metal==========
-  if(verbose) cat('metals \n')
-  ##metal_ext, columns 74:77
-  sampleTemp <- data.df[, c(12, 74:77)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(74:77)])
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[77],
-                             unitName=header.df$measurement[76],
-                             unit.df=NULL,
-                             sampleTemp=sampleTemp)
-
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  #P ============
-  if(verbose) cat('P\n')
-  ##P, columns 78:83
-  sampleTemp <- data.df[, c(12, 78:83)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(78:83)])
-  temp <- processMethodBlock_ISCN3(methodNames=header.df$measurement[83],
-                             unitName=header.df$measurement[82],
-                             unit.df=NULL,
-                             sampleTemp=sampleTemp)
-
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  #Roots + Isotope + texture + locator
-  ##Root, column 84:85 84is TEXT move to field description
-  ##Isotope, 86:93
-  ##textureClass, 94 TEXT move to field description
-  ##locator, 95 TEXT move to field description
-  if(verbose) cat('roots isotope texture locator\n')
-  sampleTemp <- data.df[, c(12, 85:93)]
-  names(sampleTemp) <- c('fieldID', header.df$measurement[c(85:93)])
-  temp <- processMethodBlock_ISCN3(methodNames=NULL,
-                             unitName=NULL,
-                             unit.df=header.df[c(85:93),],
-                             sampleTemp=sampleTemp)
-
-  #merge results
-  measurement.df <- plyr::rbind.fill(measurement.df, temp$measurement)
-  sample.df <- plyr::rbind.fill(sample.df, temp$sample)
-
-  if(verbose) cat('done with processWorksheet_ISCN3\n')
-  return(list(study=study.df, field=field.df, lab=lab.df,
-              fieldTreatment=fieldTreatment.df, labTreatment=labTreatment.df,
-              measurement=measurement.df, samples=sample.df))
-}
-
-#' Process a methods block
-#'
-#' Force the samples to discard repeats
-#'
-#' TODO Update this to use convert_MMU_Block
-#'
-#' @param methodNames strings identifying the metods name for the block
-#' @param unitName strings identifying the unit name for the block
-#' @param sampleTemp stirngs identifying the samples for the block
-#' @param unit.df data frame for the unit for the block keyed on the measure
-#' @param verbose boolean if you want lots of error messages
-#'
-#' @return a list of data frames with the sample data and measurement information
-processMethodBlock_ISCN3 <- function(methodNames=NULL, unitName=NULL,
-                               sampleTemp, unit.df=NULL, verbose=FALSE){
-
-  ##Merge methods
-  sampleTemp$method <- ''
-  for(methodStr in methodNames){
-    patternStr <- sprintf('%%s %s: %%s', methodStr)
-    emptyStr <- sprintf('\\s+%s:\\s+$', methodStr)
-    sampleTemp$method <- sprintf(patternStr, sampleTemp$method, sampleTemp[,methodStr])
-    sampleTemp$method <- gsub(emptyStr, '', sampleTemp$method)
-    sampleTemp$method <- gsub('^\\s+', '', sampleTemp$method)
-    sampleTemp[,methodStr] <- NULL
+    if(fileNum == 1){
+      if(verbose) print('Create inital answer list')
+      ans <- list(sample=sample.df, field=field.df, study=study.df, ISCNKey)
+    }else{
+      if(verbose) print('Append to answer list')
+      ans <- list(sample=bind_rows(ans$sample, sample.df),
+                  field =bind_rows(ans$field, field.df),
+                  study =bind_rows(ans$study, study.df),
+                  ISCNKey)
+    }
   }
-  if(verbose) cat('flag1')
-  #reshape2::melt values
-  sampleTemp <- unique(reshape2::melt(sampleTemp, id.vars=c(c('fieldID', 'method'), unitName),
-                            variable.name='measurement',
-                            na.rm=TRUE, forceNumericValue=TRUE))
-  if(verbose) cat('flag2')
-  if(!is.null(unitName)){
-    names(sampleTemp)[3] <- 'unit'
-  }else if(is.null(unitName) & !is.null(unit.df)){
-    #units
-    sampleTemp <- merge(sampleTemp, unit.df[,c('measurement', 'unit')])
-  }else{
-    warning('units not specified')
-  }
-  if(verbose) cat('flag3')
-  #issolate unique measurements
-  measurementTemp <- unique(sampleTemp[c('measurement','method')])
-  measurementTemp$measurementID <- sprintf('%s_%02d', measurementTemp$measurement,
-                                           1:nrow(measurementTemp))
-  if(verbose) cat('flag4')
-  sampleTemp <- merge(sampleTemp, measurementTemp)[, c('fieldID', 'measurementID',
-                                                       'value', 'unit')]
 
-  #rename stuff
-  names(measurementTemp)[1] <- 'type'
 
-  sampleTemp$value <- as.numeric(sampleTemp$value)
-  if(verbose) cat('flag5')
-  sampleTemp <- sampleTemp[sampleTemp$value != -999, ]
-  if(verbose) cat('flag6')
-  return(list(sample=sampleTemp, measurement=measurementTemp))
+  ans$sample[,c('studyID', 'fieldID', 'sampleID', 'var', 'unit')] <-
+    lapply(ans$sample[,c('studyID', 'fieldID', 'sampleID', 'var', 'unit')], as.factor)
 
+  ans$field[,c('studyID', filter(ISCNKey, dataframe=='field' &
+                                   class == 'factor')$headerName)] <-
+    lapply(ans$field[,c('studyID', filter(ISCNKey, dataframe=='field' &
+                                            class == 'factor')$headerName)], as.factor)
+
+  ans$study[,filter(ISCNKey, dataframe=='study' &
+                      class == 'factor')$headerName] <-
+    lapply(ans$study[,filter(ISCNKey, dataframe=='study' &
+                               class == 'factor')$headerName], as.factor)
+
+  return(ans)
 }
