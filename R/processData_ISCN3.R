@@ -13,7 +13,7 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
          class='factor'),
     list(header="dataset_name_sub", var='dataset_name_sub', dataframe='study',
          class='factor'),
-    list(header="dataset_name_soc", var='dataset_name_soc',
+    list(header="dataset_name_soc", var='dataset_name_soc', ##include in soc methods
          class='factor'),
     ##Field data
     list(header="lat (dec. deg)", var='lat', dataframe='field', unit='dec. deg',
@@ -70,7 +70,8 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
     list(header="bdNRCS_prep_code", var='(bd_sample)|(bd_tot)|(bd_other)|(bd_whole)',
          type='method', dataframe='sample', class='factor'),
     #### Carbon and Nitrogen
-    list(header="cNRCS_prep_code", var='c_tot', type='method', class='factor'), ##TODO
+    list(header="cNRCS_prep_code", var='c_tot', type='method', dataframe='sample',
+         class='factor'),
     list(header="c_method", var='c_tot', type='method', dataframe='sample',
          class='character'),
     list(header="c_tot (percent)", var='c_tot', type='value', unit='percent',
@@ -81,6 +82,7 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
          dataframe='sample', class='numeric'),
     list(header="n_tot (percent)", var='n_tot', type='value', unit ='percent', dataframe='sample', class='numeric'),
     list(header="c_to_n (mass ratio)", var='c_to_n', type='value', unit='mass ratio', dataframe='sample', class='numeric'),
+    ##SOC methods are uniquely constructed to include dataset_name_soc, bd, and oc methods
     list(header="soc (g cm-2)", var='soc', type='value', unit='g cm-2', dataframe='sample',
          method='(soc_carbon_flag)|(soc_method)', class='numeric'),
     list(header="soc_carbon_flag", var='soc', type='method', dataframe='sample',
@@ -260,9 +262,8 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
 
 
   #### files to read in ####
-  if(verbose) print('Get file names')
-  files.arr <- list.files(path='../soils-long-tail-recovery/repoData/ISCN_3/Layers/',
-                          pattern='\\.csv$', full.names=TRUE)
+  if(verbose) print('Get file names (looking for csv files in dir)')
+  files.arr <- list.files(path=dir, pattern='\\.csv$', full.names=TRUE)
 
   for(fileNum in 1:length(files.arr)){
     if(verbose) print(paste('Reading', files.arr[fileNum]))
@@ -284,9 +285,9 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
       fill_(filter(ISCNKey, dataframe == 'study')$headerName) %>%
       mutate(dataset_name=if_else(is.na(dataset_name), defaultDatasetName,
                                   as.character(dataset_name)),
-             studyID=sprintf('%s:%s', dataset_name, dataset_name_sub),
+             studyID=sprintf('%s:sheet%d:%s', dataset_name, fileNum, dataset_name_sub),
              fieldID=sprintf('%s:%s:%s', site_name, profile_name, layer_name),
-             sampleID = sprintf('ISCN3-%d-%.6d', fileNum, 1:length(dataset_name)))
+             sampleID=sprintf('%d:%.6d', fileNum, 1:nrow(test)))
 
     if(verbose) print('Create study dataframe')
     ####Create study dataframe ####
@@ -349,20 +350,49 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
       left_join(ISCNKey[,c('headerName', 'var')], by='headerName') %>%
       select(-headerName)
 
+
+    if(verbose) print('Create SOC var-value-method dataframe')
+    ##deal with SOC first and append all BD/OC methods so we can reconstruct SOC calcs
+    soc_methods_headers <- c('dataset_name_soc',
+                             filter(ISCNKey, dataframe == 'sample',
+                                  type=='method',
+                                  grepl('(soc)|(bd_)|(^oc$)|(^c_tot$)', var))$headerName)
+    sample_SOC.df <- test[, c('studyID', 'fieldID', 'sampleID',
+                              'dataset_name_sub', soc_methods_headers,
+                     'soc__g_cm_2')] %>%
+      filter(is.finite(soc__g_cm_2)) %>%
+      unique %>%
+      group_by(studyID, fieldID, sampleID, soc__g_cm_2) %>%
+      gather(method, string,
+             dataset_name_soc, bd_method, bdNRCS_prep_code,
+             cNRCS_prep_code, c_method, soc_carbon_flag, soc_method, na.rm=TRUE) %>%
+      filter(method == 'soc_method' | (method != 'soc_method' & grepl('\\S', string))) %>%
+      mutate(method.str = paste0(method, ': ', string)) %>%
+      summarise(method = paste(method.str, collapse=' - ')) %>%
+      mutate(var='soc') %>%
+      rename(value=soc__g_cm_2)
+
     if(verbose) print('Create full sample dataframe')
     sample.df <- test[,c('studyID', 'fieldID', 'sampleID',
                          filter(ISCNKey, dataframe == 'sample' &
-                                  type=='value')$headerName)] %>%
+                                  type=='value' &
+                                  #deal with SOC seperately
+                                  !grepl('^soc$', var))$headerName)] %>%
       unique %>%
       gather(headerName, value, -studyID, -fieldID, -sampleID, na.rm=TRUE) %>%
       left_join(ISCNKey[,c('headerName', 'var')], by='headerName') %>%
       select(-headerName) %>%
       left_join(method.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
+      bind_rows(sample_SOC.df) %>% ##add back in the SOC that had seperate methods above
       left_join(unit.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
       left_join(sigma.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
       left_join(simpleUnit.df, by='var') %>%
       mutate(unit = if_else(is.na(unit), simpleUnit, unit)) %>%
-      select(-simpleUnit)
+      select(-simpleUnit) %>%
+      ### remove sampleID to remove duplicates SOCs We need to wait to remove duplicates
+      ### ...until merge method notes
+      select(-sampleID) %>%
+      unique
 
     if(fileNum == 1){
       if(verbose) print('Create inital answer list')
@@ -377,8 +407,9 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
   }
 
 
-  ans$sample[,c('studyID', 'fieldID', 'sampleID', 'var', 'unit')] <-
-    lapply(ans$sample[,c('studyID', 'fieldID', 'sampleID', 'var', 'unit')], as.factor)
+  ##Cast things as factors
+  ans$sample[,c('studyID', 'fieldID', 'var', 'unit', 'method')] <-
+    lapply(ans$sample[,c('studyID', 'fieldID', 'var', 'unit', 'method')], as.factor)
 
   ans$field[,c('studyID', filter(ISCNKey, dataframe=='field' &
                                    class == 'factor')$headerName)] <-
@@ -389,6 +420,7 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
                       class == 'factor')$headerName] <-
     lapply(ans$study[,filter(ISCNKey, dataframe=='study' &
                                class == 'factor')$headerName], as.factor)
+
 
   return(ans)
 }
