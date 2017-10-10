@@ -413,7 +413,7 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
       ans <- list(sample=bind_rows(ans$sample, sample.df),
                   field =bind_rows(ans$field, field.df),
                   study =bind_rows(ans$study, study.df),
-                  ISCNKey)
+                  key = ISCNKey)
     }
   }
 
