@@ -9,12 +9,11 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
 
   #### Make ISCN Key ####
   ISCNKey <- bind_rows( ##Sub-Study data
-    list(header="ISCN 1-1 (2015-12-10)", var='dataset_name', dataframe='study',
+    list(header="ISCN 1-1 (2015-12-10)", var='dataset_name', dataframe = 'study',
          class='factor'),
     list(header="dataset_name_sub", var='dataset_name_sub', dataframe='study',
          class='factor'),
-    list(header="dataset_name_soc", var='dataset_name_soc', ##include in soc methods
-         class='factor'),
+    list(header="dataset_name_soc", var='dataset_name_soc', class='factor'), ##include in soc methods
     ##Field data
     list(header="lat (dec. deg)", var='lat', dataframe='field', unit='dec. deg',
          class='numeric'),
@@ -26,35 +25,32 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
          class='factor'),
     list(header="country (country)", var='country', dataframe='field',
          class='factor'),
-    list(header="site_name", var='site_name', dataframe='field',
-         class='character'),
+    list(header="site_name", var='site_name', dataframe='field', class='factor'),
     list(header="observation_date (YYYY-MM-DD)", var='observation_date',
          dataframe='field', unit = 'YYYY-MM-DD',
-         class='character'),
-    list(header="profile_name", var='profile_name', dataframe='field',
-         class='character'),
-    list(header="layer_name", var='layer_name', dataframe='field',
-         class='character'),
+         class='factor'),
+    list(header="profile_name", var='profile_name', dataframe='field', class='factor'),
+    list(header="layer_name", var='layer_name', dataframe='field', class='factor'),
     list(header="layer_top (cm)", var='layer_top', dataframe='field', unit='cm',
          class='numeric'),
     list(header="layer_bot (cm)", var='layer_bottom', dataframe='field', unit='cm',
          class='numeric'),
     list(header="hzn_desgn_other", var='hzn_desgn_other', dataframe='field',
-         class='character'),
+         class='factor'),
     list(header="hzn", var='hzn', dataframe='field',
          class='factor'),
     list(header="hzn_desgn", var='hzn_desgn', dataframe='field',
          class='factor'),
     list(header="layer_note", var='layer_note', dataframe='field',
-         class='character'),
+         class='factor'),
     list(header="color", var='color', dataframe='field',
          class='factor'),
     list(header="vegclass_local", var='vegclass_local', dataframe='field',
-         class='character'),
+         class='factor'),
     list(header="soil_taxon", var='soil_taxon', dataframe='field',
          class='factor'),
     list(header="soil_series", var='soil_series', dataframe='field',
-         class='character'),
+         class='factor'),
     ##measurements
     #### Bulk density
     list(header="bd_method", var='(bd_sample)|(bd_tot)|(bd_other)|(bd_whole)',
@@ -216,7 +212,7 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
     ###texture
     list(header="textureClass", var='textureClass', dataframe='field', class='factor'),
     list(header="locator_parent_alias", var='locator_parent_alias', dataframe='field',
-         class='character'))
+         class='factor'))
 
   ##Be very careful changing any of this since it was coded by hand, the permill ascii
   ##... is throwing off some of the dplyr functions
@@ -284,22 +280,32 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
     test <- test %>%
       fill_(filter(ISCNKey, dataframe == 'study')$headerName) %>%
       mutate(dataset_name=if_else(is.na(dataset_name), defaultDatasetName,
-                                  as.character(dataset_name)),
-             studyID=sprintf('%s:sheet%d:%s', dataset_name, fileNum, dataset_name_sub),
-             fieldID=sprintf('%s:%s:%s', site_name, profile_name, layer_name),
-             sampleID=sprintf('%d:%.6d', fileNum, 1:nrow(test)))
+                                  as.character(dataset_name))) %>%
+      mutate(studyName=sprintf('%s - %d - %s',
+                             dataset_name, fileNum, dataset_name_sub),
+             fieldName=sprintf(' %s - %s - %s',
+                             site_name, profile_name, layer_name),
+             sampleID=sprintf('%d - %.6d', fileNum, 1:nrow(test)))
 
     if(verbose) print('Create study dataframe')
     ####Create study dataframe ####
-    study.df <- test[c('studyID',
+    study.df <- test[c('studyName',
                        filter(filter(ISCNKey, dataframe == 'study'))$headerName)] %>%
-      unique
+      unique %>%
+      mutate(studyID = 1:length(studyName))
 
     if(verbose) print('Create field dataframe')
     ####Create field dataframe ####
-    field.df <- test[,c('studyID', 'fieldID',
+    field.df <- test[,c('studyName', 'fieldName',
                         filter(ISCNKey, dataframe == 'field')$headerName)] %>%
-      unique
+      unique %>%
+      left_join(study.df[,c('studyName', 'studyID')], by='studyName') %>%
+      mutate(fieldID = 1:length(fieldName))
+
+    ##put the fieldNum and studyNum into test
+    test <- test %>%
+      left_join(field.df[,c('fieldName', 'studyName', 'fieldID', 'studyID')],
+                by=c('studyName', 'fieldName'))
 
     if(verbose) print('Create methods dataframe')
     method1.df <- test[,c('studyID', 'fieldID', 'sampleID',
@@ -323,9 +329,11 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
     method.df <- method1.df %>%
       full_join(method2.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
       mutate(method = if_else(is.na(method.headerName.2),
-                              paste(method.headerName.1, ':', methodStr.1),
-                              paste(method.headerName.1, ':', methodStr.1, ';',
-                                    method.headerName.2, ':', methodStr.2))) %>%
+                              paste0(method.headerName.1, ': ', methodStr.1),
+                              if_else(is.na(method.headerName.1),
+                                      paste0(method.headerName.2, ': ', methodStr.2),
+                                      paste0(method.headerName.1, ': ', methodStr.1, ' - ',
+                                            method.headerName.2, ': ', methodStr.2)))) %>%
       select(contains('ID'), var, method)
 
 
@@ -341,14 +349,15 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
       rename(unit=unitStr) %>%
       select(contains('ID'), var, unit)
 
-    if(verbose) print('Create sigma dataframes')
-    sigma.df <- test[,c('studyID', 'fieldID', 'sampleID',
-                        filter(ISCNKey, dataframe == 'sample' &
-                                 type=='sigma')$headerName)] %>%
-      unique %>%
-      gather(headerName, sigma, -studyID, -fieldID, -sampleID, na.rm=TRUE) %>%
-      left_join(ISCNKey[,c('headerName', 'var')], by='headerName') %>%
-      select(-headerName)
+    #if(verbose) print('Create sigma dataframes')
+    ##Nothing ehre
+    #sigma.df <- test[,c('studyID', 'fieldID', 'sampleID',
+    #                    filter(ISCNKey, dataframe == 'sample' &
+    #                             type=='sigma')$headerName)] %>%
+    #  unique %>%
+    #  gather(headerName, sigma, -studyID, -fieldID, -sampleID, na.rm=TRUE) %>%
+    #  left_join(ISCNKey[,c('headerName', 'var')], by='headerName') %>%
+    #  select(-headerName)
 
 
     if(verbose) print('Create SOC var-value-method dataframe')
@@ -357,8 +366,7 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
                              filter(ISCNKey, dataframe == 'sample',
                                   type=='method',
                                   grepl('(soc)|(bd_)|(^oc$)|(^c_tot$)', var))$headerName)
-    sample_SOC.df <- test[, c('studyID', 'fieldID', 'sampleID',
-                              'dataset_name_sub', soc_methods_headers,
+    sample_SOC.df <- test[, c('studyID', 'fieldID', 'sampleID', soc_methods_headers,
                      'soc__g_cm_2')] %>%
       filter(is.finite(soc__g_cm_2)) %>%
       unique %>%
@@ -385,7 +393,7 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
       left_join(method.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
       bind_rows(sample_SOC.df) %>% ##add back in the SOC that had seperate methods above
       left_join(unit.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
-      left_join(sigma.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
+      #left_join(sigma.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
       left_join(simpleUnit.df, by='var') %>%
       mutate(unit = if_else(is.na(unit), simpleUnit, unit)) %>%
       select(-simpleUnit) %>%
@@ -393,6 +401,9 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
       ### ...until merge method notes
       select(-sampleID) %>%
       unique
+
+    field.df <- field.df %>% select(-fieldName, -studyName)
+    study.df$studyName <- NULL
 
     if(fileNum == 1){
       if(verbose) print('Create inital answer list')
@@ -408,19 +419,25 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
 
 
   ##Cast things as factors
-  ans$sample[,c('studyID', 'fieldID', 'var', 'unit', 'method')] <-
-    lapply(ans$sample[,c('studyID', 'fieldID', 'var', 'unit', 'method')], as.factor)
+  ans$sample[,c('var', 'unit', 'method')] <-
+    lapply(ans$sample[,c('var', 'unit', 'method')], as.factor)
 
-  ans$field[,c('studyID', filter(ISCNKey, dataframe=='field' &
-                                   class == 'factor')$headerName)] <-
-    lapply(ans$field[,c('studyID', filter(ISCNKey, dataframe=='field' &
-                                            class == 'factor')$headerName)], as.factor)
+  ans$field[,filter(ISCNKey, dataframe=='field' & class == 'factor')$headerName] <-
+    lapply(ans$field[, filter(ISCNKey, dataframe=='field' &
+                                class == 'factor')$headerName], as.factor)
 
   ans$study[,filter(ISCNKey, dataframe=='study' &
                       class == 'factor')$headerName] <-
     lapply(ans$study[,filter(ISCNKey, dataframe=='study' &
                                class == 'factor')$headerName], as.factor)
 
+
+  ans$measure <- unique(ans$sample[,c('var', 'method', 'unit')])
+  ans$measure$measureID <- 1:nrow(ans$measure)
+
+  ans$sample <- ans$sample %>%
+    left_join(ans$measure, by=c('var', 'method', 'unit')) %>%
+    select(-var, -method, -unit)
 
   return(ans)
 }
