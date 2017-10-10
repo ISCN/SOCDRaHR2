@@ -30,7 +30,7 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
          dataframe='field', unit = 'YYYY-MM-DD',
          class='factor'),
     list(header="profile_name", var='profile_name', dataframe='field', class='factor'),
-    list(header="layer_name", var='layer_name', dataframe='field', class='factor'),
+    list(header="layer_name", var='layer_name', dataframe='field', class='character'),
     list(header="layer_top (cm)", var='layer_top', dataframe='field', unit='cm',
          class='numeric'),
     list(header="layer_bot (cm)", var='layer_bottom', dataframe='field', unit='cm',
@@ -292,7 +292,9 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
     study.df <- test[c('studyName',
                        filter(filter(ISCNKey, dataframe == 'study'))$headerName)] %>%
       unique %>%
-      mutate(studyID = 1:length(studyName))
+      mutate(studyID = 1:length(studyName) +
+               ifelse(fileNum == 1, 0, ceiling(max(ans$study$studyID))),
+             sheetID = fileNum)
 
     if(verbose) print('Create field dataframe')
     ####Create field dataframe ####
@@ -300,7 +302,8 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
                         filter(ISCNKey, dataframe == 'field')$headerName)] %>%
       unique %>%
       left_join(study.df[,c('studyName', 'studyID')], by='studyName') %>%
-      mutate(fieldID = 1:length(fieldName))
+      mutate(fieldID = 1:length(fieldName) +
+               ifelse(fileNum == 1, 0, ceiling(max(ans$field$fieldID))))
 
     ##put the fieldNum and studyNum into test
     test <- test %>%
@@ -396,14 +399,8 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
       #left_join(sigma.df, by=c('studyID', 'fieldID', 'sampleID', 'var')) %>%
       left_join(simpleUnit.df, by='var') %>%
       mutate(unit = if_else(is.na(unit), simpleUnit, unit)) %>%
-      select(-simpleUnit) %>%
-      ### remove sampleID to remove duplicates SOCs We need to wait to remove duplicates
-      ### ...until merge method notes
-      select(-sampleID) %>%
+      select(-simpleUnit, -sampleID) %>%
       unique
-
-    field.df <- field.df %>% select(-fieldName, -studyName)
-    study.df$studyName <- NULL
 
     if(fileNum == 1){
       if(verbose) print('Create inital answer list')
@@ -435,9 +432,16 @@ processData_ISCN3 <- function(dir=NULL, verbose=FALSE, onlyPullKey=FALSE){
   ans$measure <- unique(ans$sample[,c('var', 'method', 'unit')])
   ans$measure$measureID <- 1:nrow(ans$measure)
 
+  ans$field <- ans$field %>% select(-fieldName, -studyName) %>%
+    mutate(studyID = as.integer(studyID),
+           fieldID=as.integer(fieldID))
+  ans$study <- ans$study %>% select(-studyName) %>%
+    mutate(studyID = as.integer(studyID))
+
   ans$sample <- ans$sample %>%
     left_join(ans$measure, by=c('var', 'method', 'unit')) %>%
-    select(-var, -method, -unit)
+    select(-var, -method, -unit, -studyID) %>%
+    mutate(fieldID = as.integer(fieldID))
 
   return(ans)
 }
