@@ -46,7 +46,7 @@ getControlVocabulary_ISCNTemplet2016 <- function(pdfDoc){
   ans <- ans[-1*((landsatIndex+1):(landscapeIndex-1))[removeRows],]
 
 
-  varableKey <- data.frame(X1 = unique(ans$X1), stringsAsFactors=FALSE) %>%
+  variableKey <- data.frame(X1 = unique(ans$X1), stringsAsFactors=FALSE) %>%
     mutate('ControlVariableName' = gsub(' used by :.*$', '', X1),
            'usedBy' = gsub('^.* used by :', '', X1)) %>%
     separate(usedBy, into=paste0('Y', 1:5), sep='[^[:alnum:]_]+', fill='right') %>%
@@ -57,7 +57,7 @@ getControlVocabulary_ISCNTemplet2016 <- function(pdfDoc){
     mutate(X1 = if_else(grepl('^\\s*$', X1), as.character(NA), X1)) %>%
     fill(X1, .direction='down') %>%
     filter(!is.na(X2)) %>%
-    left_join(unique(varableKey %>% select(X1, ControlVariableName)), by='X1') %>%
+    left_join(unique(variableKey %>% select(X1, ControlVariableName)), by='X1') %>%
     rename(vocabulary=X2, note=X3) %>%
     select(ControlVariableName, vocabulary, note)
 
