@@ -229,7 +229,7 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL, verbose=FALSE, onlyI
     list(header="p_method", var='^p_',
          type='method', dataframe='sample', class='character'),
     ###Roots
-    list(header="root_quant_size", var='root_quant_size', class='character'), ##TODO
+    list(header="root_quant_size", var='root_weight', class='character', type='method', dataframe='sample'),
     list(header="root_weight (g)", var='root_weight', type='value',
          unit='g', dataframe='sample', class='numeric'),
     ###isotopes
@@ -245,8 +245,8 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL, verbose=FALSE, onlyI
          class='numeric'),
     list(header="14c_age_sigma (BP)", var='14c_age', type='sigma', unit='BP',
          dataframe='sample', class='numeric'),
-    list(header='fraction_modern', var='fraction_modern', type='value', class='numeric'),
-    list(header="fraction_modern_sigma", var='fraction_modern', type='sigma',
+    list(header='fraction_modern', var='fraction_modern', type='value', class='numeric', dataframe='sample'),
+    list(header="fraction_modern_sigma", var='fraction_modern', type='sigma', dataframe='sample',
          class='numeric'),
     ###texture
     list(header="textureClass", var='textureClass', dataframe='field', class='factor'),
@@ -285,7 +285,7 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL, verbose=FALSE, onlyI
   if(onlyISCNKey) return(ISCNKey)
 
   #### Read data files ####
-  if(verbose) print(paste('Get file names, looking for csv files in layersDir:', layersDir))
+  if(verbose) print(paste('Maybe go get a cup of coffee... this takes a while.\nGet file names, looking for csv files in layersDir:', layersDir))
   files.arr <- list.files(path=layersDir, pattern='\\.csv$', full.names=TRUE)
 
   ans <- list(study=data.frame(),
@@ -347,6 +347,8 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL, verbose=FALSE, onlyI
   rm(all.temp)
 
   ####Rename the headers for field####
+  ##TODO key.ls <- rename_(df, .dots = setNames(names(key.ls), key.ls))
+  #     rename_(df, .dots = setNames(names(key.ls), key.ls))
   renameNonSampleHeaders <- ISCNKey %>% filter(dataframe != 'sample', header != var)
   renameNonSampleHeaders.ls <- as.list(renameNonSampleHeaders$var)
   names(renameNonSampleHeaders.ls) <- renameNonSampleHeaders$header
