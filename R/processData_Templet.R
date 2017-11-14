@@ -11,59 +11,75 @@
 #'
 #' @examples
 #' key.df <- data.frame(header=c('site_name', 'profile_name', 'layer_top', 'layer_bottom', 'SOC', 'SOC notes'),
-#'                         var=c(NA,           NA,             NA,          NA,            'soc',  'soc'),
+#'                         var=c('site_name', 'profile_name',  'layer_top',  'layer_bottom','soc',  'soc'),
 #'                         class=c('factor',    'factor',       'numeric',   'numeric',  'numeric','character),
 #'                         type=c(NA,         NA,              NA,          NA,            'value', 'method'),
 #'                    dataframe=c('field',     'field',        'field',    'field',       'sample', 'sample'))
 #'
-processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.df,
+processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.df=NA,
                                         verticalSheets=c('disturbance', 'metadata'),
-                                skip=c(1,2),
-                                          verbose=FALSE){
+                                excludeSheets=c('controlled vocabulary'),
+                                idRegEx = '_name$',
+                                skip=c(1,2), templetCasting=FALSE, verbose=FALSE){
 
   library(dplyr)
   library(readxl)
   library(tidyr)
   library(assertthat)
 
-  ##TODO add renaming of headers
   ##TODO check to see if there are more then one value associated with a var
   ##TODO Accept an arbitrary dataframe ID
   ##TODO be more clever about indexing ans$treatment appropreately so we aren't going through the whole '_name'
   ##...to identify a treatment
 
-  nameSuffix <- '_name' ##TODO finish abstracting this out
   primaryNameStr <- 'site_name' ##TODO finish abstracting this out
 
-  ##dev file
-  #filename <- '../soils-long-tail-recovery/repoData/Treat_2015/ISCNtemplate_Treat_peatProps_v2.xlsx'
-  #keyfile <- 'templates/ISCNtemplate_2016Key.xlsx'
-  #key.df <- read_excel(path=keyfile, sheet='headerKey')
+  # ##dev file
+  # detach(parms)
+  # parms <- list(filename='repoData/test/ISCNtemplate.xlsx', key.df=NA,
+  #               verticalSheets=c('disturbance', 'metadata'),
+  #               excludeSheets=c('controlled vocabulary'),
+  #               idRegEx = '_name$',
+  #               skip=c(1,2), templetCasting=FALSE, verbose=FALSE)
+  # attach(parms)
+  # filename <- '../soils-long-tail-recovery/repoData/Treat_2015/ISCNtemplate_Treat_peatProps_v2.xlsx'
+  # #filename <- '../soils-long-tail-recovery/repoData/Berhe2012/Berhe_2012.xlsx'
+  # keyfile <- '../soils-long-tail-recovery/templates/ISCNtemplate_2016Key.xlsx'
+  # key.df <- read_excel(path=keyfile, sheet='headerKey')
+  # #key.df <- readxl::read_excel(path='../soils-long-tail-recovery/templates/PowellCenterKey.xlsx', sheet='headerKey')
+  # #verticalSheets <- c()
+  # #skip <- NA
+  #
 
-  assert_that(all(key.df$type %in% c('value', 'method', 'sigma', NA)))
-  assert_that(all(key.df$dataframe %in% c('study', 'field', 'treatment', 'sample', NA)))
+  assert_that(all(key.df$type %in% c('value', 'method', 'sigma', 'unit', NA)), msg='Unexpected type names')
+  assert_that(all(key.df$dataframe %in% c('study', 'field', 'treatment', 'sample', NA)), msg='Unexpected dataframe names')
+  assert_that(all(c('header', 'dataframe', 'class', 'type', 'hardUnit') %in% names(key.df)), msg='Missing key names')
 
   ####Expand the regular expressions in the key ####
   unitVars <- unique(filter(key.df, type == 'value')$var)
   key.df <- key.df %>%
-    group_by(header, dataframe, class, note, type, unit) %>%
+    group_by(header, dataframe, class, note, type, hardUnit) %>%
     ##Expand regular expressions in 'var' (as defined by appearence of ^|)
     do((function(xx){
-      if(grepl('\\^|\\|', xx$var)) #check for regular expression
+      if(grepl('\\^|\\|\\$', xx$var)) #check for regular expression
         #return all variables that match
         return(data.frame(var=as.character(unitVars[grepl(xx$var, unitVars)]), stringsAsFactors=FALSE))
       else
         #do nothing
         return(data.frame(var=xx$var, stringsAsFactors=FALSE))
     })(.)) %>%
-    group_by(header, dataframe, class, type, unit, var) %>%
     arrange(var) %>%
     ungroup()
+
+  ### pull the final header names
+  wideHeaders <- setNames(filter(key.df, is.na(type) | type == 'header')$var, #values
+                            filter(key.df, is.na(type) | type == 'header')$header) #names
+  wideHeaders <- wideHeaders[!is.na(wideHeaders) & !is.na(names(wideHeaders))]
 
   #### Read in all the data either to key wide format or for future reformating as long
   bigWide.df <- NA
   futureLong.df <- data.frame()
-  for(sheetName in excel_sheets(filename)){
+  for(sheetName in setdiff(excel_sheets(filename), excludeSheets)){
     if(sheetName %in% verticalSheets){
       ##Read in by column data
       temp <- readxl::read_excel(path=filename, sheet=sheetName, col_types = 'text', col_names=FALSE)
@@ -76,29 +92,32 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
     }
 
     ##Drop identified skips
-    if(!is.null(skip)) temp <- temp[-1*skip,]
+    if(!all(is.null(skip)) & !all(is.na(skip))) temp <- temp[-1*skip,]
 
     ##Drop empty columns
     dropCols <- apply(temp, 2, function(xx){all(is.na(xx))}) ##select_if has issues with column names
     temp <- temp[,!dropCols]
+
+    ##rename headers
+    names(temp)[names(temp) %in% names(wideHeaders)] <- wideHeaders[names(temp[names(temp) %in% names(wideHeaders)])]
 
     ##forces that we always have an id for a merge
     if(is.null(temp[[primaryNameStr]])){
       temp[[primaryNameStr]] <- as.character(NA)
     }
 
-    wideVars <- intersect(filter(key.df, dataframe != 'sample')$header, names(temp))
+    wideVars <- intersect(c(primaryNameStr, wideHeaders), names(temp))
     if(is.data.frame(bigWide.df)){
-    bigWide.df <- full_join(
-      temp %>% select(one_of(wideVars), ends_with(nameSuffix)), bigWide.df)
+      bigWide.df <- full_join(
+        temp %>% select(one_of(wideVars), matches(idRegEx)), bigWide.df)
     }else{
-      bigWide.df <-  temp %>% select(one_of(wideVars), ends_with(nameSuffix))
+      bigWide.df <-  temp %>% select(one_of(wideVars), matches(idRegEx))
     }
 
-    longVars <- intersect(filter(key.df, dataframe == 'sample')$header, names(temp))
+    longVars <- setdiff(names(temp), wideVars) ##anything that is not wide is long
     if(length(longVars) > 0){
       futureLong.df <- bind_rows(
-        temp %>% select(one_of(longVars), ends_with(nameSuffix)), futureLong.df)
+        temp %>% select(one_of(longVars), matches(idRegEx)), futureLong.df)
     }
   }
 
@@ -107,51 +126,70 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
 
   ans$study <- bigWide.df %>%
     select(one_of(intersect(names(bigWide.df), filter(key.df, dataframe=='study')$header))) %>%
-    filter(!is.na(dataset_name)) %>%
     unique()
 
   ans$field <- bigWide.df %>%
-    select(one_of(c(intersect(names(bigWide.df), filter(key.df, dataframe=='field')$header)),
-                  primaryNameStr)) %>%
+    select(one_of(c(intersect(names(bigWide.df), filter(key.df, dataframe=='field')$header)))) %>%
     unique()
 
-  if(length(intersect(names(bigWide.df), filter(key.df, dataframe=='treatment')$header)) > 0){
+  if(length(intersect(names(bigWide.df)[!grepl(idRegEx,
+                                               names(bigWide.df))], filter(key.df, dataframe=='treatment')$header)) > 0){
     ans$treatment <-  bigWide.df %>%
       select(one_of(intersect(names(bigWide.df), filter(key.df, dataframe=='treatment')$header)),
-             ends_with(nameSuffix)) %>%
-      unique
+             matches(idRegEx)) %>%
+      unique()
+  }else if(length(intersect(names(futureLong.df), filter(key.df, dataframe=='treatment')$header)) > 0){
+    ans$treatment <- futureLong.df %>%
+      select(one_of(intersect(names(futureLong.df), filter(key.df, dataframe=='treatment')$header))) %>%
+      unique() %>%
+      group_by_(.dots=names(.)[grepl(idRegEx, names(.))]) %>%
+      gather(header, entry, -matches(idRegEx), na.rm=TRUE) %>%
+      left_join(key.df, by=c('header')) %>%
+      select(matches(idRegEx), class, type, var, header, entry) %>%
+      mutate(entry = if_else(type == 'method', paste(header, entry, sep=':'), entry)) %>%
+      group_by(var, add=TRUE) %>%
+      summarize(method = paste0(entry[type=='method'], collapse='|'),
+                unit = ifelse(any(type == 'unit'),
+                              as.character(unique(entry[type=='unit'])), as.character(NA))) %>%
+      ungroup()
+  } else {
+    ans$treatment <- data.frame()
   }
 
   ans$sample <- futureLong.df %>%
     select(one_of(intersect(names(futureLong.df), filter(key.df, dataframe=='sample')$header)),
-           ends_with(nameSuffix)) %>%
+           matches(idRegEx)) %>%
     filter(!is.na(site_name)) %>%
-    group_by_(.dots=names(futureLong.df)[grepl('_name$', names(futureLong.df))]) %>%
-    gather(header, entry, -ends_with(nameSuffix), na.rm=TRUE) %>%
-    left_join(key.df) %>%
-    select(ends_with(nameSuffix), class, type, var, header, entry) %>%
+    group_by_(.dots=names(futureLong.df)[grepl(idRegEx, names(futureLong.df))]) %>%
+    gather(header, entry, -matches(idRegEx), na.rm=TRUE) %>%
+    left_join(key.df, by='header') %>%
+    select(matches(idRegEx), class, type, var, header, entry) %>%
     mutate(entry = if_else(type == 'method', paste(header, entry, sep=':'), entry)) %>%
     group_by(var, add=TRUE) %>%
-    filter(any(type == 'value'))  %>% unique() %>%
+    filter(any(type == 'value')) %>% unique() %>%
     summarize(method = paste0(entry[type=='method'], collapse='|'),
               value = unique(entry[type == 'value']),
               sigma = ifelse(any(type == 'sigma'),
-                             unique(entry[type=='sigma']), as.character(NA))) %>%
+                             unique(entry[type=='sigma']), as.character(NA)),
+              unit = ifelse(any(type == 'unit'),
+                            as.character(unique(entry[type=='unit'])), as.character(NA))) %>%
     ungroup()
 
   ####Cast to numerics and factors####
-  ans$field <- ans$field %>%
-    mutate_at(vars(one_of(intersect(unique(key.df$header[key.df$class == 'factor']), names(ans$field)))),
-              funs(factor)) %>%
-    mutate_at(vars(one_of(intersect(unique(key.df$header[key.df$class == 'numeric']), names(ans$field)))),
-              funs(as.numeric)) %>% filter(is.finite(site_name))
+  if(templetCasting){
+    ans$field <- ans$field %>%
+      mutate_at(vars(one_of(intersect(unique(key.df$header[key.df$class == 'factor']), names(ans$field)))),
+                funs(factor)) %>%
+      mutate_at(vars(one_of(intersect(unique(key.df$header[key.df$class == 'numeric']), names(ans$field)))),
+                funs(as.numeric)) %>% filter(is.finite(site_name))
+  }
 
-  ans$sample <- ans$sample %>%
-    mutate_at(vars(ends_with(nameSuffix)),
-              funs(factor)) %>%
-    mutate_at(vars(method, var),
-              funs(factor)) %>%
-    mutate_at(vars(value, sigma), funs(as.numeric))
+    ans$sample <- ans$sample %>%
+      mutate_at(vars(matches(idRegEx)),
+                funs(factor)) %>%
+      mutate_at(vars(method, var),
+                funs(factor)) %>%
+      mutate_at(vars(value, sigma), funs(as.numeric))
 
   ans$key <- key.df
   return(ans)

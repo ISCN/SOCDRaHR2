@@ -12,10 +12,9 @@
 #' emptyFramework <- processData_emptyStandard()
 processData_emptyStandard <- function(){
   ans <- list(study = data.frame(studyID = NA, doi = NA, permissions = NA),
-              labTreatment = data.frame(labTreatmentID = NA),
-              fieldTreatment = data.frame(fieldTreatmentID = NA),
+              treatment = data.frame(treatmentID = NA),
               measurement = data.frame(type = NA, method = NA, measurementID = NA),
-              sample = data.frame(fieldID = NA, measurementID = NA, value = NA, unit = NA),
+              sample = data.frame(fieldID = NA, measurementID = NA, value = NA),
               field =  c(fieldID = NA,
                          lat = NA, long = NA,
                          layer_top = NA, layer_bottom = NA, layer_units = NA,
