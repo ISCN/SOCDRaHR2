@@ -2,18 +2,22 @@
 % Please edit documentation in R/processData_ISCN3.R
 \name{processData_ISCN3}
 \alias{processData_ISCN3}
-\title{Load ISCN vs 3 Layer data}
+\title{Load ISCN Layer and Meta data}
 \usage{
-processData_ISCN3(dir = "repoData/ISCN_3", verbose = FALSE)
+processData_ISCN3(layersDir = NULL, metaDir = NULL, keyFile = NULL,
+  verbose = FALSE, onlyISCNKey = FALSE, loadVars = NULL)
 }
 \arguments{
-\item{dir}{string identifying the folder the data is in. Should have a subfolder 'Layers' containing all ISCN_ALL_DATA_LAYER_C[1-4]_1-1.csv files.}
+\item{layersDir}{path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.csv files; R doesn't play nicely with large xlsx files so we fall back on csv exports}
 
-\item{verbose}{boolean flag for verbose outputs}
-}
-\value{
-a data frame with all data in the correct format
+\item{metaDir}{path to the folder contianingISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files}
+
+\item{verbose}{boolean flag denoting whether or not to print lots of status messages}
+
+\item{loadVars}{an array of characters to read in only certain variables}
+
+\item{onlyPullKey}{Only return the ISCN key not the data}
 }
 \description{
-ISCN vs 3 (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C2_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C3_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C4_1-1.xlsx
+ISCN (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C2_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C3_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C4_1-1.xlsx
 }

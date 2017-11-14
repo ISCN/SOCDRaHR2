@@ -5,3 +5,8 @@
 inst/doc
 *.Rproj
 
+#Ignore the temp folder
+temp/*
+
+#Ignore lock files
+*~

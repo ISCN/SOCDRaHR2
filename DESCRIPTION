@@ -12,10 +12,13 @@ BugReport: https://github.com/ktoddbrown/soilDataR/issues
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: plyr (>= 1.8),
+Imports: dplyr (>= 0.5.0),
     reshape2 (>= 1.4),
     readxl (>= 1.0.0),
-    stringr (>= 1.2.0)
+    stringr (>= 1.2.0),
+    readr (>= 1.1.1),
+    assertthat(>= 0.2.0),
+    tidyr (>= 0.6.3)
 Suggests: 
     knitr (>= 1.10),
     rmarkdown (>= 1.5),

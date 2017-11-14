@@ -13,6 +13,7 @@ A list that reflects the structure of the data representation
 This function returns an empty list of data frames with the internal standard fields.
 You can either use this as a basis to build new ingestion scripts and this is the
  structure that scripts should be tested against in testthat checks.
+ This is the minimum structure.
 }
 \examples{
 emptyFramework <- processData_emptyStandard()
