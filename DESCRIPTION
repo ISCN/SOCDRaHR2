@@ -1,7 +1,6 @@
 Package: SoilDataR
 Type: Package
-Title: This package contains scripts to read in and harmonize different digital soil 
-  data archives
+Title: Scripts to read in and harmonize different digital soil data archives
 Version: 0.0.1
 Authors@R: c(person("Todd-Brown", "K", email = "ktoddbrown@gmail.com",
   role = c("aut", "cre")))

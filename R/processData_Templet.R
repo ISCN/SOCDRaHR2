@@ -4,6 +4,9 @@
 #' @param skip the columns or rows to skip because they are human readable descriptions or units. Note that 1 is the first row/column after the header.
 #' @param key.df data frame converting headers to variables. key.df must have the following fields: header, var, type, class, dataframe. 'headers' must match the headers in the data file. 'var' should be the final name of the long format sample data or regular expressions that will match to the orginal header to apply the same methods notes to. 'type' flags the type of information in the column; note that while there can be multiple 'method' associated with a variable, there should only be one 'value' and 'sigma'; NA signals a wide table format that will be a header in the final output. 'dataframe' identifies what final data frame to put the header in (currently can only be 'study', 'field', 'treatment', 'sample'); NA will result in the column being dropped.
 #' @param verticalSheets an array of names for the data sheets that are vertical (ie names are in column 1 instead of row 1)
+#' @param excludeSheets TODO
+#' @param idRegEx TODO
+#' @param templetCasting TODO
 #' @param verbose a flag to print out helpful statements
 #'
 #' @return a list of the dataframes identified by 'dataframe' and a copy of the final key
@@ -12,7 +15,7 @@
 #' @examples
 #' key.df <- data.frame(header=c('site_name', 'profile_name', 'layer_top', 'layer_bottom', 'SOC', 'SOC notes'),
 #'                         var=c('site_name', 'profile_name',  'layer_top',  'layer_bottom','soc',  'soc'),
-#'                         class=c('factor',    'factor',       'numeric',   'numeric',  'numeric','character),
+#'                         class=c('factor',    'factor',       'numeric',   'numeric',  'numeric','character'),
 #'                         type=c(NA,         NA,              NA,          NA,            'value', 'method'),
 #'                    dataframe=c('field',     'field',        'field',    'field',       'sample', 'sample'))
 #'
@@ -21,11 +24,6 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
                                 excludeSheets=c('controlled vocabulary'),
                                 idRegEx = '_name$',
                                 skip=c(1,2), templetCasting=FALSE, verbose=FALSE){
-
-  library(dplyr)
-  library(readxl)
-  library(tidyr)
-  library(assertthat)
 
   ##TODO check to see if there are more then one value associated with a var
   ##TODO Accept an arbitrary dataframe ID

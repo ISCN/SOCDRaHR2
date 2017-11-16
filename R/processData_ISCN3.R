@@ -4,12 +4,12 @@
 #'
 #' @param layersDir path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.csv files; R doesn't play nicely with large xlsx files so we fall back on csv exports
 #' @param metaDir path to the folder contianingISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files
+#' @param keyFile (TODO)
 #' @param verbose boolean flag denoting whether or not to print lots of status messages
-#' @param onlyPullKey Only return the ISCN key not the data
+#' @param onlyISCNKey (TODO)
 #' @param loadVars an array of characters to read in only certain variables
 #'
-#' @importFrom magrittr %>%
-#' @imports dplyr
+#' @import dplyr
 #' @importFrom tidyr gather spread
 #' @importFrom readxl read_excel
 #' @importFrom readr read_csv
@@ -24,12 +24,6 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
   #                  verbose = TRUE, onlyISCNKey=FALSE,
   #                 loadVars = c("14c_age"))
   # attach(debug.ls)
-
-  ##TODO move to package::function notation
-  library(dplyr)
-  library(tidyr)
-  library(readr)
-  library(readxl)
 
   #### Make ISCN Key ####
   ISCNKey <- read_excel(path=keyFile, sheet='headerKey')
