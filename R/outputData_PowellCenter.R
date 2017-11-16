@@ -5,18 +5,18 @@
 #' @param data.df data frame with internal formating and a column (ISCN_id) specifying the harnomized measure names
 #' @param outputDir target directory string for the outputs
 #' @param templatefile string pointing to a template file
-#'
+#' @importFrom readxl read_excel
 #' @return returns a list of dataframes that reflect the output
 #' @export
 outputData_PowellCenter <- function(data.df, outputDir, templatefile){
 
   #templatefile='templates/PowellCenterTemplate_With Minerals and Dissolutions.xlsx'
-  sheetHeaders <- list(metadata = readxl::read_excel(path=templatefile, sheet='metadata'),
-                       site = readxl::read_excel(path=templatefile, sheet='site'),
-                       profile=readxl::read_excel(path=templatefile, sheet='profile'),
-                       layer = readxl::read_excel(path=templatefile, sheet='layer'),
-                       fraction = readxl::read_excel(path=templatefile, sheet='fraction'),
-                       control_vocab = readxl::read_excel(path=templatefile,
+  sheetHeaders <- list(metadata = read_excel(path=templatefile, sheet='metadata'),
+                       site = read_excel(path=templatefile, sheet='site'),
+                       profile=read_excel(path=templatefile, sheet='profile'),
+                       layer = read_excel(path=templatefile, sheet='layer'),
+                       fraction = read_excel(path=templatefile, sheet='fraction'),
+                       control_vocab = read_excel(path=templatefile,
                                                           sheet='controlled vocabulary',
                                                           skip=1))
 

@@ -12,11 +12,13 @@ processData_ISCN3(layersDir = NULL, metaDir = NULL, keyFile = NULL,
 
 \item{metaDir}{path to the folder contianingISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files}
 
+\item{keyFile}{(TODO)}
+
 \item{verbose}{boolean flag denoting whether or not to print lots of status messages}
 
-\item{loadVars}{an array of characters to read in only certain variables}
+\item{onlyISCNKey}{(TODO)}
 
-\item{onlyPullKey}{Only return the ISCN key not the data}
+\item{loadVars}{an array of characters to read in only certain variables}
 }
 \description{
 ISCN (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C2_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C3_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C4_1-1.xlsx

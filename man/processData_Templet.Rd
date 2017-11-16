@@ -16,7 +16,13 @@ processData_Templet(filename = "repoData/test/ISCNtemplate.xlsx",
 
 \item{verticalSheets}{an array of names for the data sheets that are vertical (ie names are in column 1 instead of row 1)}
 
+\item{excludeSheets}{TODO}
+
+\item{idRegEx}{TODO}
+
 \item{skip}{the columns or rows to skip because they are human readable descriptions or units. Note that 1 is the first row/column after the header.}
+
+\item{templetCasting}{TODO}
 
 \item{verbose}{a flag to print out helpful statements}
 }
@@ -25,4 +31,12 @@ a list of the dataframes identified by 'dataframe' and a copy of the final key
 }
 \description{
 This function will read in a generic data file and convert it to the internal format with the assistance of a key.
+}
+\examples{
+key.df <- data.frame(header=c('site_name', 'profile_name', 'layer_top', 'layer_bottom', 'SOC', 'SOC notes'),
+                        var=c('site_name', 'profile_name',  'layer_top',  'layer_bottom','soc',  'soc'),
+                        class=c('factor',    'factor',       'numeric',   'numeric',  'numeric','character'),
+                        type=c(NA,         NA,              NA,          NA,            'value', 'method'),
+                   dataframe=c('field',     'field',        'field',    'field',       'sample', 'sample'))
+
 }
