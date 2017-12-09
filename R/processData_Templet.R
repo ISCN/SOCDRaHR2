@@ -56,7 +56,7 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
   ####Expand the regular expressions in the key ####
   unitVars <- unique(filter(key.df, type == 'value')$var)
   key.df <- key.df %>%
-    group_by(header, dataframe, class, note, type, hardUnit) %>%
+    group_by(header, dataframe, class, type, hardUnit) %>%
     ##Expand regular expressions in 'var' (as defined by appearence of ^|)
     do((function(xx){
       if(grepl('\\^|\\|\\$', xx$var)) #check for regular expression
@@ -68,16 +68,20 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
     })(.)) %>%
     arrange(var) %>%
     ungroup()
+  
+  if(verbose){print('key.df: '); print(key.df)}
 
   ### pull the final header names
   wideHeaders <- setNames(filter(key.df, is.na(type) | type == 'header')$var, #values
                             filter(key.df, is.na(type) | type == 'header')$header) #names
   wideHeaders <- wideHeaders[!is.na(wideHeaders) & !is.na(names(wideHeaders))]
-
+  if(verbose){print('to be renamed - wideHeaders: '); print(wideHeaders)}
   #### Read in all the data either to key wide format or for future reformating as long
   bigWide.df <- NA
   futureLong.df <- data.frame()
+  
   for(sheetName in setdiff(excel_sheets(filename), excludeSheets)){
+    if(verbose) print(paste('reading sheet: [', sheetName, ']'))
     if(sheetName %in% verticalSheets){
       ##Read in by column data
       temp <- readxl::read_excel(path=filename, sheet=sheetName, col_types = 'text', col_names=FALSE)
@@ -118,7 +122,13 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
         temp %>% select(one_of(longVars), matches(idRegEx)), futureLong.df)
     }
   }
-
+  if(verbose) {
+    print('Done with reading in all sheets')
+    print('bigWide.df')
+    print(head(bigWide.df))
+    print('futureLong.df')
+    print(head(futureLong.df))
+  }
   ###Pull out dataframes ###
   ans <- list()
 
@@ -126,17 +136,25 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
     select(one_of(intersect(names(bigWide.df), filter(key.df, dataframe=='study')$header))) %>%
     unique()
 
+  if(verbose) print('Done with constructing study')
+  if(verbose) print(head(ans$study))
   ans$field <- bigWide.df %>%
     select(one_of(c(intersect(names(bigWide.df), filter(key.df, dataframe=='field')$header)))) %>%
     unique()
 
+  if(verbose) print('Done with constructing field')
+  if(verbose) print(head(ans$field))
+  
   if(length(intersect(names(bigWide.df)[!grepl(idRegEx,
-                                               names(bigWide.df))], filter(key.df, dataframe=='treatment')$header)) > 0){
+                                               names(bigWide.df))], 
+                      filter(key.df, dataframe=='treatment')$header)) > 0){
+    print('constructing treatment from bigWide.df')
     ans$treatment <-  bigWide.df %>%
       select(one_of(intersect(names(bigWide.df), filter(key.df, dataframe=='treatment')$header)),
              matches(idRegEx)) %>%
       unique()
   }else if(length(intersect(names(futureLong.df), filter(key.df, dataframe=='treatment')$header)) > 0){
+    print('constructing treatment from futureLong.df')
     ans$treatment <- futureLong.df %>%
       select(one_of(intersect(names(futureLong.df), filter(key.df, dataframe=='treatment')$header))) %>%
       unique() %>%
@@ -154,6 +172,9 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
     ans$treatment <- data.frame()
   }
 
+  if(verbose) print('Done with constructing treatment')
+  if(verbose) print(head(ans$treatment))
+  
   ans$sample <- futureLong.df %>%
     select(one_of(intersect(names(futureLong.df), filter(key.df, dataframe=='sample')$header)),
            matches(idRegEx)) %>%
@@ -173,6 +194,9 @@ processData_Templet <- function(filename='repoData/test/ISCNtemplate.xlsx', key.
                             as.character(unique(entry[type=='unit'])), as.character(NA))) %>%
     ungroup()
 
+  if(verbose) print('Done with constructing sample')
+  if(verbose) print(head(ans$sample))
+  
   ####Cast to numerics and factors####
   if(templetCasting){
     ans$field <- ans$field %>%
