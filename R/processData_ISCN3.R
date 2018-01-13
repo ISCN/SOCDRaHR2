@@ -5,7 +5,6 @@
 #'
 #' @param layersDir path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.csv files; R doesn't play nicely with large xlsx files so we fall back on csv exports
 #' @param metaDir path to the folder contianing ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files
-#' @param keyFile (TODO)
 #' @param verbose boolean flag denoting whether or not to print lots of status messages
 #' @param onlyISCNKey (TODO)
 #' @param loadVars an array of characters to read in only certain variables
@@ -16,7 +15,6 @@
 #' @importFrom readr read_csv
 #' @export
 processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
-                              keyFile=NULL,
                               verbose=FALSE, onlyISCNKey=FALSE, loadVars=NULL){
 
   ## create the layer and meta directors if needed
@@ -56,13 +54,10 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
   #                 loadVars = c("14c_age"))
   # attach(debug.ls)
 
-  #### Make ISCN Key ####
-  ISCNKey <- read_excel(path=keyFile, sheet='headerKey')
-
   #### Fill in the regular expression variables ####
-  unitVars <- filter(ISCNKey, type == 'value')$var
+  unitVars <- filter(SoilDataR::ISCNKey.df, type == 'value')$var
 
-  ISCNKey <- ISCNKey %>%
+  ISCNKey <- SoilDataR::ISCNKey.df %>%
     group_by(header, dataframe, class, type, unit, method) %>%
     do((function(xx){
       if(grepl('(\\^)|(\\|)|(\\$)', xx$var)) #check for regular expression
@@ -76,9 +71,9 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
     arrange(var) %>%
     ##seperate the unit type as either hard coded (hardUnit) or references (unitCol) based on
     ##...starting match
-    mutate(hardUnit = if_else(any(grepl(paste0('^',unit), ISCNKey$header)), as.character(NA), unit),
-           unitCol =  if_else(any(grepl(paste0('^',unit), ISCNKey$header)),
-                              ISCNKey$header[grepl(paste0('^',unit), ISCNKey$header)][1],
+    mutate(hardUnit = if_else(any(grepl(paste0('^',unit), SoilDataR::ISCNKey.df$header)), as.character(NA), unit),
+           unitCol =  if_else(any(grepl(paste0('^',unit), SoilDataR::ISCNKey.df$header)),
+                             SoilDataR::ISCNKey.df$header[grepl(paste0('^',unit),SoilDataR::ISCNKey.df$header)][1],
                               as.character(NA))) %>%
     ungroup()
 
