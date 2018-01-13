@@ -1,9 +1,10 @@
 #' Load ISCN Layer and Meta data
 #'
+#' This function first downloads the layer and meta data from the ISCN website.
 #' ISCN (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C2_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C3_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C4_1-1.xlsx
 #'
 #' @param layersDir path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.csv files; R doesn't play nicely with large xlsx files so we fall back on csv exports
-#' @param metaDir path to the folder contianingISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files
+#' @param metaDir path to the folder contianing ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files
 #' @param keyFile (TODO)
 #' @param verbose boolean flag denoting whether or not to print lots of status messages
 #' @param onlyISCNKey (TODO)
@@ -18,6 +19,32 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
                               keyFile=NULL,
                               verbose=FALSE, onlyISCNKey=FALSE, loadVars=NULL){
 
+  ## create the layer and meta directors if needed
+  if(is.null(layersDir)){
+    layersDir <- tempfile()
+  }
+  
+  if(is.null(metaDir)){
+    metaDir <- tempfile()
+  }
+  
+  ## Download the layer data
+  for(layerDataFile in c('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C2_1-1.xlsx',
+                         'ISCN_ALL_DATA_LAYER_C3_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C4_1-1.xlsx')){
+    if(!file.exists(file.path(layersDir, layerDataFile))){
+      download.file(sprintf('ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/%s', layerDataFile), 
+                    file.path(layersDir, layerDataFile), quiet=FALSE)
+    }
+  }
+  
+  # Download meta data
+  for(metaDataFile in c('ISCN_ALL-DATA-CITATION_1-1.xlsx', 'ISCN_ALL_DATA_DATASET_1-1.xlsx')){
+    if(!file.exists(file.path(metaDir, metaDataFile))){
+      download.file(sprintf('ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/%s', metaDataFile), 
+                    file.path(metaDir, metaDataFile), quiet=FALSE)
+    }
+  }
+  
   # debug.ls <- list(layersDir = '../soils-long-tail-recovery/repoData/ISCN_3/Layers',
   #                  metaDir = '../soils-long-tail-recovery/repoData/ISCN_3/Meta/',
   #                 keyFile = '../soils-long-tail-recovery/repoData/ISCN_3/ISCNKey.xlsx',
