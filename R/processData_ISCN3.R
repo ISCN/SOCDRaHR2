@@ -20,12 +20,14 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
                               verbose=FALSE, onlyISCNKey=FALSE, loadVars=NULL){
 
   ## create the layer and meta directors if needed
+  delete_layersDir <- is.null(layersDir)
   if(is.null(layersDir)){
-    layersDir <- tempfile()
+    layersDir <- tempdir()
   }
   
+  delete_metaDir <- is.null(metaDir)
   if(is.null(metaDir)){
-    metaDir <- tempfile()
+    metaDir <- tempdir()
   }
   
   ## Download the layer data
@@ -44,6 +46,8 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
                     file.path(metaDir, metaDataFile), quiet=FALSE)
     }
   }
+  
+  #temp <- readxl::read_excel(file.path(layersDir, 'ISCN_ALL_DATA_LAYER_C1_1-1.xlsx'))
   
   # debug.ls <- list(layersDir = '../soils-long-tail-recovery/repoData/ISCN_3/Layers',
   #                  metaDir = '../soils-long-tail-recovery/repoData/ISCN_3/Meta/',
@@ -229,5 +233,14 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
 
     ans$ISCNKey <- ISCNKey
 
+    #delete the files from the temepratory directorys
+    if(delete_metaDir){
+      file.remove(file.path(metaDir, c('ISCN_ALL-DATA-CITATION_1-1.xlsx', 'ISCN_ALL_DATA_DATASET_1-1.xlsx')), recursive=TRUE)
+    }
+    if(delete_layersDir){
+      file.remove(file.path(layerDir, c('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C2_1-1.xlsx',
+                                   'ISCN_ALL_DATA_LAYER_C3_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C4_1-1.xlsx')), recursive=TRUE)
+    }
+  
   return(ans)
 }
