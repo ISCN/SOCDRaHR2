@@ -17,7 +17,8 @@ Imports: dplyr (>= 0.5.0),
     stringr (>= 1.2.0),
     readr (>= 1.1.1),
     assertthat(>= 0.2.0),
-    tidyr (>= 0.6.3)
+    tidyr (>= 0.6.3),
+    lubridate (>= 1.7.1)
 Suggests: 
     knitr (>= 1.10),
     rmarkdown (>= 1.5),
