@@ -4,22 +4,19 @@
 \alias{processData_ISCN3}
 \title{Load ISCN Layer and Meta data}
 \usage{
-processData_ISCN3(layersDir = NULL, metaDir = NULL, keyFile = NULL,
-  verbose = FALSE, onlyISCNKey = FALSE, loadVars = NULL)
+processData_ISCN3(dataDir = NULL, verbose = FALSE, onlyISCNKey = FALSE,
+  loadVars = NULL)
 }
 \arguments{
-\item{layersDir}{path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.csv files; R doesn't play nicely with large xlsx files so we fall back on csv exports}
-
-\item{metaDir}{path to the folder contianingISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files}
-
-\item{keyFile}{(TODO)}
+\item{dataDir}{path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.xlsx, ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files. If this is left NULL then files will be downloaded to a temporary directory from the ISCN website and then deleted.}
 
 \item{verbose}{boolean flag denoting whether or not to print lots of status messages}
 
-\item{onlyISCNKey}{(TODO)}
+\item{onlyISCNKey}{boolean flag to only return the processed ISCN3 key which is slightly different then SoilDataR::ISCNKey.df. The regular expressions in the variable column are matched to the column names.}
 
-\item{loadVars}{an array of characters to read in only certain variables}
+\item{loadVars}{an array of characters to read in only certain variables. If NULL then all the variables will be read in.}
 }
 \description{
+This function first downloads the layer and meta data from the ISCN website.
 ISCN (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C2_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C3_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C4_1-1.xlsx
 }

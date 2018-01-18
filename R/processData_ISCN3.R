@@ -3,48 +3,36 @@
 #' This function first downloads the layer and meta data from the ISCN website.
 #' ISCN (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C1_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C2_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C3_1-1.xlsx ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/ISCN_ALL_DATA_LAYER_C4_1-1.xlsx
 #'
-#' @param layersDir path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.excel files. If this is left Null then files will be downloaded to a temporary directory and then deleted.
-#' @param metaDir path to the folder contianing ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files. If this is left Null then files will be downloaded to a temporary directory and then deleted.
+#' @param dataDir path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.xlsx, ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files. If this is left NULL then files will be downloaded to a temporary directory from the ISCN website and then deleted.
 #' @param verbose boolean flag denoting whether or not to print lots of status messages
-#' @param onlyISCNKey boolean flag to only return the processed ISCN3 key which is slightly different then SoilDataR::ISCNKey.df
-#' @param loadVars an array of characters to read in only certain variables
+#' @param onlyISCNKey boolean flag to only return the processed ISCN3 key which is slightly different then SoilDataR::ISCNKey.df. The regular expressions in the variable column are matched to the column names.
+#' @param loadVars an array of characters to read in only certain variables. If NULL then all the variables will be read in.
 #'
 #' @import dplyr
 #' @importFrom tidyr gather spread
 #' @importFrom readxl read_excel
 #' @importFrom readr read_csv
+#' @importFrom lubridate decimal_date
 #' @export
-processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
-                              verbose=FALSE, onlyISCNKey=FALSE, loadVars=NULL){
+processData_ISCN3 <- function(dataDir=NULL, verbose=FALSE, onlyISCNKey=FALSE, loadVars=NULL){
   
   ## create the layer and meta directors if needed
-  delete_layersDir <- is.null(layersDir)
-  if(is.null(layersDir)){
-    layersDir <- tempdir()
+  delete_dataDir <- is.null(dataDir)
+  if(is.null(dataDir)){
+    dataDir <- tempdir()
   }
   
-  delete_metaDir <- is.null(metaDir)
-  if(is.null(metaDir)){
-    metaDir <- tempdir()
-  }
+  layerDataFiles.arr <- file.path(dataDir, c('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C2_1-1.xlsx',
+                                             'ISCN_ALL_DATA_LAYER_C3_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C4_1-1.xlsx'))
+  dataFiles.arr <- c(layerDataFiles.arr, 
+                         file.path(dataDir, c(
+                                            'ISCN_ALL-DATA-CITATION_1-1.xlsx', 'ISCN_ALL_DATA_DATASET_1-1.xlsx')))
   
-  layerDataFiles.arr <- file.path(layersDir, c('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C2_1-1.xlsx',
-                                               'ISCN_ALL_DATA_LAYER_C3_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C4_1-1.xlsx'))
-  metaDataFiles.arr <- file.path(metaDir,  c('ISCN_ALL-DATA-CITATION_1-1.xlsx', 'ISCN_ALL_DATA_DATASET_1-1.xlsx'))
-  
-  ## Download the layer data
-  for(layerDataFile in layerDataFiles.arr){
-    if(!file.exists(layerDataFile)){
-      download.file(sprintf('ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/%s', basename(layerDataFile)), 
-                    layerDataFile, quiet=FALSE)
-    }
-  }
-  
-  # Download meta data
-  for(metaDataFile in metaDataFiles.arr){
-    if(!file.exists( metaDataFile)){
-      download.file(sprintf('ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/%s', basename(metaDataFile)), 
-                    metaDataFile, quiet=FALSE)
+  ## Download the data
+  for(dataFiles.arr in dataFiles.arr){
+    if(!file.exists(dataFiles.arr)){
+      download.file(sprintf('ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/%s', basename(dataFiles.arr)), 
+                    dataFiles.arr, quiet=FALSE)
     }
   }
   
@@ -97,19 +85,21 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
       mutate(rowNum = 1:nrow(.), ##Adding row numbers because dataset_name_soc breaks the soc variable
                                  ##...the layer name is no longer a unique row identifier
              observation_date = as.numeric(`observation_date (YYYY-MM-DD)`)) %>%
+      ##Dates start from December 20, 1899 in most versions of excel right now
       mutate(`observation_date (YYYY-MM-DD)` = if_else(observation_date > 2020,
                                         lubridate::decimal_date(as.Date(observation_date, 
                                                                         origin = "1899-12-30")),
                                         observation_date))
     
-    if(grepl('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', basename(layerDataFiles.arr[fileNum])) &
+    ##Check that the date is correct in the first data sheet
+    if(grepl('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', basename(dataFiles.arr[fileNum])) &
        ! floor(all.temp$`observation_date (YYYY-MM-DD)`[1]) == 2006){
+      ##keep going but don't trust it
       warning('Dates from ISCN3 layer files do not check out (SoilDataR::processData_ISCN3) ')
     }
     
     ##Pull the formal name for the ISCN data provider version
     datasetName <- as.character(names(all.temp)[1])
-    #all.temp %>% select(-contains(datasetName)) %>% mutate(dataset_provider = datasetName)
 
     dropCols <- apply(all.temp, 2, function(xx){all(is.na(xx))}) ##select_if has issues with non-standard column names
     all.temp <- all.temp[,!dropCols]
@@ -184,7 +174,7 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
   if(verbose) print('Adding field/measure IDs and factoring')
   ans$field <- ans$field %>%
     mutate_at(vars(one_of(intersect(unique(ISCNKey$var[ISCNKey$class == 'factor']), names(ans$field)))),
-              funs(factor))%>% ##Need to rename headers as var
+              funs(factor)) %>% ##Need to rename headers as var
     arrange(dataset_name) %>%
     mutate(fieldID = 1:nrow(.))
 
@@ -204,8 +194,8 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
   }
   #### read in meta files ####
   if(verbose) print('reading in meta files')
-  ans$study <- read_excel(path=paste(metaDir, 'ISCN_ALL-DATA-CITATION_1-1.xlsx', sep='/'), sheet='citation') %>%
-    full_join(read_excel(path=paste(metaDir, 'ISCN_ALL_DATA_DATASET_1-1.xlsx', sep='/'), sheet='dataset')) %>%
+  ans$study <- read_excel(path=paste(dataDir, 'ISCN_ALL-DATA-CITATION_1-1.xlsx', sep='/'), sheet='citation') %>%
+    full_join(read_excel(path=paste(dataDir, 'ISCN_ALL_DATA_DATASET_1-1.xlsx', sep='/'), sheet='dataset')) %>%
     mutate(`modification_date (YYYY-MM-DD)` = as.POSIXct(round(`modification_date (YYYY-MM-DD)`, unit='day'))) %>%
     select(-`ISCN 1-1 (2015-12-10)`) %>%
     group_by(dataset_name) %>%
@@ -226,19 +216,13 @@ processData_ISCN3 <- function(layersDir=NULL, metaDir=NULL,
     ans$ISCNKey <- ISCNKey
 
     #delete the files from the temepratory directorys
-    if(delete_metaDir){
+    
+    if(delete_dataDir){
       if(verbose) print(paste('deleting: ', 
-                              paste0(file.path(metaDir, c('ISCN_ALL-DATA-CITATION_1-1.xlsx', 'ISCN_ALL_DATA_DATASET_1-1.xlsx'),
-                                               collapse=', '))))
-      file.remove(file.path(metaDir, c('ISCN_ALL-DATA-CITATION_1-1.xlsx', 'ISCN_ALL_DATA_DATASET_1-1.xlsx')), recursive=TRUE)
-    }
-    if(delete_layersDir){
-      if(verbose) print(paste('deleting: ', 
-                              paste0(file.path(layersDir, c('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C2_1-1.xlsx',
+                              paste0(file.path(dataDir, c('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C2_1-1.xlsx',
                                                            'ISCN_ALL_DATA_LAYER_C3_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C4_1-1.xlsx')),
                                      collapse=', ')))
-      file.remove(file.path(layersDir, c('ISCN_ALL_DATA_LAYER_C1_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C2_1-1.xlsx',
-                                   'ISCN_ALL_DATA_LAYER_C3_1-1.xlsx', 'ISCN_ALL_DATA_LAYER_C4_1-1.xlsx')), recursive=TRUE)
+      file.remove(dataFiles.arr, recursive=TRUE)
     }
   
   return(ans)
