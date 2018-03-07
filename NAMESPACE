@@ -2,10 +2,11 @@
 
 export(outputData_PowellCenter)
 export(processData_ISCN3)
-export(processData_Templet)
+export(readKeyedData)
 import(dplyr)
 importFrom(lubridate,decimal_date)
 importFrom(readr,read_csv)
+importFrom(readxl,excel_sheets)
 importFrom(readxl,read_excel)
 importFrom(tidyr,gather)
 importFrom(tidyr,spread)
