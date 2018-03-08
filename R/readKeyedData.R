@@ -11,6 +11,7 @@
 #' @return a list of a wide and long data tables with a copy of the final key
 #' 
 #' @importFrom readxl excel_sheets read_excel
+#' @importFrom assertthat assert_that
 #' @export
 #'
 readKeyedData <- function(filename=NA, key.df=NA,
@@ -19,16 +20,8 @@ readKeyedData <- function(filename=NA, key.df=NA,
                                 skipRows=0, dropRows=NA, verbose=FALSE){
   
   ### Check input file(s) ###
-  assert_that(!is.na(filename) & !is.null(filename), 
+  assertthat::assert_that(all(!is.na(filename)) & all(!is.null(filename)), 
               msg='Must specify filename for input, if file does not exist then function will attempt to download from download_url specificed in key.df.')
-  
-  if(any(!file.exists(filename))){
-    if(verbose) print(paste('No file to process, trying to download from', 
-                            (key.df %>% filter(var == 'download_url'))$hardValue),
-                      'to', filename)
-    download.file((key.df %>% filter(var == 'download_url'))$hardValue, 
-                  filename, quiet=FALSE)
-  }
   
   ### check file type ###
   readingCSVfiles <- all(grepl('\\.csv', filename))
@@ -45,11 +38,11 @@ readKeyedData <- function(filename=NA, key.df=NA,
   }
   
   ### Check key.df structure ###
-  assert_that(all(c('header', 'var', 'flagID', 'softType') %in% 
+  assertthat::assert_that(all(c('header', 'var', 'flagID', 'softType') %in% 
                     names(key.df)),
               msg='Missing some key names')
   
-  assert_that('value' %in% key.df$softType, 
+  assertthat::assert_that('value' %in% key.df$softType, 
               msg='"value" must be in key.df$softType')
   
   #### Trim key to only read in matched vars ####
@@ -75,9 +68,9 @@ readKeyedData <- function(filename=NA, key.df=NA,
     select(-fullVar)
   
   ### Check that all vars are either long or wide and there are wide ids flaged ###
-  assert_that(any(is.na(key.df$softType) & !is.na(key.df$flagID)), 
+  assertthat::assert_that(any(is.na(key.df$softType) & !is.na(key.df$flagID)), 
              msg='A long data type can not be a flaged id')
-  assert_that(any(!is.na(key.df$softType) & is.na(key.df$flagID)),
+  assertthat::assert_that(any(!is.na(key.df$softType) & is.na(key.df$flagID)),
              msg='There must be a flagged id for the wide data types')
   
   
@@ -88,12 +81,14 @@ readKeyedData <- function(filename=NA, key.df=NA,
     if(verbose) print(paste('reading table', tableIndex))
     ### read in orginal data table ###
     if(readingCSVfiles){
-      data.df <- read_csv(filename[tableIndex], skip=skipRows)
+      data.df <- read_csv(filename[tableIndex], skip=skipRows, 
+                          col_names= tableIndex != verticalTable)
     }else{
       if(readxl::excel_sheets(filename)[tableIndex] %in% excludeSheets){
         next()
       }
-      data.df <- readxl::read_excel(filename, sheet=tableIndex, skip=skipRows)
+      data.df <- readxl::read_excel(filename, sheet=tableIndex, skip=skipRows,
+                                    col_names= tableIndex != verticalTable)
     }
     
     ### flip things around if it's a vertical format ###
@@ -136,14 +131,19 @@ readKeyedData <- function(filename=NA, key.df=NA,
       next() ##go on to the next table, there isn't anything here or if there are no id keys or it's only id
     }
  
-    long.df <- data.df %>%
+    longTemp <- data.df %>%
       ##pull the long headers
       select_(quote(longKey.df$header)) %>% 
       ##group by the headers flagged as ids
       group_by_(longKey.df$header[!is.na(longKey.df$flagID)]) %>%
       ##gather up all the non-id columns into two columns
       gather(key=header, value=value, 
-             one_of(longKey.df$header[is.na(longKey.df$flagID)]), na.rm=TRUE) %>%
+             one_of(longKey.df$header[is.na(longKey.df$flagID)]), na.rm=TRUE) 
+    
+    if(nrow(longTemp) == 0){
+      next()
+    }
+    longTemp <- longTemp %>% 
       ##key out what type of data is in each column
       left_join(longKey.df %>% select(header, var, softType), by='header') %>%
       ##merge columns of the same var-type (ie multi-columns defining methods)
@@ -156,9 +156,11 @@ readKeyedData <- function(filename=NA, key.df=NA,
       ##spead the type-value into 'value, sigma, unit, method' columns
       spread(key=softType, value=value) %>%
       ##filter out things that are never given a value
-      filter(!is.na(value)) %>%
+      filter(!is.na(value)) 
+      
       ##append it to the data from previous tables
-      bind_rows(long.df)
+      long.df <- longTemp %>%
+        bind_rows(long.df)
     
   }
   
@@ -167,8 +169,8 @@ readKeyedData <- function(filename=NA, key.df=NA,
     setNames( setNames(key.df$var, key.df$header)[names(.)])
   
   long.df <- long.df %>%
-    setNames( setNames( c(key.df$var, unique(key.df$softType)),
-                        c(key.df$header, unique(key.df$softType)) )[names(.)])
+    setNames( setNames( c(key.df$var, 'var', unique(key.df$softType)),
+                        c(key.df$header, 'var', unique(key.df$softType)) )[names(.)])
   
   return(list(wide=wide.df, long=long.df, key=key.df))
 }
