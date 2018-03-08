@@ -113,12 +113,19 @@ readKeyedData <- function(filename=NA, key.df=NA,
       select_(quote(wideKey.df$header)) %>%
       select_if(~any(!is.na(.))) #drop empty columns
     
+    if(verbose) print(paste('Wide headers to be merged:', 
+                            paste(names(wideTemp), collapse=', ')))
+    
     if(is.null(wide.df)){
+      if(verbose) print('initalizing wide table')
       wide.df <- wideTemp
-    }else if(length(intersect(names(wideTemp), names(wide.df))) > 0){
-      wide.df <- full_join(wide.df, wideTemp) #merge data based on common names
+    }else if(length(intersect(names(wideTemp), names(wide.df))) == 0 &
+             (nrow(wideTemp) == 1 | nrow(wide.df) == 1)){
+      if(verbose) print('binding to wide table')
+      wide.df <- data.frame(wide.df, wideTemp) #column bind what is a single row
     }else{
-      wide.df <- data.frame(wide.df, wideTemp) #otherwise try to column bind what is probably a single row
+      if(verbose) print('full_join with wide table')
+      wide.df <- full_join(wide.df, wideTemp) #merge data based on common names
     }
     
     ### pull the long table ###
@@ -126,16 +133,18 @@ readKeyedData <- function(filename=NA, key.df=NA,
       filter(!is.na(softType) | !is.na(flagID), #define long table by their soft type
                                                 #...identification and cross id by flagID
              header %in% names(data.df)) # only look appropreate headers
-    if(nrow(longKey.df) == 0 | all(is.na(longKey.df$flagID)) |
+    if(nrow(longKey.df) == 0 | 
+       all(is.na(longKey.df$flagID)) |
        all(!is.na(longKey.df$flagID))){
-      next() ##go on to the next table, there isn't anything here or if there are no id keys or it's only id
+      next() ##go on to the next table, there isn't anything here or 
+             ##...if there are no id keys or it's only id
     }
  
     longTemp <- data.df %>%
       ##pull the long headers
       select_(quote(longKey.df$header)) %>% 
       ##group by the headers flagged as ids
-      group_by_(longKey.df$header[!is.na(longKey.df$flagID)]) %>%
+      group_by_(.dots=longKey.df$header[!is.na(longKey.df$flagID)]) %>%
       ##gather up all the non-id columns into two columns
       gather(key=header, value=value, 
              one_of(longKey.df$header[is.na(longKey.df$flagID)]), na.rm=TRUE) 
@@ -151,7 +160,7 @@ readKeyedData <- function(filename=NA, key.df=NA,
       summarize(value=ifelse(length(value) == 1, value,
                              paste(header, value, sep=':', collapse='; '))) %>%
       ##regroup by only the id columns and var
-      group_by_(longKey.df$header[!is.na(longKey.df$flagID)], add=FALSE) %>% 
+      group_by_(.dots=longKey.df$header[!is.na(longKey.df$flagID)], add=FALSE) %>% 
       group_by(var) %>%
       ##spead the type-value into 'value, sigma, unit, method' columns
       spread(key=softType, value=value) %>%
