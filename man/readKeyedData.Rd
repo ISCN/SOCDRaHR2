@@ -2,7 +2,7 @@
 % Please edit documentation in R/readKeyedData.R
 \name{readKeyedData}
 \alias{readKeyedData}
-\title{This function will read in a generic data file and convert it a long data table and a wide data table with the assistance of a key. This is intended for relatively small data sets, if your data is more then 10K layers (with an expected data load >10Mb) consider writing your own function.}
+\title{Simple read-in for small datasets}
 \usage{
 readKeyedData(filename = NA, key.df = NA, verticalTable = c("metadata"),
   excludeSheets = c("controlled vocabulary"), skipRows = 0, dropRows = NA,

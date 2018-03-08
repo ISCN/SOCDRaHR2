@@ -1,4 +1,6 @@
-#' This function will read in a generic data file and convert it a long data table and a wide data table with the assistance of a key. This is intended for relatively small data sets, if your data is more then 10K layers (with an expected data load >10Mb) consider writing your own function.
+#' Simple read-in for small datasets
+#' 
+#'  This function will read in a generic data file and convert it a long data table and a wide data table with the assistance of a key. This is intended for relatively small data sets, if your data is more then 10K layers (with an expected data load >10Mb) consider writing your own function.
 #'
 #' @param filename characters identifying an Excel file with worksheets or set of csv files to be read in
 #' @param key.df data frame converting headers to variables. 
