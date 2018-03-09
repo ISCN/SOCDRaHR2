@@ -31,10 +31,18 @@ readKeyedData <- function(filename=NA, key.df=NA,
   
   if(readingCSVfiles){
     numIterate <- length(filename)
-    verticalTable <- which(filename %in% verticalTable)
+    if(any(filename %in% verticalTable)){
+      verticalTable <- which(filename %in% verticalTable)
+    }else{
+      verticalTable <- -1
+    }
   }else if(readingEXCELworkbook){
     numIterate <- length(readxl::excel_sheets(filename))
-    verticalTable <- which(readxl::excel_sheets(filename) %in% verticalTable)
+    if(any(readxl::excel_sheets(filename) %in% verticalTable)){
+      verticalTable <- which(readxl::excel_sheets(filename) %in% verticalTable)
+    }else{
+      verticalTable <- -1
+    }
   }else{
     stop('Invalide file format, must be csv files or an excel workbook')
   }
@@ -53,21 +61,26 @@ readKeyedData <- function(filename=NA, key.df=NA,
     filter(!is.na(var))
   
   ####Expand the regular expressions in the key ####
-  key.df <- key.df %>%
+  varsToExpand <- key.df %>%
     filter(softType != 'value' & !is.na(softType), #pull softTypes that are not values
            #If var doesn't match value vars assume they are regular expressions
            !var %in% (key.df %>% filter(softType == 'value'))$var) %>%
-    group_by(header) %>%
-    do((function(xx=.,
-                 varlist = (key.df %>% filter(!is.na(var) & softType == 'value'))$var){
-      return(data.frame(fullVar=varlist[grepl(xx$var, varlist)], stringsAsFactors=FALSE))
-    })(.)) %>% #fill in the vars that match the regular expression
-    right_join(key.df, by='header') %>% #merge back into main key
-    group_by(header, dataframe, softType) %>%
-    mutate(var = if_else(is.na(fullVar), var, fullVar)) %>%
-    arrange(var) %>%
-    ungroup() %>%
-    select(-fullVar)
+    group_by(header) 
+  
+  if(nrow(varsToExpand) > 0){
+    key.df <- varsToExpand %>%
+      do((function(xx=.,
+                   varlist = (key.df %>% filter(!is.na(var) & softType == 'value'))$var){
+        return(data.frame(fullVar=varlist[grepl(xx$var, varlist)],
+                          stringsAsFactors=FALSE))
+      })(.)) %>% #fill in the vars that match the regular expression
+      right_join(key.df, by='header') %>% #merge back into main key
+      group_by(header, dataframe, softType) %>%
+      mutate(var = if_else(is.na(fullVar), var, fullVar)) %>%
+      arrange(var) %>%
+      ungroup() %>%
+      select(-fullVar)
+  }
   
   ### Check that all vars are either long or wide and there are wide ids flaged ###
   assertthat::assert_that(any(is.na(key.df$softType) & !is.na(key.df$flagID)), 
@@ -146,7 +159,7 @@ readKeyedData <- function(filename=NA, key.df=NA,
       ##pull the long headers
       select_(quote(longKey.df$header)) %>% 
       ##group by the headers flagged as ids
-      group_by_(.dots=longKey.df$header[!is.na(longKey.df$flagID)]) %>%
+      group_by_at(vars(one_of(longKey.df$header[!is.na(longKey.df$flagID)]))) %>%
       ##gather up all the non-id columns into two columns
       gather(key=header, value=value, 
              one_of(longKey.df$header[is.na(longKey.df$flagID)]), na.rm=TRUE) 
@@ -159,10 +172,13 @@ readKeyedData <- function(filename=NA, key.df=NA,
       left_join(longKey.df %>% select(header, var, softType), by='header') %>%
       ##merge columns of the same var-type (ie multi-columns defining methods)
       group_by(var, softType, add=TRUE) %>% unique %>%
-      summarize(value=ifelse(length(value) == 1, value,
+      summarize(value=ifelse(length(value) == 1 | all(softType == 'value'), 
+                             value,
                              paste(header, value, sep=':', collapse='; '))) %>%
       ##regroup by only the id columns and var
-      group_by_(.dots=longKey.df$header[!is.na(longKey.df$flagID)], add=FALSE) %>% 
+      ungroup() %>%
+      group_by_at(vars(one_of(longKey.df$header[!is.na(longKey.df$flagID)])),
+                  add=FALSE) %>% 
       group_by(var) %>%
       ##spead the type-value into 'value, sigma, unit, method' columns
       spread(key=softType, value=value) %>%
