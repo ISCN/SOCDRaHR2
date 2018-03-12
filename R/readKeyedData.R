@@ -92,7 +92,7 @@ readKeyedData <- function(filename=NA, key.df=NA,
   wide.df <- NULL
   long.df <- NULL
   
-  for(tableIndex in 1:numIterate){
+  for(tableIndex in seq_len(numIterate)){
     if(verbose) print(paste('reading table', tableIndex))
     ### read in orginal data table ###
     if(readingCSVfiles){
