@@ -44,7 +44,7 @@ readKeyedData <- function(filename=NA, key.df=NA,
       verticalTable <- -1
     }
   }else{
-    stop('Invalide file format, must be csv files or an excel workbook')
+    stop('Invalid file format, must be csv files or an excel workbook')
   }
   
   ### Check key.df structure ###
