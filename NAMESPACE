@@ -3,6 +3,7 @@
 export(ISCN4)
 export(outputData_PowellCenter)
 export(processData_ISCN3)
+export(readCanandaUplandForest2018)
 export(readKeyedData)
 import(dplyr)
 importFrom(assertthat,assert_that)
