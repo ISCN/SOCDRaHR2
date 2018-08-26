@@ -4,8 +4,8 @@
 \alias{processData_ISCN3}
 \title{Load ISCN Layer and Meta data}
 \usage{
-processData_ISCN3(dataDir = NULL, verbose = FALSE, onlyISCNKey = FALSE,
-  loadVars = NULL)
+processData_ISCN3(dataDir = NULL, verbose = FALSE,
+  onlyISCNKey = FALSE, loadVars = NULL)
 }
 \arguments{
 \item{dataDir}{path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.xlsx, ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files. If this is left NULL then files will be downloaded to a temporary directory from the ISCN website and then deleted.}
