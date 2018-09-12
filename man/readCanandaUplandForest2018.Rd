@@ -12,7 +12,7 @@ readCanandaUplandForest2018(dataDir, download = TRUE)
 \item{download}{boolean that will download the files from repository}
 }
 \value{
-a list with meta data and raw table reads. This will be 4.6 Mb in size.
+a list with meta data and raw table reads. This will be 7.4 Mb in size.
 }
 \description{
 Download and read in the raw data tables from Shaw, C., Hilger, A., Filiatrault, M. and

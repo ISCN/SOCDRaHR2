@@ -57,7 +57,7 @@ readCanandaUplandForest2018 <- function(dataDir, download=TRUE){
   }
   
   ##### Enter data key #####
-ans$ISCN5_key <- read.csv(text='table,header,MetaDataDescriptors,var,longVar,flagID,dataframe,class,softType,hardValue,hardSigma,hardUnit,hardMethod
+ans$ISCN5_key <- read.csv(text='orgTable,orgHeader,MetaDataDescriptors,var,longVar,flagID,dataframe,class,softType,hardValue,hardSigma,hardUnit,hardMethod
 PROFILES,LOCATION_ID,Unique identifier for each site. ,site_name,,field_id,field,,,,,,
 PROFILES,HZN_SEQ_NO,Unique identifier for each horizon. Used in conjunction with LOCATION_ID to produce unique identifiers for the PROFILES table. ,profile_name,,field_id,field,,,,,,
 PROFILES,HORIZON,Soil horizon designation according to the Canadian System of Soil Classification. ,hzn_desgn,,,field,,,,,,
@@ -74,7 +74,7 @@ PROFILES,CF_CORR_FACTOR,CF_CORR_FACTOR is calculated as (1 - CF_VOL_PCT/100) and
 PROFILES,ORG_CARB_PCT,"Percent organic carbon reported by the source, or estimated. See meta documentation for details)",oc,,,sample,,value,,,,
 PROFILES,CARB_MEAS_EST,Indicates whether ORG_CARBON_PCT was measured and reported in the source or estimated using the procedure described for ORG_CARBON_PCT ,oc,,,sample,,method,,,,
 PROFILES,CARB_EST_TYPE,Indicates method of estimation if CARB_MEAS_EST is “Estimated” ,oc,,,sample,,method,,,,
-PROFILES,HZN_CARB_THA,Organic carbon stock for a horizon calculated as HZN_CARB_THA = ORG_CARB_PCT/100 * BULK_DENSITY * HZN_THICKNESS * 100 * HZN_CF_FACTOR,soc,,,sample,,value,,,,
+PROFILES,HZN_CARB_THA,Organic carbon stock for a horizon calculated as HZN_CARB_THA = ORG_CARB_PCT/100 * BULK_DENSITY * HZN_THICKNESS * 100 * HZN_CF_FACTOR,,,,,,,,,,
 PROFILES,SAND_PCT,Percent sand as reported by the source rounded to the nearest integer ,sand_tot_psa,,,sample,,value,,,percent,
 PROFILES,SILT_PCT,"Percent silt as reported by the source, rounded to the nearest integer ",silt_tot_psa,,,sample,,value,,,percent,
 PROFILES,CLAY_PCT,"Percent clay as reported by the source, rounded to the nearest integer ",clay_tot_psa,,,sample,,value,,,percent,
@@ -126,7 +126,7 @@ REFERENCES,CITE_LONG,,source_citation,,,study,,,,,,
 REFERENCES,AUTHORS,,source_authors,,,study,,,,,,
 REFERENCES,YEAR,,source_year,,,study,,,,,,
 REFERENCES,TITLE,,source_title,,,study,,,,,,
-REFERENCES,LINK_TO_PDF,,source_url,,,study,,,,,,', na.strings='')
+REFERENCES,LINK_TO_PDF,,source_url,,,study,,,,,,', na.strings = '', as.is=TRUE)
   
   return(ans)
 }
