@@ -13,7 +13,7 @@
 #' 
 #' @importFrom assertthat assert_that
 #' @importFrom tibble as_tibble
-#' @importFrome tidyr unite spread
+#' @importFrom tidyr unite spread
 #' @import dplyr
 #'
 #' @examples

@@ -9,7 +9,6 @@
 #'  a second data frame with the records
 #' @export
 #'
-#' @examples
 readCPEAT <- function(dataDir){
   downloadDOI <- read.csv(text=gsub(' ', '', gsub(' core ', '_c', 'URL,Author,Site_core,orgFile,extra
 https://doi.org/10.1594/PANGAEA.890471,Garneau,Aero,Aero.csv,
