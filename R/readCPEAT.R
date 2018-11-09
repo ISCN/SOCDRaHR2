@@ -9,7 +9,7 @@
 #'  a second data frame with the records
 #' @export
 #'
-readCPEAT <- function(dataDir){
+readCPEAT <- function(dataDir, workLocal = FALSE){
   downloadDOI <- read.csv(text=gsub(' ', '', gsub(' core ', '_c', 'URL,Author,Site_core,orgFile,extra
 https://doi.org/10.1594/PANGAEA.890471,Garneau,Aero,Aero.csv,
 https://doi.org/10.1594/PANGAEA.890528,Yu,Altay core 1,Altay.csv,
@@ -99,7 +99,17 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
                                       '?format=textfile', sep='')),
       localFile = file.path(dataDir, paste0(Site_core, '.tab'))) 
   
-  download.file(downloadDOI$downloadURL, downloadDOI$localFile)
+  if(any(!file.exists(downloadDOI$localFile)) & !workLocal){
+    #print(downloadDOI$localFile[!file.exists(downloadDOI$localFile)])
+    download.file(downloadDOI$downloadURL[!file.exists(downloadDOI$localFile)], 
+                  downloadDOI$localFile[!file.exists(downloadDOI$localFile)])
+  }
+  
+  if(workLocal){
+    downloadDOI <- downloadDOI %>% 
+      filter(file.exists(localFile))
+  }
+  
   
   allData <- plyr::ddply(downloadDOI, c('Site_core'), function(xx){
     #print(xx$localFile)
@@ -147,6 +157,6 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
   #     return(xxtemp3)
   #   })(.))
   
-  return(site=metaData, sample=allData)
+  return(list(site=metaData, sample=allData, files=downloadDOI))
   #tester <- pangaear::pg_data('10.1594/PANGAEA.890471')
 }
