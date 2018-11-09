@@ -4,9 +4,10 @@
 \alias{readKeyedData}
 \title{Simple read-in for small datasets}
 \usage{
-readKeyedData(filename = NA, key.df = NA, verticalTable = c("metadata"),
-  excludeSheets = c("controlled vocabulary"), skipRows = 0, dropRows = NA,
-  verbose = FALSE)
+readKeyedData(filename = NA, key.df = NA,
+  verticalTable = c("metadata"),
+  excludeSheets = c("controlled vocabulary"), skipRows = 0,
+  dropRows = NA, verbose = FALSE)
 }
 \arguments{
 \item{filename}{characters identifying an Excel file with worksheets or set of csv files to be read in}
