@@ -6,15 +6,13 @@
 #' @param soilDepthAvg 
 #' @param topRef 
 #'
-#' @return
-#' @export
+#' @return 
 #'
-#' @example
-#' soilDepthAvg <- c(12,48,62,75,92,112,130,148)
-#' x <- SoilDepthAvgToBound(soilDepthAvg,0)
 
 soilDepthAvgToBound <- function(soilDepthAvg,topRef= 0){
-
+  # soilDepthAvg <- c(12,48,62,75,92,112,130,148)
+  # x <- SoilDepthAvgToBound(soilDepthAvg,0)
+  
   #soilDepthAvg <- c(12,48,62,75,92,112,130,148)
 
 n <- length(soilDepthAvg)
