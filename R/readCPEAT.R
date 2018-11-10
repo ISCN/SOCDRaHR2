@@ -1,15 +1,21 @@
 #' CPEAT project reads
 #' 
-#' This reads in the specified records of the CPEAT project. Currently under development, not all
-#' the metadata is parsed
+#' This reads in records of the CPEAT project from PANGAEA. 
 #'
-#' @param dataDir identify the download directory 
+#' @param dataDir identify the download directory
+#' @param workLocal flag to ignore any files you don't have locally (don't download)
+#' @param verbose flag to print out verbose debugging messages 
 #'
 #' @return a list of data frames, the first data frame with the meta data and
 #'  a second data frame with the records
+#'  @import magrittr
+#'  @importFrom dplyr select mutate vars starts_with select if_else recode filter full_join
+#'  @importFrom readr read_file read_tsv
+#'  @importFrom plyr ddply
+#'  @importFrom tidyr separate gather spread
 #' @export
 #'
-readCPEAT <- function(dataDir, workLocal = FALSE){
+readCPEAT <- function(dataDir, workLocal = FALSE, verbose=FALSE){
   downloadDOI <- read.csv(text=gsub(' ', '', gsub(' core ', '_c', 'URL,Author,Site_core,orgFile,extra
 https://doi.org/10.1594/PANGAEA.890471,Garneau,Aero,Aero.csv,
 https://doi.org/10.1594/PANGAEA.890528,Yu,Altay core 1,Altay.csv,
@@ -95,32 +101,39 @@ https://doi.org/10.1594/PANGAEA.890539,Bunbury,VC04-06 core 1,VC04-06.csv,
 https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
                           stringsAsFactors = FALSE)  %>%
     dplyr::select(-extra) %>%
-    dplyr::mutate(downloadURL = glue::trim(paste(gsub('doi.org', 'doi.pangaea.de', URL),
-                                      '?format=textfile', sep='')),
-      localFile = file.path(dataDir, paste0(Site_core, '.tab'))) 
+    dplyr::mutate(downloadURL = gsub('\\s+$', '', gsub('^\\s+', '', 
+                                                       paste(gsub('doi.org', 'doi.pangaea.de', URL),
+                                                             '?format=textfile', sep=''))),
+                  ##prototype provided as csv files, actually downloading as tsv
+                  localFile = file.path(dataDir, paste0(Site_core, '.tab'))) 
   
+  ##Download the specified files above if you don't have them
   if(any(!file.exists(downloadDOI$localFile)) & !workLocal){
-    #print(downloadDOI$localFile[!file.exists(downloadDOI$localFile)])
+    if(verbose) print(paste('downloading:', 
+                            downloadDOI$localFile[!file.exists(downloadDOI$localFile)]))
     download.file(downloadDOI$downloadURL[!file.exists(downloadDOI$localFile)], 
                   downloadDOI$localFile[!file.exists(downloadDOI$localFile)])
   }
   
+  ##Trim out any files that failed to download
   if(workLocal){
     downloadDOI <- downloadDOI %>% 
       filter(file.exists(localFile))
   }
   
-  
+  ##Grab the tabiluar data from all the files
   allData <- plyr::ddply(downloadDOI, c('Site_core'), function(xx){
-    #print(xx$localFile)
-    readText <- read_file(xx$localFile)
+    if(verbose) {paste('processing data table:', xx$localFile)}
+    readText <- readr::read_file(xx$localFile)
     #header <- regmatches(readText, regexpr('/\\* .*\n\\*/', readText))
-    return(read_tsv(gsub('/\\* .*\n\\*/\n', '', readText)))
+    ##Trim the header between /* and \*
+    return(readr::read_tsv(gsub('/\\* .*\n\\*/\n', '', readText)))
   })
   
+  ##Grab the header text
   allheader <- plyr::ddply(downloadDOI, c('Site_core'), function(xx){
-    #print(xx$localFile)
-    readText <- read_file(xx$localFile)
+    if(verbose) print(paste('processing data table:', xx$localFile))
+    readText <- readr::read_file(xx$localFile)
     header <- regmatches(readText, regexpr('/\\* .*\n\\*/', readText))
     ans <- unlist(strsplit(x=header, split='\n.+:\t', perl=TRUE))
     ans <- ans[-1] #pop off the header
@@ -129,34 +142,72 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
     return(as.data.frame(as.list(ans)))
   })
   
+  
+  ##I really hate this bit of code. It feels like there should be 
+  ##...an elegant parsing solution but I can't find it in time alotted. Very sad.
   metaData <- allheader %>% 
     dplyr::mutate(Size = as.numeric(gsub(' data points\n\\*/', '', Size))) %>%
-    dplyr::mutate_at(vars(License), as.factor) %>%
-    tidyr::separate(Coverage, c('lat_lab', 'lat', 'lon_lab', 'lon', 
-                                'min_depth_lab', 'min_depth', 'max_depth_lab', 'max_depth'),
-                    sep='(: )|( \\* )|(\n\t)') %>%
-    #dplyr::select(-lat_lab, -lon_lab, -min_depth_lab, -max_depth_lab) %>%
-    dplyr::mutate(min_depth = gsub(' m$', '', min_depth),
-                  max_depth = gsub(' m$', '', max_depth)) %>%
-    dplyr::mutate_at(vars(min_depth, max_depth, lat, lon), as.numeric) %>%
-    dplyr::group_by_all()
-  #TODO this needs to be parsed
-  # %>%
-  #   do((function(xx){
-  #     #print(xx$Event.s.)
-  #     xxtemp <- gsub('COMMENT:','',  as.character(xx$Event.s.))
-  #     #xxtemp <- gsub('Details.+:', '', xxtemp, perl = TRUE)
-  #     xxtemp <- strsplit(unlist(strsplit(as.character(xxtemp), '( \\* )|(; )|( : )|(, )')), ': ')
-  #     xxtemp[[1]] <- c('name', xxtemp[[1]][1])
-  #     xxtemp <- lapply(xxtemp, function(yy){
-  #       if(length(yy) > 2){return(yy[length(yy)-1:0])} else {return(yy)}})
-  #     
-  #     xxtemp2 <- t(as.data.frame(xxtemp))
-  #     xxtemp3 <- data.frame(as.list(setNames(xxtemp2[,2], xxtemp2[,1])))
-  #     print(xxtemp3)
-  #     return(xxtemp3)
-  #   })(.))
+    dplyr::mutate_at(dplyr::vars(License), as.factor) %>%
+    tidyr::separate(Coverage, into=paste('section', 1:4),
+                    sep='(\\s+\\*\\s+)|\t') %>%
+    tidyr::gather(key='key', value='parseME', dplyr::starts_with('section')) %>%
+    dplyr::select(-key) %>%
+    tidyr::separate(parseME, into=c('header', 'value'), sep=':') %>%
+    dplyr::mutate(header = dplyr::if_else(grepl(' m$', value), paste(header, '[m]'), header),
+                  value = gsub(' m$', '', value)) %>%
+    ##trim spaces
+    dplyr::mutate(header=gsub('\\s+$', '', gsub('^\\s+', '', header)),
+                  value=gsub('\\s+$', '', gsub('^\\s+', '', value))) %>%
+    tidyr::spread(key='header', value='value') %>%
+    tidyr::separate(col=Event.s., into=c('Space', 'StudyComments'), sep=' \\* COMMENT: ')
   
-  return(list(site=metaData, sample=allData, files=downloadDOI))
+  space_DF <- metaData %>% dplyr::select(Space) %>% unique %>%
+    tidyr::separate(col=Space, into=c('core_name', paste0('parse_string', 1:6)), sep='\\*', remove=FALSE) %>%
+    tidyr::gather(key='segment', value='parseME', dplyr::starts_with('parse_string'), na.rm=TRUE) %>%
+    dplyr::select(-segment) %>%
+    tidyr::separate(parseME, into=c('header', 'value'), sep=': ') %>%
+    dplyr::mutate(header=dplyr::recode(header, ' Penetration' = " Recovery")) %>%
+    dplyr::mutate(header = gsub('\\s$', '', gsub('^\\s+', '', header)),
+                  value = gsub('\\s$', '', gsub('^\\s+', '', value))) %>%
+    dplyr::mutate(header = dplyr::if_else(grepl('cm$', value),
+                                          paste(header,'[cm]'), 
+                                          dplyr::if_else(grepl(' m$', value), paste(header, '[m]'), header)),
+                  value = gsub(' c?m$', '', value)) %>%
+    tidyr::spread(key='header', value='value') 
+  
+  comments_DF <- metaData %>% dplyr::select(StudyComments) %>% unique %>%
+    dplyr::mutate(parse_String = dplyr::if_else(grepl('^[^;]+:[^;]+:', StudyComments),
+                                                gsub('^[^:]+: ?', '', StudyComments), StudyComments)) %>%
+    tidyr::separate(parse_String, into=paste0('x', 1:11), sep='(;)|(.,) ') %>%
+    tidyr::gather(key='position', value='parse_string', dplyr::starts_with('x'), na.rm=TRUE) %>% 
+    dplyr::select(-position) %>%
+    dplyr::mutate(parse_string = dplyr::recode(parse_string, 
+                                               `carbon rate site Y3` = 'carbon rate site: Y3',
+                                               ` basal age 14065 calBP` ='basal age: 14065 calBP')) %>%
+    tidyr::separate(parse_string, into=c('label', 'value'), sep=': ', remove=FALSE) %>%
+    dplyr::mutate(value=dplyr::if_else(grepl('uncal', value), paste0(gsub('uncal.*$', '',value), 'uncal'), value)) %>%
+    ##Deal with units
+    dplyr::mutate(label=tolower(gsub('^\\s+', '',
+                                     dplyr::if_else(grepl('\\d+ \\w+\\.?$', value), 
+                                       sprintf('%s [%s]', label, gsub('^(\\d|\\.)+ ', '', value)), label)) ))%>%
+    dplyr::mutate(value=dplyr::if_else(grepl('\\d+ \\w+\\.?$', value), 
+                                     gsub(' \\D+$', '', value), value)) %>%
+    dplyr::filter(!is.na(value)) %>%
+    dplyr::select(-parse_string) %>%
+    tidyr::spread(key='label', value='value') %>%
+    dplyr::mutate(`peat properties sample size` = gsub(' ?cm.*', '', `peat properties sample size`)) %>%
+    dplyr::rename('peat properties sample size [cm^3]' = `peat properties sample size`)
+  
+  temp <- metaData %>% 
+    dplyr::full_join(space_DF) %>% 
+    dplyr::full_join(comments_DF) %>%
+    dplyr::select(-Space, -StudyComments)
+  
+  return(list(site=temp, sample=allData, files=downloadDOI))
+  #This pangaear solution was never quite there. but leaving it here for future tinkering
+  #devtools::install_github("ropensci/pangaear@cache-path", force=TRUE)
   #tester <- pangaear::pg_data('10.1594/PANGAEA.890471')
+  #tester[[1]]$metadata$events
+  #record_test <- pangaear::pg_get_record('oai:pangaea.de:doi:10.1594/PANGAEA.890471')
+
 }
