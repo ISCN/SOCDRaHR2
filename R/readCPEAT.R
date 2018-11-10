@@ -145,6 +145,11 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
   
   ##I really hate this bit of code. It feels like there should be 
   ##...an elegant parsing solution but I can't find it in time alotted. Very sad.
+  #This pangaear solution was never quite there. but leaving it here for future tinkering
+  #devtools::install_github("ropensci/pangaear@cache-path", force=TRUE)
+  #tester <- pangaear::pg_data('10.1594/PANGAEA.890471')
+  #tester[[1]]$metadata$events
+  #record_test <- pangaear::pg_get_record('oai:pangaea.de:doi:10.1594/PANGAEA.890471')
   metaData <- allheader %>% 
     dplyr::mutate(Size = as.numeric(gsub(' data points\n\\*/', '', Size))) %>%
     dplyr::mutate_at(dplyr::vars(License), as.factor) %>%
@@ -204,10 +209,6 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
     dplyr::select(-Space, -StudyComments)
   
   return(list(site=temp, sample=allData, files=downloadDOI))
-  #This pangaear solution was never quite there. but leaving it here for future tinkering
-  #devtools::install_github("ropensci/pangaear@cache-path", force=TRUE)
-  #tester <- pangaear::pg_data('10.1594/PANGAEA.890471')
-  #tester[[1]]$metadata$events
-  #record_test <- pangaear::pg_get_record('oai:pangaea.de:doi:10.1594/PANGAEA.890471')
+  
 
 }
