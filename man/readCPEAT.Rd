@@ -4,16 +4,24 @@
 \alias{readCPEAT}
 \title{CPEAT project reads}
 \usage{
-readCPEAT(dataDir)
+readCPEAT(dataDir, workLocal = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{dataDir}{identify the download directory}
+
+\item{workLocal}{flag to ignore any files you don't have locally (don't download)}
+
+\item{verbose}{flag to print out verbose debugging messages}
 }
 \value{
 a list of data frames, the first data frame with the meta data and
  a second data frame with the records
+ @import magrittr
+ @importFrom dplyr select mutate vars starts_with select if_else recode filter full_join
+ @importFrom readr read_file read_tsv
+ @importFrom plyr ddply
+ @importFrom tidyr separate gather spread
 }
 \description{
-This reads in the specified records of the CPEAT project. Currently under development, not all
-the metadata is parsed
+This reads in records of the CPEAT project from PANGAEA.
 }
