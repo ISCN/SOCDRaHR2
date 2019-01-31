@@ -1,0 +1,17 @@
+This file contains a list of contributors for the soils data recovery project.
+
+The following people identified soil data sets of interest:
+  K Todd-Brown <ktoddbrown@gmail.com>, Pacific Northwest National Lab
+  Samuel C Zipper <samuelczipper@gmail.com>, University of Victoria
+  H Lu <luharmony@gmail.com>, Stanford University
+  S Tumber-Davila <stumber@stanford.edu>, Stanford University
+  
+The following people have contributed code and code review for data ingestion.
+  B Stockmaster <stockmaster@iodp.tamu.edu>, Texas A&M University
+  Laurel B Childress <childress@iodp.tamu.edu> Texas A&M University
+  Kritika Kothari <kritikakothari@gmail.com>, Texas A&M University
+  Edith Sotelo <sotelog.edith@gmail.com> Texas A&M University
+
+The following people write reports for ingested data sets: 
+  K Todd-Brown <ktoddbrown@gmail.com>, Pacific Northwest National Lab
+ 
