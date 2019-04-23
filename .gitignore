@@ -10,3 +10,6 @@ temp/*
 
 #Ignore lock files
 *~
+
+#Ignore mac files
+.DS_Store
