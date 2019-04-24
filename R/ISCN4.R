@@ -18,7 +18,26 @@
 #' }
 ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=TRUE){
  
-  if(!onlyNewData){
+  dataDir <- '~/Documents/Professional/Datasets/ISCN_3'
+  ISCN <- ISCN3(dataDir = dataDir, verbose=TRUE)
+  
+  keys.ls <- makeKeys()
+  
+  tempKey <- dplyr::left_join(keys.ls$ISCN, keys.ls$ISCN3, by='variable', 
+                              suffix=c('_target', '_source'))
+  
+  #xx <- tempKey %>% filter(table_target == 'study', table_source == 'citation', !is.na(header_source))
+  
+  temp <- plyr::dlply(tempKey %>% filter(!is.na(header_source)), 
+                      c('table_target'), function(xx){
+                        plyr::ddply(xx, c('table_source'), function(yy){
+                          selectCols <- unique(yy$header_source)
+                          ans <- unique(data.table::data.table(ISCN[[yy$table_source[1]]])[, ..selectCols])
+                          return(ans)
+                        })
+  })
+  
+if(!onlyNewData){
     stop('Merging with ISCN3 not currently implimented.')
   }
   
@@ -369,14 +388,14 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=TRUE){
                      dplyr::mutate(layer_name = paste(profile_name, layer_name, sep='-')))
   
   ###### Read in data ########
-  Treat <- SoilDataR::readKeyedData(filename=datafile.arr['Treat'], key.df=key.df, dropRows=1:2)
+  Treat <- soilDataR::readKeyedData(filename=datafile.arr['Treat'], key.df=key.df, dropRows=1:2)
   Treat$long <- Treat$key %>% 
     dplyr::filter(!is.na(hardUnit)) %>% #units are the only thing hard coded here
     dplyr::select(var, hardUnit) %>% unique %>% 
     dplyr::right_join(Treat$long, by=c('var')) %>% 
     dplyr::rename(unit=hardUnit)
   
-  Alamos <- SoilDataR::readKeyedData(filename=AlamosFilename, 
+  Alamos <- soilDataR::readKeyedData(filename=AlamosFilename, 
                                      verticalTable = c(AlamosFilename[1]),
                                      key.df=key.df, dropRows=1:2)
   
