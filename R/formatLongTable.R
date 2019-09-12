@@ -64,7 +64,7 @@ formatLongTable <- function(data.ls, sourceKey, targetKey,
       xx <- key[table_source == sourceTbl & table_target == targetTbl]
       
       #Pull all the columns indicated by the key
-      columnNames <- (xx[xx$header != '',])$header
+      columnNames <- base::intersect((xx[xx$header != '',])$header, names(data.ls[[sourceTbl]]))
       
       ##pull out unique data
       sourcedata <- unique((data.ls[[sourceTbl]])[,..columnNames])
@@ -74,10 +74,12 @@ formatLongTable <- function(data.ls, sourceKey, targetKey,
       names(idVars) <- paste0((xx[xx$type == 'id',])$variable, '_id')
       
       if(any(xx$type != 'id')){
-        sourcedata <- melt(sourcedata, id.vars = idVars, variable.name = 'header', value.name='entry', na.rm=TRUE)
+        sourcedata <- melt(sourcedata, id.vars = idVars, 
+                           variable.name = 'header', value.name='entry', na.rm=TRUE)
         
-        temp <- merge(sourcedata, key[type != 'id',c('variable', 'header', 'entry', 'type')], by='header')
-        temp$entry <- paste0(temp$entry.x, temp$entry.y)
+        temp <- merge(key[type != 'id',c('variable', 'header', 'type')], sourcedata, 
+                      by='header', allow.cartesian = TRUE)
+        #temp$entry <- paste0(temp$entry.x, temp$entry.y)
         selectCols <- c(idVars, 'header', 'entry', 'variable', 'type')
         sourcedata <- temp[,..selectCols]
         
@@ -94,6 +96,13 @@ formatLongTable <- function(data.ls, sourceKey, targetKey,
       }
       
     }
+    
+    ##Mutate all the non-entry colums to factors
+    cols <- setdiff(names(ans[[targetTbl]]), c('entry'))
+    ans[[targetTbl]][,(cols) := lapply(.SD, as.factor), .SDcols=cols]
+    
+    ##only keep unique values
+    ans[[targetTbl]] <- unique(ans[[targetTbl]])
   }
   
   return(ans)

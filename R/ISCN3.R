@@ -11,9 +11,10 @@
 #' @importFrom data.table rbindlist
 #' @importFrom readxl read_excel
 #' @importFrom tibble tibble
+#' @importFrom utils download.file
 #' @export
 #' 
-ISCN3 <- function(dataDir=NULL, verbose=FALSE){
+ISCN3 <- function(dataDir=NULL, orginalFormat = FALSE, verbose=FALSE){
   
   ## construct file paths ####
   delete_dataDir <- is.null(dataDir)
@@ -25,7 +26,10 @@ ISCN3 <- function(dataDir=NULL, verbose=FALSE){
                                              'ISCN_ALL_DATA_LAYER_C2_1-1.xlsx',
                                              'ISCN_ALL_DATA_LAYER_C3_1-1.xlsx', 
                                              'ISCN_ALL_DATA_LAYER_C4_1-1.xlsx'))
+  
+  profileDataFiles.arr <- file.path(dataDir, c('ISCN_ALL-DATA_PROFILE_1-1.xlsx'))
   dataFiles.arr <- c(layerDataFiles.arr, 
+                     profileDataFiles.arr,
                          file.path(dataDir, c(
                                             'ISCN_ALL-DATA-CITATION_1-1.xlsx', 
                                             'ISCN_ALL_DATA_DATASET_1-1.xlsx')))
@@ -35,7 +39,7 @@ ISCN3 <- function(dataDir=NULL, verbose=FALSE){
   
   for(dataFiles.arr in dataFiles.arr){
     if(!file.exists(dataFiles.arr)){
-      download.file(sprintf('ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/%s', basename(dataFiles.arr)), 
+      utils::download.file(sprintf('ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/%s', basename(dataFiles.arr)), 
                     dataFiles.arr, quiet=FALSE)
     }
   }
@@ -46,11 +50,16 @@ ISCN3 <- function(dataDir=NULL, verbose=FALSE){
   
   citation.dt <- data.table::data.table(readxl::read_excel(path=paste(dataDir, 
                                                           'ISCN_ALL-DATA-CITATION_1-1.xlsx', sep='/'),
-                                    sheet='citation'))
+                                    sheet='citation', col_types = 'text'))
   
   dataset.dt <- data.table::data.table(readxl::read_excel(path=paste(dataDir, 
                                                          'ISCN_ALL_DATA_DATASET_1-1.xlsx', sep='/'), 
-                                   sheet='dataset'))
+                                   sheet='dataset', col_types = 'text'))
+  
+  if(verbose) print('Profile data read in.')
+  #only one profile data sheet
+  profile.dt <- data.table::data.table(readxl::read_excel(path=profileDataFiles.arr[1], 
+                                                          sheet='profile', col_types='text'))
   
   if(verbose) print('Layer data read in.')
 
@@ -58,7 +67,14 @@ ISCN3 <- function(dataDir=NULL, verbose=FALSE){
                                                 function(xx){
                                   readxl::read_excel(path=xx, sheet='layer', col_types='text')}))
   
-  
-  return(list(citation=citation.dt, dataset=dataset.dt, layer = layer.dt))
+  keys.ls <- makeKeys()
+  if(orginalFormat){
+    
+    return(list(citation=citation.dt, dataset=dataset.dt, profile = profile.dt, layer = layer.dt, 
+                key=keys.ls$ISCN3))
+  }else{
+    return(formatLongTable(list(citation=citation.dt, dataset=dataset.dt, profile = profile.dt, layer = layer.dt),
+                            sourceKey = keys.ls$ISCN3, targetKey=keys.ls$ISCN))
+  }
 
 }
