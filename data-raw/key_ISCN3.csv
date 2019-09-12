@@ -1,0 +1,254 @@
+"table","header","variable","type","entry"
+"layer","13c (‰)","13c","value_num",NA
+"layer",NA,"13c","unit","permille"
+"layer","14c (‰)","14c","value_num",NA
+"layer","14c_sigma (‰)","14c","sigma",NA
+"layer",NA,"14c","unit","permille"
+"layer","14c_age (BP)","14c_age","value_num",NA
+"layer","14c_age_sigma (BP)","14c_age","sigma",NA
+"layer",NA,"14c_age","unit","BP"
+"layer","15n (‰)","15n","value_num",NA
+"layer",NA,"15n","unit","permille"
+"profile","2d_position (2d_position)","2d_position","valueStr",NA
+"citation","acknowledgement","acknowledgement","valueStr",NA
+"citation","acknowledgement_usage","acknowledgement_usage","valueStr",NA
+"layer","al_dith (specified by al_fe_units)","al_dith","value_num",NA
+"layer","al_fe_units (extract_units)","al_dith","unit",NA
+"layer","al_fe_method","al_dith","method",NA
+"layer","al_other (specified by al_fe_units)","al_other","value_num",NA
+"layer","al_fe_units (extract_units)","al_other","unit",NA
+"layer","al_fe_method","al_other","method",NA
+"layer","al_ox (specified by al_fe_units)","al_ox","value_num",NA
+"layer","al_fe_units (extract_units)","al_ox","unit",NA
+"layer","al_fe_method","al_ox","method",NA
+"profile","aspect_deg (degree)","aspect_deg","value",NA
+NA,NA,"aspect_deg","unit","deg."
+"layer","base_sum (specified by cec_h_units)","base_sum","value_num",NA
+"layer","cec_h_units (extract_units)","base_sum","unit",NA
+"layer","bs (percent)","bs","value_num",NA
+"layer",NA,"bs","unit","percent"
+"layer","bs_sum (percent)","bs_sum","value_num",NA
+"layer",NA,"bs_sum","unit","percent"
+"layer","bd_method","bulk_density_other","method",NA
+"layer","bd_other (g cm-3)","bulk_density_other","value_num",NA
+"layer",NA,"bulk_density_other","unit","g cm-3"
+"layer","bdNRCS_prep_code","bulk_density_other","method",NA
+"layer","bd_method","bulk_density_sample","method",NA
+"layer","bd_samp (g cm-3)","bulk_density_sample","value_num",NA
+"layer",NA,"bulk_density_sample","unit","g cm-3"
+"layer","bdNRCS_prep_code","bulk_density_sample","method",NA
+"layer","bd_method","bulk_density_total","method",NA
+"layer","bd_tot (g cm-3)","bulk_density_total","value_num",NA
+"layer",NA,"bulk_density_total","unit","g cm-3"
+"layer","bdNRCS_prep_code","bulk_density_total","method",NA
+"layer","bd_method","bulk_density_whole","method",NA
+"layer","bd_whole (g cm-3)","bulk_density_whole","value_num",NA
+"layer",NA,"bulk_density_whole","unit","g cm-3"
+"layer","bdNRCS_prep_code","bulk_density_whole","method",NA
+"layer","c_to_n (mass ratio)","c_to_n","value_num",NA
+"layer",NA,"c_to_n","unit","mass ratio"
+"layer","cNRCS_prep_code","c_tot","method",NA
+"layer","c_method","c_tot","method",NA
+"layer","c_tot (percent)","c_tot","value_num",NA
+"layer",NA,"c_tot","unit","percent"
+"layer","ca_al (specified by bc_units)","ca_al","value_num",NA
+"layer","bc_units (extract_units)","ca_al","unit",NA
+"layer","bc_method","ca_al","unit",NA
+"layer","ca_ext (specified by bc_units)","ca_ext","value_num",NA
+"layer","bc_units (extract_units)","ca_ext","unit",NA
+"layer","bc_method","ca_ext","unit",NA
+"layer","caco3 (percent)","caco3","value_num",NA
+"layer",NA,"caco3","unit","percent"
+"layer","cat_exch (cmol H+ kg-1)","cat_exch","value_num",NA
+"layer",NA,"cat_exch","unit","cmol H+ kg-1"
+"layer","cec_sum (specified by cec_h_units)","cec_sum","value_num",NA
+"layer","cec_h_units (extract_units)","cec_sum","unit",NA
+"citation","citation","citation","valueStr",NA
+"citation","citation_usage","citation_usage","valueStr",NA
+"layer","clay_tot_psa (percent)","clay_tot_psa","value_num",NA
+"layer",NA,"clay_tot_psa","unit","percent"
+"layer","color","color","value_str",NA
+"dataset","contact_email","contact_email","valueStr",NA
+"dataset","contact_name","contact_name","valueStr",NA
+"profile","country (country)","country","valueStr",NA
+"layer","country (country)","country","value_str",NA
+"citation","curator_email","curator_email","valueStr",NA
+"dataset","curator_email","curator_email","valueStr",NA
+"citation","curator_name","curator_name","valueStr",NA
+"dataset","curator_name","curator_name","valueStr",NA
+"citation","curator_organization","curator_organization","valueStr",NA
+"dataset","curator_organization","curator_organization","valueStr",NA
+NA,NA,"data_collection","valueStr","ISCN 1-1 (2015-12-10)"
+"dataset","dataset_description","dataset_description","valueStr",NA
+"citation","dataset_name","dataset_name","id",NA
+"dataset","dataset_name","dataset_name","id",NA
+"profile","dataset_name_sub","dataset_name","id",NA
+"layer","dataset_name_sub","dataset_name","id",NA
+"citation","dataset_type (dataset_type)","dataset_type","valueStr",NA
+"dataset","dataset_type (dataset_type)","dataset_type","valueStr",NA
+"profile","datum (datum)","datum","valueStr",NA
+"layer","datum (datum)","datum","value_num",NA
+"layer",NA,"datum","unit","datum"
+"profile","drainagecl (drainage)","drainagecl","valueStr",NA
+"layer","ecec (specified by cec_h_units)","ecec","value_num",NA
+"layer","cec_h_units (extract_units)","ecec","unit",NA
+"profile","ecoregion","ecoregion","valueStr",NA
+"profile","elevation (m)","elevation","value",NA
+NA,NA,"elevation","unit","m"
+"layer","fe_dith (specified by al_fe_units)","fe_dith","value_num",NA
+"layer","al_fe_units (extract_units)","fe_dith","unit",NA
+"layer","al_fe_method","fe_dith","method",NA
+"layer","fe_other (specified by al_fe_units)","fe_other","value_num",NA
+"layer","al_fe_units (extract_units)","fe_other","unit",NA
+"layer","al_fe_method","fe_other","method",NA
+"layer","fe_ox (specified by al_fe_units)","fe_ox","value_num",NA
+"layer","al_fe_units (extract_units)","fe_ox","unit",NA
+"layer","al_fe_method","fe_ox","method",NA
+"layer","fraction_modern","fraction_modern","value_num",NA
+"layer","fraction_modern_sigma","fraction_modern","sigma",NA
+"layer","h_ext (specified by metal_ext_units)","h_ext","value_num",NA
+"layer","metal_ext_units (extract_units)","h_ext","unit",NA
+"layer","metal_ext_method","h_ext","method",NA
+"layer","hzn","horizon","value_str",NA
+"layer","hzn_desgn","horizon_designation","value_str",NA
+"layer","hzn_desgn_other","horizon_designation_other","value_str",NA
+"layer","k_ext (specified by bc_units)","k_ext","value_num",NA
+"layer","bc_units (extract_units)","k_ext","unit",NA
+"layer","bc_method","k_ext","unit",NA
+"profile","landform (landform)","landform","valueStr",NA
+"profile","landform_note","landform_note","valueStr",NA
+"profile","landscape (landscape)","landscape","valueStr",NA
+"profile","landuse (landsat)","landuse","valueStr",NA
+"profile","lat (dec. deg)","latitude","value",NA
+NA,NA,"latitude","unit","dec. deg."
+"layer","lat (dec. deg)","latitude","value_num",NA
+"layer",NA,"latitude","unit","decimal degrees"
+"dataset","soc_lcount_ISCN","layer_ISCN_soc_count","value",NA
+"layer","layer_bot (cm)","layer_bottom","value_num",NA
+"profile","carbon_lcount","layer_carbon_count","value",NA
+"dataset","total_lcount","layer_count","value",NA
+"profile","total_lcount","layer_count","value",NA
+"layer","layer_name","layer_name","id",NA
+"layer","layer_note","layer_name","note",NA
+"dataset","soc_lcount","layer_soc_count","value",NA
+"profile","soc_lcount","layer_soc_count","value",NA
+"layer","layer_top (cm)","layer_top","value_num",NA
+"profile","locator_alias","locator_alias","valueStr",NA
+"profile","locator_parent_alias","locator_parent_alias","valueStr",NA
+"layer","locator_parent_alias","locator_parent_alias","value_str",NA
+"layer","loi (percent)","loi","value_num",NA
+"layer",NA,"loi","unit","percent"
+"profile","long (dec. deg)","longitude","value",NA
+NA,NA,"longitude","unit","dec. deg."
+"layer","long (dec. deg)","longitude","value_num",NA
+"layer",NA,"longitude","unit","decimal degrees"
+"profile","map (mm)","map","value",NA
+NA,NA,"map","unit","mm"
+"profile","mat (°C)","mat","value",NA
+NA,NA,"mat","unit","deg. C"
+"layer","mg_ext (specified by bc_units)","mg_ext","value_num",NA
+"layer","bc_units (extract_units)","mg_ext","unit",NA
+"layer","bc_method","mg_ext","unit",NA
+"layer","mn_dith (specified by al_fe_units)","mn_dith","value_num",NA
+"layer","al_fe_units (extract_units)","mn_dith","unit",NA
+"layer","al_fe_method","mn_dith","method",NA
+"layer","mn_other (specified by al_fe_units)","mn_other","value_num",NA
+"layer","al_fe_units (extract_units)","mn_other","unit",NA
+"layer","al_fe_method","mn_other","method",NA
+"layer","mn_ox (specified by al_fe_units)","mn_ox","value_num",NA
+"layer","al_fe_units (extract_units)","mn_ox","unit",NA
+"layer","al_fe_method","mn_ox","method",NA
+"citation","modification_date (YYYY-MM-DD)","modification_date","valueStr",NA
+"dataset","modification_date (YYYY-MM-DD)","modification_date","valueStr",NA
+"layer","n_tot (percent)","n_tot","value_num",NA
+"layer",NA,"n_tot","unit","percent"
+"layer","na_ext (specified by bc_units)","na_ext","value_num",NA
+"layer","bc_units (extract_units)","na_ext","unit",NA
+"layer","bc_method","na_ext","unit",NA
+"profile","observation_date (YYYY-MM-DD)","observation_date","valueStr",NA
+"layer","observation_date (YYYY-MM-DD)","observation_date","value_date",NA
+"layer","cNRCS_prep_code","oc","method",NA
+"layer","c_method","oc","method",NA
+"layer","oc (percent)","oc","value_num",NA
+"layer",NA,"oc","unit","percent"
+"layer","p_bray (specified by p_units)","p_bray","value_num",NA
+"layer","p_units (extract_units)","p_bray","unit",NA
+"layer","p_method","p_bray","method",NA
+"layer","p_meh (specified by p_units)","p_meh","value_num",NA
+"layer","p_units (extract_units)","p_meh","unit",NA
+"layer","p_method","p_meh","method",NA
+"layer","p_other (specified by p_units)","p_other","value_num",NA
+"layer","p_units (extract_units)","p_other","unit",NA
+"layer","p_method","p_other","method",NA
+"layer","p_ox (specified by p_units)","p_ox","value_num",NA
+"layer","p_units (extract_units)","p_ox","unit",NA
+"layer","p_method","p_ox","method",NA
+"layer","ph_method","ph_cacl","method",NA
+"layer","ph_cacl","ph_cacl","value_num",NA
+"layer","ph_method","ph_h2o","method",NA
+"layer","ph_h2o","ph_h2o","value_num",NA
+"layer","ph_method","ph_other","method",NA
+"layer","ph_other","ph_other","value_num",NA
+"dataset","soc_pcount_ISCN","profile_ISCN_soc_count","value",NA
+"profile","layer_bot (cm)","profile_bottom","value",NA
+NA,NA,"profile_bottom","unit","cm"
+"dataset","total_pcount","profile_count","value",NA
+"profile","profile_name","profile_name","id",NA
+"layer","profile_name","profile_name","id",NA
+"profile","dataset_name_soc","profile_soc","method",NA
+"profile","soc (g cm-2)","profile_soc","value",NA
+"profile","soc_method","profile_soc","method",NA
+NA,NA,"profile_soc","unit","g cm-2"
+"profile","soc_carbon_flag","profile_soc_carbon_flag","valueStr",NA
+"dataset","soc_pcount","profile_soc_count","value",NA
+"profile","soc_depth (cm)","profile_soc_depth","value",NA
+NA,NA,"profile_soc_depth","unit","cm"
+"profile","soc_spatial_flag","profile_soc_spatial_flag","valueStr",NA
+"profile","layer_top (cm)","profile_top","value",NA
+NA,NA,"profile_top","unit","cm"
+"profile","profile_zero_ref (profile_zero_ref)","profile_zero_ref","valueStr",NA
+"citation","reference","reference","valueStr",NA
+"layer","root_quant_size","root_quant_size","value_num",NA
+"layer","root_weight (g)","root_weight","value_num",NA
+"layer",NA,"root_weight","unit","g"
+"profile","runoff (runoff)","runoff","valueStr",NA
+"layer","sand_tot_psa (percent)","sand_tot_psa","value_num",NA
+"layer",NA,"sand_tot_psa","unit","percent"
+"layer","silt_tot_psa (percent)","silt_tot_psa","value_num",NA
+"layer",NA,"silt_tot_psa","unit","percent"
+"dataset","soc_scount_ISCN","site_ISCN_soc_count","value",NA
+"dataset","total_scount","site_count","value",NA
+"profile","site_name","site_name","id",NA
+"layer","site_name","site_name","id",NA
+"profile","site_note","site_note","valueStr",NA
+"profile","site_perm (site_perm)","site_perm","valueStr",NA
+"dataset","soc_scount","site_soc_count","value",NA
+"profile","slope (percent)","slope","value",NA
+NA,NA,"slope","unit","percent"
+"layer","dataset_name_soc","soc","method",NA
+"layer","soc (g cm-2)","soc","value_num",NA
+"layer",NA,"soc","unit","g cm-2"
+"layer","soc_carbon_flag","soc","method",NA
+"layer","soc_method","soc","method",NA
+"profile","soil_series","soil_series","value",NA
+"layer","soil_series","soil_series","value_str",NA
+"profile","soil_taxon","soil_taxon","value",NA
+"layer","soil_taxon","soil_taxon","value_str",NA
+"profile","state (state_province)","state","valueStr",NA
+"layer","state (state_province)","state","value_str",NA
+"profile","surface_veg","surface_veg","valueStr",NA
+"layer","textureClass","textureClass","valueStr",NA
+"profile","thaw_depth_profile (cm)","thaw_depth_profile","value",NA
+NA,NA,"thaw_depth_profile","unit","cm"
+"profile","vegclass_local","vegclass_local","valueStr",NA
+"layer","vegclass_local","vegclass_local","valueStr",NA
+"layer","wpg2_method","wpg2","method",NA
+"layer","wpg2 (percent)","wpg2","value_num",NA
+"layer",NA,"wpg2","unit","percent"
+"layer","zn_ext (specified by metal_ext_units)","zn_ext","value_num",NA
+"layer","metal_ext_units (extract_units)","zn_ext","unit",NA
+"layer","metal_ext_method","zn_ext","method",NA
+"citation","ISCN 1-1 (2015-12-10)",NA,NA,NA
+"dataset","ISCN 1-1 (2015-12-10)",NA,NA,NA
+"profile","ISCN 1-1 (2015-12-10)",NA,NA,NA
+"layer","ISCN 1-1 (2015-12-10)",NA,NA,NA
