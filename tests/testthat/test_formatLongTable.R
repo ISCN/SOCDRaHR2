@@ -40,6 +40,29 @@ testthat::test_that("test one variable one table",{
   testthat::expect_identical(expectedOutput$sample, output$sample)
 })
 
+testthat::test_that('one header assigned to two variables [[wishlist]]',{
+  testInput <- list(T1 = data.table::as.data.table(
+    tibble::tribble(~sampleID, ~depth,
+                    'S1', '1',
+                    'S1', '3')))
+  
+  inputKey <- data.table::as.data.table(
+    tibble::tribble(~table, ~header, ~variable, ~type, ~entry,
+                    'T1', 'sampleID', 'profile_name', 'id', '',
+                    'T1', 'depth', 'layer_name', 'value', '',
+                    'T1', 'depth', 'layer_bottom', 'value', ''))
+  
+  outputKey <- data.table::as.data.table(
+    (tibble::tribble(~table, ~variable,
+                               'sample', 'profile_name',
+                               'sample', 'layer_name',
+                               'sample', 'layer_bottom')))
+  
+  
+  output <- formatLongTable(data.ls = testInput, sourceKey = inputKey, targetKey = outputKey)
+  
+})
+
 testthat::test_that("test one variable, two methods, one table",{
   testInput <- list(T1 = data.table::as.data.table(
     tibble::tribble(~siteID, ~sampleID, ~SOC, ~SOC_flag, ~SOC_method,

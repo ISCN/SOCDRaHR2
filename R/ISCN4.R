@@ -16,7 +16,7 @@
 #' \dontrun{
 #' temp <- ISCN4()
 #' }
-ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=TRUE){
+ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
  
   
   ###### dowload and datafiles identified #########
@@ -47,12 +47,12 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=TRUE){
   tempMeta <- readxl::read_excel(path=datafile.arr['Treat'], sheet='metadata',
                                  col_names = c('V1', 'V2', 'V3', 'V4'), col_types = 'text',
                                  na = c('', 'NA'))
-  Treat.ls <- list(metadata = as.data.table(t(tempMeta[,4])), #only data in column 4
-                   site = as.data.table(readxl::read_excel(path=datafile.arr['Treat'], sheet='site',
+  Treat.ls <- list(metadata = data.table::as.data.table(t(tempMeta[,4])), #only data in column 4
+                   site = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Treat'], sheet='site',
                                                            col_types = 'text', na = c('', 'NA')))[-(1:2),],
-                   profile = as.data.table(readxl::read_excel(path=datafile.arr['Treat'], sheet='profile',
+                   profile = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Treat'], sheet='profile',
                                                            col_types = 'text', na = c('', 'NA')))[-(1:2),],
-                   layer = as.data.table(readxl::read_excel(path=datafile.arr['Treat'], sheet='layer',
+                   layer = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Treat'], sheet='layer',
                                                            col_types = 'text', na = c('', 'NA')))[-(1:2),])
   ######Treat: pull the names from the first column of metadata####
   names(Treat.ls$metadata) <- unlist(tempMeta[,1])
@@ -63,6 +63,19 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=TRUE){
   Treat.ls$site <- Treat.ls$site[,names(emptySites$site[emptySites$site == FALSE]), with=FALSE]
   Treat.ls$profile <- Treat.ls$profile[,names(emptySites$profile[emptySites$profile == FALSE]), with=FALSE]
   Treat.ls$layer <- Treat.ls$layer[,names(emptySites$layer[emptySites$layer == FALSE]), with=FALSE]
+  
+  
+  ####set up missing ids in Treat ####
+  #TreatLong.ls$layer$dataset_name_id <- 'P2C2 Synthesis: Peat properties'
+  #TreatLong.ls$profile$dataset_name_id <- 'P2C2 Synthesis: Peat properties'
+  
+  dataset_name <- paste0(regmatches(Treat.ls$site$add_note, regexpr("^(\\w|')+", Treat.ls$site$add_note)),
+        regmatches(Treat.ls$site$add_note, regexpr('((20)|19)\\d\\d', Treat.ls$site$add_note)),
+        '_',regmatches(Treat.ls$site$add_note, regexpr('\\d+$', Treat.ls$site$add_note)))
+  
+  # Treat.ls$site$citation <- Treat.ls$site$add_note
+  #Treat.ls$site$add_note <- NULL
+  
   
   #check headers
   #unique(unlist(lapply(Treat.ls, names)))[!unique(unlist(lapply(Treat.ls, names))) %in% keys.ls$ISCN2016$header]
@@ -76,20 +89,16 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=TRUE){
   if(verbose) print(lapply(TreatLong.ls, function(x) format(object.size(x), unit='Mb')))
   if(verbose)print('done')
 
-  ####set up missing ids in Treat ####
-  TreatLong.ls$layer$dataset_name_id <- 'P2C2 Synthesis: Peat properties'
-  TreatLong.ls$profile$dataset_name_id <- 'P2C2 Synthesis: Peat properties'
-  
   ####### Alamose has some formatting issues so let's deal with that first ####
   tempMeta <- readxl::read_excel(path=datafile.arr['Alamos'], sheet='metadata',
                                  col_names = c('V1', 'V2', 'V3', 'V4'), col_types = 'text',
                                  na = c('', 'NA'))
-  Alamos.ls <- list(metadata = as.data.table(t(tempMeta[,4])), #only data in column 4
-                   site = as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='site',
+  Alamos.ls <- list(metadata = data.table::as.data.table(t(tempMeta[,4])), #only data in column 4
+                   site = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='site',
                                                            col_types = 'text', na = c('', 'NA')))[-(1:3),],
-                   profile = as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='profile',
+                   profile = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='profile',
                                                            col_types = 'text', na = c('', 'NA')))[-(1:3),],
-                   layer = as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='layer',
+                   layer = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='layer',
                                                            col_types = 'text', na = c('', 'NA')))[-(1:3),])
   ######Alamos: pull the names from the first column of metadata####
   names(Alamos.ls$metadata) <- unlist(tempMeta[,1])
@@ -119,19 +128,28 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=TRUE){
   AlamosLong.ls$profile$site_name_id <- factor('Alamos')
   
   ###Put Treat and Alamos together####
-  data.ls <- list(study = data.table::rbindlist(list(TreatLong.ls$study, AlamosLong.ls$study), use.names = TRUE),
-                  profile = data.table::rbindlist(list(TreatLong.ls$profile, AlamosLong.ls$profile), use.names = TRUE),
-                  layer = data.table::rbindlist(list(TreatLong.ls$layer, AlamosLong.ls$layer), use.names = TRUE))
+  data.ls <- list(
+    study = data.table::rbindlist(list(TreatLong.ls$study, AlamosLong.ls$study), use.names = TRUE),
+    profile = data.table::rbindlist(list(TreatLong.ls$profile, AlamosLong.ls$profile), use.names = TRUE),
+    layer = data.table::rbindlist(list(TreatLong.ls$layer, AlamosLong.ls$layer), use.names = TRUE))
   
+  lapply(data.ls, function(xx){xx[,collection_name_id := factor('ISCN4')]})
+  
+  data.ls$collection <-   collection.dt <- data.table::data.table(collection_name_id = 'ISCN4', 
+                                                                  variable = 'collection_citation',
+                                                                  entry = 'In Prep',
+                                                                  type = 'value')
   
   if(!onlyNewData){
     if(verbose)print('loading ISCN3...')
     ISCN <- ISCN3(dataDir = dataDir, orginalFormat = FALSE, verbose=verbose)
     if(verbose)print('done')
     
-    data.ls <- list(study = data.table::rbindlist(list(data.ls$study, ISCN$study), use.names = TRUE),
-                  profile = data.table::rbindlist(list(data.ls$profile, ISCN$profile), use.names = TRUE),
-                  layer = data.table::rbindlist(list(data.ls$layer, ISCN$layer), use.names = TRUE))
+    data.ls <- list(
+      collection = data.table::rbindlist(list(data.ls$collection, ISCN$collection), use.names = TRUE),
+      study = data.table::rbindlist(list(data.ls$study, ISCN$study), use.names = TRUE),
+      profile = data.table::rbindlist(list(data.ls$profile, ISCN$profile), use.names = TRUE),
+      layer = data.table::rbindlist(list(data.ls$layer, ISCN$layer), use.names = TRUE))
   }
   
    

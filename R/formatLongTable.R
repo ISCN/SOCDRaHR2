@@ -14,34 +14,34 @@
 #' @export
 formatLongTable <- function(data.ls, sourceKey, targetKey, 
                             tableOrder = c('study', 'site'),
-                            verbose=FALSE){
+                            warnMismatch = FALSE, verbose=FALSE){
   key <- merge(data.table::as.data.table(targetKey)[,c('table', 'variable')], 
                data.table::as.data.table(sourceKey)[,c('table', 'header', 'entry', 'type', 'variable')],
                by=c('variable'), suffixes = c('_target', '_source'),
                all=TRUE)
   
   ##Check that the data.ls tables are data.tables
-  if(!all(unlist(lapply(data.ls, is.data.table)))){
+  if(!all(unlist(lapply(data.ls, data.table::is.data.table)))){
     stop('data.ls must be data.table')
   }
   
   ##check for headers that are not matched with table targets
   danglingHeader <- key[(!is.na(header) & is.na(table_target)) | is.na(variable)]
-  if(nrow(danglingHeader) > 0){
+  if(nrow(danglingHeader) > 0 & warnMismatch){
     warning(paste('Dangling headers in source table that will be dropped:', 
                   paste( unique(danglingHeader$header), collapse = ' ')))
   }
   
   missingHeader <- key[(is.na(header) & !is.na(table_target)) | is.na(variable)]
-  if(nrow(missingHeader) > 0){
+  if(nrow(missingHeader) > 0 & warnMismatch){
     warning(paste('Dangling headers in the target table that will be dropped:',
                   paste(unique(missingHeader$variable), collapse = ' ')))
   }
   
   missingType <- key[is.na(type)]
-  if(nrow(missingType) > 0){
+  if(nrow(missingType) > 0 & warnMismatch){
     warning(paste('Missing type definition in source key, will drop:',
-                  paste(missingHeader$header, collapse=' ')))
+                  paste(unique(missingHeader$header), collapse=' ')))
   }
   
   ##keep only keys that are well defined
@@ -52,19 +52,25 @@ formatLongTable <- function(data.ls, sourceKey, targetKey,
   ans <- list()
   #for each target table, force an ordering
   for(targetTbl in c(tableOrder, base::setdiff(unique(key$table_target), tableOrder))) {
+    if(verbose) cat(paste('Processing for target:',targetTbl))
     if(!(targetTbl %in% key$table_target)){
-      
+      if(verbose) cat('target not found in key... moving on.\n')
       next()
     }
     
     ans[[targetTbl]] <- data.table::data.table()
     orderSource <- sort(table(key[table_target == targetTbl]$table_source))
     for(sourceTbl in names(orderSource)){
+      if(verbose) cat(paste('\tData from source table:', sourceTbl, '\n'))
       #pull the relvant table
       xx <- key[table_source == sourceTbl & table_target == targetTbl]
+      if(verbose) cat(paste('\tusing key:\n'))
+      if(verbose) print(xx)
       
       #Pull all the columns indicated by the key
+      if(verbose) cat(paste('data columns [', paste(names(data.ls[[sourceTbl]]), collapse=', '), ']\n' ))
       columnNames <- base::intersect((xx[xx$header != '',])$header, names(data.ls[[sourceTbl]]))
+      if(verbose) cat(paste('select columns [', paste(columnNames, collapse = ', '), ']\n'))
       
       ##pull out unique data
       sourcedata <- unique((data.ls[[sourceTbl]])[,..columnNames])
@@ -74,7 +80,7 @@ formatLongTable <- function(data.ls, sourceKey, targetKey,
       names(idVars) <- paste0((xx[xx$type == 'id',])$variable, '_id')
       
       if(any(xx$type != 'id')){
-        sourcedata <- melt(sourcedata, id.vars = idVars, 
+        sourcedata <- data.table::melt.data.table(sourcedata, id.vars = idVars, 
                            variable.name = 'header', value.name='entry', na.rm=TRUE)
         
         temp <- merge(key[type != 'id',c('variable', 'header', 'type')], sourcedata, 

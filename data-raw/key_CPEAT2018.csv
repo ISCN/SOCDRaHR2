@@ -1,0 +1,66 @@
+row,table,header,long_description,variable,type,entry
+62,files,Site_core,,dataset_name,id,
+40,sample,Site_core,,dataset_name,id,
+41,sample,layer_name,,layer_name,id,
+1,site,Site_core,,dataset_name,id,
+15,site,core_name,,profile_name,id,
+43,sample,,,layer_bottom,unit,m
+45,sample,,,age,unit,ka BP
+47,sample,,,bulk_density_other,unit,g cm-3
+49,sample,,,loi,unit,percent
+51,sample,,,som,unit,g cm-3
+53,sample,,,soc,unit,g cm-3
+58,sample,,,total_carbon,unit,percent
+59,sample,,,total_nitrogen,unit,percent
+13,site,,,site_rook_depth_max,unit,m
+14,site,,,site_rock_depth_min,unit,m
+19,site,,,elevation,unit,m
+20,site,,,elevation_end,unit,m
+21,site,,,elevation_start,unit,m
+24,site,,,,unit,m
+28,site,,,profile_basal_age_depth,unit,cm
+31,site,,,profile_depth,unit,cm
+37,site,,,processed_volume,unit,cm3
+60,files,URL,,url,value,
+61,files,Author,,author,value,
+64,files,downloadURL,,download_url,value,
+42,sample,Depth [m],,layer_bottom,value,
+44,sample,Age [ka BP],,age,value,
+46,sample,DBD [g/cm**3],dry bulk density,bulk_density_other,value,
+48,sample,OM [%],"organic matter percent, loss on ignition",loi,value,
+50,sample,OM dens [g/cm**3],,som,value,
+52,sample,Corg dens [g/cm**3],,soc,value,
+54,sample,Peat,,peat,value,
+55,sample,Peat (Loisel et al. 2014),,peat_flag,value,
+56,sample,TC [%],,total_carbon,value,
+57,sample,TN [%],,total_nitrogen,value,
+2,site,Citation,,citation,value,
+3,site,Related.to,,reference,value,
+4,site,Further.details,,acknowledgement,value,
+5,site,Project.s.,,collection,value,
+7,site,License,,license,value,
+9,site,LATITUDE,,latitude,value,
+10,site,LONGITUDE,,longitude,value,
+11,site,"MAXIMUM DEPTH, sediment/rock [m]",,site_rook_depth_max,value,
+12,site,"MINIMUM DEPTH, sediment/rock [m]",,site_rock_depth_min,value,
+16,site,ELEVATION [m],,elevation,value,
+17,site,ELEVATION END [m],,elevation_end,value,
+18,site,ELEVATION START [m],,elevation_start,value,
+22,site,LOCATION,,country,value,
+23,site,Recovery [cm],,core_recovery,value,
+25,site,basal age [calbp],,profile_basal_age_calbp,value,
+26,site,basal age [uncal],,profile_basal_age_uncal,value,
+27,site,basal age depth [cm],,profile_basal_age_depth,value,
+29,site,carbon rate site,,carbon_rate_site,value,
+30,site,core length [cm],,profile_depth,value,
+32,site,core microtopography,,site_microtopography,value,
+33,site,coring year,,observation_date,value,
+35,site,n dates,,profile_data_count,value,
+36,site,peat properties sample size [cm^3],,processed_volume,value,
+39,site,peatland type,,site_peat_class,value,
+34,site,,,observation_date,year-AD,
+63,files,orgFile,,,,
+65,files,localFile,,,,
+6,site,Parameter.s.,,,,
+8,site,Size,,,,
+38,site,peat properties site,,,,
