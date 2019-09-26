@@ -1,4 +1,4 @@
-Package: SOC_DRaH2
+Package: SOCDRaH2
 Type: Package
 Title: Scripts to read in and harmonize different digital soil data archives
 Version: 0.2.0
