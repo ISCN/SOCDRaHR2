@@ -30,8 +30,7 @@ site,lat,Latitude - dec. deg,latitude,latitute,value,
 site,,,latitude,,unit,dec. deg
 site,long,Longitude - dec. deg,longitude,longitude,value,
 site,,,longitude,,unit,dec. deg
-site,datum,Latitude/Longitude Datum - (datum),latitude,lat-lon datum id,method,
-site,datum,Latitude/Longitude Datum - (datum),longitude,lat-lon datum id,method,
+site,datum,Latitude/Longitude Datum - (datum),datum,lat-lon datum id,method,
 site,location_acc,Location Accuracy - m,location_acc,NA,value,
 site,,,location_acc,,unit,m
 site,elevation,Elevation - m,elevation,NA,value,
