@@ -129,7 +129,7 @@ NA,NA,"latitude","unit","dec. deg."
 "dataset","total_lcount","layer_count","value",NA
 "profile","total_lcount","layer_count","value",NA
 "layer","layer_name","layer_name","id",NA
-"layer","layer_note","layer_name","note",NA
+"layer","layer_note","layer_note","variable",NA
 "dataset","soc_lcount","layer_soc_count","value",NA
 "profile","soc_lcount","layer_soc_count","value",NA
 "layer","layer_top (cm)","layer_top","value_num",NA
