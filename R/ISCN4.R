@@ -84,7 +84,7 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
   if(verbose)print('casting Treat to long...')
   TreatLong.ls <- formatLongTable(data.ls = Treat.ls, 
                                   sourceKey = keys.ls$ISCN2016[header %in% unlist(lapply(Treat.ls, names)),], 
-                                  targetKey = keys.ls$ISCN, verbose = TRUE)
+                                  targetKey = keys.ls$ISCN, verbose = verbose)
   
   if(verbose) print(lapply(TreatLong.ls, function(x) format(object.size(x), unit='Mb')))
   if(verbose)print('done')
@@ -116,7 +116,7 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
   if(verbose)print('casting Alamos to long...')
   AlamosLong.ls <- formatLongTable(data.ls = Alamos.ls, 
                                   sourceKey = keys.ls$ISCN2016, 
-                                  targetKey = keys.ls$ISCN, verbose = TRUE)
+                                  targetKey = keys.ls$ISCN, verbose = verbose)
   
   if(verbose) print(lapply(AlamosLong.ls, function(x) format(object.size(x), unit='Mb')))
   if(verbose)print('done')
