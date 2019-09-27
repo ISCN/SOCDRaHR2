@@ -65,6 +65,7 @@ ISCN3 <- function(dataDir=NULL, orginalFormat = FALSE, verbose=FALSE){
   layer.dt <- data.table::rbindlist(lapply(layerDataFiles.arr, 
                                                 function(xx){
                                   readxl::read_excel(path=xx, sheet='layer', col_types='text')}))
+  layer.dt[,layer_name := paste(layer_name, 1:length(layer_name), sep='_')]
   
   ##add collection level details like citation
   collection.dt <- data.table::data.table(collection_name_id = 'ISCN3', 
