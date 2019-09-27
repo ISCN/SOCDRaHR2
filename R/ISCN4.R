@@ -25,8 +25,8 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
     dataDir <- tempdir()
   }
   
-  download.url <- c(Treat='http://iscn.fluxdata.org/wp-content/uploads/sites/15/ISCNtemplate_Treat_peatProps_v2.xlsx',
-                    Alamos='http://iscn.fluxdata.org/wp-content/uploads/sites/15/ISCNtemplate_Alamos.xlsx')
+  download.url <- c(Treat='http://iscn.fluxdata.org/wp-content/uploads/sites/23/2018/08/ISCNtemplate_Treat_peatProps_v2.xlsx',
+                    Alamos='http://iscn.fluxdata.org/wp-content/uploads/sites/23/2018/08/ISCNtemplate_Alamos.xlsx')
   datafile.arr <- file.path(dataDir, basename(download.url))
   names(datafile.arr) <- names(download.url)
   
