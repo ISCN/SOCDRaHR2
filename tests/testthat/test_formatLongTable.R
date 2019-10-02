@@ -313,18 +313,14 @@ testthat::test_that("test two source and two target table",{
   expectedOutput <- list(
     site = data.table::as.data.table(
       tibble::tribble(~site_name_id,~header,~entry,~variable,~type,
-                      "river",NA,NA,NA,NA,
-                      "lake",NA,NA,NA,NA,
                       "river","MAT","15","mat","value",
                       "lake","MAT","13","mat","value")),
     sample=data.table::as.data.table(
-      tibble::tribble(~site_name_id,~layer_name_id, ~header,~entry, ~variable, ~type,
-                      "river",NA,NA,NA,NA,NA,
-                      "lake",NA,NA,NA,NA,NA,
-                      "river","S1","BD","1.5","bulk_density","value",
-                      "lake","S2","BD","1.1","bulk_density","value",
-                      "river","S1","SOC","5.2","soc","value",
-                      "lake","S2","SOC","3","soc","value")))
+      tibble::tribble(~layer_name_id,~site_name_id, ~header,~entry, ~variable, ~type,
+                      "S1","river","BD","1.5","bulk_density","value",
+                      "S2","lake","BD","1.1","bulk_density","value",
+                      "S1","river","SOC","5.2","soc","value",
+                      "S2","lake","SOC","3","soc","value")))
   
   
   cols <- setdiff(names(expectedOutput$site), c('entry'))
@@ -385,8 +381,6 @@ testthat::test_that("quasi real test",{
   expectedOutput <- list(
     site = data.table::as.data.table(
       tibble::tribble(~site_name_id, ~header, ~entry, ~variable, ~type,
-"river",NA,NA,NA,NA,
-"lake",NA,NA,NA,NA,
 "lake","country","USA","country","string",
 "river","country","USA","country","string",
 "lake","datum","WGS84","latitude","unit",
@@ -403,17 +397,15 @@ testthat::test_that("quasi real test",{
 "river","state","New Hampshire","state","string")
     ),
     sample=data.table::as.data.table(
-      tibble::tribble(~site_name_id,~layer_name_id,~header,~entry,~variable,~type,
-"lake",NA,NA,NA,NA,NA,
-"river",NA,NA,NA,NA,NA,
-"river","S1","BD","1.5","bulk_density","value",
-"lake","S1","BD","1.1","bulk_density","value",
-"river","S1","BD_notes","dry, not seive","bulk_density","method",
-"lake","S1","BD_notes","dry and 2mm seive","bulk_density","method",
-"river","S1","color","black","color","string",
-"lake","S1","color","brown","color","string",
-"river","S1","SOC","5.2","soc","value",
-"lake","S1","SOC","3","soc","value")))
+      tibble::tribble(~layer_name_id,~site_name_id,~header,~entry,~variable,~type,
+                      "S1","river","BD","1.5","bulk_density","value",
+                      "S1","lake","BD","1.1","bulk_density","value",
+                      "S1","river","BD_notes","dry, not seive","bulk_density","method",
+                      "S1","lake","BD_notes","dry and 2mm seive","bulk_density","method",
+                      "S1","river","color","black","color","string",
+                      "S1","lake","color","brown","color","string",
+                      "S1","river","SOC","5.2","soc","value",
+                      "S1","lake","SOC","3","soc","value")))
   
   cols <- setdiff(names(expectedOutput$site), c('entry'))
   expectedOutput$site[,(cols) := lapply(.SD, as.factor), .SDcols=cols]
@@ -422,4 +414,49 @@ testthat::test_that("quasi real test",{
   
   #match number of tables
   testthat::expect_equal(expectedOutput, output)
+})
+
+testthat::test_that("merge site-level inputs variables across profile-level outputs",{
+  testInput <- list(
+    T1 =data.table::as.data.table(
+      tibble::tribble(~siteID,  ~MAT,
+                      'river','15', 
+                      'lake', '13')),
+    T2 = data.table::as.data.table(
+      tibble::tribble(~siteID, ~sampleID, ~SOC,
+                      'river', 'S1', '5.2',
+                      'river', 'S2', '4',
+                      'lake', 'S2', '3')))
+  
+  inputKey <- data.table::as.data.table(
+    tibble::tribble(~table, ~header, ~variable, ~type, ~entry,
+                    'T2', 'siteID', 'site_name', 'id', '',
+                    'T1', 'siteID', 'site_name', 'id', '',
+                    'T2', 'sampleID', 'layer_name', 'id', '',
+                    'T2', 'SOC', 'soc', 'value', '',
+                    'T1', 'MAT', 'mat', 'value', ''))
+  
+  outputKey <- data.table::as.data.table(
+    (tibble::tribble(~table, ~variable,
+                     'sample', 'mat',
+                     'sample', 'site_name',
+                     'sample', 'layer_name',
+                     'sample', 'soc')))
+  
+  output <- formatLongTable(data.ls = testInput, sourceKey = inputKey, targetKey = outputKey)
+  
+  expectedOutput <- data.table::as.data.table(
+    tibble::tribble(~site_name_id, ~header, ~entry, ~variable, ~type, ~layer_name_id,
+                    "lake","MAT","13","mat","value","S2",
+                    "river","MAT","15","mat","value","S1",
+                    "river","MAT","15","mat","value","S2",
+                    "river","SOC","5.2","soc","value","S1",
+                    "river","SOC","4","soc","value","S2",
+                    "lake","SOC","3","soc","value","S2")
+  )
+  cols <- setdiff(names(expectedOutput), c('entry'))
+  expectedOutput[,(cols) := lapply(.SD, as.factor), .SDcols=cols]
+  
+  expect_equal(output$sample, expectedOutput)
+  
 })

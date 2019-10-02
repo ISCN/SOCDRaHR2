@@ -8,7 +8,7 @@
 #' @param tableOrder default order in wihc to process the source tables
 #' @param verbose boolean flagging lots of output
 #'
-#' @importFrom  data.table melt.data.table setcolorder
+#' @importFrom  data.table melt.data.table setcolorder rbind merge
 #' 
 #' @return a list of data tables in the interal quasi-long format
 #' @export
@@ -91,14 +91,37 @@ formatLongTable <- function(data.ls, sourceKey, targetKey,
         
         names(sourcedata) <- c(names(idVars), 'header', 'entry', 'variable', 'type')
       }else{
-        ##keep the tables with only id headers incase we are linking headers across multiple source tables
-        names(sourcedata) <- names(idVars)
+        ##There is no data here... moving on
+        next
       }
+      
       ##merge it with the data from other tables
       if(nrow(ans[[targetTbl]]) == 0){
+        if(verbose)print(paste('starting new target table:', targetTbl))
         ans[[targetTbl]] <- sourcedata
       }else{
-        ans[[targetTbl]] <- rbind(ans[[targetTbl]], sourcedata, fill=TRUE)
+        if(verbose)print('adding to existing target table...')
+        sourceID <- names(idVars)
+        targetID <- setdiff(names(ans[[targetTbl]]), c('header', 'entry', 'variable', 'type'))
+        if(!setequal(sourceID, targetID)){
+          if(verbose){print(paste(targetTbl, 'names do not match sourcedata:[', paste0(sourceID, collapse=','), '] != [',
+                                  paste0(targetID, collapse = ', '),']'))}
+          if(length(sourceID) > length(targetID)){
+            sourceID <- names(idVars)
+            if(verbose) print(paste('merging sourcedata columns [', paste0(sourceID, collapse=', '), '] into ans$', targetTbl, 
+                                    'with columns [', paste0(targetID, collapse=','), '] by columns [',
+                                    paste0(base::intersect(targetID, sourceID), collapse=', '), ']'))
+     
+            #there are extra id columns in the sourcedata
+            ans[[targetTbl]] <- merge(ans[[targetTbl]], unique(sourcedata[,..sourceID]), by=base::intersect(targetID, sourceID), all=TRUE)
+          }else{
+            #there are extra id columns in the ans table
+            sourcedata <- merge(sourcedata, ans[[targetTbl]][,..targetID], all=TRUE)
+          }
+
+          #bind the data tables
+        }
+        ans[[targetTbl]] <- rbindlist(list(ans[[targetTbl]], sourcedata), use.names=TRUE)
       }
       
     }
