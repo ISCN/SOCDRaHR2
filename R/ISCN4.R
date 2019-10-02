@@ -129,16 +129,22 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
   
   ###Put Treat and Alamos together####
   data.ls <- list(
-    study = data.table::rbindlist(list(TreatLong.ls$study, AlamosLong.ls$study), use.names = TRUE),
-    profile = data.table::rbindlist(list(TreatLong.ls$profile, AlamosLong.ls$profile), use.names = TRUE),
-    layer = data.table::rbindlist(list(TreatLong.ls$layer, AlamosLong.ls$layer), use.names = TRUE))
+    study = data.table::rbindlist(list(TreatLong.ls$study, AlamosLong.ls$study), fill = TRUE),
+    profile = data.table::rbindlist(list(TreatLong.ls$profile, AlamosLong.ls$profile), fill = TRUE),
+    layer = data.table::rbindlist(list(TreatLong.ls$layer, AlamosLong.ls$layer), fill = TRUE))
   
   lapply(data.ls, function(xx){xx[,collection_name_id := factor('ISCN4')]})
   
-  data.ls$collection <-   collection.dt <- data.table::data.table(collection_name_id = 'ISCN4', 
+  ##Add the collection level information for ISCN4
+  data.ls$collection <- data.table::data.table(collection_name_id = 'ISCN4', 
                                                                   variable = 'collection_citation',
                                                                   entry = 'In Prep',
                                                                   type = 'value')
+  
+  hardKeys <- keys.ls$ISCN2016[!is.na(entry)  & !is.na(variable), c('variable', 'type', 'entry')]
+  hardKeys[,collection_name_id := factor('ISCN4')]
+  data.ls$collection <- data.table::rbindlist(list(data.ls$collection, hardKeys), fill = TRUE)
+  
   
   if(!onlyNewData){
     if(verbose)print('loading ISCN3...')
@@ -146,10 +152,10 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
     if(verbose)print('done')
     
     data.ls <- list(
-      collection = data.table::rbindlist(list(data.ls$collection, ISCN$collection), use.names = TRUE),
-      study = data.table::rbindlist(list(data.ls$study, ISCN$study), use.names = TRUE),
-      profile = data.table::rbindlist(list(data.ls$profile, ISCN$profile), use.names = TRUE),
-      layer = data.table::rbindlist(list(data.ls$layer, ISCN$layer), use.names = TRUE))
+      collection = data.table::rbindlist(list(data.ls$collection, ISCN$collection), fill = TRUE),
+      study = data.table::rbindlist(list(data.ls$study, ISCN$study), fill = TRUE),
+      profile = data.table::rbindlist(list(data.ls$profile, ISCN$profile), fill = TRUE),
+      layer = data.table::rbindlist(list(data.ls$layer, ISCN$layer), fill = TRUE))
   }
   
    

@@ -28,6 +28,10 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
                                   variable = c('license', 'collection_citation'),
                                   type = 'value',
                                   entry = c(CUFS2018$licenseFull, CUFS2018$citation))
+    hardKeys <- key.ls$CUFS2018[!is.na(entry) & !is.na(variable), c('variable', 'type', 'entry')]
+    hardKeys[,collection_name_id := ans1$collection$collection_name_id[1]]
+    ans1$collection <- data.table::rbindlist(list(ans1$collection, hardKeys), fill = TRUE)
+    
     ans1$study$collection_name_id <- ans1$collection$collection_name_id[1]
     ans1$profile$collection_name_id <- ans1$collection$collection_name_id[1]
     ans1$layer$collection_name_id <- ans1$collection$collection_name_id[1]
@@ -38,16 +42,21 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
                                   variable = c('license'),
                                   type = 'value',
                                   entry = 'Creative Commons Attribution 3.0 Unported (CC-BY-3.0)')
-    ans2$study$collection_name_id <- ans2$collection$collection_name_id
-    ans2$profile$collection_name_id <- ans2$collection$collection_name_id
-    ans2$layer$collection_name_id <- ans2$collection$collection_name_id
+    hardKeys <- key.ls$CPEAT[!is.na(entry) & !is.na(variable), c('variable', 'type', 'entry')]
+    hardKeys[,collection_name_id := ans2$collection$collection_name_id[1]]
+    ans2$collection <- data.table::rbindlist(list(ans2$collection, hardKeys), fill = TRUE)
+    
+    ans2$study$collection_name_id <- ans2$collection$collection_name_id[1]
+    ans2$profile$collection_name_id <- ans2$collection$collection_name_id[1]
+    ans2$layer$collection_name_id <- ans2$collection$collection_name_id[1]
     
     ans <- list(collection = data.table::rbindlist(list(ans1$collection, ans2$collection), fill=TRUE),
       study = data.table::rbindlist(list(ans1$study, ans2$study), fill=TRUE),
       profile = data.table::rbindlist(list(ans1$profile, ans2$profile), fill=TRUE),
       layer = data.table::rbindlist(list(ans1$layer, ans2$layer), fill=TRUE))
+    
     if(newDataOnly){
-    return(ans)
+      return(ans)
     }else{
       ISCN <- ISCN4(dataDir = dataDir, onlyNewData = FALSE, verbose=verbose)
       
