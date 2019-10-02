@@ -111,12 +111,13 @@ formatLongTable <- function(data.ls, sourceKey, targetKey,
             if(verbose) print(paste('merging sourcedata columns [', paste0(sourceID, collapse=', '), '] into ans$', targetTbl, 
                                     'with columns [', paste0(targetID, collapse=','), '] by columns [',
                                     paste0(base::intersect(targetID, sourceID), collapse=', '), ']'))
-     
+            if(verbose) print(head(ans[[targetTbl]]))
+            if(verbose) print(head(sourcedata))
             #there are extra id columns in the sourcedata
-            ans[[targetTbl]] <- merge(ans[[targetTbl]], unique(sourcedata[,..sourceID]), by=base::intersect(targetID, sourceID), all=TRUE)
+            ans[[targetTbl]] <- merge(ans[[targetTbl]], unique(sourcedata[,..sourceID]), by=base::intersect(targetID, sourceID), all=TRUE, allow.cartesian=TRUE)
           }else{
             #there are extra id columns in the ans table
-            sourcedata <- merge(sourcedata, ans[[targetTbl]][,..targetID], all=TRUE)
+            sourcedata <- merge(sourcedata, ans[[targetTbl]][,..targetID], by=base::intersect(targetID, sourceID), all=TRUE, allow.cartesian=TRUE)
           }
 
           #bind the data tables
