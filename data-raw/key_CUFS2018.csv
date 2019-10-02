@@ -1,6 +1,6 @@
 ,table,header,description,variable,type,entry
 1,PROFILES,LOCATION_ID,Unique identifier for each site. ,site_name,id,
-2,PROFILES,HZN_SEQ_NO,Unique identifier for each horizon. Used in conjunction with LOCATION_ID to produce unique identifiers for the PROFILES table. ,profile_name,id,
+2,PROFILES,HZN_SEQ_NO,Unique identifier for each horizon. Used in conjunction with LOCATION_ID to produce unique identifiers for the PROFILES table. ,layer_name,id,
 3,PROFILES,HORIZON,Soil horizon designation according to the Canadian System of Soil Classification. ,hzn_desgn,value,
 ,,,,hzn_desgn,method,Soil horizon designation according to the Canadian System of Soil Classification. 
 4,PROFILES,HZN_ORG_MIN,Indicates whether the horizon is organic or mineral according to definitions of the Canadian System of Soil Classification. ,hzn_desgn_note,value,
