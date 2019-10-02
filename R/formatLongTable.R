@@ -8,7 +8,7 @@
 #' @param tableOrder default order in wihc to process the source tables
 #' @param verbose boolean flagging lots of output
 #'
-#' @importFrom  data.table melt.data.table setcolorder rbind merge
+#' @importFrom  data.table melt.data.table setcolorder rbindlist
 #' 
 #' @return a list of data tables in the interal quasi-long format
 #' @export
