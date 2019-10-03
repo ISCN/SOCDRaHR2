@@ -27,6 +27,14 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
   }else{
     ###Harmonize Canadian Upland Forest Soils#######
     
+    #Convert to depth from top units
+    CUFS2018$PROFILES[, layer_top := as.character(as.numeric(UPPER_HZN_LIMIT)-min(as.numeric(UPPER_HZN_LIMIT))), by=LOCATION_ID][,
+                        layer_bottom := as.character(as.numeric(layer_top) + as.numeric(HZN_THICKNESS)), by=LOCATION_ID] 
+    key.ls$CUFS2018 <- data.table::rbindlist(list(key.ls$CUFS2018,
+                                             data.table::data.table(table = 'PROFILES', header = c('layer_bottom', NA), variable = 'layer_bottom', type= c('value', 'unit'), entry = c(NA, 'cm')),
+                                               data.table::data.table(table = 'PROFILES', header = c('layer_top', NA), variable = 'layer_top', type= c('value', 'unit'), entry = c(NA, 'cm'))), fill = TRUE)
+    
+    #Reformat
     ans1 <- formatLongTable(CUFS2018[c('PROFILES', 'REFERENCES', 'SITES')],
                            sourceKey = key.ls$CUFS2018, targetKey = key.ls$ISCN, verbose=verbose)
     ans1$collection <- data.table::data.table(collection_name_id = 'Canadian Upland Forest Soils 2018',
