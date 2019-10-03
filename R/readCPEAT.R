@@ -10,7 +10,7 @@
 #'  a second data frame with the records
 #'  @import magrittr
 #'  @importFrom dplyr select mutate vars starts_with select if_else recode filter full_join
-#'  @importFrom readr read_file read_tsv
+#'  @importFrom readr read_file read_tsv cols
 #'  @importFrom plyr ddply
 #'  @importFrom tidyr separate gather spread
 #' @export
@@ -134,7 +134,7 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
     readText <- readr::read_file(xx$localFile)
     #header <- regmatches(readText, regexpr('/\\* .*\n\\*/', readText))
     ##Trim the header between /* and \*
-    return(readr::read_tsv(gsub('/\\* .*\n\\*/\n', '', readText)))
+    return(readr::read_tsv(gsub('/\\* .*\n\\*/\n', '', readText), col_types=readr::cols(.default = "c")))
   }) %>% dplyr::mutate(layer_name = paste(Site_core, `Depth [m]`, sep='_'))
   
   ##Grab the header text
@@ -213,7 +213,8 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
   temp <- metaData %>% 
     dplyr::full_join(space_DF) %>% 
     dplyr::full_join(comments_DF) %>%
-    dplyr::select(-Space, -StudyComments)
+    dplyr::select(-Space, -StudyComments) %>%
+    dplyr::mutate_all(as.character)
   
   return(list(site=data.table::as.data.table(temp),
               sample=data.table::as.data.table(allData), 

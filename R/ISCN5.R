@@ -5,6 +5,8 @@
 #' @param dataDir string identifying the data directory
 #' @param orginalFormat boolean flag whether or not to translate to keep in orginal data table.
 #'
+#' @import data.table
+#'
 #' @return a list of data tables
 #' @export
 #'
@@ -22,6 +24,8 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
     return(list(CUFS2018 = CUFS2018,
                 CPEAT2018 = CPEAT2018))
   }else{
+    ###Harmonize Canadian Upland Forest Soils#######
+    
     ans1 <- formatLongTable(CUFS2018[c('PROFILES', 'REFERENCES', 'SITES')],
                            sourceKey = key.ls$CUFS2018, targetKey = key.ls$ISCN, verbose=verbose)
     ans1$collection <- data.table::data.table(collection_name_id = 'Canadian Upland Forest Soils 2018',
@@ -36,7 +40,17 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
     ans1$profile$collection_name_id <- ans1$collection$collection_name_id[1]
     ans1$layer$collection_name_id <- ans1$collection$collection_name_id[1]
     
-    ans2 <- formatLongTable(CPEAT2018[c('site', 'sample', 'files')],
+    ######Harmonize CPEAT########
+    
+    #Convert the units for the depth from m to cm and add a top to the layers
+    CPEAT2018$sample[,layer_bottom := as.character(as.numeric(`Depth [m]`)*100)][,layer_top := as.character(c(0, layer_bottom[-length(layer_bottom)])), by=Site_core]
+    #...update the key
+    key.ls$CPEAT <- data.table::rbindlist(list(key.ls$CPEAT[variable != 'layer_bottom', ],
+                               data.table::data.table(table = 'sample', header = c('layer_bottom', NA), variable = 'layer_bottom', type= c('value', 'unit'), entry = c(NA, 'cm')),
+                               data.table::data.table(table = 'sample', header = c('layer_top', NA), variable = 'layer_top', type= c('value', 'unit'), entry = c(NA, 'cm'))), fill = TRUE)
+    
+    #Reformat to long
+    ans2 <- formatLongTable(CPEAT2018[c('site', 'sample', 'files')][,lapply(.SD, as.character), .SDcols = c('site', 'sample', 'files')],
                             sourceKey = key.ls$CPEAT, targetKey = key.ls$ISCN)
     ans2$collection <- data.table::data.table(collection_name_id = 'CPEAT 2018',
                                   variable = c('license'),
@@ -50,6 +64,8 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
     ans2$profile$collection_name_id <- ans2$collection$collection_name_id[1]
     ans2$layer$collection_name_id <- ans2$collection$collection_name_id[1]
     
+    
+    #######Put everything together#####
     ans <- list(collection = data.table::rbindlist(list(ans1$collection, ans2$collection), fill=TRUE),
       study = data.table::rbindlist(list(ans1$study, ans2$study), fill=TRUE),
       profile = data.table::rbindlist(list(ans1$profile, ans2$profile), fill=TRUE),
@@ -63,7 +79,8 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
       return(list(collection=data.table::rbindlist(list(ans$collection, ISCN$collection), fill=TRUE),
                   study = data.table::rbindlist(list(ans$study, ISCN$study), fill=TRUE),
                   profile = data.table::rbindlist(list(ans$profile, ISCN$profile), fill=TRUE),
-                  layer = data.table::rbindlist(list(ans$layer, ISCN$layer), fill=TRUE)))
+                  layer = data.table::rbindlist(list(ans$layer, ISCN$layer), fill=TRUE),
+                  key = key.ls))
     }
   }
 }
