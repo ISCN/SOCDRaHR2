@@ -50,7 +50,7 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
                                data.table::data.table(table = 'sample', header = c('layer_top', NA), variable = 'layer_top', type= c('value', 'unit'), entry = c(NA, 'cm'))), fill = TRUE)
     
     #Reformat to long
-    ans2 <- formatLongTable(CPEAT2018[c('site', 'sample', 'files')][,lapply(.SD, as.character), .SDcols = c('site', 'sample', 'files')],
+    ans2 <- formatLongTable(CPEAT2018[c('site', 'sample', 'files')],
                             sourceKey = key.ls$CPEAT, targetKey = key.ls$ISCN)
     ans2$collection <- data.table::data.table(collection_name_id = 'CPEAT 2018',
                                   variable = c('license'),
