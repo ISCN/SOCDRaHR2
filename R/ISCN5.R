@@ -15,6 +15,7 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
   CUFS2018 <- readCanandaUplandForest2018(dataDir=dataDir)
   
   CPEAT2018 <- readCPEAT(dataDir=dataDir)
+  CPEAT2018$sample <- unique(CPEAT2018$sample)
   #plyr::ldply(CPEAT2018, function(xx){data.frame(header=names(xx))})
   #write.csv(plyr::ldply(CPEAT2018, function(xx){data.frame(header=names(xx))}), file='data-raw/key_CPEAT2018.csv', row.names = FALSE)
   
