@@ -117,7 +117,7 @@ layer,layer_number,Laboratory Layer Number -,layer_lab_number,NA,value,
 layer,labeled_addition,Labeled Addition - (label_add),labeled_addition,NA,value,
 layer,layer_top,Layer Top - cm,layer_top,depth to top of the layer,value,
 layer,,,layer_top,,unit,cm
-layer,layer_bot,Layer Bottom - cm,layer_bottom,depth to bottom of the layer,,
+layer,layer_bot,Layer Bottom - cm,layer_bottom,depth to bottom of the layer,value,
 layer,,,layer_bottom,,unit,cm
 layer,hzn_desgn,Horizon Designation -,hzn_desgn,horizon desigination (detailes TBD),value,
 layer,hzn_desgn_other,Horizon Designation Other -,hzn_desgn_other,other horizon desigination,value,
