@@ -16,7 +16,7 @@
 #' \dontrun{
 #' temp <- ISCN4()
 #' }
-ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
+ISCN4 <- function(dataDir=NULL, orginalFormat = FALSE, onlyNewData=TRUE, verbose=FALSE){
  
   
   ###### dowload and datafiles identified #########
@@ -80,26 +80,18 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
   #check headers
   #unique(unlist(lapply(Treat.ls, names)))[!unique(unlist(lapply(Treat.ls, names))) %in% keys.ls$ISCN2016$header]
   
-  #####Cast as long format####
-  if(verbose)print('casting Treat to long...')
-  TreatLong.ls <- formatLongTable(data.ls = Treat.ls, 
-                                  sourceKey = keys.ls$ISCN2016[header %in% unlist(lapply(Treat.ls, names)),], 
-                                  targetKey = keys.ls$ISCN, verbose = verbose)
   
-  if(verbose) print(lapply(TreatLong.ls, function(x) format(object.size(x), unit='Mb')))
-  if(verbose)print('done')
-
   ####### Alamose has some formatting issues so let's deal with that first ####
   tempMeta <- readxl::read_excel(path=datafile.arr['Alamos'], sheet='metadata',
                                  col_names = c('V1', 'V2', 'V3', 'V4'), col_types = 'text',
                                  na = c('', 'NA'))
   Alamos.ls <- list(metadata = data.table::as.data.table(t(tempMeta[,4])), #only data in column 4
-                   site = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='site',
-                                                           col_types = 'text', na = c('', 'NA')))[-(1:3),],
-                   profile = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='profile',
-                                                           col_types = 'text', na = c('', 'NA')))[-(1:3),],
-                   layer = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='layer',
-                                                           col_types = 'text', na = c('', 'NA')))[-(1:3),])
+                    site = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='site',
+                                                                        col_types = 'text', na = c('', 'NA')))[-(1:3),],
+                    profile = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='profile',
+                                                                           col_types = 'text', na = c('', 'NA')))[-(1:3),],
+                    layer = data.table::as.data.table(readxl::read_excel(path=datafile.arr['Alamos'], sheet='layer',
+                                                                         col_types = 'text', na = c('', 'NA')))[-(1:3),])
   ######Alamos: pull the names from the first column of metadata####
   names(Alamos.ls$metadata) <- unlist(tempMeta[,1])
   
@@ -110,6 +102,19 @@ ISCN4 <- function(dataDir=NULL, onlyNewData=TRUE, verbose=FALSE){
   Alamos.ls$profile <- Alamos.ls$profile[,names(emptySites$profile[emptySites$profile == FALSE]), with=FALSE]
   Alamos.ls$layer <- Alamos.ls$layer[,names(emptySites$layer[emptySites$layer == FALSE]), with=FALSE]
   
+  if(orginalFormat){
+    return(list(Treat=Treat.ls, Alamos=Alamos.ls))
+  }
+  
+  #####Cast as long format####
+  if(verbose)print('casting Treat to long...')
+  TreatLong.ls <- formatLongTable(data.ls = Treat.ls, 
+                                  sourceKey = keys.ls$ISCN2016[header %in% unlist(lapply(Treat.ls, names)),], 
+                                  targetKey = keys.ls$ISCN, verbose = verbose)
+  
+  if(verbose) print(lapply(TreatLong.ls, function(x) format(object.size(x), unit='Mb')))
+  if(verbose)print('done')
+
   
   
    #####Cast Alomos as long format####
