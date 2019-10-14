@@ -10,7 +10,7 @@ row,table,header,long_description,variable,type,entry
 49,sample,,,loi,unit,percent
 51,sample,,,som,unit,g cm-3
 53,sample,,,soc,unit,g cm-3
-58,sample,,,total_carbon,unit,percent
+58,sample,,,oc,unit,percent
 59,sample,,,total_nitrogen,unit,percent
 13,site,,,site_rook_depth_max,unit,m
 14,site,,,site_rock_depth_min,unit,m
@@ -32,7 +32,7 @@ row,table,header,long_description,variable,type,entry
 52,sample,Corg dens [g/cm**3],,soc,value,
 54,sample,Peat,,peat,value,
 55,sample,Peat (Loisel et al. 2014),,peat_flag,value,
-56,sample,TC [%],,total_carbon,value,
+56,sample,TC [%],,oc,value,
 57,sample,TN [%],,total_nitrogen,value,
 2,site,Citation,,citation,value,
 3,site,Related.to,,reference,value,
