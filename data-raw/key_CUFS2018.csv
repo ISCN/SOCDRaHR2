@@ -2,9 +2,9 @@
 1,PROFILES,LOCATION_ID,Unique identifier for each site. ,site_name,id,
 2,PROFILES,HZN_SEQ_NO,Unique identifier for each horizon. Used in conjunction with LOCATION_ID to produce unique identifiers for the PROFILES table. ,layer_name,id,
 3,PROFILES,HORIZON,Soil horizon designation according to the Canadian System of Soil Classification. ,hzn_desgn,value,
-,,,,hzn_desgn,method,Soil horizon designation according to the Canadian System of Soil Classification. 
+,,,,hzn_desgn,method,Soil horizon designation according to the Canadian System of Soil Classification.
 4,PROFILES,HZN_ORG_MIN,Indicates whether the horizon is organic or mineral according to definitions of the Canadian System of Soil Classification. ,hzn_desgn_note,value,
-,,,,hzn_desgn_note,method,Indicates whether the horizon is organic or mineral according to definitions of the Canadian System of Soil Classification. 
+,,,,hzn_desgn_note,method,Indicates whether the horizon is organic or mineral according to definitions of the Canadian System of Soil Classification.
 5,PROFILES,UPPER_HZN_LIMIT,Depth of upper horizon limit referenced to the top of the first mineral soil horizon (depth of 0 cm).,layer_depth_to_mineral,value,
 ,,,,layer_depth_to_mineral,method,Depth of upper horizon limit referenced to the top of the first mineral soil horizon (depth of 0 cm).
 ,,,,layer_depth_to_mineral,unit,cm
@@ -56,13 +56,13 @@
 33,PROFILES,TOT_NITRO_PCT,Percent total nitrogen as reported by the source. ,n_tot,value,
 ,,,,n_tot,unit,percent
 34,PROFILES,Fe_PYROPHOSPHATE,Pyrophosphate-extractable iron as reported by the source. ,fe_other,value,
-,,,,fe_other,method,Pyrophosphate-extractable iron as reported by the source. 
+,,,,fe_other,method,Pyrophosphate-extractable iron as reported by the source.
 35,PROFILES,Al_PYROPHOSPHATE,Pyrophosphate-extractable aluminum as reported by the source. ,al_other,value,
-,,,,al_other,method,Pyrophosphate-extractable aluminum as reported by the source. 
+,,,,al_other,method,Pyrophosphate-extractable aluminum as reported by the source.
 36,PROFILES,Fe_OXALATE,Oxalate-extractable iron as reported by the source. ,fe_ox,value,percent
-,,,,fe_ox,method,Oxalate-extractable iron as reported by the source. 
+,,,,fe_ox,method,Oxalate-extractable iron as reported by the source.
 37,PROFILES,Al_OXALATE,Oxalate-extractable aluminum as reported by the source. ,al_ox,value,percent
-,,,,al_ox,method,Oxalate-extractable aluminum as reported by the source. 
+,,,,al_ox,method,Oxalate-extractable aluminum as reported by the source.
 38,SITES,LOCATION_ID,Unique identifier for each site. ,site_name,id,
 39,SITES,RELEASE_SOURCE,Short name for data source (publication or database) ,study_name,id,
 40,SITES,RELEASE_SOURCE_SITEID,Site identifier used in source publication or database ,source_site_name,value,
@@ -73,20 +73,20 @@
 44,SITES,ORDER,Soil order according to the Canadian System of Soil Classification. ,cssc_order,value,
 45,SITES,GREAT_GROUP,Soil great group according to the Canadian System of Soil Classification ,cssc_gg,value,
 46,SITES,GGSG,Soil great group and subgroup according to the Canadian System of Soil Classification ,cssc_ggsg,value,
-,,,,cssc_code,method,Soil great group and subgroup abbreviation according to the Canadian System of Soil Classification 
-,,,,cssc_order,method,Soil order according to the Canadian System of Soil Classification. 
-,,,,cssc_gg,method,Soil great group according to the Canadian System of Soil Classification 
-,,,,cssc_ggsg,method,Soil great group and subgroup according to the Canadian System of Soil Classification 
-47,SITES,ORG_C_THA,Total soil organic carbon stock in organic horizons of the soil profile ,soc_organic,value,
-,,,,soc_organic,unit,t ha-1
-,,,,soc_organic,method,Total soil organic carbon stock in organic horizons of the soil profile 
-48,SITES,MIN_C_THA,"Total soil organic carbon stock in the mineral horizons of the soil profile to a depth of 100 cm or less, where rock is present above a 100-cm depth",soc_mineral,value,
-,,,,soc_mineral,unit,t ha-1
-,,,,soc_mineral,method,"Total soil organic carbon stock in the mineral horizons of the soil profile to a depth of 100 cm or less, where rock is present above a 100-cm depth"
-49,SITES,TOT_C_THA,"Total soil organic carbon in the soil profile to a depth of 100 cm, or less where rock is present above a 100-cm depth.",soc,value,
-,,,,soc,unit,t ha-1
-,,,,soc,method,"Total soil organic carbon in the soil profile to a depth of 100 cm, or less where rock is present above a 100-cm depth."
-50,SITES,COARSE_FRAGMENTS,Indicates if any steps were taken to correct for coarse fragments in the calculation of MIN_CARB_THA ,soc,method,
+,,,,cssc_code,method,Soil great group and subgroup abbreviation according to the Canadian System of Soil Classification
+,,,,cssc_order,method,Soil order according to the Canadian System of Soil Classification.
+,,,,cssc_gg,method,Soil great group according to the Canadian System of Soil Classification
+,,,,cssc_ggsg,method,Soil great group and subgroup according to the Canadian System of Soil Classification
+47,SITES,ORG_C_THA,Total soil organic carbon stock in organic horizons of the soil profile ,soc_area_organic,value,
+,,,,soc_area_organic,unit,t ha-1
+,,,,soc_area_organic,method,Total soil organic carbon stock in organic horizons of the soil profile
+48,SITES,MIN_C_THA,"Total soil organic carbon stock in the mineral horizons of the soil profile to a depth of 100 cm or less, where rock is present above a 100-cm depth",soc_area_mineral,value,
+,,,,soc_area_mineral,unit,t ha-1
+,,,,soc_area_mineral,method,"Total soil organic carbon stock in the mineral horizons of the soil profile to a depth of 100 cm or less, where rock is present above a 100-cm depth"
+49,SITES,TOT_C_THA,"Total soil organic carbon in the soil profile to a depth of 100 cm, or less where rock is present above a 100-cm depth.",soc_area,value,
+,,,,soc_area,unit,t ha-1
+,,,,soc_area,method,"Total soil organic carbon in the soil profile to a depth of 100 cm, or less where rock is present above a 100-cm depth."
+50,SITES,COARSE_FRAGMENTS,Indicates if any steps were taken to correct for coarse fragments in the calculation of MIN_CARB_THA ,soc_area,method,
 51,SITES,DEPTH_TO_RX,"Depth from the surface of the mineral soil to rock, if the presence of rock was reported by the source ",total_soil_depth,value,
 ,,,,,unit,cm
 52,SITES,FOREST_TYPE,"Defined as hardwood (HW), softwood (SW), or mixedwood (MW) based on descriptions provided by original source, or in some cases by a quantitative assessment of individual tree data if they were available ",vegclass,value,
