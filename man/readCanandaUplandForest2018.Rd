@@ -4,7 +4,7 @@
 \alias{readCanandaUplandForest2018}
 \title{Raw read for Canadian upland soils (2018)}
 \usage{
-readCanandaUplandForest2018(dataDir, download = TRUE)
+readCanandaUplandForest2018(dataDir, download = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{dataDir}{filename for download directory}

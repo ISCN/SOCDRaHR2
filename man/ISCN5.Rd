@@ -4,8 +4,7 @@
 \alias{ISCN5}
 \title{Read in new ISCN5 contributions}
 \usage{
-ISCN5(dataDir, orginalFormat = TRUE, newDataOnly = TRUE,
-  verbose = FALSE)
+ISCN5(dataDir, orginalFormat = TRUE, newDataOnly = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{dataDir}{string identifying the data directory}

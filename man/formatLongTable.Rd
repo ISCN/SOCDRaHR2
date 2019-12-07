@@ -4,8 +4,14 @@
 \alias{formatLongTable}
 \title{Convert to internal data format}
 \usage{
-formatLongTable(data.ls, sourceKey, targetKey, tableOrder = c("study",
-  "site"), warnMismatch = FALSE, verbose = FALSE)
+formatLongTable(
+  data.ls,
+  sourceKey,
+  targetKey,
+  tableOrder = c("study", "site"),
+  warnMismatch = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{data.ls}{list of source relational data tables}
