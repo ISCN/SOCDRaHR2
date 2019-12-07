@@ -39,5 +39,7 @@ readISRaD <- function(dataDir, verbose=FALSE, gitRef = "master"){
   #  write.csv(temp, file='data-raw/key_ISRaD.csv')
   # 
   
-  return(ISRaD.ls)
+  ###only return the agreed upon data tables. 
+  ###Check ISRaD MOU before changing this!!!
+  return(ISRaD.ls[c("metadata", "site", "profile", "flux", "layer")])
 }
