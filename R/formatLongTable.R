@@ -59,7 +59,7 @@ formatLongTable <- function(data.ls, sourceKey, targetKey,
     }
     
     ans[[targetTbl]] <- data.table::data.table()
-    orderSource <- sort(table(key[table_target == targetTbl]$table_source))
+    orderSource <- sort(table(as.character(key[table_target == targetTbl]$table_source)))
     for(sourceTbl in names(orderSource)){
       if(verbose) cat(paste('\tData from source table:', sourceTbl, '\n'))
       #pull the relvant table

@@ -13,7 +13,7 @@
 #' @export
 #' 
 #'
-readCanandaUplandForest2018 <- function(dataDir, download=TRUE){
+readCanandaUplandForest2018 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   #### Download ####
 

@@ -12,10 +12,11 @@
 #'
 ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FALSE){
   
-  CUFS2018 <- readCanandaUplandForest2018(dataDir=dataDir)
-  
-  CPEAT2018 <- readCPEAT(dataDir=dataDir)
+  CUFS2018 <- readCanandaUplandForest2018(dataDir=dataDir, verbose=verbose)
+  CPEAT2018 <- readCPEAT(dataDir=dataDir, verbose=verbose)
   CPEAT2018$sample <- unique(CPEAT2018$sample)
+  ISRaD2019 <- readISRaD(dataDir=dataDir, verbose=verbose)
+  
   #plyr::ldply(CPEAT2018, function(xx){data.frame(header=names(xx))})
   #write.csv(plyr::ldply(CPEAT2018, function(xx){data.frame(header=names(xx))}), file='data-raw/key_CPEAT2018.csv', row.names = FALSE)
   
@@ -23,7 +24,8 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
   
   if(orginalFormat){
     return(list(CUFS2018 = CUFS2018,
-                CPEAT2018 = CPEAT2018))
+                CPEAT2018 = CPEAT2018,
+                ISRaD2019 = ISRaD2019))
   }else{
     ###Harmonize Canadian Upland Forest Soils#######
     
@@ -60,7 +62,7 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
     
     #Reformat to long
     ans2 <- formatLongTable(CPEAT2018[c('site', 'sample', 'files')],
-                            sourceKey = key.ls$CPEAT, targetKey = key.ls$ISCN)
+                            sourceKey = key.ls$CPEAT, targetKey = key.ls$ISCN, verbose=verbose)
     ans2$collection <- data.table::data.table(collection_name_id = 'CPEAT 2018',
                                   variable = c('license'),
                                   type = 'value',
@@ -73,12 +75,28 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
     ans2$profile$collection_name_id <- ans2$collection$collection_name_id[1]
     ans2$layer$collection_name_id <- ans2$collection$collection_name_id[1]
     
+    #####Harmonize ISRaD######
+    
+    ans3 <- formatLongTable(data.ls = ISRaD2019, sourceKey = key.ls$ISRaD, targetKey = key.ls$ISCN, 
+                            verbose = verbose)
+  
+    ans3$collection <- data.table::data.table(collection_name_id = 'ISRaD 2019',
+                                  variable = c('license'),
+                                  type = 'value',
+                                  entry = 'Creative Commons Attribution 3.0 Unported (CC-BY-3.0)')
+    hardKeys <- key.ls$ISRaD[!is.na(entry) & !is.na(variable), c('variable', 'type', 'entry')]
+    hardKeys[,collection_name_id := ans3$collection$collection_name_id[1]]
+    ans3$collection <- data.table::rbindlist(list(ans3$collection, hardKeys), fill = TRUE)
+    
+    ans3$study$collection_name_id <- ans3$collection$collection_name_id[1]
+    ans3$profile$collection_name_id <- ans3$collection$collection_name_id[1]
+    ans3$layer$collection_name_id <- ans3$collection$collection_name_id[1]
     
     #######Put everything together#####
-    ans <- list(collection = data.table::rbindlist(list(ans1$collection, ans2$collection), fill=TRUE),
-      study = data.table::rbindlist(list(ans1$study, ans2$study), fill=TRUE),
-      profile = data.table::rbindlist(list(ans1$profile, ans2$profile), fill=TRUE),
-      layer = data.table::rbindlist(list(ans1$layer, ans2$layer), fill=TRUE))
+    ans <- list(collection = data.table::rbindlist(list(ans1$collection, ans2$collection, ans3$collection), fill=TRUE),
+      study = data.table::rbindlist(list(ans1$study, ans2$study, ans3$study), fill=TRUE),
+      profile = data.table::rbindlist(list(ans1$profile, ans2$profile, ans3$profile), fill=TRUE),
+      layer = data.table::rbindlist(list(ans1$layer, ans2$layer, ans3$layer), fill=TRUE))
     
     if(newDataOnly){
       return(ans)
