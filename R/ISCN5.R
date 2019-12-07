@@ -32,9 +32,16 @@ ISCN5 <- function(dataDir, orginalFormat = TRUE, newDataOnly=TRUE, verbose = FAL
     #Convert to depth from top units
     CUFS2018$PROFILES[, layer_top := as.character(as.numeric(UPPER_HZN_LIMIT)-min(as.numeric(UPPER_HZN_LIMIT))), by=LOCATION_ID][,
                         layer_bottom := as.character(as.numeric(layer_top) + as.numeric(HZN_THICKNESS)), by=LOCATION_ID] 
+    
     key.ls$CUFS2018 <- data.table::rbindlist(list(key.ls$CUFS2018,
                                              data.table::data.table(table = 'PROFILES', header = c('layer_bottom', NA), variable = 'layer_bottom', type= c('value', 'unit'), entry = c(NA, 'cm')),
                                                data.table::data.table(table = 'PROFILES', header = c('layer_top', NA), variable = 'layer_top', type= c('value', 'unit'), entry = c(NA, 'cm'))), fill = TRUE)
+    
+    #Convert ISRaD to depth from top
+    ISRaD2019$layer[, lyr_bot:= as.character(as.numeric(lyr_bot)-min(as.numeric(lyr_top))), 
+                    by=pro_name][,
+                                 lyr_top := as.character(as.numeric(lyr_top)-min(as.numeric(lyr_top))), 
+                    by=pro_name]
     
     #Reformat
     ans1 <- formatLongTable(CUFS2018[c('PROFILES', 'REFERENCES', 'SITES')],
