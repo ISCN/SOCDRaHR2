@@ -13,3 +13,6 @@ temp/*
 
 #Ignore mac files
 .DS_Store
+
+#Ignore key templates
+*.numbers

@@ -33,12 +33,17 @@ makeKeys <- function(dataDir=NULL, saveDir=NULL){
   CUFS2018Key <- read.csv(file.path(dataDir, "key_CUFS2018.csv"),
                           colClasses = 'character', na.strings = c('', 'NA'))
   
+  ####ISRaD####
+  ISRaDKey <- read.csv(file.path(dataDir,'key_ISRaD.csv'), 
+                       colClasses = 'character', na.strings = c('', 'NA'))
+  
   ####return answer####
   ISCN_key_list <- list(ISCN = data.table::as.data.table(ISCN5.target), 
               ISCN3 = data.table::as.data.table(ISCN3Key),
               ISCN2016 = data.table::as.data.table(ISCN2016),
               CUFS2018 = data.table::as.data.table(CUFS2018Key),
-              CPEAT = data.table::as.data.table(CPEAT2018Key))
+              CPEAT = data.table::as.data.table(CPEAT2018Key),
+              ISRaD = data.table::as.data.table(ISRaDKey))
   
   save(ISCN_key_list, file=file.path(saveDir, 'ISCN_key_list.RData'))
   return(ISCN_key_list)
