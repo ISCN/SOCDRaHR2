@@ -26,7 +26,8 @@ dataDir <- 'Your/Data/Dir'
 ```{r load}
 keys.ls <- makeKeys()
 #ISCN.ls <- ISCN3(dataDir=dataDir, orginalFormat = FALSE)
-ISCN.ls <- ISCN4(dataDir = dataDir, onlyNewData = FALSE)
+#ISCN.ls <- ISCN4(dataDir = dataDir, onlyNewData = FALSE)
+ISCN.ls <- ISCN5(dataDir = dataDir, orginalFormat = FALSE, newDataOnly = FALSE)
 ```
 
 # General variables

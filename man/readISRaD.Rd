@@ -4,12 +4,14 @@
 \alias{readISRaD}
 \title{Read ISRaD contribution down to the layer level.}
 \usage{
-readISRaD(dataDir, verbose = FALSE)
+readISRaD(dataDir, verbose = FALSE, gitRef = "master")
 }
 \arguments{
 \item{dataDir}{string identifying the file where the ISRaD data will be downloaded}
 
 \item{verbose}{boolean flag to produce excessive debugging statements}
+
+\item{gitRef}{a string identifying the git reference for the ISRaD install}
 }
 \value{
 a list of character-based data tables
