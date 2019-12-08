@@ -4,7 +4,12 @@
 \alias{ISCN4}
 \title{Read in two data sets queued in for data processing for ISCN4.}
 \usage{
-ISCN4(dataDir = NULL, onlyNewData = TRUE, verbose = TRUE)
+ISCN4(
+  dataDir = NULL,
+  orginalFormat = FALSE,
+  onlyNewData = TRUE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{dataDir}{string identifing the data directory to download data to, or NULL to download to a temporary directory}

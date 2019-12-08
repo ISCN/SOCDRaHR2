@@ -10,12 +10,18 @@
 #'  a second data frame with the records
 #'  @import magrittr
 #'  @importFrom dplyr select mutate vars starts_with select if_else recode filter full_join
-#'  @importFrom readr read_file read_tsv
+#'  @importFrom readr read_file read_tsv cols
 #'  @importFrom plyr ddply
 #'  @importFrom tidyr separate gather spread
 #' @export
 #'
 readCPEAT <- function(dataDir, workLocal = FALSE, verbose=FALSE){
+  #create a new directory for all the CPEAT downloads
+  if(!file.exists(file.path(dataDir, 'CPEAT'))){
+    dir.create(file.path(dataDir, 'CPEAT'))
+  }
+  dataDir <- file.path(dataDir, 'CPEAT')
+  
   downloadDOI <- read.csv(text=gsub(' ', '', gsub(' core ', '_c', 'URL,Author,Site_core,orgFile,extra
 https://doi.org/10.1594/PANGAEA.890471,Garneau,Aero,Aero.csv,
 https://doi.org/10.1594/PANGAEA.890528,Yu,Altay core 1,Altay.csv,
@@ -111,8 +117,9 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
   if(any(!file.exists(downloadDOI$localFile)) & !workLocal){
     if(verbose) print(paste('downloading:', 
                             downloadDOI$localFile[!file.exists(downloadDOI$localFile)]))
-    download.file(downloadDOI$downloadURL[!file.exists(downloadDOI$localFile)], 
-                  downloadDOI$localFile[!file.exists(downloadDOI$localFile)])
+    for(ii in which(!file.exists(downloadDOI$localFile))){ #does not always 
+      download.file(downloadDOI$downloadURL[ii], downloadDOI$localFile[ii])
+    }
   }
   
   ##Trim out any files that failed to download
@@ -127,8 +134,8 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
     readText <- readr::read_file(xx$localFile)
     #header <- regmatches(readText, regexpr('/\\* .*\n\\*/', readText))
     ##Trim the header between /* and \*
-    return(readr::read_tsv(gsub('/\\* .*\n\\*/\n', '', readText)))
-  })
+    return(readr::read_tsv(gsub('/\\* .*\n\\*/\n', '', readText), col_types=readr::cols(.default = "c")))
+  }) %>% dplyr::mutate(layer_name = paste(Site_core, `Depth [m]`, sep='_'))
   
   ##Grab the header text
   allheader <- plyr::ddply(downloadDOI, c('Site_core'), function(xx){
@@ -138,7 +145,7 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
     ans <- unlist(strsplit(x=header, split='\n.+:\t', perl=TRUE))
     ans <- ans[-1] #pop off the header
     names(ans) <- gsub('\\n|\\t|:', '', 
-                               unlist(regmatches(header, gregexpr('\n.+:\t', header, per=TRUE))))
+                               unlist(regmatches(header, gregexpr('\n.+:\t', header, perl=TRUE))))
     return(as.data.frame(as.list(ans)))
   })
   
@@ -206,9 +213,12 @@ https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
   temp <- metaData %>% 
     dplyr::full_join(space_DF) %>% 
     dplyr::full_join(comments_DF) %>%
-    dplyr::select(-Space, -StudyComments)
+    dplyr::select(-Space, -StudyComments) %>%
+    dplyr::mutate_all(as.character)
   
-  return(list(site=temp, sample=allData, files=downloadDOI))
+  return(list(site=data.table::as.data.table(temp),
+              sample=data.table::as.data.table(allData), 
+              files=data.table::as.data.table(downloadDOI)))
   
 
 }

@@ -1,7 +1,7 @@
-Package: soilDataR
+Package: SOCDRaH2
 Type: Package
 Title: Scripts to read in and harmonize different digital soil data archives
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person("Todd-Brown", "K", email = "ktoddbrown@gmail.com",
   role = c("aut", "cre")))
 Description: Downloads, reads and harmonizes data related to soil carbon as part of the International Soil Carbon Network SOC-DRaH Project.
@@ -25,4 +25,4 @@ Suggests:
     rmarkdown (>= 1.5),
     testthat (>= 1.0)
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 7.0.2

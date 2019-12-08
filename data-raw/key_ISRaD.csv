@@ -1,0 +1,223 @@
+,table,header,variable,type,entry,Required,Variable_Name,Units/Info,Description,Vocab,Variable_class,Min,Max
+,,,collection_name,id,ISRaD,,,,,,,,
+,,,collection_citation,value,10.5194/essd-2019-55,,,,,,,,
+,,,collection_license,,CC-BY,,,,,,,,
+1,metadata,entry_name,dataset_name,id,,Yes,Dataset (entry) Name,author_year,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis.",must match across levels,NA,NA,NA
+2,metadata,doi,doi,value,,Yes,Digital Object Identifier (DOI),"do not use ""http://doi.org"" prefix","Digital Object Identifier. Please look this number up at journal webpage even if it is not reported in PDF. Alphanumeric string only. Do not include ""http://doi.org""",NA,NA,NA,NA
+3,metadata,compilation_doi,compilation_doi,value,,No,DOI of Published Compiliation,"do not use ""http://doi.org"" prefix","Digital Object Identifier. Please look this number up at journal webpage even if it is not reported in PDF. Alphanumeric string only. Do not include ""http://doi.org""",NA,NA,NA,NA
+4,metadata,curator_name,curator_name,value,,Yes,Curator Name,Your name (person entering data),"Name of person completing template or, in the case of synthesis efforts, the author of the synthesis.",NA,NA,NA,NA
+5,metadata,curator_organization,curator_organization,value,,Yes,Curator Organization,Your organization,Professional affiliation,NA,NA,NA,NA
+6,metadata,curator_email,curator_email,value,,Yes,Curator Email,Your email,Current Contact email,NA,NA,NA,NA
+7,metadata,modification_date_y,modification_date_y,value,,Yes,Template Modification Year,yyyy,Date template was last modified (year),NA,NA,NA,NA
+8,metadata,modification_date_m,modification_date_m,value,,Yes,Template Modification Month,mm,Date template was last modified (month),NA,NA,NA,NA
+9,metadata,modification_date_d,modification_date_d,value,,Yes,Template Modification Day,dd,Date template was last modified (day),NA,NA,NA,NA
+10,metadata,contact_name,contact_name,value,,Yes,Additional Contact Name,Corresponding author of dataset,Name of corresponding author from the dataset or synthesis,NA,NA,NA,NA
+11,metadata,contact_email,contact_email,value,,Yes,Additional Contact Email,Corresponding author email,Current email of corresponding author of dataset of synthesis,NA,NA,NA,NA
+12,metadata,contact_orcid_id,contact_orcid_id,value,,No,Contact ORCID ID Number,Corresponding author ORCID #,ORCID number of corresponding author (if reported),NA,NA,NA,NA
+13,metadata,bibliographical_reference,bibliographical_reference,value,,Yes,Bibliographical Reference,"Author(s), Year, Article Title, Journal Title, Volume, Page Numbers",Citation for study (if applicable),NA,NA,NA,NA
+14,metadata,metadata_note,metadata_note,value,,No,Notes about dataset,Notes,"Any comments regarding missing data, available data not included in publication, or other pertinent aspects of the study or dataset.",NA,NA,NA,NA
+15,metadata,associated_datasets,associated_datasets,value,,No,Datasets associated with the primary entry,author_year; … ; author_year,List any associated datasets that may report the same data contained in the primary entry,NA,NA,NA,NA
+16,metadata,template_version,template_version,value,,No,Template version date,yyyymmddhh,"DO NOT EDIT (year, month, day, hour of template version (UTC))",NA,NA,NA,NA
+17,site,entry_name,dataset_name,id,,Yes,Dataset (entry) Name,author_year,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis. Values must match across levels.",must match across levels,character,NA,NA
+18,site,site_name,site_name,id,,Yes,Site Name,alphanumeric,"A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels.",must match across levels,character,NA,NA
+19,site,site_lat,latitude_coarse,value,,Yes,Latitude,dec. deg,"Latitude of site reported as decimal degrees. The precision of the coordinates reported are up the user. For conversion of degree minute second values to decimal degrees, please see the following resource: https://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees",NA,numeric,-90,90
+20,site,site_long,longitude_coarse,value,,Yes,Longitude,dec. deg,"Longitude of site reported as decimal degrees. The precision of the coordinates reported are up the user. For conversion of degree minute second values to decimal degrees, please see the following resource: https://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees",NA,numeric,-180,180
+21,site,site_datum,datum_coarse,value,,No,Latitude/Longitude Datum,(lat/long datum),Latitude/Longitude datum against which Latitude and Longitude are reported. Default = WGS84,"AGD84, ED50, ETRS89, GRS80, NAD83, OSGB36, WGS84",character,NA,NA
+22,site,site_elevation,elevation_coarse,value,,No,Elevation,m,"The elevation at the site as determined by topo map, GPS, altimeter, etc. Contributed value is assumed accurate within several meters regardless of method used.",NA,numeric,-413,8900
+23,site,site_note,site_note,value,,No,Site Notes,notes,"Various notes on and descriptions of the site other than C flux, climate, photo or vegetation. May include local names for physiographic features, which may or may not appear on USGS Topographic Quadrangles.",NA,character,NA,NA
+24,profile,entry_name,dataset_name,id,,Yes,Dataset (entry) Name,author_year,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis.",must match across levels,character,NA,NA
+25,profile,site_name,site_name,id,,Yes,Site Name,Alphanumeric,see site tab for description,must match across levels,character,NA,NA
+26,profile,plot_name,plot_name,value,,No,Plot Name,Alphanumeric,"Denote sub-site scale groupings for data, e.g. plots",must match across levels,character,NA,NA
+27,profile,pro_name,profile_name,id,,Yes,Profile/Plot Name,Alphanumeric,"A unique name for a single profile. Values should match those reported in the orginal study. If no other information is available, value can be numeric. For NRCS data it is the same as “Pedon ID”.",must match across levels,character,NA,NA
+28,profile,pro_note,profile_note,value,,No,Profile Notes,Notes,"Supplemental information describing location detail, alternative profile naming, additional references, or other information",NA,character,NA,NA
+29,profile,pro_lat,latitude,value,,No,Profile Latitudue,dec. deg,"Latitude and Longitude of profile locations. These fields are for reporting fine-scale (<1 km) spatial locations. For larger differences in location, the Site designation should be used. Datum should match that specified for the Site.",NA,numeric,-90,90
+30,profile,pro_long,longitude,value,,No,Profile Longitude,dec. deg,"Latitude and Longitude of profile locations. These fields are for reporting fine-scale (<1 km) spatial locations. For larger differences in location, the Site designation should be used. Datum should match that specified for the Site.",NA,numeric,-180,180
+31,profile,pro_elevation,elevation,value,,No,Profile Elevation,m,Elevation for a specific profile. Only needs to be entered if different from site elevation.,NA,numeric,NA,NA
+32,profile,pro_treatment,treatment,value,,Yes,Profile Treatment,Control or Treatment,Indication of whether samples were collected from a natural soil (control) or one subjected to an experimental treatment. Blank values are assumed to represent control conditions.,"control, treatment",character,NA,NA
+33,profile,pro_treatment_note,treatment_note,value,,No,Profile Treatment Note,Treatment Type,"If samples are from an exerimental treatment, provide a description of the treatment type (warming, isotopic label, rainout, etc).",NA,character,NA,NA
+34,profile,pro_comp,composit,value,,No,Profile Compositing,(yes or blank),"Are Profile data from composite sample? When no value is entered, it is assumed samples were not a composite",yes,character,NA,NA
+35,profile,pro_reps,replicate,value,,No,Profile Replcate Number,Positive Integer,"The number of replicates averaged for the data reported, blank cells or a value of 1 indicate no replication",NA,numeric,1,inf
+36,profile,pro_MAT,MAT,value,,No,Mean Annual Temperature Measured,˚C,Mean annual temperature measured at loction of the soil profile.,NA,numeric,-60,60
+37,profile,pro_MAP,MAP,value,,No,Mean Annual Precipitation Measured,mm yr-1,Mean annual precipitation measured at location of the soil profile.,NA,numeric,0,15000
+38,profile,pro_peatland,peatland,value,,No,Peatland Present,(yes or blank),Is peat present in this profile? Yes if peatland. Blank if not present.,yes,character,NA,NA
+39,profile,pro_usda_soil_order,usda_soil_order,value,,No,Soil Order in USDA Taxonomy,pro_usda_soil_order,The soil order in USDA soil taxonomy,"Alfisols, Andisols, Aridisols, Entisols, Gelisols, Histosols, Inceptisols, Mollisols, Oxisols, Spodosols, Ultisols, Vertisols",character,NA,NA
+40,profile,pro_soil_series,soil_series,value,,No,Soil Series Name,NA,The soil series name of the profile in USDA soil taxonomy,NA,character,NA,NA
+41,profile,pro_soil_taxon,soil_taxon,value,,No,Additonal Soil Taxonomic Descriptors (e.g. more specific USDA or WRB),NA,"Use this field in combination with ""pro_soil_taxon_sys"" to record non-USDA soil taxonomy or additional USDA soil taxonomic descriptors",NA,character,NA,NA
+42,profile,pro_soil_taxon_sys,soil_taxon,method,,No,Soil Taxonomic System (use for text in pro_soil_taxon field),(pro_taxon_sys),"The relevant soil taxonomic classification system for data entered in the ""pro_soil_taxon"" column","USDA, WRB, other",character,NA,NA
+43,profile,pro_chrono_name,chronosequence_name,value,,No,Denote Chronosequence Grouping,NA,Group name assigned to a particular chronosequence,NA,character,NA,NA
+44,profile,pro_soil_age,soil_age,value,,No,Soil Age,Ky,The age of the soil in thousands of years (Ky),NA,numeric,0,3000000
+45,profile,pro_soil_age_note,soil_age_note,method,,No,Notes on Soil Age or Chronosequence,NA,"Additional notes regarding soil age determination, chronosequence grouping, etc.",NA,character,NA,NA
+46,profile,pro_MAST,MAST,value,,No,Mean Annual Soil Temperature,˚C,Mean annual soil temperature as estimated for the entire profile. Depth specific values may be reported at the Layer level.,NA,numeric,-60,60
+47,profile,pro_MASWC,MASWC,value,,No,Mean Annual Water Content,% WHC,Mean annual soil moisture content as estimated for the entire profile in units of % water holding capacity. Depth specific values may be reported at the Layer level.,NA,numeric,0,100
+48,profile,pro_land_cover,land_cover,value,,No,Land Cover Category,(land_cover),The general landcover classificiation,"bare, cultivated, forest, rangeland/grassland, shrubland, urban, wetland, tundra",character,NA,NA
+49,profile,pro_lc_phenology,land_cover_phenology,value,,No,Forest or Shrubland Phenology (leave blank if unknown),(phenology),Vegetation phenology for forest and shrubland types,"deciduous, evergreen, mixed",character,NA,NA
+50,profile,pro_lc_leaf_type,land_cover_morphology,value,,No,Forest Leaf Morphology (leave blank if unknown),(leaf type),Leaf morphology for forests,"broadleaf, needleleaf, mixed",character,NA,NA
+51,profile,pro_lc_photosyn_path,land_cover_photosynthetic_pathway,value,,No,Photosynthetic Pathway (leave blank if unknown),(phenology),Vegetation photosynthetic pathway (applicable mainly to grassland),"C3, C4, CAM",character,NA,NA
+52,profile,pro_veg_note,vegitation_note,value,,No,Profile Vegetation,species names,"Provide additional detail of vegetation information including species composition, basal area, aboveground biomass, etc.",NA,character,NA,NA
+53,profile,pro_NPP,NPP,value,,No,NPP,g C m-2 yr-1,Net primary productivity associated with profile location,NA,numeric,NA,NA
+54,profile,pro_bedrock_depth,bedrock_depth,value,,No,Depth to Bedrock,cm,The observed depth to the top of the bedrock layer.,NA,numeric,0,inf
+55,profile,pro_complete,complete_profile,value,,No,Complete Profile Flag,NA,Flag indicating confidence that profile was sampled completely (down to parent rock or C horizon with minimal C content),NA,character,NA,NA
+56,profile,pro_depth_water,water_table_depth,value,,No,Depth to Water Table,cm,Measure or estimate the depth from the ground surface to the stabilized contact with free- standing water in an open bore-hole or well at the time of sampling.,NA,numeric,0,inf
+57,profile,pro_thaw_depth,thaw_depth,value,,No,Thaw Depth,cm,"The depth to the frozen surface of the profile. For Alaska sites, this applies only if sampled after August 15 and should be left blank if sampled before.",NA,numeric,0,inf
+58,profile,pro_parent_material,parent_material,value,,No,Parent Material Categories,(parent_material),Generalized geologic type describing the geologic or organic precursors of the soil,"igneous intrusive, igneous extrusive, igneous pyroclastic, metamorphic, sedimentary-clastics, organic, evaporites, interbedded, loess",character,NA,NA
+59,profile,pro_parent_chem,parent_chemistry,value,,No,Parent Material Chemistry,(parent_chem),General parent material chemical composition,"mafic, felsic, intermediate",character,NA,NA
+60,profile,pro_parent_material_notes,parent_material,method,,No,Notes on parent material or chemical,"rock type, etc.",Additional details regarding the soil parent material,NA,character,NA,NA
+61,profile,pro_2d_position,position_2d,value,,No,2D Position,(2d_position),2-dimensional position of the site on the Landform on which it is located. See USDA- NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 3-38 through 3-41). This information supplements Landscape and Landform to describe the geographic setting of the site.,"summit, shoulder, backslope, footslope, toeslope, interfluve",character,NA,NA
+62,profile,pro_aspect,aspect_class,value,,No,Site Aspect Class,(direction),The cardinal direction that the slope faces at a site. Use this field if only if you do not provide the azimuth of the Site Aspect in compass degrees.,"N, S, E, W, NE, NW, SE, SW",character,NA,NA
+63,profile,pro_aspect_deg,aspect_degree,value,,No,Site Aspect,degree,"The numerical observation of aspect at the site. The compass bearing (corrected for declination) that a slope faces, looking downslope. If the site has no slope leave blank.",NA,numeric,0,360
+64,profile,pro_slope,slope,value,,No,Slope,%,The angle of the ground surface through the site and in the direction that overland water would flow. Make observations facing downslope to avoid errors associated with some brands of clinometers. If the site has no slope leave blank.,NA,numeric,0,100
+65,profile,pro_slope_shape,slope_shape,value,,No,Slope Shape,(shape),General descriport of surface shape at soil profile sampling location.,"convergent, divergent, planar",character,NA,NA
+66,profile,pro_drainage_class,drainage_class,value,,No,Drainage Class,(drainage_class),The frequency and duration of wet periods in conditions similar to those under as defined by the USDA NRCS.,"excessively, somewhat excessively, well, moderately well, somewhat poorly, poorly, very poorly",character,NA,NA
+67,profile,pro_soc,soc,value,,No,Reported Profile Soil Organic Carbon Stock,g cm-2,The data contributor's calculated soil organic carbon stock value for the profile,NA,numeric,0,inf
+68,profile,pro_soc_sigma,soc,sigma,,No,Reported Profile Soil Organic Carbon Stock Standard Deviation,g cm-2,"The standard deviation of the site, cluster, profile, or layer-level calculated soil organic carbon stock. (For layer soil organic carbon stocks, this may be based on analytical or sampling replicates of %C or bulk density measurements).",NA,numeric,0,inf
+69,profile,pro_soc_depth,soc_depth,value,,No,Reported Profile Soil Organic Carbon Stock Depth,cm,"The depth to which profiles were sampled to quantify the mean site, cluster, or profile calculated soil organic carbon stocks.",NA,numeric,0,inf
+70,profile,pro_catchment_area,catchment_area,value,,No,Catchment area,km^2,Catchment area drained in km^2,NA,numeric,0,inf
+71,profile,pro_permafrost,permafrost,value,,No,Permafrost Present,NA,Is permafrost present at this profile? Yes if present. Blank if not present.,yes,character,NA,NA
+72,profile,pro_thermokarst,thermokarst,value,,No,Thermokarst Present,NA,Are thermokarst features present at this profile? Yes if present. Blank if not present.,yes,character,NA,NA
+73,profile,pro_deforested,deforested,value,,No,Deforested Percentage,%,Percent of landscape deforested (or of catchment area),NA,numeric,0,100
+74,profile,pro_water_body,water_body_type,value,,No,Water Body Type,NA,"Type of water body (Eg: lake, mainstem, tributary, etc)",NA,character,NA,NA
+75,profile,pro_water_body_name,water_body_name,value,,No,Water Body Name,NA,"River name, lake name, etc. for different profiles collected from same water body. Group identifier for aquatic profiles. (Use is similar to plot_name or pro_chrono_name).",NA,character,NA,NA
+76,layer,entry_name,dataset_name,id,,Yes,Dataset (entry) Name,author_year,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis.",must match across levels,character,NA,NA
+77,layer,site_name,site_name,id,,Yes,Site Name,alphanumeric,see site tab for description,must match across levels,character,NA,NA
+78,layer,pro_name,profile_name,id,,Yes,Profile Name,alphanumeric,see profile tab for description,must match across levels,character,NA,NA
+79,layer,lyr_name,layer_name,id,,Yes,Layer Name,alphanumeric,"A unqiue layer identifier. Most commonly a concatination of the profile name and layer depth range is used. For example: ""profile1_0-10""",must match across levels,character,NA,NA
+80,layer,lyr_obs_date_y,observation_date_y,value,,Yes,Observation Date Year,yyyy,Year when sample was collected,NA,numeric,1850,2025
+81,layer,lyr_obs_date_m,observation_date_m,value,,No,Observation Date Month,mm,Month when sample was collected,NA,numeric,1,12
+82,layer,lyr_obs_date_d,observation_date_d,value,,No,Observation Date Day,dd,Day when sample was collected,NA,numeric,1,31
+83,layer,lyr_all_org_neg,organic_depths_negative,value,,No,Layer All Organic,(yes or blank),"Flag if mineral interface is unknown and depth is measured from atmosphere interface, e.g. peat cores",yes,character,NA,NA
+84,layer,lyr_top,layer_top,value,,Yes,Layer Top,cm,The upper depth of the sampling interval,NA,numeric,NA,NA
+85,layer,lyr_bot,layer_bottom,value,,Yes,Layer Bottom,cm,The lower depth of the sampling intercal,NA,numeric,NA,NA
+86,layer,lyr_hzn,horizon,value,,No,Horizon,alphanumeric,Follow conventions of the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 2-2 through 2-4). Note that datasets originally using another convention will be modified for this column. If a different convention was used it can be entered in Horizon Designation Other.,NA,character,NA,NA
+87,layer,lyr_comp,composit,value,,No,Layer Composite,(yes or blank),Use if the layer analyzed is a composite of multiple samples from the same depth interval,yes,character,NA,NA
+88,layer,lyr_igsn,IGSN,value,,No,International Geo Sample Number,NA,"The International Geo Sample Number (IGSN, http://www.geosamples.org/aboutigsn) is used to identify and track soil layers.",NA,character,NA,NA
+89,layer,lyr_note,layer_note,value,,No,Soil Layer or Horizon Notes,notes,NA,NA,character,NA,NA
+90,layer,lyr_color,color,value,,No,Moist Munsell Color,NA,Color of moist soil based on the Munsell soil color chart.,NA,character,NA,NA
+91,layer,lyr_color_dry,color_dry,value,,No,Dry Munsell Color,NA,Color of dry soil based on Munsell color system,NA,character,NA,NA
+92,layer,lyr_burn_ev,burn_evidence,value,,No,Evidence of Burning,Burn or Blank,Descriptive information indicating evidence of burning within the layer.,burn,character,NA,NA
+93,layer,lyr_bd_samp,bulk_density_sample,value,,No,"Bulk Density, Coarse Fragments Removed",g cm-3,"Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater than 1 cm diameter removed.",NA,numeric,1E-03,2.6
+94,layer,lyr_bd_tot,bulk_density_total,value,,No,Bulk Density With Coarse Fragments,g cm-3,"Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater than 1 cm diameter included.",NA,numeric,1E-03,2.6
+95,layer,lyr_bd_notes,bulk_density_sample,value,,No,Bulk Density Method or Other Notes,NA,Please reference or describe the methods used to determine bulk density.,NA,character,NA,NA
+,layer,lyr_bd_notes,bulk_density_total,value,,,,,,,,,
+96,layer,lyr_sand_tot_psa,sand_tot_psa,value,,No,Percent Sand,%,"Percent by weight of soil particles greater than 0.05 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986.",NA,numeric,0,100
+97,layer,lyr_silt_tot_psa,silt_tot_psa,value,,No,Percent Silt,%,"Percent by weight of soil particles in the size range from 0.002 to 0.050 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986.",NA,numeric,0,100
+98,layer,lyr_clay_tot_psa,clay_tot_psa,value,,No,Percent Clay,%,"Percent by weight of soil particles less than 0.002 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986.",NA,numeric,0,100
+99,layer,lyr_coarse_tot,wpg2,value,,No,Coarse Fraction,%,The mass percent of sample above a coarse fraction threshold . The default threshold is 2mm. Specify alternative values in coarse_size_threshold,NA,numeric,0,100
+100,layer,lyr_coarse_size_thresh,wpg2,method,,No,Coarse Fraction Size Threshold Used,mm,The size threshold used to define the coarse fraction. The default is 2mm,NA,numeric,0,inf
+101,layer,lyr_coarse_density,wpg2_density,value,,No,Density of Coarse Fraction,g cm-3,Measured or estimated density of coarse fraction,NA,numeric,0,20
+102,layer,lyr_texture_class,texture_class,value,,No,Texture Class,(texture_class),The soil textural classification (USDA categories),"sand,
+loamy sand,
+sandy loam,
+loam,
+silt,
+silty loam,
+sandy clay loam,
+clay loam,
+silty clay loam,
+sandy clay,
+silty clay,
+clay,
+gravelly loam,
+fibric,
+sapric,
+hemic",character,NA,NA
+103,layer,lyr_bet_surface_area,BET_surface_area,value,,No,Bulk Layer Surface Area Measured By BET,m2/ g-1,Bulk surface area of sample as measured using the Brunauer–Emmett–Teller (BET) method,NA,numeric,0,inf
+104,layer,lyr_ph_cacl,ph_cacl,value,,No,Soil pH CaCl2,NA,1:2 soil-CaCl2 is the pH of a sample measured in 0.01M CaCl2 at a 1:2 soil:solution ratio.,NA,numeric,0,14
+105,layer,lyr_ph_h2o,ph_h2o,,,No,Soil pH 1:1,NA,"1:1 distilled water and soil paste. If pH was done by a different method, then enter it into one of the other soil pH fields.",NA,numeric,0,14
+106,layer,lyr_ph,ph_other,,,No,Soil pH,NA,pH measurements  other than 1:1 soil and distilled water paste or in CaCl2.,NA,numeric,0,14
+107,layer,lyr_ph_method,ph_other,method,,No,Method Used to Measure pH,(ph_method),pH measurements method other than 1:1 soil and distilled water paste or in CaCl2.,NA,character,NA,NA
+108,layer,lyr_cat_exch,cat_exch,value,,No,Cation Exchange,cmol H+ kg-1,"Cation Exchange Capacity. Document the extractant solution in the metadata worksheet, Lab Analysis Method.",NA,numeric,0,NA
+109,layer,lyr_base_sum,base_sum,value,,No,Sum of Bases,meq 100g-1,Total exchangeable base content,NA,numeric,0,NA
+110,layer,lyr_cec_sum,cec_sum,value,,No,Sum of Exchangeable Cations,meq 100g-1,Total exchangeable cation content,NA,numeric,0,NA
+111,layer,lyr_ca_exch,ca_exch,value,,No,Exchangeable Calcium,meq 100g-1,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted.",NA,numeric,0,NA
+112,layer,lyr_na_exch,na_exch,value,,No,Exchangeable Sodium,meq 100g-1,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted.",NA,numeric,0,NA
+113,layer,lyr_mg_exch,mg_exch,value,,No,Exchangeable Magnesium,meq 100g-1,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted.",NA,numeric,0,NA
+114,layer,lyr_k_exch,k_exch,value,,No,Exchangeable Potassium,meq 100g-1,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted.",NA,numeric,0,NA
+115,layer,lyr_ecec,ecec,value,,No,Effective Cation Exchange Capacity,meq 100g-1,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted.",NA,numeric,0,NA
+116,layer,lyr_bs,bs,value,,No,% Base Saturation,%,The percentage of soil exchangeable sites occupied by base cations,NA,numeric,0,250
+117,layer,lyr_c_inorg,caco3,value,,No,Inorganic Carbon,%,Percent weight of inorganic carbon in a dried soil sample. This is often calculated by subrating measurements of organic carbon from total carbon.,NA,numeric,0,100
+118,layer,lyr_c_org,oc,value,,No,Organic Carbon,%,"Percent by weight of organic carbon (i.e., after inorganic carbon has been removed)  in a dried soil sample.",NA,numeric,0,100
+119,layer,lyr_c_tot,c_tot,value,,No,Total Carbon,%,"Percent by weight of total carbon (i.e., inorganic + organic C)  in the dried, milled soil sample.",NA,numeric,0,100
+120,layer,lyr_soc,soc,value,,No,Bulk Layer Reported Soil Organic Carbon Stock,g cm-2,"The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer.",NA,numeric,0,NA
+121,layer,lyr_soc_sigma,soc,sigma,,No,Bulk Layer Reported Soil Organic Carbon Stock Standard Deviation,g cm-2,"The data contributor's calculated soil organic carbon stock standard deviation for the site, cluster, profile or layer.",NA,numeric,0,NA
+122,layer,lyr_n_tot,n_tot,value,,No,Bulk Layer Total Nitrogen,%,Percent by weight of nitrogen (organic and inorganic) in an oven-dried sample (the laboratory analytical concentration).,NA,numeric,0,100
+123,layer,lyr_son,son,value,,No,Bulk Layer Soil Organic Nitrogen Stock,g cm-2,Reported stock of organic soil N,NA,numeric,0,NA
+124,layer,lyr_c_to_n,c_to_n,value,,No,Bulk Layer C:N,unitless,"Mass ratio of total carbon to total nitrogen, as calculated from the total carbon and total nitrogen concentrations of the bulk layer, fraction, or other sample type.",NA,numeric,0,NA
+125,layer,lyr_loi,loi,value,,No,Bulk Layer Loss on Ignition,%,Percent by weight of the organic content of the <2mm fraction is the organic material lost after ignition. It is reported on a <2 mm base. Please document the method in the associated Carbon Analysis Method.,NA,numeric,0,100
+126,layer,lyr_ha_fa,humic_to_fulvic_acid,value,,No,Ratio of Layer C in Humic Acids:Fulvic Acids,NA,Ratio of layer C in humic acids vs. fulvic acids,NA,numeric,0,NA
+127,layer,lyr_15n,15n,value,,No,Bulk Layer δ15N,‰,Per mille signature of δ15N relative to air (international standard).,NA,numeric,-15,20
+128,layer,lyr_13c,13c,value,,No,Bulk Layer δ13C,‰,see flux tab for description,NA,numeric,-60,10
+129,layer,lyr_rc_lab,rc_lab,value,,No,Radiocarbon Laboratory ID,rc_lab,see flux tab for description,NA,character,NA,NA
+130,layer,lyr_rc_lab_number,rc_lab_number,value,,No,Radiocarbon Laboratory Sample Number,NA,see flux tab for description,NA,character,NA,NA
+131,layer,lyr_rc_year,rc_year,value,,No,Radiocarbon Analysis Year,YYYY,see flux tab for description,NA,numeric,1900,inf
+132,layer,lyr_14c,14c,value,,No,Bulk Layer Δ14C,‰,see flux tab for description,NA,numeric,-1000,1000
+133,layer,lyr_14c_sigma,14c,sigma,,No,Bulk Layer Δ14C Sigma,‰,see flux tab for description,NA,numeric,-1000,1000
+134,layer,lyr_14c_sd,14c,sd,,No,Bulk Layer Δ14C Standard Deviation,numeric,see flux tab for description,NA,numeric,0,NA
+135,layer,lyr_fraction_modern,fraction_modern,value,,No,Bulk Layer Fraction Modern,numeric,see flux tab for description,NA,numeric,0,NA
+136,layer,lyr_fraction_modern_sigma,fraction_modern,sigma,,No,Bulk Layer Fraction Modern Sigma,numeric,see flux tab for description,NA,numeric,0,NA
+137,layer,lyr_fraction_modern_sd,fraction_modern,sd,,No,Bulk Layer Fraction Modern Standard Deviation,numeric,see flux tab for description,NA,numeric,0,NA
+138,layer,lyr_mbc_method,microbial_biomass,method,,No,Microbial Biomass Method,(mbc_method),The method used to esimate microbial biomass.,"chloroform fumigation extraction, chloroform fumigation incubation, substrate induced respiration, total PLFA, other",character,NA,NA
+139,layer,lyr_raw_mbc,microbial_biomass_raw,value,,No,Raw Microbial Biomass Value,mgC/g,"mg of microbial biomass C per g of soil, e.g. from TOC analyzer (use for chloroform fumigation extraction data, etc.)",NA,numeric,0,NA
+,,,microbial_biomass_raw,method,"mg of microbial biomass C per g of soil, e.g. from TOC analyzer (use for chloroform fumigation extraction data, etc.)",,,,,,,,
+140,layer,lyr_reported_mbc,microbial_biomass_reported,value,,No,Reported Microbial Biomass  After Transformation,mgC/g,"mg of microbial biomass C per g of soil, e.g. following conversion from SIR rates (use for substrate induced respiration data, etc.)",NA,numeric,0,NA
+,,,microbial_biomass_reported,method,"mg of microbial biomass C per g of soil, e.g. following conversion from SIR rates (use for substrate induced respiration data, etc.)",,,,,,,,
+141,layer,lyr_p_ext,p_ext,value,,No,Extractable Phosphorus,NA,Phosphorus extracted from soil,NA,numeric,0,NA
+142,layer,lyr_p_units,p_ext,unit,,No,Specify Units For P Data,NA,Units for reported extractable phosphorus data,NA,character,NA,NA
+143,layer,lyr_p_method,p_ext,method,,No,Specify Method For P,alphanumeric,Method used for extractable phosphorsus,NA,character,NA,NA
+144,layer,lyr_p_tot,p_total,value,,No,Total P Concentration,mg/g,Concentration of total layer phosphorus per gram of soil,NA,numeric,0,NA
+145,layer,lyr_p_stock,p_stock,value,,No,Bulk Layer P Stock (w/o coarse fragments),g cm-2,Stock of phosphorus in bulk soil (coarse fragments excluded),NA,numeric,0,NA
+146,layer,lyr_fe_py,fe_py,value,,No,Pyrophosphate Extractable Fe,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted.",NA,numeric,0,1000
+147,layer,lyr_al_py,al_py,value,,No,Pyrophosphate Extractable Al,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted.",NA,numeric,0,1000
+148,layer,lyr_fe_al_py,fe_al_py,value,,No,Sum of Pyrophosphate Extractable Fe and Al,mg/g,Combined mass of Fe and Al extracted from soil with sodium pyrophosphate per gram of soil extracted.,NA,numeric,0,1000
+149,layer,lyr_si_py,si_py,value,,No,Pyrophosphate Extractable Si,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted.",NA,numeric,0,1000
+150,layer,lyr_c_py,c_py,value,,No,Pyrophosphate Extractable C,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted.",NA,numeric,0,1000
+151,layer,lyr_py_notes,fe_py,notes,,No,Pyrophosphate Extraction Notes,alphanumeric,"Notes on sodium pyrophosphate extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed).",NA,character,NA,NA
+,,lyr_py_notes,al_py,notes,,,,,,,,,
+,,lyr_py_notes,fe_al_py,notes,,,,,,,,,
+,,lyr_py_notes,si_py,notes,,,,,,,,,
+,,lyr_py_notes,c_py,notes,,,,,,,,,
+152,layer,lyr_fe_ox,fe_ox,value,,No,Oxalate Extractable Fe,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate  per gram of soil extracted.",NA,numeric,0,1000
+153,layer,lyr_al_ox,al_ox,value,,No,Oxalate Extractable Al,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate  per gram of soil extracted.",NA,numeric,0,1000
+154,layer,lyr_si_ox,si_ox,value,,No,Oxalate Extractable Si,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate  per gram of soil extracted.",NA,numeric,0,1000
+155,layer,lyr_c_ox,c_ox,value,,No,Oxalate Extractable Carbon,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate  per gram of soil extracted.",NA,numeric,0,1000
+156,layer,lyr_noncrystalline_ox,noncrystaline_ox,value,,No,Total Non-Crystalline Mineral Content,mg/g,Total non-crystalline mineral content of soil extracted with ammonium oxalate per gram of soil extracted.,NA,numeric,0,1000
+157,layer,lyr_ox_notes,fe_ox,notes,,No,"Oxalate Notes: Concentration, Extraction Time, Sequential or Parallel",alphanumeric,"Notes on ammonium oxalate  extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed).",NA,character,NA,NA
+,,lyr_ox_notes,al_ox,notes,,,,,,,,,
+,,lyr_ox_notes,si_ox,notes,,,,,,,,,
+,,lyr_ox_notes,c_ox,notes,,,,,,,,,
+,,lyr_ox_notes,noncrystaline_ox,notes,,,,,,,,,
+158,layer,lyr_fe_hy,fe_hy,value,,No,Hydroxylamine Extractable Fe,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted.",NA,numeric,0,1000
+159,layer,lyr_al_hy,al_hy,value,,No,Hydroxylamine Extractable Al,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted.",NA,numeric,0,1000
+160,layer,lyr_si_hy,si_hy,value,,No,Hydroxylamine Extractable Si,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted.",NA,numeric,0,1000
+161,layer,lyr_c_hy,c_hy,value,,No,Hydroxylamine Extractable C,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted.",NA,numeric,0,1000
+162,layer,lyr_hy_notes,fe_hy,notes,,No,"Hydroxylamine Notes: Concentration, Extraction Time, Sequential or Parallel",alphanumeric,"Notes on hydroxylamine  extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed).",NA,character,0,1000
+,,,al_hy,notes,,,,,,,,,
+,,,si_hy,notes,,,,,,,,,
+,,,c_hy,notes,,,,,,,,,
+163,layer,lyr_fe_dith,fe_dith,value,,No,Dithionite Extractable Fe,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted.",NA,numeric,0,1000
+164,layer,lyr_al_dith,al_dith,value,,No,Dithionite Extractable Al,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted.",NA,numeric,0,1000
+165,layer,lyr_si_dith,si_dith,value,,No,Dithionite Extractable Si,mg/g,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted.",NA,numeric,0,1000
+166,layer,lyr_dith_notes,fe_dith,notes,,No,"Dithionite Notes: Concentration, Extraction Time, Sequential or Parallel",alphanumeric,"Notes on dithionite extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed).",NA,character,0,1000
+,,lyr_dith_notes,al_dith,notes,,,,,,,,,
+,,lyr_dith_notes,si_dith,notes,,,,,,,,,
+167,layer,lyr_quartz,quartz,value,,No,Quartz Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+168,layer,lyr_alkali_feldspar,alkali_feldspar,value,,No,Alkali Feldspar Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+169,layer,lyr_plag_feldspar,plag_feldspar,value,,No,Plagioclase Feldspar Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+170,layer,lyr_mica_chlorite,mica_chlorite,value,,No,Mica + Chlorite Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+171,layer,lyr_amphibole,amphibole,value,,No,Amphibole (Hornblende),"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+172,layer,lyr_pyroxine,pyroxine,value,,No,Enstatite + Augite + Diopside,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+173,layer,lyr_olivine,olivine,value,,No,Olivine Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+174,layer,lyr_volc_glass,volc_glass,value,,No,Volcanic Glass Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+175,layer,lyr_kaol_halloy,kaol_halloy,value,,No,Kaolinite + Halloysite,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+176,layer,lyr_smect_vermic,smect_vermic,value,,No,Smectite (Montmorillonite) + Vermincullite,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+177,layer,lyr_gibbsite,gibbsite,value,,No,Gibbsite Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+178,layer,lyr_fe_oxides,fe_oxides,value,,No,Goethite + Hematite + Magnetite + Lepidocrocite,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+179,layer,lyr_imog_alloph,limog_alloph,value,,No,Imogolite + Allophane,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+180,layer,lyr_ferrihydrite,ferrihydrite,value,,No,Ferrihydrite Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+181,layer,lyr_calcite_dolomite,calcite_dolomite,value,,No,Calcite + Dolomite Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+182,layer,lyr_zeolite,zeolite,value,,No,zeolite Abundance,"% or 101/102/102 for ""+/++/+++""","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation",NA,numeric,0,103
+183,layer,lyr_bd_samp_fill_extra,bulk_density_sample_fill,value,,No,"Expert Estimated Bulk Density, Coarse Fragments Removed",g cm-3,"Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater than 1 cm diameter removed.",NA,numeric,1E-03,2.6
+,,,bulk_density_sample_fill,method,"Expert Estimated Bulk Density, Coarse Fragments Removed",,,,,,,,
+184,layer,lyr_c_org_fill_extra,,,,No,Expert Estimated Organic Carbon,%,"Percent by weight of organic carbon (i.e., after inorganic carbon has been removed)  in a dried soil sample.",NA,numeric,0,100
+185,layer,lyr_soc_fill_extra,,,,No,Expert Estimated Bulk Layer Reported Soil Organic Carbon Stock,g cm-2,"The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer.",NA,numeric,0,NA
+186,layer,lyr_14c_fill_extra,,,,No,Expert Estimated Bulk Layer Δ14C,‰,see flux tab for description,NA,numeric,-1000,1000
+187,layer,lyr_fill_notes_extra,,,,No,Expert Estimation notes,NA,Please describe the rationale behind expert estimated values,NA,character,NA,NA

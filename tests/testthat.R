@@ -1,4 +1,4 @@
 library(testthat)
-library(SoilDataR)
+library(SOCDRaH2)
 
-test_check("SoilDataR")
+test_check("SOCDRaH2")

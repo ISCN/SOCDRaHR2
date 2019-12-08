@@ -18,7 +18,7 @@ a list of data frames, the first data frame with the meta data and
  a second data frame with the records
  @import magrittr
  @importFrom dplyr select mutate vars starts_with select if_else recode filter full_join
- @importFrom readr read_file read_tsv
+ @importFrom readr read_file read_tsv cols
  @importFrom plyr ddply
  @importFrom tidyr separate gather spread
 }
