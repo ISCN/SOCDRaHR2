@@ -21,9 +21,9 @@ Here are some important resources to get you started:
 To quickly access ISCN3 data:
 ```R
 library(devtools)
-install_github("ISCN/soilDataR")
-library(SoilDataR)
-ISCN3 <- processData_ISCN3()
+install_github("ISCN/SOCDRaH2")
+library(SOCDRaH2)
+ISCN3 <- ISCN3(dataDir='YourDataDir')
 ```
 
 # How to contribute
@@ -37,6 +37,8 @@ Any manuscripts which use these data harmonization scripts are asked to cite the
 The aggregation scripts here are licensed under BSD 2-clause. See [LICENSE](LICENSE.txt) for details.
 
 # Outside links of interest
+
+[International Soil Radiocarbon Database (ISRaD)](https://soilradiocarbon.org/) a data curation project around soil radiocarbon and fractionation measurements.
 
 [Environmental Data Initiative](https://environmentaldatainitiative.org/) has a [GitRepo](https://github.com/EDIorg/ecocomDP) that has a similar approach to aggregating survey data.
 
