@@ -2,226 +2,611 @@
 title: "Dev new process"
 author: "K Todd-Brown (ktoddbrown@gmail.com)"
 date: "8/22/2019"
-output: html_document
+output: 
+  html_document: 
+    number_sections: yes
+    toc: yes
 ---
 
 ```{r setup}
 library(data.table)
-
-tableOrder <- c('site', 'plot', 'layer')
+library(SOCDRaH2)
+library(tidyverse)
+library(tibble)
+library(ggmap)
+library(maps)
+library(mapdata)
+#source('../R/makeKeys.R')
+#source('../R/ISCN3.R')
 ```
 
-```{r readTest01}
-test01.ls <- list( dataTable1 = data.table::fread(input = '../temp/testCase/Test01_dataTable1-Table 1.csv')[,1:2], 
-dataTable2 = data.table::fread(input = '../temp/testCase/Test01_dataTable2-Table 1.csv')[,1:6],
-key = data.table::fread(input='../temp/testCase/Test01_key-Table 1.csv', header=TRUE)[,1:5])
+```{r readISCN, cache=TRUE}
+ISCN_raw <- ISCN3(dataDir = '~/Documents/Datasets/ISCN', orginalFormat = TRUE)
 
-test02.ls <- list(dataTable = data.table::fread(input='../temp/testCase/Test02_dataTable-Table 1.csv'),
-                  key = data.table::fread(input = '../temp/testCase/TestKey02-Table 1.csv', header = TRUE)[, 1:5])
+#when were ISCN SOC stocks caluclated?
 
-targetKey <- data.table::fread(input = '../temp/testCase/TargetKey-Table 1.csv', header = TRUE)[,1:3]
+#temp <- unique(ISCN_raw$layer[,c('dataset_name_sub', 'dataset_name_soc')]) %>%
+#  mutate(value = TRUE) %>%
+#  pivot_wider(id_cols = 'dataset_name_sub', names_from='dataset_name_soc')
+
+#looking at temp, the dataset_name_soc doesnt' make any sense to us. So we are going dataset by dataset to reconstruct for ISCN4.
+
+#remove NRCS to be replaced with new database
+as.data.frame(ISCN_raw$layer[dataset_name_sub != 'NRCS Sept/2014', -c('ISCN 1-1 (2015-12-10)')]) %>%
+  group_by(dataset_name_sub) %>% 
+  tally() %>% 
+  arrange(n)
 ```
 
-```{r dataIn}
+```{r stripCalcISCN, cache=TRUE}
 
-sourceData.ls <- test01.ls
-key <- merge(targetKey[,c('table', 'variable')], 
-             sourceData.ls$key[,c('table', 'header', 'entry', 'type', 'variable')],
-             by=c('variable'), suffixes = c('_target', '_source'),
-             all=TRUE)
+# noNRCS_ISCN3 %>%
+#  filter(grepl('ISCN', dataset_name_soc)) %>%
+#  select(dataset_name_soc, soc_carbon_flag, soc_method) %>%
+#  unique()
 
-##check for dropped data columns
-danglingHeader <- key[is.na(header) & is.na(table_target)]
-if(nrow(danglingHeader) > 0){
-  warning(paste('Dangling columns in source file that will be dropped:', paste( danglingHeader$header, collapse = ' ')))
+##Strip out the soc values where ISCN has filled them in
+not_all_na <- function(x) {!all(is.na(x))}
+
+noNRCS_ISCN3_layer <- as.data.frame(ISCN_raw$layer[dataset_name_sub != 'NRCS Sept/2014', -c('ISCN 1-1 (2015-12-10)')])  %>% #remove NRCS contribution
+  mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
+                                  as.character(NA), `soc (g cm-2)`),
+    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
+                                as.character(NA), `soc_carbon_flag`),
+    `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
+                           as.character(NA), `soc_method`)) %>%
+  select(-dataset_name_soc, )%>% #column now redundent with dataset_name_sub
+  select_if(not_all_na)
+
+noNRCS_ISCN3_profile <- as.data.frame(ISCN_raw$profile[dataset_name_sub != 'NRCS Sept/2014', -c('ISCN 1-1 (2015-12-10)')])  %>% #remove NRCS contribution
+  mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
+                                  as.character(NA), `soc (g cm-2)`),
+    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
+                                as.character(NA), `soc_carbon_flag`),
+    `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
+                           as.character(NA), `soc_method`)) %>%
+  select(-dataset_name_soc)%>% #column now redundent with dataset_name_sub
+  select_if(not_all_na)
+
+noNRCS_ISCN3_layer %>% pivot_longer(cols = everything(), values_drop_na = TRUE) %>%
+  group_by(name) %>% tally %>% arrange(n)
+```
+
+```{r}
+datasetName.tbl <- tibble::tribble( ~dataset_name_sub, ~CCBY_consistant, ~citation_check, ~notes,
+'Worldwide soil carbon and nitrogen data', TRUE, 'Yes', 'Citation is consistant with CC-BY, reference w/ doi, maybe even data doi?',
+'Heckman/Swanston Biscuit Burn', TRUE, 'Yes', 'Citation is consistant with CC-BY, manuscript reference needs updating',
+'Lu_PIMA', TRUE, 're-send', 'citation is consistant with CC-BY, manuscript reference looks good',
+'Heckman lithosequence', TRUE, 'Yes', 'Citation is consistant with CC-BY, Reference manuscript with no doi, no apparent data doi',
+'Oak Ridge National Lab_Loblolly_DWJ', TRUE, 'resend', 'Citation is consistant with CC-BY, Reference manuscript with no doi, no apparent data doi',
+'Lu_LTER',TRUE, 'resend', 'Citation is consistant with CC-BY, Multiple reference manuscript with some data doi',
+'Lehmann Soil C&BC #1', FALSE, 'empty', 'Request contact and acknowledgement, unpublished data',
+'Schuur', TRUE, 'resend', 'Citation is consistant with CC-BY, Multiple reference manuscript with some data doi',
+'Lehmann NE US soils', TRUE, 'Yes', 'orginal citation superseded by explicit permission, manuscript citation of unpublished data, no data here - consider scrapping',
+'Vogel', TRUE, 'resent', 'Multiple reference manuscripts with some data doi',
+'Myers-Smith', TRUE, 'resend', 'Citation is consistant with CC-BY, Multiple reference manuscript with some data doi, lter data citation - possible direct data hook',
+'USGS Muhs', TRUE, 'Yes', "Cryptic citation in site notes",
+'USGS Harden Yazoo', TRUE, "Yes", "Two manuscript citations",
+'Boby_Mack', TRUE, "Yes", "Manuscript citation",
+'Kane', TRUE, "resend", "multiple manuscript and data citations but no required acknowledgement",
+"Bonanza LTER", TRUE, "resend", "Manuscript and data citation",
+'Jorgensen_YKDE', TRUE, "resend", "Manuscript citation",
+'UMBS_FASET', TRUE, 'Yes', 'orginal citation superseded by explicit permission, unpublished',
+'Jorgensen_ARCN', TRUE, 'resend', 'report citations',
+'Oak Ridge National Lab_TDE', TRUE, 'resend', 'manuscript citation, possible link to orginal data',
+'USGS Harden', TRUE, 'Yes', 'multiple citations including manuscript and data citations',
+'USDA-FS NRS Landscape Carbon Inventory',TRUE, 'resend', 'report citation',
+'Bockheim', TRUE, "Yes", 'multiple manuscript citations',
+'Jorgensen_NPS', TRUE, "resend", 'report citation',
+'Permafrost_RCN', TRUE, "Yes", 'single citation, compliation of other studies',
+'Northern Circumpolar Soil Carbon Database (NCSCD)', TRUE, 'resend', 'data citation and manuscript',
+'USGS_S3C', TRUE, 'Yes', 'link to report with database download',
+'AK DSC Project SOC stock computation', TRUE, 'Yes', 'manuscript citation')
+
+not_all_na <- function(x) {!all(is.na(x))}
+
+datasetName <- rev(datasetName.tbl$dataset_name_sub)[1]
+
+dataset_study <- full_join(ISCN_raw$citation[dataset_name == datasetName] %>% select_if(not_all_na),
+                           ISCN_raw$dataset[dataset_name == datasetName] %>% select_if(not_all_na), 
+                           suffix = c('_citation', '_dataset'))
+
+dataset_profile <- noNRCS_ISCN3_profile  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  select_if(not_all_na)
+
+dataset_layer <- noNRCS_ISCN3_layer %>%
+  filter(dataset_name_sub == datasetName) %>%
+  select_if(not_all_na)
+```
+  
+  - Worldwide soil carbon and nitrogen data
+    + SOC disconnected from other layer data
+    + cryptic soc methods notes
+  - USGS_S3C
+    + problematics countrys otherwise spot check looks good
+  - Northern Circumpolar Soil Carbon Database (NCSCD)
+    + layer level measurements only contains soc and qual
+  - Permafrost_RCN
+    + problematic SOC but looks like that column can be removed
+    + oddly no profile information, check into this further
+  - Jorgensen_NPS
+    + no bd/oc data but complete for what it is
+  - Bockheim
+    + seems very complete, no first pass issues
+  - USDA-FS NRS Landscape Carbon Inventory
+    + Country not set (clearly US)
+    + cryptic vegitation class number 2
+    + bad SOC values, but it looks like these could just be removed
+  - USGS Harden
+    + BNZ LTER again citated here
+    + bd_tot and bd_samp are entered the same here... unclear which is right
+  - Oak Ridge National Lab_TDE
+    + Country not set (clearly US)
+    + site note links to project site on ORNL webpage with archived data
+  - Jorgensen_ARCN
+    + no soc or bd but otherwise good qual descriptions of veg and layers
+  - UMBS_FASET
+    + Country not set (clearly US)
+    + Bad SOC values but looks like we could jsut remove that column
+  - Jorgensen_YKDE
+    + only layer level observations, no quant measurements
+    + incomplete lat-lon-time
+    + detailed vegitation description
+  - Bonanza LTER
+    + looks like lter data again
+    + Same crytpic vegitation formate, really need to get this keyed out!
+  - Kane
+    + looks like lter data again, two data citations => direct reads?
+    + crytpic vegitation but otherwise pretty data
+  - Boby_Mack
+    + replace hzn ? and hzn_desgn unknow to NA
+  - USGS Harden Yazoo
+    + Country not set (clearly US)
+    + looks like bad soc value calculations, no notes, consider removing
+  - USGS Muhs
+    + Cryptic citation in site notes
+  - Myers-Smith
+    + Looks like data archived on EDI; site note refers to Bonanza Creek LTER
+    + Cryptic veg class
+  - Vogel
+    + replace hzn ? and hzn_desgn unknow to NA
+    + cryptic veg class
+  - Lehmann NE US soils
+    + Country not set (clearly US)
+    + no data here, maybe some info about hzn but it's all 'A'
+  - Schuur
+    + Looks like data archived on EDI; site note refers to Bonanza Creek LTER
+    + Cryptic veg class
+    + replace hzn ? and hzn_desgn unknow to NA
+  - Lehmann Soil C&BC #1
+    + unpublished data, contact requested
+    + Country not set (clearly US) 
+    + replace hzn ? with NA
+    + sparse data only hzn descriptions, and MIR-infered C & N
+  - Lu_LTER
+    + multiple citations that are not clearly tied to observations
+    + LTER data might be available via EDI??
+    + crytpic veg classes
+  - Oak Ridge National Lab_Loblolly_DWJ
+    + Country not set (clearly US)
+    + cryptic site note in profile
+    + hzn in layer and profile reset needs to be reset NA
+    + gapfilled bd with resampling should be removed
+
+
+```{r refFunctions}
+type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
+                                "layer_top (cm)", "layer_bot (cm)",
+                                "oc (percent)", 'c_tot (percent)',
+                                'bd_samp (g cm-3)',
+                                'soc (g cm-2)', "soc_depth (cm)",
+                                'wpg2 (percent)',
+                                'sand_tot_psa (percent)', 'silt_tot_psa (percent)', 'clay_tot_psa (percent)', 
+                                'n_tot (percent)',
+                                'ph_h2o', 'ph_cacl', 'ph_other',
+                                "13c (‰)", "14c (‰)",
+                                "elevation (m)", 
+                                "aspect_deg (degree)", "slope (percent)",
+                                 "thaw_depth_profile (cm)",
+                                'map (mm)', 'mat (°C)'), 
+                  factor_cols = c('dataset_name_sub', "datum (datum)", 
+                                  "country (country)", "state (state_province)",
+                                  "hzn", "hzn_desgn", 
+                                  "soil_series", 'color', 'soil_taxon',
+                                  "profile_zero_ref (profile_zero_ref)", 
+                                  "ecoregion", "surface_veg",
+                                  'vegclass_local', 
+                                  'landform (landform)', 'landscape (landscape)', 
+                                  '2d_position (2d_position)', 
+                                  'drainagecl (drainage)',
+                                  'root_quant_size'), 
+                  date_cols = c("observation_date (YYYY-MM-DD)", 
+                                "modification_date (YYYY-MM-DD)"),
+                  char_cols = c("dataset_name", 
+                                'site_name', 'profile_name', 'layer_name',
+                                "curator_name", "curator_organization",
+                                "curator_email",
+                                "contact_name", "contact_email",
+                                "reference","dataset_description", 
+                                "c_method", 'soc_method','bd_method', 'ph_method',
+                                'wpg2_method',
+                                'site_note', 'landform_note'),
+                  discard_cols = c("total_lcount", "carbon_lcount", "soc_lcount", "soc_lcount_ISCN",
+                                   "total_pcount", "soc_pcount",
+                                   'total_scount', 
+                                   'dataset_type (dataset_type)'),
+                  id_cols = c("dataset_name", 
+                              'site_name', 'profile_name', 'layer_name',
+                              'dataset_name_sub'))
+
+not_all_na <- function(x) {!all(is.na(x))}
+
+standardCast <- function(data){
+  return(data %>%
+           select_if(not_all_na) %>%
+  mutate_at(intersect(c(type_cols$num_cols, type_cols$date_cols),
+                      names(.)), as.numeric) %>%
+  mutate_at(intersect(type_cols$factor_cols, names(.)), as.factor) %>%
+  mutate_at(intersect(type_cols$date_cols, names(.)), lubridate::as_date,
+            origin = '1899-12-31') %>%
+  select(-any_of(type_cols$discard_cols)))
 }
 
-missingHeader <- key[is.na(header) & !is.na(table_target)]
-if(nrow(missingHeader) > 0){
-  warning(paste('Missing source header connectin to target table:',
-                paste(missingHeader$variable, collapse = ' ')))
-}
-
-key <- key[!is.na(header) & !is.na(table_target)]
-
-ans <- list()
-for(targetTbl in c(tableOrder, base::setdiff(unique(key$table_target), tableOrder))) {
-  if(!(targetTbl %in% key$table_target)){
-    next()
-  }
-  
-  ans[[targetTbl]] <- data.table()
-  orderSource <- sort(table(key[table_target == targetTbl]$table_source))
-  for(sourceTbl in names(orderSource)){
-    #pull the relvant table
-    xx <- key[table_source == sourceTbl & table_target == targetTbl]
-    
-    if(nrow(xx) == 0){
-      next()
-    }
-    
-    #Pull all the columns indicated by the key
-    columnNames <- (xx[xx$header != '',])$header
-    sourcedata <- (sourceData.ls[[sourceTbl]])[,..columnNames]
-  
-    ##rename headers => variable_type
-    data.table::setnames(sourcedata, 
-                         (xx[xx$header != '',])$header,
-                         paste0((xx[xx$header != '',])$variable, '_',
-                                (xx[xx$header != '',])$type))
-    #print(sourcedata)
-    
-    ##keep track of any basic patters (ie key$type) 
-    ##...that will need to be converted to long format at the end
-    meltPatternStr <- c()
-        
-    ##add any hard coded information from the key (generally units or methods)
-    hardEntry <- xx[xx$header == '',]
-
-    if(nrow(hardEntry) > 0){
-       sourcedata <- cbind(sourcedata, 
-                        #set the hard entries
-                        as.data.frame(stats::setNames(as.list(hardEntry$entry),
-                                              paste0(hardEntry$variable, '_', hardEntry$type))))
-       meltPatternStr <- unique(c(hardEntry$type), meltPatternStr)
-    }
-    
-    ##add any entries from the source data tables
-    softEntry <- xx[xx$header != '' & xx$type != 'id',]
-    if(nrow(softEntry) > 0){
-      sourcedata <- cbind(sourcedata, 
-                        #preserve the variable names
-                        as.data.frame(stats::setNames(as.list(unique(softEntry$variable)),
-                                                      paste0(unique(softEntry$variable), '_name'))))
-      meltPatternStr <- unique(c(softEntry$type, 'name', meltPatternStr))
-    }
-    
-    ##Transform data from wide format to long format
-    if(length(meltPatternStr) > 0){
-      #make sure every variable has all the types filled in so things melt properly
-      possibleHeaders <- expand.grid(unique(c(softEntry$variable, hardEntry$variable)), meltPatternStr)
-      possibleHeaders$header <- sprintf('%s_%s', possibleHeaders[,1], possibleHeaders[,2])
-      
-      if(any(!(possibleHeaders$header %in% names(sourcedata)))){
-        missingHeaders <- as.data.frame(stats::setNames(as.list(rep(NA, nrow(possibleHeaders))), possibleHeaders$header))
-        missingHeaders <- missingHeaders[!(names(missingHeaders) %in% names(sourcedata))]
-        sourcedata <- cbind(sourcedata, missingHeaders[,!(names(missingHeaders) %in% names(sourcedata))])
-      }
-      
-      #make sure ordering is correct so the melt gets orders right
-      setcolorder(sourcedata, neworder = sort(names(sourcedata)))
-      
-      #and use the data table fancy melt
-      sourcedata <- melt(sourcedata,
-                     measure=patterns(paste0('_', meltPatternStr, '$')), 
-         value.name = meltPatternStr)[,-'variable']
-    }
-    
-    ##merge it with the data from other tables
-    if(nrow(ans[[targetTbl]]) == 0){
-      ans[[targetTbl]] <- sourcedata
-    }else{
-      ans[[targetTbl]] <- merge(ans[[targetTbl]], sourcedata)
-    }
-  }
+reduceOneOffs <- function(xx){
+  ans <- unique(xx[!is.na(xx)])
+  if(length(ans) == 0){
+    return(NA)
+  }else{
+    return(ans)}
 }
 ```
 
-```{r old eval=FALSE}
-#make new name that we can parse easily
-key[,newName := paste0(variable, '_', type)]
+# Heckman/Swanston Biscuit Burn
 
-renameHeaders <- unique(key[header_source != ''][,c('header_source', 'newName')])
+ - Heckman/Swanston Biscuit Burn
+    + Check the lat/lon, looks like an easy fix that could be certified by contributor.
+    + Country not set (clearly US)
 
-testing <- copy(key)
-testing2 <- testing[, .(dataset = .(test01.ls[[table_source]])), 
-                    by=.(table_target, table_source)]
+```{r subset_HSBB}
+datasetName <- 'Heckman/Swanston Biscuit Burn'
 
+dataset_study <- full_join(ISCN_raw$citation[dataset_name == datasetName] %>% select_if(not_all_na),
+                           ISCN_raw$dataset[dataset_name == datasetName] %>% select_if(not_all_na), 
+                           suffix = c('_citation', '_dataset')) %>%
+  standardCast()
 
-testing3 <- testing[, list(dataset = list({
-  print(paste('--', table_source, '--'))
-  ##pull the data from the source table
-  sourceData <- test01.ls[[table_source]]
-  #headerNames <- header_source[header_source != '']
-  ##print(headerNames)
-  #print(sourceData)
-  #sourceData <- sourceData[..headerNames]
-  #print(sourceData)
-  ##rename columns
-  sourceData <- sourceData[,setnames(.SD, renameHeaders$header_source, renameHeaders$newName, skip_absent = TRUE)];
-  ##pull variable names to presever
-  softEntry <- as.list(unique(variable[header_source != '' & type != 'id']));
-  hardEntry <- as.list(unique(variable[header_source == '']));
+dataset_profile <- noNRCS_ISCN3_profile  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`country (country)` = 'United States') %>% #hardcode country
+  standardCast() %>%
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(dataset_name, `site_name`, `profile_name`,
+         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`,
+         `profile_zero_ref (profile_zero_ref)`,
+         `state (state_province)`, `country (country)`, 
+         `observation_date (YYYY-MM-DD)`, 
+         `soil_series`,`ecoregion`, `surface_veg`,
+         `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`)
+
+dataset_layer <- noNRCS_ISCN3_layer %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`country (country)` = 'United States') %>%
+  standardCast() %>% 
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(dataset_name, `site_name`, `profile_name`, layer_name,
+         `lat (dec. deg)`, `long (dec. deg)`, 
+         `layer_top (cm)`, `layer_bot (cm)`,
+         `hzn`, `hzn_desgn`,
+         `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`)
   
-  if(length(softEntry) > 0){
-  varNames <- as.data.frame(stats::setNames(softEntry, paste0(softEntry, '_name')));
+all_study <- dataset_study
+all_profile <- dataset_profile
+all_layer <- dataset_layer
+#setdiff(c(names(dataset_study), names(dataset_profile), names(dataset_layer)), unlist(type_cols))
+```
+
+Create a summary report for the data contribution including
+  1) profile level map of lat/lon
+  2) profile level tally of state-country
+  3) count of numerical & categorical values
+```{r viz_HSBB}
+#print(datasetName)
+#head(dataset_study)
+#head(dataset_profile)
+#head(dataset_layer)
+
+ggplot(data =  map_data('state') %>%
+         full_join(dataset_profile %>% 
+                     mutate(region = 
+                              tolower(`state (state_province)`), by = 'region') %>%
+                     group_by(region) %>% 
+                     tally)) + 
+  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
+               color = 'black') +
+  coord_fixed(1.3) + 
+  theme_nothing() 
+
+ggplot(data =  map_data('state') %>% 
+         filter(region %in% c("oregon", "washington"))) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data=dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  theme_nothing() 
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+ggplot(dataset_layer %>% 
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = c(`oc (percent)`,`13c (‰)`, `14c (‰)`), 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+
+```
+
+# Lu_PIMA
+
+  - Lu_PIMA
+    + modification date not consistant between citation & dataset?
+    
+```{r subset_LP}
+datasetName <- 'Lu_PIMA'
+
+dataset_study <- full_join(ISCN_raw$citation[dataset_name == datasetName] %>% select_if(not_all_na),
+                           ISCN_raw$dataset[dataset_name == datasetName] %>% select_if(not_all_na), 
+                           suffix = c('_citation', '_dataset')) %>%
+  standardCast() %>%
+  select(-ends_with('ISCN')) %>% 
+  group_by(dataset_name) %>%
+  summarize(across(where(is.character), function(xx){unique(xx[grepl('\\w+', xx)])}))
+
+dataset_profile <- noNRCS_ISCN3_profile  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`thaw_depth_profile (cm)` = 
+           gsub('none', 'Inf', `thaw_depth_profile (cm)`)) %>%
+  standardCast() %>%
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(`dataset_name`, `site_name`, `profile_name`, 
+         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+         `state (state_province)`, `country (country)`, 
+         `observation_date (YYYY-MM-DD)`, 
+         `profile_zero_ref (profile_zero_ref)`, 
+         #`layer_top (cm)`, `layer_bot (cm)`, `soc_depth (cm)`, 
+         `elevation (m)`, 
+         `ecoregion`, `vegclass_local`, 
+         `landform (landform)`, `2d_position (2d_position)`, 
+         `aspect_deg (degree)`, `slope (percent)`, 
+         `drainagecl (drainage)`, `thaw_depth_profile (cm)`,
+         `site_note`)
+
+dataset_layer <- noNRCS_ISCN3_layer %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast() %>% 
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(`dataset_name`, `site_name`, `profile_name`, `layer_name`,
+         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+         #`state (state_province)`, `country (country)`,  `observation_date (YYYY-MM-DD)`,  `vegclass_local`, 
+         `layer_top (cm)`, `layer_bot (cm)`, 
+         `hzn`, `hzn_desgn`, `color`, 
+         `bd_samp (g cm-3)`, `c_tot (percent)`, `n_tot (percent)`, 
+         `ph_h2o`, `sand_tot_psa (percent)`, 
+         `silt_tot_psa (percent)`, `clay_tot_psa (percent)`, 
+         `wpg2 (percent)`, `root_quant_size`)
   
-  ##set the hard entries
-  sourceData <- cbind(sourceData, 
-                        #set the hard entries
-                        as.data.frame(stats::setNames(as.list(entry[header_source == '']), paste0(variable[header_source == ''], '_', type[header_source == '']))), 
-                        #preserve the variable names
-                        varNames)
+all_study <- bind_rows(dataset_study, all_study)
+all_profile <- bind_rows(dataset_profile, all_profile)
+all_layer <- bind_rows(dataset_layer, all_layer)
+```
+
+```{r viz_LP}
+
+ggplot(data =  map_data('world') %>%
+         filter(region %in% c('Canada', 'USA', 'Mexico'))) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data=dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  xlim(-180, -50) +
+  theme_nothing() 
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+ggplot(dataset_layer %>% 
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = `bd_samp (g cm-3)`:`wpg2 (percent)`, 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+
+```
+
+# Heckman lithosequence
+
+  - Heckman lithosequence
+    + Country not set (clearly US)
+    + SOC measurements seem to be disconnected from the rest of the data at the layer and profile level
+    
+```{r subset_HL}
+datasetName <- 'Heckman lithosequence'
+
+dataset_study <- full_join(ISCN_raw$citation[dataset_name == datasetName] %>% select_if(not_all_na),
+                           ISCN_raw$dataset[dataset_name == datasetName] %>% select_if(not_all_na), 
+                           suffix = c('_citation', '_dataset')) %>%
+  standardCast()
+
+dataset_profile <- noNRCS_ISCN3_profile  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`thaw_depth_profile (cm)` = 
+           gsub('none', 'Inf', `thaw_depth_profile (cm)`),
+         `country (country)` = 'United States') %>%
+  standardCast() %>%
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(`dataset_name`, `site_name`, `profile_name`,
+         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+         `state (state_province)`, `country (country)`, 
+         `observation_date (YYYY-MM-DD)`,  
+         `profile_zero_ref (profile_zero_ref)`, 
+         #`layer_top (cm)`, `layer_bot (cm)`, 
+         `soc_depth (cm)`, `soc (g cm-2)`, `soc_method`, 
+         `soil_taxon`, `soil_series`, 
+         `elevation (m)`, `2d_position (2d_position)`,
+         `aspect_deg (degree)`, `slope (percent)`,
+         `ecoregion`, `landscape (landscape)`, 
+         `landform (landform)`, 
+         `map (mm)`, `mat (°C)`) %>%
+  group_by(`dataset_name`, `site_name`, `profile_name`) %>%
+  summarise_all(reduceOneOffs) %>%
+  ungroup()
+
+dataset_layer <- noNRCS_ISCN3_layer %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast() %>% 
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(`dataset_name`, `site_name`,`profile_name`, `layer_name`, 
+         #`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+         #`state (state_province)`, `country (country)`,  
+         `observation_date (YYYY-MM-DD)`, 
+         `layer_top (cm)`, `layer_bot (cm)`, 
+         `hzn`, `hzn_desgn`, `color`, `soil_taxon`, `soil_series`, 
+         `bd_method`, `bd_samp (g cm-3)`, 
+         `c_method`, `oc (percent)`, `soc (g cm-2)`, `13c (‰)`, `14c (‰)`, 
+         `n_tot (percent)`, 
+         `ph_method`, `ph_cacl`, `ph_h2o`, `ph_other`, 
+         `sand_tot_psa (percent)`, `silt_tot_psa (percent)`, 
+         `clay_tot_psa (percent)`, 
+         `wpg2_method`, `wpg2 (percent)`, 
+         `root_quant_size`) %>%
+  mutate(layer_name = gsub('_[^_]+$', '', layer_name)) %>%
+  group_by(`dataset_name`, `site_name`, `profile_name`, layer_name) %>%
+  summarise_all(reduceOneOffs) %>%
+  ungroup()
+
+
+all_study <- bind_rows(dataset_study, all_study)
+all_profile <- bind_rows(dataset_profile, all_profile)
+all_layer <- bind_rows(dataset_layer, all_layer)
+```
+
+```{r viz_HL}
+dataset_study
+summary(dataset_profile %>% select_if(is.factor))
+summary(dataset_layer %>% select_if(is.factor))
+
+ggplot(data =  map_data('state') %>%
+         full_join(dataset_profile %>% 
+                     mutate(region = 
+                              tolower(`state (state_province)`), by = 'region') %>%
+                     group_by(region) %>% 
+                     tally)) + 
+  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
+               color = 'black') +
+  coord_fixed(1.3) + 
+  theme_nothing() 
+
+ggplot(data =  map_data('state') %>% 
+         filter(region %in% c("arizona", "utah", "new mexico", "colorado"))) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data=dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  theme_nothing() 
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+ggplot(dataset_layer %>% 
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+```
+
+#Worldwide soil carbon and nitrogen data
+
+- Worldwide soil carbon and nitrogen data
+    + SOC disconnected from other layer data
+    + cryptic soc methods notes
+
+```{r subset_HSBB}
+datasetName <- 'Worldwide soil carbon and nitrogen data'
+
+dataset_study <- full_join(ISCN_raw$citation[dataset_name == datasetName] %>% select_if(not_all_na),
+                           ISCN_raw$dataset[dataset_name == datasetName] %>% select_if(not_all_na), 
+                           suffix = c('_citation', '_dataset')) %>%
+  standardCast()
+
+dataset_profile <- noNRCS_ISCN3_profile  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`country (country)` = 'United States') %>% #hardcode country
+  mutate(`soc_depth (cm)` = if_else(is.na(`soc (g cm-2)`), as.character(NA), `soc_depth (cm)`)) %>% #if no SOC then no depth
+  ##Clean up the duplicate rows
+  group_by(`dataset_name_sub`, `site_name`, `profile_name`) %>% 
+  summarise_all(reduceOneOffs) %>%
+  ungroup() %>%
+  ##cast the columns
+  standardCast() %>%
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(`dataset_name`, `site_name`, `profile_name`, 
+         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+         `state (state_province)`, `country (country)`, 
+         `observation_date (YYYY-MM-DD)`, `profile_zero_ref (profile_zero_ref)`, 
+         #`layer_top (cm)`, `layer_bot (cm)`, 
+         `soc_depth (cm)`, `soc (g cm-2)`, 
+         `soil_taxon`, `soil_series`, 
+         `elevation (m)`, `slope (percent)`, 
+         `ecoregion`, `vegclass_local`, `surface_veg`, `landform (landform)`, `landform_note`,
+         `map (mm)`, `mat (°C)`, `site_note`) 
+
+dataset_layer <- noNRCS_ISCN3_layer %>%
+  filter(dataset_name_sub == datasetName) %>%
+  names()
+  standardCast() %>% 
+  rename(dataset_name = 'dataset_name_sub')
+
+%>%
+  select(dataset_name, `site_name`, `profile_name`, layer_name,
+         `lat (dec. deg)`, `long (dec. deg)`, 
+         `layer_top (cm)`, `layer_bot (cm)`,
+         `hzn`, `hzn_desgn`,
+         `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`)
   
-  #print(sourceData)
-  #print(paste0('_', setdiff(unique(type), 'id'), '$'))
-  sourceData <- melt(sourceData, 
-                     measure=patterns(paste0('_', c('name', setdiff(unique(type), 'id')), '$')), 
-         value.name = unlist(c('name', setdiff(unique(type), 'id'))))[,-'variable']
-  }
-  
-  sourceData})), 
-                    by=.(table_source, table_target)]
-
-testing4 <- testing3[, list(data = list(rbindlist(dataset, fill=TRUE))), by=.(table_target)]
-
-temp[[1]][, setnames(.SD, renameHeaders$header_source, renameHeaders$newName, skip_absent = TRUE)]
-
-dt <- data.table(x=1:5)[,list(y=letters[1:x],z=sample(1:100,x)),by=x]
-dt2 <- dt[, list(dt.yz=list(data.table(y, z))), by=x]
-
-ans <- plyr::dlply(as.data.frame(key), c('table_target'), function(xx){
-  print(paste('Going to:', xx$table_target[1]))
-  #xx <- as.data.frame(key[table_target == 'site'])
-  #yy <- as.data.frame(key[table_target == 'site' & table_source == 'dataTable1'])
-  temp <- plyr::dlply(xx, c('table_source'), function(yy){
-    print(paste('from', yy$table_source[1]))
-    #print(class(yy))
-    
-    hardEntry <- yy[yy$header_source == '',]
-    softEntry <- yy[yy$header_source != '' & yy$type != 'id',]
-    #print(yy$table_source[1])
-    columnNames <- (yy[yy$header_source != '',])$header_source
-    
-    if(sum(softEntry$type != 'id') == 0){
-      return(NULL)
-    }
-    #print(columnNames)
-    
-    sourcedata <- (test01.ls[[yy$table_source[1]]])[,..columnNames]
-    #print(sourcedata)
-    
-    ##rename headers => variable_type
-    data.table::setnames(sourcedata, (yy[yy$header_source != '',])$header_source,
-                         (yy[yy$header_source != '',])$newName)
-    #print(sourcedata)
-    
-    ##set the hard entries
-    sourcedata <- cbind(sourcedata, 
-                        #set the hard entries
-                        as.data.frame(stats::setNames(as.list(hardEntry$entry), hardEntry$newName)), 
-                        #preserve the variable names
-                        as.data.frame(stats::setNames(as.list(softEntry$variable), paste0(softEntry$variable, '_name'))))
-    
-    #print('***')
-    #print(sourcedata)
-    
-    ##melt magic
-    ans <- melt(sourcedata, measure=patterns(paste0('_', unique(setdiff(c('name', yy$type), 'id')), '$')), 
-         value.name = unique(setdiff(c('name', yy$type), 'id')))[,-'variable']
-    
-    return(unique(ans))
-  })
-  return(rbindlist(temp, fill=TRUE))
-})
+all_study <- dataset_study
+all_profile <- dataset_profile
+all_layer <- dataset_layer
+#setdiff(c(names(dataset_study), names(dataset_profile), names(dataset_layer)), unlist(type_cols))
 ```
