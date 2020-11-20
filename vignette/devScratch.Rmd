@@ -12,6 +12,7 @@ output:
 library(data.table)
 library(SOCDRaH2)
 library(tidyverse)
+library(lubridate)
 library(tibble)
 library(ggmap)
 library(maps)
@@ -198,14 +199,16 @@ dataset_layer <- noNRCS_ISCN3_layer %>%
 ```{r refFunctions}
 type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
                                 "layer_top (cm)", "layer_bot (cm)",
-                                "oc (percent)", 'c_tot (percent)',
-                                'bd_samp (g cm-3)',
+                                "oc (percent)", 'c_tot (percent)', 'loi (percent)',
+                                'bd_samp (g cm-3)',  'bd_tot (g cm-3)', 'bd_other (g cm-3)',
                                 'soc (g cm-2)', "soc_depth (cm)",
                                 'wpg2 (percent)',
+                                'caco3 (percent)',
                                 'sand_tot_psa (percent)', 'silt_tot_psa (percent)', 'clay_tot_psa (percent)', 
                                 'n_tot (percent)',
+                                'cat_exch (cmol H+ kg-1)',
                                 'ph_h2o', 'ph_cacl', 'ph_other',
-                                "13c (‰)", "14c (‰)",
+                                "13c (‰)", "14c (‰)", '15n (‰)',
                                 "elevation (m)", 
                                 "aspect_deg (degree)", "slope (percent)",
                                  "thaw_depth_profile (cm)",
@@ -214,6 +217,7 @@ type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
                                   "country (country)", "state (state_province)",
                                   "hzn", "hzn_desgn", 
                                   "soil_series", 'color', 'soil_taxon',
+                                  'textureClass',
                                   "profile_zero_ref (profile_zero_ref)", 
                                   "ecoregion", "surface_veg",
                                   'vegclass_local', 
@@ -229,9 +233,10 @@ type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
                                 "curator_email",
                                 "contact_name", "contact_email",
                                 "reference","dataset_description", 
-                                "c_method", 'soc_method','bd_method', 'ph_method',
+                                "c_method", 'soc_method','bd_method', 'ph_method', 'soc_carbon_flag',
                                 'wpg2_method',
-                                'site_note', 'landform_note'),
+                                'site_note', 'landform_note', 'layer_note',
+                                "locator_parent_alias"),
                   discard_cols = c("total_lcount", "carbon_lcount", "soc_lcount", "soc_lcount_ISCN",
                                    "total_pcount", "soc_pcount",
                                    'total_scount', 
@@ -245,12 +250,21 @@ not_all_na <- function(x) {!all(is.na(x))}
 standardCast <- function(data){
   return(data %>%
            select_if(not_all_na) %>%
-  mutate_at(intersect(c(type_cols$num_cols, type_cols$date_cols),
-                      names(.)), as.numeric) %>%
-  mutate_at(intersect(type_cols$factor_cols, names(.)), as.factor) %>%
-  mutate_at(intersect(type_cols$date_cols, names(.)), lubridate::as_date,
-            origin = '1899-12-31') %>%
-  select(-any_of(type_cols$discard_cols)))
+           mutate_at(intersect(c(type_cols$num_cols, type_cols$date_cols),
+                               names(.)), as.numeric) %>%
+           mutate_at(intersect(type_cols$factor_cols, names(.)), as.factor) %>%
+           mutate_at(intersect(type_cols$date_cols, names(.)), function(xx){
+             ##Both conditions will be run but things throw warnings for the wrong conditional... supressing this function
+             suppressWarnings(
+               ans <- case_when(is.na(xx) ~ NA_Date_,
+                                as.numeric(xx) < 2020 ~ lubridate::ymd(paste0(xx, '-01-01')),
+                                as.numeric(xx) >= 2020 ~ lubridate::as_date(as.numeric(xx), 
+                                                              origin = lubridate::ymd('1899-12-31')),
+                                TRUE ~ NA_Date_)
+             )
+             return(ans)
+           }) %>%
+           select(-any_of(type_cols$discard_cols)))
 }
 
 reduceOneOffs <- function(xx){
@@ -562,7 +576,7 @@ ggplot(dataset_layer %>%
     + SOC disconnected from other layer data
     + cryptic soc methods notes
 
-```{r subset_HSBB}
+```{r subset_WSCND}
 datasetName <- 'Worldwide soil carbon and nitrogen data'
 
 dataset_study <- full_join(ISCN_raw$citation[dataset_name == datasetName] %>% select_if(not_all_na),
@@ -580,33 +594,49 @@ dataset_profile <- noNRCS_ISCN3_profile  %>%
   ungroup() %>%
   ##cast the columns
   standardCast() %>%
-  rename(dataset_name = 'dataset_name_sub') %>%
-  select(`dataset_name`, `site_name`, `profile_name`, 
-         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
-         `state (state_province)`, `country (country)`, 
-         `observation_date (YYYY-MM-DD)`, `profile_zero_ref (profile_zero_ref)`, 
-         #`layer_top (cm)`, `layer_bot (cm)`, 
-         `soc_depth (cm)`, `soc (g cm-2)`, 
-         `soil_taxon`, `soil_series`, 
-         `elevation (m)`, `slope (percent)`, 
-         `ecoregion`, `vegclass_local`, `surface_veg`, `landform (landform)`, `landform_note`,
-         `map (mm)`, `mat (°C)`, `site_note`) 
+  rename(dataset_name = 'dataset_name_sub') 
 
 dataset_layer <- noNRCS_ISCN3_layer %>%
   filter(dataset_name_sub == datasetName) %>%
-  names()
+  #names()
   standardCast() %>% 
   rename(dataset_name = 'dataset_name_sub')
 
-%>%
-  select(dataset_name, `site_name`, `profile_name`, layer_name,
-         `lat (dec. deg)`, `long (dec. deg)`, 
-         `layer_top (cm)`, `layer_bot (cm)`,
-         `hzn`, `hzn_desgn`,
-         `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`)
-  
 all_study <- dataset_study
 all_profile <- dataset_profile
 all_layer <- dataset_layer
 #setdiff(c(names(dataset_study), names(dataset_profile), names(dataset_layer)), unlist(type_cols))
+```
+
+```{r viz_WSCND}
+dataset_study
+summary(dataset_profile %>% select_if(is.factor))
+summary(dataset_layer %>% select_if(is.factor))
+
+ggplot(data =  map_data('world') ) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data=dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  theme_nothing() 
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+ggplot(dataset_layer %>% 
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
 ```
