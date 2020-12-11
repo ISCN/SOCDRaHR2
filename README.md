@@ -21,7 +21,7 @@ Here are some important resources to get you started:
 To quickly access ISCN3 data:
 ```R
 library(devtools)
-install_github("ISCN/SOCDRaH2")
+install_github("ISCN/SOCDRaHR2")
 library(SOCDRaH2)
 ISCN3 <- ISCN3(dataDir='YourDataDir')
 ```
