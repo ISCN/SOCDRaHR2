@@ -72,7 +72,7 @@ ISCN3 <- function(dataDir=NULL, orginalFormat = FALSE, verbose=FALSE){
                                                    variable = 'collection_citation',
                                                    entry = 'Nave L, Johnson K, van Ingen C, Agarwal D, Humphrey M, Beekwilder N. 2017. International Soil Carbon Network (ISCN) Database, Version 3. DOI: 10.17040/ISCN/1305039. Database Report: ISCN_SOC-DATA_LAYER_1-1. Accessed 2 February 2017',
                                                    type = 'value')
-  keys.ls <- makeKeys()
+  keys.ls <- SOCDRaH2::makeKeys()
   
   if(orginalFormat){
     
