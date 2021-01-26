@@ -1,0 +1,3 @@
+delete_merged_file: true
+rmd_subdir: 'data_reports/'
+output_dir: 'docs'

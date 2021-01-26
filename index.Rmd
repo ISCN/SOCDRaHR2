@@ -1,0 +1,128 @@
+---
+title: "ISCN contributing datasets"
+author: "K Todd-Brown (ktoddbrown@ufl.edu)"
+site: bookdown::bookdown_site
+documentclass: book
+output:
+  bookdown::gitbook: default
+  #bookdown::pdf_book: default
+---
+
+<!-- This index.Rmd is the contributing datasets report out -->
+<!-- TODO figure out how to move this into data_reports without breaking docs -->
+<!-- Compile with the below command -->
+<!-- bookdown::render_book(input="index.Rmd", output_format = "bookdown::gitbook") -->
+
+# Introduction
+
+```{r setup}
+library(data.table)
+library(SOCDRaH2)
+library(tidyverse)
+library(lubridate)
+library(tibble)
+library(ggmap)
+library(maps)
+library(mapdata)
+#source('../R/makeKeys.R')
+#source('../R/ISCN3.R')
+```
+
+```{r readISCN}
+#ISCN_raw <- ISCN3(dataDir = '~/Documents/Datasets/ISCN', orginalFormat = TRUE)
+
+citation_raw <- read_delim('~/Documents/Datasets/ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
+dataset_raw <- read_delim('~/Documents/Datasets/ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
+layer_raw <- vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
+profile_raw <-  vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
+
+#when were ISCN SOC stocks caluclated?
+
+#temp <- unique(ISCN_raw$layer[,c('dataset_name_sub', 'dataset_name_soc')]) %>%
+#  mutate(value = TRUE) %>%
+#  pivot_wider(id_cols = 'dataset_name_sub', names_from='dataset_name_soc')
+
+#looking at temp, the dataset_name_soc doesnt' make any sense to us. So we are going dataset by dataset to reconstruct for ISCN4.
+
+#remove NRCS to be replaced with new database
+#as.data.frame(ISCN_raw$layer[dataset_name_sub != 'NRCS Sept/2014', -c('ISCN 1-1 (2015-12-10)')]) %>%
+layer_raw %>%
+  filter(dataset_name_sub != 'NRCS Sept/2014') %>%
+  select(-'ISCN 1-1 (2015-12-10)') %>%
+  group_by(dataset_name_sub) %>% 
+  tally() %>% 
+  arrange(n)
+```
+
+```{r}
+
+type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
+                                "layer_top (cm)", "layer_bot (cm)",
+                                "oc (percent)", 'c_tot (percent)', 'loi (percent)',
+                                'bd_samp (g cm-3)',  'bd_tot (g cm-3)', 'bd_other (g cm-3)',
+                                'soc (g cm-2)', "soc_depth (cm)",
+                                'wpg2 (percent)',
+                                'caco3 (percent)',
+                                'sand_tot_psa (percent)', 'silt_tot_psa (percent)', 'clay_tot_psa (percent)', 
+                                'n_tot (percent)',
+                                'cat_exch (cmol H+ kg-1)',
+                                'ph_h2o', 'ph_cacl', 'ph_other',
+                                "13c (‰)", "14c (‰)", '15n (‰)',
+                                "elevation (m)", 
+                                "aspect_deg (degree)", "slope (percent)",
+                                 "thaw_depth_profile (cm)",
+                                'map (mm)', 'mat (°C)'), 
+                  factor_cols = c('dataset_name_sub', "datum (datum)", 
+                                  "country (country)", "state (state_province)",
+                                  "hzn", "hzn_desgn", 
+                                  "soil_series", 'color', 'soil_taxon',
+                                  'textureClass',
+                                  "profile_zero_ref (profile_zero_ref)", 
+                                  "ecoregion", "surface_veg",
+                                  'vegclass_local', 
+                                  'landform (landform)', 'landscape (landscape)', 
+                                  '2d_position (2d_position)', 
+                                  'drainagecl (drainage)',
+                                  'root_quant_size'), 
+                  date_cols = c("observation_date (YYYY-MM-DD)", 
+                                "modification_date (YYYY-MM-DD)"),
+                  char_cols = c("dataset_name", 
+                                'site_name', 'profile_name', 'layer_name',
+                                "curator_name", "curator_organization",
+                                "curator_email",
+                                "contact_name", "contact_email",
+                                "reference","dataset_description", 
+                                "c_method", 'soc_method','bd_method', 'ph_method', 'soc_carbon_flag',
+                                'wpg2_method',
+                                'site_note', 'landform_note', 'layer_note',
+                                "locator_parent_alias"),
+                  discard_cols = c("total_lcount", "carbon_lcount", "soc_lcount", "soc_lcount_ISCN",
+                                   "total_pcount", "soc_pcount",
+                                   'total_scount', 
+                                   'dataset_type (dataset_type)'),
+                  id_cols = c("dataset_name", 
+                              'site_name', 'profile_name', 'layer_name',
+                              'dataset_name_sub'))
+
+
+standardCast <- function(data){
+  return(data %>%
+           select(where(function(xx){!all(is.na(xx))})) %>%
+           mutate_at(intersect(c(type_cols$num_cols, type_cols$date_cols),
+                               names(.)), as.numeric) %>%
+           mutate_at(intersect(type_cols$factor_cols, names(.)), as.factor) %>%
+           mutate_at(intersect(type_cols$date_cols, names(.)), function(xx){
+             ##Both conditions will be run but things throw warnings for the wrong conditional... supressing this function
+             suppressWarnings(
+               ans <- case_when(is.na(xx) ~ NA_Date_,
+                                as.numeric(xx) < 2020 ~ lubridate::ymd(paste0(xx, '-01-01')),
+                                as.numeric(xx) >= 2020 ~ lubridate::as_date(as.numeric(xx), 
+                                                              origin = lubridate::ymd('1899-12-31')),
+                                TRUE ~ NA_Date_)
+             )
+             return(ans)
+           }) %>%
+           select(-any_of(type_cols$discard_cols)))
+}
+```
+
