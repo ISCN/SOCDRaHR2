@@ -1,26 +1,35 @@
+---
+title: "102_Heckman"
+author: "Rita"
+date: "2/3/2021"
+output: html_document
+---
+
+citation_raw <- read_delim('ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
+dataset_raw <- read_delim('ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
+layer_raw <- vroom::vroom('ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
+profile_raw <-  vroom::vroom('ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
+
+
 ```{r subset_HSBB}
 datasetName <- 'Heckman/Swanston Biscuit Burn'
-
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>%
   select(where(function(xx){!all(is.na(xx))})) %>%
   full_join(dataset_raw %>% 
               filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
+              select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
-
 dataset_profile <- profile_raw %>%
   filter(dataset_name_sub ==  datasetName) %>%
-    select(where(function(xx){!all(is.na(xx))})) %>%
    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
                                   as.character(NA), `soc (g cm-2)`),
     `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
                                 as.character(NA), `soc_carbon_flag`),
     `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
                            as.character(NA), `soc_method`)) %>%
+  select(where(function(xx){!all(is.na(xx))})) %>%
   select(-dataset_name_soc)#column now redundent with dataset_name_sub
-
-
 noNRCS_ISCN3_layer <- layer_raw%>%
   as.data.frame() %>%
   filter(dataset_name_sub != 'NRCS Sept/2014' & dataset_name_sub != ('ISCN 1-1 (2015-12-10)')) %>%
@@ -31,10 +40,9 @@ noNRCS_ISCN3_layer <- layer_raw%>%
     `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
                            as.character(NA), `soc_method`)) %>%
   select(-dataset_name_soc)%>% #column now redundent with dataset_name_sub
-  select_if(not_all_na)
+  select(where(function(xx){!all(is.na(xx))}))
   
-
-dataset_profile <- noNRCS_ISCN3_profile  %>%
+dataset_profile <- dataset_profile  %>%
   filter(dataset_name_sub == datasetName) %>%
   mutate(`country (country)` = 'United States') %>% #hardcode country
   standardCast() %>%
@@ -46,7 +54,6 @@ dataset_profile <- noNRCS_ISCN3_profile  %>%
          `observation_date (YYYY-MM-DD)`, 
          `soil_series`,`ecoregion`, `surface_veg`,
          `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`)
-
 dataset_layer <- noNRCS_ISCN3_layer %>%
   filter(dataset_name_sub == datasetName) %>%
   mutate(`country (country)` = 'United States') %>%
@@ -73,7 +80,6 @@ all_layer <- dataset_layer
 #head(dataset_study)
 #head(dataset_profile)
 #head(dataset_layer)
-
 ```{r viz_LP}
 
 dataset_study
