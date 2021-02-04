@@ -17,13 +17,14 @@ output:
 
 ```{r setup}
 library(data.table)
-library(SOCDRaH2)
+#library(SOCDRaH2)
 library(tidyverse)
 library(lubridate)
 library(tibble)
 library(ggmap)
 library(maps)
 library(mapdata)
+library(vroom)
 #source('../R/makeKeys.R')
 #source('../R/ISCN3.R')
 ```
