@@ -9,10 +9,11 @@ We also remove the ISCN SOC stock computation, reducing the duplicated data entr
 #unique(layer_raw$dataset_name_sub)
 datasetName <- 'Heckman/Swanston Biscuit Burn'
 
+
 ## subset the citation and dataset description tables and merge them into a study table
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>% #pull out the info on the dataset we want here
-  select(where(function(xx){!all(is.na(xx))})) %>% #pull out the info on the dataset we want here
+  select(where(function(xx){!all(is.na(xx))})) %>% #pull out columns where values are not all "NA"
   full_join( #put the the citation and the dataset information together
     dataset_raw %>%
               filter(dataset_name == datasetName) %>% #subset the dataset table
@@ -20,28 +21,38 @@ dataset_study <- citation_raw %>%
     suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the id columns between the two tables
   standardCast() #go see index.Rmd for this function, mostly recasts the column to the right types
 
+
 ## subset the profile and dataset description tables and merge them into a study table
 dataset_profile <- profile_raw %>%
-  filter(dataset_name_sub ==  datasetName) %>%
-   mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
-                                  as.character(NA), `soc (g cm-2)`),
-    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
-                                as.character(NA), `soc_carbon_flag`),
-    `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
-                           as.character(NA), `soc_method`)) %>%
-  select(where(function(xx){!all(is.na(xx))})) %>%
+  filter(dataset_name_sub ==  datasetName) %>% #pull out info from desired dataset
+   mutate( #changing the following columns to remove ISCN computations
+     `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), #changing values in column "soc (g cm-2)" for if a row in "dataset_name_soc" contains "ISCN"....
+                                  as.character(NA), #if TRUE, outputs "NA"
+                              `soc (g cm-2)`), #if FALSE, remains unchanged
+    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc), #changing values in "soc_carbon_flag" when row contains "ISCN"
+                                as.character(NA), #When row contains "ISCN", changes value to NA
+                                `soc_carbon_flag`), #if not, value is unchanged
+    `soc_method` = if_else(grepl('ISCN', dataset_name_soc), #searching "soc_method" for when a value contains "ISCN" in name, it will...
+                           as.character(NA), #changes value to "NA"
+                           `soc_method`)) %>% #returns original variable if it does not
+  select(where(function(xx){!all(is.na(xx))})) %>% #only select values that are not "NA" then
   select(-dataset_name_soc)#column now redundant with dataset_name_sub
-noNRCS_ISCN3_layer <- layer_raw%>%
-  as.data.frame() %>%
-  filter(dataset_name_sub != 'NRCS Sept/2014' & dataset_name_sub != ('ISCN 1-1 (2015-12-10)')) %>%
-   mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
-                                  as.character(NA), `soc (g cm-2)`),
-    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
-                                as.character(NA), `soc_carbon_flag`),
+
+
+## subset the profile and dataset description tables and merge them into a study table
+dataset_layer <- layer_raw%>%
+  as.data.frame() %>% #creates a data frame from that table
+  filter(dataset_name_sub != 'NRCS Sept/2014' & dataset_name_sub != ('ISCN 1-1 (2015-12-10)')) %>% 
+   mutate( #changing the following columns to further remove ISCN computations
+     `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), #changing values in this column for if a row in "dataset_name_soc" contains "ISCN"....
+                                  as.character(NA), `soc (g cm-2)`), #When row contains "ISCN", changes value to NA. If not, value is unchanged
+    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc), #changing values in this column when row contains "ISCN"
+                                as.character(NA), `soc_carbon_flag`), #When row contains "ISCN", changes value to NA. If not, value is unchanged
     `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
-                           as.character(NA), `soc_method`)) %>%
+                           as.character(NA), `soc_method`)) %>% #When this column contains "ISCN", change values to NA. If not, remain the same
   select(-dataset_name_soc)%>% #column now redundent with dataset_name_sub
-  select(where(function(xx){!all(is.na(xx))}))
+  select(where(function(xx){!all(is.na(xx))})) #only selecting values that are not "NA"
+
 
 ## defining which columns will be used in maps/tables 
 dataset_profile <- profile_raw  %>%
@@ -57,33 +68,24 @@ dataset_profile <- profile_raw  %>%
          `soil_series`,`ecoregion`, `surface_veg`,
          `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`) #selecting columns that will be used to create maps when called later
 
+
 dataset_layer <- layer_raw %>%
-  filter(dataset_name_sub == datasetName) %>%
-  mutate(`country (country)` = 'United States') %>%
-  standardCast() %>% 
-  rename(dataset_name = 'dataset_name_sub') %>%
+  filter(dataset_name_sub == datasetName) %>% #pull out info for only this dataset
+  mutate(`country (country)` = 'United States') %>% #hardcode country to correct one with desired format
+  standardCast() %>% #run this through function standardCast()
+  rename(dataset_name = 'dataset_name_sub') %>% #changing to more user-friendly name
   select(dataset_name, `site_name`, `profile_name`, layer_name,
          `lat (dec. deg)`, `long (dec. deg)`, 
          `layer_top (cm)`, `layer_bot (cm)`,
          `hzn`, `hzn_desgn`,
-         `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`)
+         `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`) #select values to be included in later graphs/tables
   
+
 all_study <- dataset_study
 all_profile <- dataset_profile
 all_layer <- dataset_layer
 #setdiff(c(names(dataset_study), names(dataset_profile), names(dataset_layer)), unlist(type_cols))
 ```
-
-#Create a summary report for the data contribution including
-#1) profile level map of lat/lon
-#2) profile level tally of state-country
-#3) count of numerical & categorical values
-#```{r viz_HSBB}
-#print(datasetName)
-#head(dataset_study)
-#head(dataset_profile)
-#head(dataset_layer)
-
 
 ## Tables
 
@@ -109,7 +111,7 @@ dataset_layer %>%
   knitr::kable()
 ```
 
-```{r viz_LP}
+```{r viz_HSBB}
 
 dataset_study
 summary(dataset_profile %>% select_if(is.factor))
