@@ -80,11 +80,46 @@ all_layer <- dataset_layer
 #head(dataset_study)
 #head(dataset_profile)
 #head(dataset_layer)
+
+
+## Tables
+
+The 'r datasetName' is located in ____ in Oregon, USA, the ___ is the zero reference, soil taxon is described in ___ profiles, ___ profiles are drawn from ___ soil series, profiles are split between ____ (see below).
+
+```{r}
+#dataset_study
+dataset_profile %>% select_if(is.factor) %>% #pull data from profile of this dataset
+  summary() %>% #produces result summary
+  knitr::kable() #create a table of these values
+```
+
+# !!!!!! LOOK AT THIS
+```{r}
+dataset_layer %>% select_if(is.factor) %>%  #THIS DATA SET MIGHT ONLY HAVE ONE LAYER!!!  LOOK AT HER
+  summary() %>%
+  knitr::kable()
+```
+
+
+```{r}
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+```
+
 ```{r viz_LP}
 
 dataset_study
 summary(dataset_profile %>% select_if(is.factor))
 summary(dataset_layer %>% select_if(is.factor))
+
+
 
 ggplot(data =  map_data('state') %>%
          full_join(dataset_profile %>% 
@@ -97,7 +132,8 @@ ggplot(data =  map_data('state') %>%
   coord_fixed(1.3) + 
   theme_nothing() 
 
-ggplot(data =  map_data('state') %>% 
+##using location data to plot sites on a state map
+ggplot(data =  map_data('state') %>% #pull out relevant info, found in state column
          filter(region %in% c("oregon", "washington"))) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
