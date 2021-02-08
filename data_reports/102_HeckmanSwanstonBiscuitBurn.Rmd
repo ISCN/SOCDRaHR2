@@ -1,25 +1,26 @@
----
-title: "102_Heckman"
-author: "Rita"
-date: "2/3/2021"
-output: html_document
----
+# Heckman/Swanston Biscuit Burn
 
-citation_raw <- read_delim('ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
-dataset_raw <- read_delim('ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
-layer_raw <- vroom::vroom('ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
-profile_raw <-  vroom::vroom('ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
-
+In this section, we will pull out the `Heckman/Swanston Biscuit Burn` from ISCN3 and clean it.
+This dataset requires the country to be set to US.
+We also remove the ISCN SOC stock computation, reducing the duplicated data entries.
 
 ```{r subset_HSBB}
+## set the dataset name gotten from 
+#unique(layer_raw$dataset_name_sub)
 datasetName <- 'Heckman/Swanston Biscuit Burn'
+
+## subset the citation and dataset description tables and merge them into a study table
 dataset_study <- citation_raw %>% 
-  filter(dataset_name == datasetName) %>%
-  select(where(function(xx){!all(is.na(xx))})) %>%
-  full_join(dataset_raw %>% 
-              filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
-  standardCast()
+  filter(dataset_name == datasetName) %>% #pull out the info on the dataset we want here
+  select(where(function(xx){!all(is.na(xx))})) %>% #pull out the info on the dataset we want here
+  full_join( #put the the citation and the dataset information together
+    dataset_raw %>%
+              filter(dataset_name == datasetName) %>% #subset the dataset table
+              select(where(function(xx){!all(is.na(xx))})), #only pull columns that are not enitrely NA values
+    suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the id columns between the two tables
+  standardCast() #go see index.Rmd for this function, mostly recasts the column to the right types
+
+## subset the profile and dataset description tables 
 dataset_profile <- profile_raw %>%
   filter(dataset_name_sub ==  datasetName) %>%
    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
@@ -29,7 +30,7 @@ dataset_profile <- profile_raw %>%
     `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
                            as.character(NA), `soc_method`)) %>%
   select(where(function(xx){!all(is.na(xx))})) %>%
-  select(-dataset_name_soc)#column now redundent with dataset_name_sub
+  select(-dataset_name_soc)#column now redundant with dataset_name_sub
 noNRCS_ISCN3_layer <- layer_raw%>%
   as.data.frame() %>%
   filter(dataset_name_sub != 'NRCS Sept/2014' & dataset_name_sub != ('ISCN 1-1 (2015-12-10)')) %>%
@@ -41,20 +42,22 @@ noNRCS_ISCN3_layer <- layer_raw%>%
                            as.character(NA), `soc_method`)) %>%
   select(-dataset_name_soc)%>% #column now redundent with dataset_name_sub
   select(where(function(xx){!all(is.na(xx))}))
-  
-dataset_profile <- dataset_profile  %>%
-  filter(dataset_name_sub == datasetName) %>%
-  mutate(`country (country)` = 'United States') %>% #hardcode country
-  standardCast() %>%
-  rename(dataset_name = 'dataset_name_sub') %>%
+
+## defining which columns will be used in maps/tables 
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) %>% #pull out the info on the dataset we want here
+  mutate(`country (country)` = 'United States') %>% #hardcode country to correct one
+  standardCast() %>% #recasting column to character type
+  rename(dataset_name = 'dataset_name_sub') %>% #simplifying column name
   select(dataset_name, `site_name`, `profile_name`,
          `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`,
          `profile_zero_ref (profile_zero_ref)`,
          `state (state_province)`, `country (country)`, 
          `observation_date (YYYY-MM-DD)`, 
          `soil_series`,`ecoregion`, `surface_veg`,
-         `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`)
-dataset_layer <- noNRCS_ISCN3_layer %>%
+         `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`) #selecting columns that will be used to create maps when called later
+
+dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>%
   mutate(`country (country)` = 'United States') %>%
   standardCast() %>% 
