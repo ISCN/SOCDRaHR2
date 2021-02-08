@@ -1,24 +1,25 @@
 # Heckman lithosequence
 
-ISCNv3 issues to resolve for ISCNv3.5
+In this section, we will pull out the `Heckman lithosequence` from ISCN3 and clean it.
+This dataset requires the country to be set to US.
+We also remove the ISCN SOC stock computation, reducing the duplicated data entries.
 
-  - Heckman lithosequence
-    + Country not set (clearly US)
-    + SOC measurements seem to be disconnected from the rest of the data at the layer and profile level
-   
-    
 ```{r}
+## set the dataset name gotten from 
+#unique(layer_raw$dataset_name_sub)
 datasetName <- 'Heckman lithosequence'
 
+## subset the citation and dataset description tables and merge them into a study table
 dataset_study <- citation_raw %>% 
-  filter(dataset_name == datasetName) %>%
-  select(where(function(xx){!(is.na(xx))})) %>%
-  full_join(dataset_raw %>% 
-              filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
-  standardCast()
+  filter(dataset_name == datasetName) %>% #pull out the info on the dataset we want here
+  select(where(function(xx){!all(is.na(xx))})) %>% #only pull columns that are not enitrely NA values
+  full_join( #put the the citation and the dataset information together
+    dataset_raw %>% 
+              filter(dataset_name == datasetName) %>% #subset the dataset table
+              select(where(function(xx){!(is.na(xx))})), #only pull columns that are not enitrely NA values
+    suffix = c('_citation', '_dataset')) %>% #flag common columns that are not the id columns between the two tables
+  standardCast() #go see index.Rmd for this fucntion, mostly recasts the column to the right types
 
-##TODO Remove gapfilled soc stocks
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>%
   mutate(`country (country)` = 'United States') %>%
@@ -37,22 +38,47 @@ dataset_layer <- layer_raw %>%
   filter(dataset_name_soc == 'ISCN SOC stock computation') %>%
   select(-dataset_name_soc)
 
-#all_study <- bind_rows(dataset_study, all_study)
-#all_profile <- bind_rows(dataset_profile, all_profile)
-#all_layer <- bind_rows(dataset_layer, all_layer)
+```
+
+## Tables
+
+The `r datasetName` is located in the Sonoran Basion and Range in Arizona, USA, the top of the profile is the zero reference, soil taxon is described in all profiles, three profiles are drawn from the Spudrock soil series, profiles are split between mountain range and plateau, with hillslope and mountian slope on backslopes and summits (see below).
+
+```{r}
+#dataset_study
+dataset_profile %>% select_if(is.factor) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
-dataset_study
-summary(dataset_profile %>% select_if(is.factor))
-summary(dataset_layer %>% select_if(is.factor))
+dataset_layer %>% select_if(is.factor) %>%
+  summary() %>%
+  knitr::kable()
 
+```
+```{r}
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+```
+
+## Figures
+
+```{r}
 ggplot(data =  map_data('state') %>%
          full_join(dataset_profile %>% 
                      mutate(region = 
                               tolower(`state (state_province)`), by = 'region') %>%
                      group_by(region) %>% 
-                     tally)) + 
+                     tally, by = 'region') )+ 
   geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
                color = 'black') +
   coord_fixed(1.3) + 
@@ -67,16 +93,6 @@ ggplot(data =  map_data('state') %>%
              shape = 'x', color = 'red') +
   coord_fixed(1.3) +
   theme_nothing() 
-
-dataset_layer %>%
-  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
-  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
-  bind_rows(
-    dataset_layer %>%
-      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
-      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
-  arrange(n) %>%
-  knitr::kable()
 
 ggplot(dataset_layer %>% 
          pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),

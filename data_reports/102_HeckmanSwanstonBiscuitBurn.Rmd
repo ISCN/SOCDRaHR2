@@ -1,0 +1,131 @@
+# Heckman/Swanston Biscuit Burn
+
+In this section, we will pull out the `Heckman/Swanston Biscuit Burn` from ISCN3 and clean it.
+This dataset requires the country to be set to US.
+We also remove the ISCN SOC stock computation, reducing the duplicated data entries.
+
+```{r subset_HSBB}
+## set the dataset name gotten from 
+#unique(layer_raw$dataset_name_sub)
+datasetName <- 'Heckman/Swanston Biscuit Burn'
+
+## subset the citation and dataset description tables and merge them into a study table
+dataset_study <- citation_raw %>% 
+  filter(dataset_name == datasetName) %>% #pull out the info on the dataset we want here
+  select(where(function(xx){!all(is.na(xx))})) %>% #pull out the info on the dataset we want here
+  full_join( #put the the citation and the dataset information together
+    dataset_raw %>%
+              filter(dataset_name == datasetName) %>% #subset the dataset table
+              select(where(function(xx){!all(is.na(xx))})), #only pull columns that are not enitrely NA values
+    suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the id columns between the two tables
+  standardCast() #go see index.Rmd for this function, mostly recasts the column to the right types
+
+## subset the profile and dataset description tables 
+dataset_profile <- profile_raw %>%
+  filter(dataset_name_sub ==  datasetName) %>%
+   mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
+                                  as.character(NA), `soc (g cm-2)`),
+    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
+                                as.character(NA), `soc_carbon_flag`),
+    `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
+                           as.character(NA), `soc_method`)) %>%
+  select(where(function(xx){!all(is.na(xx))})) %>%
+  select(-dataset_name_soc)#column now redundant with dataset_name_sub
+noNRCS_ISCN3_layer <- layer_raw%>%
+  as.data.frame() %>%
+  filter(dataset_name_sub != 'NRCS Sept/2014' & dataset_name_sub != ('ISCN 1-1 (2015-12-10)')) %>%
+   mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
+                                  as.character(NA), `soc (g cm-2)`),
+    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
+                                as.character(NA), `soc_carbon_flag`),
+    `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
+                           as.character(NA), `soc_method`)) %>%
+  select(-dataset_name_soc)%>% #column now redundent with dataset_name_sub
+  select(where(function(xx){!all(is.na(xx))}))
+
+## defining which columns will be used in maps/tables 
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) %>% #pull out the info on the dataset we want here
+  mutate(`country (country)` = 'United States') %>% #hardcode country to correct one
+  standardCast() %>% #recasting column to character type
+  rename(dataset_name = 'dataset_name_sub') %>% #simplifying column name
+  select(dataset_name, `site_name`, `profile_name`,
+         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`,
+         `profile_zero_ref (profile_zero_ref)`,
+         `state (state_province)`, `country (country)`, 
+         `observation_date (YYYY-MM-DD)`, 
+         `soil_series`,`ecoregion`, `surface_veg`,
+         `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`) #selecting columns that will be used to create maps when called later
+
+dataset_layer <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`country (country)` = 'United States') %>%
+  standardCast() %>% 
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(dataset_name, `site_name`, `profile_name`, layer_name,
+         `lat (dec. deg)`, `long (dec. deg)`, 
+         `layer_top (cm)`, `layer_bot (cm)`,
+         `hzn`, `hzn_desgn`,
+         `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`)
+  
+all_study <- dataset_study
+all_profile <- dataset_profile
+all_layer <- dataset_layer
+#setdiff(c(names(dataset_study), names(dataset_profile), names(dataset_layer)), unlist(type_cols))
+```
+
+#Create a summary report for the data contribution including
+#1) profile level map of lat/lon
+#2) profile level tally of state-country
+#3) count of numerical & categorical values
+#```{r viz_HSBB}
+#print(datasetName)
+#head(dataset_study)
+#head(dataset_profile)
+#head(dataset_layer)
+```{r viz_LP}
+
+dataset_study
+summary(dataset_profile %>% select_if(is.factor))
+summary(dataset_layer %>% select_if(is.factor))
+
+ggplot(data =  map_data('state') %>%
+         full_join(dataset_profile %>% 
+                     mutate(region = 
+                              tolower(`state (state_province)`), by = 'region') %>%
+                     group_by(region) %>% 
+                     tally)) + 
+  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
+               color = 'black') +
+  coord_fixed(1.3) + 
+  theme_nothing() 
+
+ggplot(data =  map_data('state') %>% 
+         filter(region %in% c("oregon", "washington"))) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data=dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  theme_nothing() 
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+ggplot(dataset_layer %>% 
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = c(`oc (percent)`,`13c (‰)`, `14c (‰)`), 
+                      values_to = 'measurement', names_to = 'type')) +
+  geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+```
+  
