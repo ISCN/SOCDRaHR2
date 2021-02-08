@@ -20,7 +20,7 @@ dataset_study <- citation_raw %>%
     suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the id columns between the two tables
   standardCast() #go see index.Rmd for this function, mostly recasts the column to the right types
 
-## subset the profile and dataset description tables 
+## subset the profile and dataset description tables and merge them into a study table
 dataset_profile <- profile_raw %>%
   filter(dataset_name_sub ==  datasetName) %>%
    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
@@ -87,20 +87,13 @@ all_layer <- dataset_layer
 
 ## Tables
 
-The 'r datasetName' is located in ____ in Oregon, USA, the ___ is the zero reference, soil taxon is described in ___ profiles, ___ profiles are drawn from ___ soil series, profiles are split between ____ (see below).
+The 'r datasetName' is located in the Cascade Range in Oregon, USA, the top of the profile is the zero reference, profiles are drawn from one of six soil series', profiles are split between having mixed conifer/hardwood to no surface vegetation (see below).
 
 ```{r}
 #dataset_study
 dataset_profile %>% select_if(is.factor) %>% #pull data from profile of this dataset
   summary() %>% #produces result summary
   knitr::kable() #create a table of these values
-```
-
-# !!!!!! LOOK AT THIS
-```{r}
-dataset_layer %>% select_if(is.factor) %>%  #THIS DATA SET MIGHT ONLY HAVE ONE LAYER!!!  LOOK AT HER
-  summary() %>%
-  knitr::kable()
 ```
 
 
