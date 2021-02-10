@@ -33,6 +33,7 @@ library(vroom)
 #ISCN_raw <- ISCN3(dataDir = '~/Documents/Datasets/ISCN', orginalFormat = TRUE)
 
 ISCN_dir <- '~/Documents/Datasets/ISCN' #commnet out as needed and add your folder below
+ISCN_dir <- 'ISCN'
 
 citation_raw <- read_delim(file.path(ISCN_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12))
 dataset_raw <- read_delim(file.path(ISCN_dir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19))
