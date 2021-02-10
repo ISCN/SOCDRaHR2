@@ -8,8 +8,6 @@ We also remove the ISCN SOC stock computation, reducing the duplicated data entr
 ## set the dataset name gotten from 
 #unique(layer_raw$dataset_name_sub)
 datasetName <- 'Heckman/Swanston Biscuit Burn'
-
-
 ## subset the citation and dataset description tables and merge them into a study table
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>% #pull out the info on the dataset we want here
@@ -20,8 +18,6 @@ dataset_study <- citation_raw %>%
               select(where(function(xx){!all(is.na(xx))})), #only pull columns that are not enitrely NA values
     suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the id columns between the two tables
   standardCast() #go see index.Rmd for this function, mostly recasts the column to the right types
-
-
 ## subset the profile and dataset description tables and merge them into a study table
 dataset_profile <- profile_raw %>%
   filter(dataset_name_sub ==  datasetName) %>% #pull out info from desired dataset
@@ -37,8 +33,6 @@ dataset_profile <- profile_raw %>%
                            `soc_method`)) %>% #returns original variable if it does not
   select(where(function(xx){!all(is.na(xx))})) %>% #only select values that are not "NA" then
   select(-dataset_name_soc)#column now redundant with dataset_name_sub
-
-
 ## subset the profile and dataset description tables and merge them into a study table
 dataset_layer <- layer_raw%>%
   as.data.frame() %>% #creates a data frame from that table
@@ -52,8 +46,6 @@ dataset_layer <- layer_raw%>%
                            as.character(NA), `soc_method`)) %>% #When this column contains "ISCN", change values to NA. If not, remain the same
   select(-dataset_name_soc)%>% #column now redundent with dataset_name_sub
   select(where(function(xx){!all(is.na(xx))})) #only selecting values that are not "NA"
-
-
 ## defining which columns will be used in maps/tables 
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>% #pull out the info on the dataset we want here
@@ -67,8 +59,6 @@ dataset_profile <- profile_raw  %>%
          `observation_date (YYYY-MM-DD)`, 
          `soil_series`,`ecoregion`, `surface_veg`,
          `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`) #selecting columns that will be used to create maps when called later
-
-
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>% #pull out info for only this dataset
   mutate(`country (country)` = 'United States') %>% #hardcode country to correct one with desired format
@@ -80,7 +70,6 @@ dataset_layer <- layer_raw %>%
          `hzn`, `hzn_desgn`,
          `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`) #select values to be included in later graphs/tables
   
-
 all_study <- dataset_study
 all_profile <- dataset_profile
 all_layer <- dataset_layer
@@ -112,13 +101,9 @@ dataset_layer %>%
 ```
 
 ```{r viz_HSBB}
-
 dataset_study
 summary(dataset_profile %>% select_if(is.factor))
 summary(dataset_layer %>% select_if(is.factor))
-
-
-
 ggplot(data =  map_data('state') %>%
          full_join(dataset_profile %>% 
                      mutate(region = 
@@ -129,7 +114,6 @@ ggplot(data =  map_data('state') %>%
                color = 'black') +
   coord_fixed(1.3) + 
   theme_nothing() 
-
 ##using location data to plot sites on a state map
 ggplot(data =  map_data('state') %>% #pull out relevant info, found in state column
          filter(region %in% c("oregon", "washington"))) + 
@@ -140,7 +124,6 @@ ggplot(data =  map_data('state') %>% #pull out relevant info, found in state col
              shape = 'x', color = 'red') +
   coord_fixed(1.3) +
   theme_nothing() 
-
 dataset_layer %>%
   pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
   group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
@@ -150,7 +133,6 @@ dataset_layer %>%
       group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
   arrange(n) %>%
   knitr::kable()
-
 ggplot(dataset_layer %>% 
          pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
                        values_to='depth') %>%
@@ -159,4 +141,3 @@ ggplot(dataset_layer %>%
   geom_line(aes(x=depth, y= measurement, group = profile_name)) +
   facet_wrap(~type, scales='free')
 ```
-  
