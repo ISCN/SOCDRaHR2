@@ -19,7 +19,7 @@ dataset_study <- citation_raw %>%
 
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>%
-  mutate(`country (country)` = 'United States') %>%
+  mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
   standardCast() %>% #comment out pipe here and take a look at the profile information to figure out how to remove ISCN soc computations
   filter(dataset_name_soc != 'ISCN SOC stock computation') %>% #in this case just remove the whole row, no other data is lost
   select(where(function(xx){!all(is.na(xx))})) #remove the extra soc column lingering from ISCN soc computation
@@ -33,7 +33,7 @@ dataset_profile <- profile_raw  %>%
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>%
   standardCast() %>%
-  mutate(`country (country)` = 'United States') %>%
+  mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
   arrange(dataset_name_sub, site_name, profile_name, layer_name, dataset_name_soc) %>% #sort the rows for the fill on the next line
   tidyr::fill(-starts_with('soc'), .direction='up') %>% #fill in the data that was not repeated for the rows not associated with ISCN SOC computations; be careful when reusing this code that you have the right direction set for the fill!
   filter(dataset_name_soc != 'ISCN SOC stock computation') %>% #remove the ISCN SOC stocks
