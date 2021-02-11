@@ -1,3 +1,3 @@
 delete_merged_file: true
-rmd_files: ["index.Rmd", 'data_reports/101_HeckmanLithosequence.Rmd']
+rmd_files: ["index.Rmd", 'data_reports/101_HeckmanLithosequence.Rmd', 'data_reports/999_References.Rmd']
 output_dir: 'docs'
