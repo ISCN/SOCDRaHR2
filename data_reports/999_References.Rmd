@@ -1,0 +1,9 @@
+# References
+
+## ISCN3 citations
+
+dataset_name | citation
+-------------|----------
+`Heckman lithosequence` | @Heckman2009
+
+## All references

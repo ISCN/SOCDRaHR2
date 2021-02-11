@@ -6,6 +6,7 @@ documentclass: book
 output:
   bookdown::gitbook: default
   #bookdown::pdf_book: default
+bibliography: data_reports/ISCN3_bibliography.bib
 ---
 
 <!-- This index.Rmd is the contributing datasets report out -->
@@ -26,6 +27,8 @@ library(tibble)
 library(ggmap)
 library(maps)
 library(mapdata)
+library(knitr)
+library(tidyr)
 
 #data_dir <- '~/Documents/Datasets/ISCN' #comment out and set to your directory to run this code
 data_dir <- '~/Documents/Datasets/ISCN' #set to your directory to run this code
