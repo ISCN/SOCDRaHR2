@@ -9,6 +9,7 @@ We also remove the ISCN SOC stock computation, reducing the duplicated data entr
 #unique(layer_raw$dataset_name_sub)
 
 datasetName <- 'Heckman/Swanston Biscuit Burn'
+
 ## subset the citation and dataset description tables and merge them into a study table
 
 dataset_study <- citation_raw %>% 
@@ -20,7 +21,11 @@ dataset_study <- citation_raw %>%
               select(where(function(xx){!all(is.na(xx))})), #only pull columns that are not enitrely NA values
     suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the id columns between the two tables
   standardCast() #go see index.Rmd for this function, mostly recasts the column to the right types
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> edb3b06196b3410139f2272436510a642a776d96
 ## subset the profile and dataset description tables and merge them into a study table
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>% #pull out the info on the dataset we want here
@@ -34,8 +39,13 @@ dataset_profile <- profile_raw  %>%
          `observation_date (YYYY-MM-DD)`, 
          `soil_series`,`ecoregion`, `surface_veg`,
          `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`) #selecting columns that will be used to create maps when called later
+<<<<<<< HEAD
 
 ## subset the profile and dataset description tables and merge them into a study table
+=======
+         
+## subset the layer and dataset description tables and merge them into a study table
+>>>>>>> edb3b06196b3410139f2272436510a642a776d96
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>% #pull out info for only this dataset
   mutate(`country (country)` = 'United States') %>% #hardcode country to correct one with desired format
