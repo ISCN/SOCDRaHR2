@@ -5,5 +5,6 @@
 dataset_name | citation
 -------------|----------
 `Heckman lithosequence` | @Heckman2009
+`Worldwide soil carbon and nitrogen data` | @Zinke1986
 
 ## All references
