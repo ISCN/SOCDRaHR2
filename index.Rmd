@@ -10,7 +10,6 @@ bibliography: data_reports/ISCN3_bibliography.bib
 ---
 
 <!-- This index.Rmd is the contributing datasets report out -->
-<!-- TODO figure out how to move this into data_reports without breaking docs -->
 <!-- Compile with the below command -->
 <!-- bookdown::render_book(input="index.Rmd", output_format = "bookdown::gitbook") -->
 
