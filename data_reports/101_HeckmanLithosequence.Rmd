@@ -34,9 +34,10 @@ dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>%
   standardCast() %>%
   mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
+  mutate(dataset_name_soc = recode(dataset_name_soc, 'ISCN SOC stock computation' = '_ISCN SOC stock computation')) %>% #recode ISCN so that when we sort it it's on top to fill in the values (see next two lines of code)
   arrange(dataset_name_sub, site_name, profile_name, layer_name, dataset_name_soc) %>% #sort the rows for the fill on the next line
-  tidyr::fill(-starts_with('soc'), .direction='up') %>% #fill in the data that was not repeated for the rows not associated with ISCN SOC computations; be careful when reusing this code that you have the right direction set for the fill!
-  filter(dataset_name_soc != 'ISCN SOC stock computation') %>% #remove the ISCN SOC stocks
+  tidyr::fill(-starts_with('soc'), .direction='down') %>% #fill in the data that was not repeated for the rows not associated with ISCN SOC computations; be careful when reusing this code that you have the right direction set for the fill!
+  filter(dataset_name_soc != '_ISCN SOC stock computation') %>% #remove the ISCN SOC stocks
   select(-dataset_name_soc) %>% #we don't care about the flag any more
   select(where(function(xx){!all(is.na(xx))}))
 ```
@@ -113,6 +114,10 @@ ggplot(dataset_layer %>%
          geom_line(aes(x=depth, y= measurement, group = profile_name)) +
   facet_wrap(~type, scales='free')
 ```
+
+## TODO
+
+- Follow up with Heckman to get key for `root_quant_size` and `color`.
 
 ## Citations
 
