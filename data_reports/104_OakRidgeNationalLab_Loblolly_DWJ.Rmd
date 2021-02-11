@@ -4,7 +4,7 @@
 #This dataset requires the country to be set to US. Additionally, the hzn in layer and profile needs to be reset to "NA" when the symbol "?" is present.
 #In addition, gapfilled bd with sampling was set to "NA" based on method noted.
 #ISCN SOC stock computation's were removed reducing the duplicated data entries.
-#Dataset reference noted in a cryptic message, needs to be formly cited using bibtext. 
+#Dataset reference noted in a cryptic message, needs to be formly cited using bibtext. (https://doi.org/10.2172/921773)
    
     
 ```{r}
