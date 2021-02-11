@@ -14,7 +14,6 @@ dataset_study <- citation_raw %>%
 #comparison for pre ISCN soc stock correction
 # dataset_profile_temp <- profile_raw  %>%
 #   filter(dataset_name_sub == datasetName) %>%
-#   mutate(`country (country)` = 'United States') %>%
 #   standardCast()
 
 dataset_profile <- profile_raw  %>%
@@ -27,8 +26,7 @@ dataset_profile <- profile_raw  %>%
 #comparison before SOC correction
 # dataset_layer_temp <- layer_raw %>%
 #   filter(dataset_name_sub == datasetName) %>%
-#   standardCast() %>%
-#   mutate(`country (country)` = 'United States')
+#   standardCast()
 
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>%
