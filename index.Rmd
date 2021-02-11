@@ -18,7 +18,7 @@ output:
 ISCNv3 is composed of several contributing data sets. 
 This report considers each one separately, and reports on the location of the data, as well as basic summary statistics.
 
-```{r setup}
+```{r setup, message=FALSE, echo=FALSE}
 library(data.table)
 library(tidyverse)
 library(lubridate)
@@ -30,7 +30,7 @@ library(mapdata)
 #data_dir <- '~/Documents/Datasets/ISCN' #comment out and set to your directory to run this code
 data_dir <- '~/Documents/Datasets/ISCN' #set to your directory to run this code
 
-knitr::opts_chunk$set(eval = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r eval=FALSE}
@@ -170,7 +170,17 @@ if(length(missingCols) > 0){
 }
 ```
 
-`r lapply(type_cols, print)`
+**numerical** [`r length(type_cols$num_cols)`] `r type_cols$num_cols`
+
+**factor** [`r length(type_cols$factor_cols)`] `r type_cols$factor_cols`
+
+**date** [`r length(type_cols$date_cols)`] `r type_cols$date_cols`
+
+**id** [`r length(type_cols$id_cols)`] `r type_cols$id_cols`
+
+**discard** [`r length(type_cols$discard_cols)`] `r type_cols$discard_cols`
+
+**noAction** [`r length(type_cols$noAction_cols)`] `r type_cols$noAction_cols`
 
 ```{r}
 
