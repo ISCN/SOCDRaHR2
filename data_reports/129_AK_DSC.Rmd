@@ -29,13 +29,13 @@ dataset_profile <- profile_raw  %>%
 #  standardCast()
 
 dataset_layer <- layer_raw %>%
-  filter(dataset_name_sub == datasetName) %>%
-  standardCast() %>%
+  filter(dataset_name_sub == datasetName)  %>%
   group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
   mutate_at(vars(-group_cols(), -'dataset_name_soc'), 
             function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the 
   filter(dataset_name_soc == dataset_name_sub) %>% #only take the soc values provided by the submitter
-  select(-dataset_name_soc) #we don't care about the flag any more
+  select(-dataset_name_soc) %>%
+  standardCast() #we don't care about the flag any more
 
 ```
 
