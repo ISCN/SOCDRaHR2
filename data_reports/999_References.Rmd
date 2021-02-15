@@ -8,4 +8,6 @@ dataset_name | citation
 `AK DSC Project SOC stock computation` | @Johnson2011
 `Worldwide soil carbon and nitrogen data` | @Zinke1986
 `USGS_S3C` | @Buell2004
+`Northern Circumpolar Soil Carbon Database` | @Hugelius2013
+
 ## All references

@@ -1,3 +1,3 @@
 delete_merged_file: true
-rmd_files: ["index.Rmd", 'data_reports/101_HeckmanLithosequence.Rmd', 'data_reports/128_USGS_S3C.Rmd', 'data_reports/129_AK_DSC.Rmd', 'data_reports/130_WorldwideSCND.Rmd', 'data_reports/999_References.Rmd']
+rmd_files: ["index.Rmd", 'data_reports/101_HeckmanLithosequence.Rmd', 'data_reports/127_NCSD.Rmd', 'data_reports/128_USGS_S3C.Rmd', 'data_reports/129_AK_DSC.Rmd', 'data_reports/130_WorldwideSCND.Rmd', 'data_reports/999_References.Rmd']
 output_dir: 'docs'
