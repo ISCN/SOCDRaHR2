@@ -67,15 +67,16 @@ dataset_profile %>% select_if(is.factor) %>% #pull data from profile of this dat
 
 
 ```{r}
-dataset_layer %>%
-  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
-  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
-  bind_rows(
-    dataset_layer %>%
-      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
-      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+#create a table that displays the names of the number and factor columns in the dataset, how many values there are in each, and how many unique values there are
+dataset_layer %>% #pipe dataset_layer
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>% #pivot the names of columns from dataset_layer with number values into a column called names and the values associated with the column into a column called values (All NA values are dropped)
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>% #find how many total values and unique values each number column has
+  bind_rows( #combine the number and factor column summaries into one dataframe
+    dataset_layer %>% #pipe dataset_layer
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>% #pivot the names of columns from dataset_layer with factor values into a column called names and the values associated with the column into a column called values (All NA values are dropped)
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>% #find how many total values and unique values each factor column has
   arrange(n) %>%
-  knitr::kable()
+  knitr::kable() #create the table
 ```
 
 ```{r viz_HSBB}
