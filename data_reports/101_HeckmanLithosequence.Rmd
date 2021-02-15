@@ -103,6 +103,18 @@ dataset_layer %>%
 ```
 
 
+
+## Profile histograms
+
+```{r}
+ggplot(dataset_profile %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+  geom_histogram(aes(x=measurement)) +
+  facet_wrap(~type, scales='free') +
+  theme_bw()
+```
+
 ## Depth plots
 
 ```{r}

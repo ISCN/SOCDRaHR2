@@ -98,6 +98,16 @@ dataset_layer %>%
   knitr::kable()
 ```
 
+## Profile histograms
+
+```{r}
+ggplot(dataset_profile %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+  geom_histogram(aes(x=measurement)) +
+  facet_wrap(~type, scales='free') +
+  theme_bw()
+```
 
 ## Depth plots
 
@@ -116,6 +126,7 @@ ggplot(dataset_layer %>%
 
 - download and re-ingest from @Buell2004
 - Double check profile soc calculations, do we just remove all the SOC columns?
+- Fix problematic country ids
 - Clean up pH values, check clay-sand-silt percent, clean up bulk density total, check bounds for caco3 percent
 
 ## Citations
