@@ -17,13 +17,14 @@ output:
 
 ```{r setup}
 library(data.table)
-library(SOCDRaH2)
+#library(SOCDRaH2)
 library(tidyverse)
 library(lubridate)
 library(tibble)
 library(ggmap)
 library(maps)
 library(mapdata)
+library(vroom)
 #source('../R/makeKeys.R')
 #source('../R/ISCN3.R')
 ```
@@ -31,10 +32,10 @@ library(mapdata)
 ```{r readISCN}
 #ISCN_raw <- ISCN3(dataDir = '~/Documents/Datasets/ISCN', orginalFormat = TRUE)
 
-citation_raw <- read_delim('~/Documents/Datasets/ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
-dataset_raw <- read_delim('~/Documents/Datasets/ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
-layer_raw <- vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
-profile_raw <-  vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
+citation_raw <- read_delim('~/ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
+dataset_raw <- read_delim('~/ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
+layer_raw <- vroom::vroom('~/ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
+profile_raw <-  vroom::vroom('~/ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
 
 #when were ISCN SOC stocks caluclated?
 
