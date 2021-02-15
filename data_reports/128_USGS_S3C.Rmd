@@ -115,7 +115,7 @@ ggplot(dataset_layer %>%
 ## TODO
 
 - download and re-ingest from @Buell2004
-- Double check profile soc calculations, do we just remove all the columns?
+- Double check profile soc calculations, do we just remove all the SOC columns?
 - Clean up pH values, check clay-sand-silt percent, clean up bulk density total, check bounds for caco3 percent
 
 ## Citations
