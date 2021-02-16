@@ -1,6 +1,6 @@
 # Heckman/Swanston Biscuit Burn
 
-```{r subset_HSBB}
+```{r}
 ## set the dataset name gotten from 
 #unique(layer_raw$dataset_name_sub)
 datasetName <- 'Heckman/Swanston Biscuit Burn'
@@ -49,7 +49,7 @@ This data set compared data for burned and unburned soils at the site of the 200
 In ISCN3, the country was not set to United States despite the location of the collected data being identified as the state of Oregon. ISCN3.5 now identifies this as `'United States'`.
 ISCN3 filled soil carbon stock computations that created duplicated data entries, which were then removed in ISCN3.5.
 
-```{r message=FALSE, warning=FALSE}
+```{r}
 knitr::kable(t(dataset_study))
 ```
 
@@ -93,7 +93,7 @@ ggplot(data =  map_data('state') %>% #pull out relevant info, found in state col
 ```
 
 
-```{r eval=FALSE}
+```{r}
 #this is useful to see for the analysis but we don't want it in the report
 #create a table that displays the names of the number and factor columns in the dataset, how many values there are in each, and how many unique values there are
 dataset_layer %>% #pipe dataset_layer
@@ -134,8 +134,8 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
--Follow up with Heckman to see if control at same lat/lon as Burn 7
--Follow up with Heckman about curator name discrepancy (101 says Kate but this document, 102, says Katherine)
+ - Follow up with Heckman to see if control at same lat/lon as Burn 7
+ - Follow up with Heckman about curator name discrepancy (101 says Kate but this document, 102, says Katherine)
 
 
 ## Citations
