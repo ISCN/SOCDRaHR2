@@ -136,4 +136,8 @@ ggplot(dataset_layer %>%
 
 -Follow up with Heckman to see if control at same lat/lon as Burn 7
 -Follow up with Heckman about curator name discrepancy (101 says Kate but this document, 102, says Katherine)
--Determine if table in line 64 is necessary
+
+
+## Citations
+
+Please see @Heckman2013 for additional details and if you are using ISCN3 please cite.
