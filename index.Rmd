@@ -29,8 +29,8 @@ library(mapdata)
 library(knitr)
 library(tidyr)
 
-#data_dir <- '~/Documents/Datasets/ISCN' #comment out and set to your directory to run this code
-data_dir <- 'ISCN3' #set to your directory to run this code
+data_dir <- '~/Documents/Datasets/ISCN' #comment out and set to your directory to run this code
+#data_dir <- 'ISCN3' #set to your directory to run this code
 
 knitr::opts_chunk$set(echo = FALSE)
 ```
@@ -56,14 +56,7 @@ layer_raw <- vroom::vroom(file.path(data_dir, 'ISCN3_layer.csv'), col_types = st
 ```
 
 
-<<<<<<< HEAD
-citation_raw <- read_delim('~/Desktop/Research/ISCN3/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
-dataset_raw <- read_delim('~/Desktop/Research/ISCN3/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
-layer_raw <- vroom::vroom('~/Desktop/Research/ISCN3/ISCN3_layer.csv', col_types = strrep('c', times = 95))
-profile_raw <-  vroom::vroom('~/Desktop/Research/ISCN3/ISCN3_profile.csv', col_types = strrep('c', times = 44))
-=======
 ## ISCN3 structure
->>>>>>> 0c6c2afc05d48fc75d48b0ae1e30e1fea1eefa81
 
 ISCN3 consists of four tables: citation, dataset, profile, and layer. 
 The `citation` and `dataset` tables describe information about each data contribution including any citations practices and contact information for the contributor.
