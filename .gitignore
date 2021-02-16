@@ -4,6 +4,7 @@
 .Ruserdata
 inst/doc
 *.Rproj
+.RDataTmp
 
 #Ignore the temp folder
 temp/*
@@ -16,3 +17,6 @@ temp/*
 
 #Ignore key templates
 *.numbers
+
+#set index.rm to be ignored for data dir issues
+index.Rmd
