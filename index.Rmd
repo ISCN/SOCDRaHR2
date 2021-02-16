@@ -20,21 +20,13 @@ This report considers each one separately, and reports on the location of the da
 
 ```{r setup, message=FALSE, echo=FALSE}
 library(data.table)
-<<<<<<< HEAD
 #library(SOCDRaH2)
-=======
->>>>>>> 1ba3a469ed5faa2e70fa10cf92f97a20a5418e74
 library(tidyverse)
 library(lubridate)
 library(tibble)
 library(ggmap)
 library(maps)
 library(mapdata)
-<<<<<<< HEAD
-library(vroom)
-#source('../R/makeKeys.R')
-#source('../R/ISCN3.R')
-=======
 library(knitr)
 library(tidyr)
 
@@ -59,24 +51,11 @@ rm(ISCN3) #memory management, ISCN3 is big
 #Run previous chunk if you need access to the data
 #csv data should be archived by summer 2021
 
-citation_raw <- read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12))
-dataset_raw <- read_delim(file.path(data_dir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19))
-profile_raw <-  vroom::vroom(file.path(data_dir, 'ISCN3_profile.csv'), col_types = strrep('c', times = 44))
-layer_raw <- vroom::vroom(file.path(data_dir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
-```
-
-<<<<<<< HEAD
-<<<<<<< HEAD
 citation_raw <- read_delim('~/ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
 dataset_raw <- read_delim('~/ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
 layer_raw <- vroom::vroom('~/ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
 profile_raw <-  vroom::vroom('~/ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
-=======
-=======
-
->>>>>>> 0c6c2afc05d48fc75d48b0ae1e30e1fea1eefa81
-## ISCN3 structure
->>>>>>> 1ba3a469ed5faa2e70fa10cf92f97a20a5418e74
+```
 
 ISCN3 consists of four tables: citation, dataset, profile, and layer. 
 The `citation` and `dataset` tables describe information about each data contribution including any citations practices and contact information for the contributor.
