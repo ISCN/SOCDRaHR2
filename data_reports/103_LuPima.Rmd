@@ -1,0 +1,137 @@
+---
+title: "103_LuPima"
+author: "Julie Bielecki"
+date: "2/2/2021"
+output: html_document
+---
+
+# Lu_PIMA
+
+In this section, we will pull out the 'Lu_Pima' from ISCN3 and clean it.
+This data needed the location to be set to Alaska, US. 
+The modification date between citation_raw and dataset_name was not the same, due to a rounding error. 
+Ensure all tables created have values, and the NA columns are not included.
+
+    
+```{r subset_LP}
+##set the dataset name gotten from
+
+#unique(layer_raw$dataset_name_sub)
+datasetName <- 'Lu_PIMA'
+
+#modifty citation_raw so that the dates are rounded and match dataset_name
+dateRounded <- citation_raw %>%
+  mutate(`modification_date (YYYY-MM-DD)` = as.numeric(`modification_date (YYYY-MM-DD)`)) %>% #the column first had to be converted to a numeric so the round function could be used
+  mutate(`modification_date (YYYY-MM-DD)` = round(`modification_date (YYYY-MM-DD)`, 0)) %>%
+  #rounding to zero decimal points matches this date to dataset_name
+  mutate(`modification_date (YYYY-MM-DD)` = as.character(`modification_date (YYYY-MM-DD)`)) #the column was reconverted to character so that it could be merged with the matching column during the full_join
+
+#subset the dateRounded and data set description tables and merge them into a study table
+
+dataset_study <- dateRounded %>% 
+  filter(dataset_name == datasetName) %>% #pull out the info of the dataset we want here
+  select(where(function(xx){!(is.na(xx))})) %>% #only pull columns that are not entirely NA values
+  full_join(dataset_raw %>% #put the citation and dataset information together 
+              filter(dataset_name == datasetName) %>% #subset the dataset table
+              select(where(function(xx){!(is.na(xx))})),  #only pull columns that are not NA values entirely
+              suffix = c('_citation', '_dataset'))%>% #flag common columns that are not id columns between the two tables
+  standardCast() #go see index.Rmd for this function, mostly recasts the column to the right type
+
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) %>% #choosing only the Lu_Pima entries
+  mutate(`country (country)` = 'United States') %>% #assigning the country to United States
+  standardCast() %>% #assigning to appropriate class
+  filter(dataset_name_soc != 'ISCN SOC stock computation') #remove gapfilled values
+
+dataset_layer <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) %>% #choosing only the Lu_Pima entries
+  standardCast() %>% #assigning to appropriate class
+  mutate(`country (country)` = 'United States', #editting the ISCN SOC stock computation entries only
+         `soc (g cm-2)` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc (g cm-2)`, NA_real_),
+         `soc_carbon_flag` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_carbon_flag`, NA_character_),
+         `soc_method` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_method`, NA_character_)) %>% 
+  group_by(`dataset_name_sub`, `site_name`, `profile_name`, layer_name) %>%
+  fill(starts_with('soc')) %>% #choosing only the columns that begin with soc
+  filter(dataset_name_soc == 'ISCN SOC stock computation') %>% #narrowing from 69 to 25 objects, removing the ISCN no SOC stock computation columns
+  select(-dataset_name_soc)
+```
+
+#Tables
+
+The 'r datasetname' is located in Alaska, based out of the University of Alaska - Fairbanks on Black Spruce Pines.  
+
+```{r}
+#dataset_profile
+
+#creating a table from profile_raw
+dataset_profile %>% select_if(is.factor) %>%
+  summary() %>%
+  knitr::kable()
+
+#summary(dataset_profile %>% 
+#          select_if(is.factor))
+#summary(dataset_layer %>%
+#          select_if(is.factor))
+```
+
+``` {r}
+#dataset_layer
+
+#creating a table from layer_raw
+dataset_layer %>% select_if(is.factor) %>%
+  summary() %>%
+  knitr::kable()
+```
+
+```{r}
+#dataset_layer
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>% #creating a table of three columns only 
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>% #the three columns that will be in the table
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+```
+
+##Figures
+
+```{r viz_LP}
+
+#world map
+ggplot(data = map_data('world2') %>%
+            full_join(dataset_profile %>% 
+                     mutate(region = 
+                              tolower(`state (state_province)`), by = 'region') %>%
+                     group_by(region) %>% 
+                     tally)) + 
+  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
+               color = 'black') +
+  coord_fixed(1.3) + 
+  theme_nothing() 
+
+#map zooming in on alaska
+#TODO figure out how to map alaska
+#ggplot(data =  map_data('usa') %>% 
+#         filter(region %in% c("alaska"))) + 
+#  geom_polygon(aes(x=long, y = lat, group = group), 
+#              fill = 'grey', color = 'black') + 
+#  geom_point(data=dataset_profile, 
+#             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+#             shape = 'x', color = 'red') +
+#  coord_fixed(1.3) +
+#  theme_nothing() 
+
+#visuals on data from table
+ggplot(dataset_layer %>% 
+         standardCast() %>%
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+```
