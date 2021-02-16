@@ -1,0 +1,352 @@
+---
+title: "ISCN contributing datasets"
+author: "K Todd-Brown (ktoddbrown@ufl.edu)"
+site: bookdown::bookdown_site
+documentclass: book
+output:
+  bookdown::gitbook: default
+  #bookdown::pdf_book: default
+---
+
+<!-- This index.Rmd is the contributing datasets report out -->
+<!-- TODO figure out how to move this into data_reports without breaking docs -->
+<!-- Compile with the below command -->
+<!-- bookdown::render_book(input="index.Rmd", output_format = "bookdown::gitbook") -->  
+      #organizes so that every markdown is its own chapter
+
+# Introduction
+
+```{r setup}
+library(data.table)
+library(SOCDRaH2)
+library(tidyverse)
+library(lubridate)
+library(tibble)
+library(ggmap)
+library(maps)
+library(mapdata)
+library(vroom)
+
+#source('../R/makeKeys.R')
+#source('../R/ISCN3.R')
+
+```
+
+```{r readISCN}
+#ISCN_raw <- ISCN3(dataDir = '~/Documents/Datasets/ISCN', orginalFormat = TRUE)
+
+citation_raw <- read_delim('~/Desktop/2021Spring/Todd-Brown Lab/ISCN3/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
+
+dataset_raw <- read_delim('~/Desktop/2021Spring/Todd-Brown Lab/ISCN3/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
+
+layer_raw <- vroom::vroom('~/Desktop/2021Spring/Todd-Brown Lab/ISCN3/ISCN3_layer.csv', col_types = strrep('c', times = 95))
+
+profile_raw <-  vroom::vroom('~/Desktop/2021Spring/Todd-Brown Lab/ISCN3/ISCN3_profile.csv', col_types = strrep('c', times = 44))
+
+#when were ISCN SOC stocks caluclated?
+
+#temp <- unique(ISCN_raw$layer[,c('dataset_name_sub', 'dataset_name_soc')]) %>%
+#  mutate(value = TRUE) %>%
+#  pivot_wider(id_cols = 'dataset_name_sub', names_from='dataset_name_soc')
+
+#looking at temp, the dataset_name_soc doesnt' make any sense to us. So we are going dataset by dataset to reconstruct for ISCN4.
+
+#remove NRCS to be replaced with new database
+#as.data.frame(ISCN_raw$layer[dataset_name_sub != 'NRCS Sept/2014', -c('ISCN 1-1 (2015-12-10)')]) %>%
+layer_raw %>%
+  filter(dataset_name_sub != 'NRCS Sept/2014') %>%
+  select(-'ISCN 1-1 (2015-12-10)') %>%
+  group_by(dataset_name_sub) %>% 
+  tally() %>%
+  arrange(n)
+```
+
+```{r}
+
+type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
+                                "layer_top (cm)", "layer_bot (cm)",
+                                "oc (percent)", 'c_tot (percent)', 'loi (percent)',
+                                'bd_samp (g cm-3)',  'bd_tot (g cm-3)', 'bd_other (g cm-3)',
+                                'soc (g cm-2)', "soc_depth (cm)",
+                                'wpg2 (percent)',
+                                'caco3 (percent)',
+                                'sand_tot_psa (percent)', 'silt_tot_psa (percent)', 'clay_tot_psa (percent)', 
+                                'n_tot (percent)',
+                                'cat_exch (cmol H+ kg-1)',
+                                'ph_h2o', 'ph_cacl', 'ph_other',
+                                "13c (‰)", "14c (‰)", '15n (‰)',
+                                "elevation (m)", 
+                                "aspect_deg (degree)", "slope (percent)",
+                                 "thaw_depth_profile (cm)",
+                                'map (mm)', 'mat (°C)'), 
+                  factor_cols = c('dataset_name_sub', "datum (datum)", 
+                                  "country (country)", "state (state_province)",
+                                  "hzn", "hzn_desgn", 
+                                  "soil_series", 'color', 'soil_taxon',
+                                  'textureClass',
+                                  "profile_zero_ref (profile_zero_ref)", 
+                                  "ecoregion", "surface_veg",
+                                  'vegclass_local', 
+                                  'landform (landform)', 'landscape (landscape)', 
+                                  '2d_position (2d_position)', 
+                                  'drainagecl (drainage)',
+                                  'root_quant_size'), 
+                  date_cols = c("observation_date (YYYY-MM-DD)", 
+                                "modification_date (YYYY-MM-DD)"),
+                  char_cols = c("dataset_name", 
+                                'site_name', 'profile_name', 'layer_name',
+                                "curator_name", "curator_organization",
+                                "curator_email",
+                                "contact_name", "contact_email",
+                                "reference","dataset_description", 
+                                "c_method", 'soc_method','bd_method', 'ph_method', 'soc_carbon_flag',
+                                'wpg2_method',
+                                'site_note', 'landform_note', 'layer_note',
+                                "locator_parent_alias"),
+                  discard_cols = c("total_lcount", "carbon_lcount", "soc_lcount", "soc_lcount_ISCN",
+                                   "total_pcount", "soc_pcount",
+                                   'total_scount', 
+                                   'dataset_type (dataset_type)'),
+                  id_cols = c("dataset_name", 
+                              'site_name', 'profile_name', 'layer_name',
+                              'dataset_name_sub'))
+
+
+standardCast <- function(data){
+  return(data %>%
+           select(where(function(xx){!all(is.na(xx))})) %>%
+           mutate_at(intersect(c(type_cols$num_cols, type_cols$date_cols),
+                               names(.)), as.numeric) %>%
+           mutate_at(intersect(type_cols$factor_cols, names(.)), as.factor) %>%
+           mutate_at(intersect(type_cols$date_cols, names(.)), function(xx){
+             ##Both conditions will be run but things throw warnings for the wrong conditional... suppressing this function
+             suppressWarnings(
+               ans <- case_when(is.na(xx) ~ NA_Date_,
+                                as.numeric(xx) < 2020 ~ lubridate::ymd(paste0(xx, '-01-01')),
+                                as.numeric(xx) >= 2020 ~ lubridate::as_date(as.numeric(xx), 
+                                                              origin = lubridate::ymd('1899-12-31')),
+                                TRUE ~ NA_Date_)
+             )
+             return(ans)
+           }) %>%
+           select(-any_of(type_cols$discard_cols)))
+}
+```
+
+
+<!--chapter:end:index.Rmd-->
+
+# Heckman lithosequence
+
+ISCNv3 issues to resolve for ISCNv3.5
+
+  - Heckman lithosequence
+    + Country not set (clearly US)
+    + SOC measurements seem to be disconnected from the rest of the data at the layer and profile level
+   
+    
+```{r}
+datasetName <- 'Heckman lithosequence'
+
+dataset_study <- citation_raw %>% 
+  filter(dataset_name == datasetName) %>%
+  select(where(function(xx){!(is.na(xx))})) %>%
+  full_join(dataset_raw %>% 
+              filter(dataset_name == datasetName) %>%
+              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
+  standardCast()
+
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`country (country)` = 'United States') %>%
+  #assigning the country to United States
+  standardCast() %>% 
+  filter(dataset_name_soc != 'ISCN SOC stock computation') #remove gapfilled values
+
+dataset_layer <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast() %>%
+  mutate(`country (country)` = 'United States',
+         `soc (g cm-2)` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc (g cm-2)`, NA_real_),
+         `soc_carbon_flag` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_carbon_flag`, NA_character_),
+         `soc_method` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_method`, NA_character_)) %>% 
+  group_by(`dataset_name_sub`, `site_name`, `profile_name`, layer_name) %>%
+  fill(starts_with('soc')) %>%
+  filter(dataset_name_soc == 'ISCN SOC stock computation') %>%
+  select(-dataset_name_soc)
+
+#all_study <- bind_rows(dataset_study, all_study)
+#all_profile <- bind_rows(dataset_profile, all_profile)
+#all_layer <- bind_rows(dataset_layer, all_layer)
+```
+
+```{r}
+dataset_study
+summary(dataset_profile %>% select_if(is.factor))
+summary(dataset_layer %>% select_if(is.factor))
+
+ggplot(data =  map_data('state') %>%
+         full_join(dataset_profile %>% 
+                     mutate(region = 
+                              tolower(`state (state_province)`), by = 'region') %>%
+                     group_by(region) %>% 
+                     tally)) + 
+  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
+               color = 'black') +
+  coord_fixed(1.3) + 
+  theme_nothing() 
+
+ggplot(data =  map_data('state') %>% 
+         filter(region %in% c("arizona", "utah", "new mexico", "colorado"))) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data=dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  theme_nothing() 
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+ggplot(dataset_layer %>% 
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+```
+
+<!--chapter:end:data_reports/101_HeckmanLithosequence.Rmd-->
+
+---
+title: "103_LuPima"
+author: "Julie Bielecki"
+date: "2/2/2021"
+output: html_document
+---
+
+# Lu_PIMA
+
+  - Lu_PIMA
+    + modification date not consistent between citation & data set?
+    
+```{r subset_LP}
+datasetName <- 'Lu_PIMA'
+
+dataset_study <- citation_raw %>% 
+  filter(dataset_name == datasetName) %>%
+  select(where(function(xx){!(is.na(xx))})) %>%
+  full_join(dataset_raw %>% 
+              filter(dataset_name == datasetName) %>%
+              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
+  standardCast()
+
+#dataset_study <- full_join(ISCN_raw$citation[dataset_name == datasetName] %>% select_if(not_all_na),
+#                           ISCN_raw$dataset[dataset_name == datasetName] %>% select_if(not_all_na), 
+#                           suffix = c('_citation', '_dataset')) %>%
+#  standardCast() %>%
+#  select(-ends_with('ISCN')) %>% 
+#  group_by(dataset_name) %>%
+#  summarize(across(where(is.character), function(xx){unique(xx[grepl('\\w+', xx)])}))
+
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`country (country)` = 'United States') %>%
+  #assigning the country to United States
+  standardCast() %>% 
+  filter(dataset_name_soc != 'ISCN SOC stock computation') #remove gapfilled values
+
+#dataset_profile <- noNRCS_ISCN3_profile  %>%
+#  filter(dataset_name_sub == datasetName) %>%
+#  mutate(`thaw_depth_profile (cm)` = 
+#           gsub('none', 'Inf', `thaw_depth_profile (cm)`)) %>%
+#  standardCast() %>%
+#  rename(dataset_name = 'dataset_name_sub') %>%
+#  select(`dataset_name`, `site_name`, `profile_name`, 
+#         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+#         `state (state_province)`, `country (country)`, 
+#         `observation_date (YYYY-MM-DD)`, 
+#         `profile_zero_ref (profile_zero_ref)`, 
+#         #`layer_top (cm)`, `layer_bot (cm)`, `soc_depth (cm)`, 
+#         `elevation (m)`, 
+#         `ecoregion`, `vegclass_local`, 
+#         `landform (landform)`, `2d_position (2d_position)`, 
+#         `aspect_deg (degree)`, `slope (percent)`, 
+#         `drainagecl (drainage)`, `thaw_depth_profile (cm)`,
+#         `site_note`)
+
+dataset_layer <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast() %>%
+  mutate(`country (country)` = 'United States',
+         `soc (g cm-2)` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc (g cm-2)`, NA_real_),
+         `soc_carbon_flag` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_carbon_flag`, NA_character_),
+         `soc_method` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_method`, NA_character_)) %>% 
+  group_by(`dataset_name_sub`, `site_name`, `profile_name`, layer_name) %>%
+  fill(starts_with('soc')) %>%
+  filter(dataset_name_soc == 'ISCN SOC stock computation') %>%
+  select(-dataset_name_soc)
+
+#dataset_layer <- noNRCS_ISCN3_layer %>%
+#  filter(dataset_name_sub == datasetName) %>%
+#  standardCast() %>% 
+#  rename(dataset_name = 'dataset_name_sub') %>%
+#  select(`dataset_name`, `site_name`, `profile_name`, `layer_name`,
+#         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+         #`state (state_province)`, `country (country)`,  `observation_date (YYYY-MM-DD)`,  `vegclass_local`, 
+#         `layer_top (cm)`, `layer_bot (cm)`, 
+#         `hzn`, `hzn_desgn`, `color`, 
+#         `bd_samp (g cm-3)`, `c_tot (percent)`, `n_tot (percent)`, 
+#         `ph_h2o`, `sand_tot_psa (percent)`, 
+#         `silt_tot_psa (percent)`, `clay_tot_psa (percent)`, 
+#         `wpg2 (percent)`, `root_quant_size`)
+  
+#all_study <- bind_rows(dataset_study, all_study)
+#all_profile <- bind_rows(dataset_profile, all_profile)
+#all_layer <- bind_rows(dataset_layer, all_layer)
+```
+
+```{r viz_LP}
+
+ggplot(data =  map_data('world') %>%
+         filter(region %in% c('Canada', 'USA', 'Mexico'))) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data=dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  xlim(-180, -50) +
+  theme_nothing() 
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+ggplot(dataset_layer %>% 
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = `bd_samp (g cm-3)`:`wpg2 (percent)`, 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+
+```
+
+<!--chapter:end:data_reports/103_LuPima.Rmd-->
+
