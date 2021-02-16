@@ -1,9 +1,5 @@
 # Heckman/Swanston Biscuit Burn
 
-In this section, we will pull out the `Heckman/Swanston Biscuit Burn` from ISCN3 and clean it.
-This dataset requires the country to be set to US.
-We also remove the ISCN SOC stock computation, reducing the duplicated data entries.
-
 ```{r subset_HSBB}
 ## set the dataset name gotten from 
 #unique(layer_raw$dataset_name_sub)
@@ -37,34 +33,68 @@ dataset_profile <- profile_raw  %>%
 ## subset the layer and dataset description tables and merge them into a study table
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>% #pull out info for only this dataset
-  mutate(`country (country)` = 'United States') %>% #hardcode country to correct one with desired format
-  standardCast() %>% #run this through function standardCast()
+    standardCast() %>% 
+  mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
   rename(dataset_name = 'dataset_name_sub') %>% #changing to more user-friendly name
   select(dataset_name, `site_name`, `profile_name`, layer_name,
          `lat (dec. deg)`, `long (dec. deg)`, 
          `layer_top (cm)`, `layer_bot (cm)`,
          `hzn`, `hzn_desgn`,
          `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`) #select values to be included in later graphs/tables
-  
-all_study <- dataset_study
-all_profile <- dataset_profile
-all_layer <- dataset_layer
-#setdiff(c(names(dataset_study), names(dataset_profile), names(dataset_layer)), unlist(type_cols))
-```
-
-## Tables
-
-The 'r datasetName' is located in the Cascade Range in Oregon, USA, the top of the profile is the zero reference, profiles are drawn from one of six soil series', profiles are split between having mixed conifer/hardwood to no surface vegetation (see below).
-
-```{r}
-#dataset_study
-dataset_profile %>% select_if(is.factor) %>% #pull data from profile of this dataset
-  summary() %>% #produces result summary
-  knitr::kable() #create a table of these values
 ```
 
 
+The `Heckman/Swanston Biscuit Burn` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+This data set compared data for burned and unburned soils at the site of the 2002 Biscuit Fire.
+In ISCN3, the country was not set to United States despite the location of the collected data being identified as the state of Oregon. ISCN3.5 now identifies this as `'United States'`.
+ISCN3 filled soil carbon stock computations that created duplicated data entries, which were then removed in ISCN3.5.
+
+```{r message=FALSE, warning=FALSE}
+knitr::kable(t(dataset_study))
+```
+
+
+There are the following factors in the profile:
 ```{r}
+knitr::kable(summary(dataset_profile %>% select_if(is.factor)))
+```
+
+And the following factors in the layers:
+```{r}
+knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
+```
+
+
+## Location
+
+```{r}
+##using location data to display what state/region of the United States was sampled
+ggplot(data =  map_data('state') %>%  #identifying Oregon as state of interest in this data set
+         full_join(dataset_profile %>% 
+                     mutate(region = 
+                              tolower(`state (state_province)`), by = 'region') %>%
+                     group_by(region) %>% 
+                     tally, by='region')) + #making state of interest a different color than the rest
+  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
+               color = 'black') + #making map outline black
+  coord_fixed(1.3) + #fixing ratio  between y and x axes
+  theme_nothing() #makes blank ggplot theme
+
+##using location data to plot sites on a state map
+ggplot(data =  map_data('state') %>% #pull out relevant info, found in state column
+         filter(region %in% c("oregon", "washington"))) + # selecting which states to include on second map
+  geom_polygon(aes(x=long, y = lat, group = group), # creating the shape of the map; ‘group’ connects adjacent points with lines to outline shape
+               fill = 'grey', color = 'black') +  
+  geom_point(data=dataset_profile, # creating scatter plot of latitudes and longitudes from dataset_profile 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`), #assigning latitude and longitude to respective axes
+             shape = 'x', color = 'red') + # locations will be marked by red x
+  coord_fixed(1.3) + #fixing ratio  between y and x axes
+  theme_nothing() 
+```
+
+
+```{r eval=FALSE}
+#this is useful to see for the analysis but we don't want it in the report
 #create a table that displays the names of the number and factor columns in the dataset, how many values there are in each, and how many unique values there are
 dataset_layer %>% #pipe dataset_layer
   pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>% #pivot the names of columns from dataset_layer with number values into a column called names and the values associated with the column into a column called values (All NA values are dropped)
@@ -77,44 +107,33 @@ dataset_layer %>% #pipe dataset_layer
   knitr::kable() #create the table
 ```
 
-```{r viz_HSBB}
-dataset_study
-summary(dataset_profile %>% select_if(is.factor))
-summary(dataset_layer %>% select_if(is.factor))
-ggplot(data =  map_data('state') %>%
-         full_join(dataset_profile %>% 
-                     mutate(region = 
-                              tolower(`state (state_province)`), by = 'region') %>%
-                     group_by(region) %>% 
-                     tally)) + 
-  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
-               color = 'black') +
-  coord_fixed(1.3) + 
-  theme_nothing() 
-##using location data to plot sites on a state map
-ggplot(data =  map_data('state') %>% #pull out relevant info, found in state column
-         filter(region %in% c("oregon", "washington"))) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data=dataset_profile, 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
-  theme_nothing() 
-dataset_layer %>%
-  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
-  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
-  bind_rows(
-    dataset_layer %>%
-      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
-      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
-  arrange(n) %>%
-  knitr::kable()
+## Profile histograms
+
+```{r}
+##using profile data to create a histogram for each measured variable in this data set
+ggplot(dataset_profile %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), #selecting what columns to pull
+                      values_to = 'measurement', names_to = 'type')) + #naming x values and the variables to make histograms of
+  geom_histogram(aes(x=measurement)) +  #setting x and y axes
+  facet_wrap(~type, scales='free') +
+  theme_bw() #using a compatible theme with histogram function
+```
+
+## Depth plots
+
+```{r}
+##using layer data to create a plot for each measured variable at corresponding depths in this data set
 ggplot(dataset_layer %>% 
          pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
-                       values_to='depth') %>%
+                       values_to='depth') %>% 
          pivot_longer(cols = c(`oc (percent)`,`13c (‰)`, `14c (‰)`), 
-                      values_to = 'measurement', names_to = 'type')) +
-  geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+                      values_to = 'measurement', names_to = 'type')) + #naming x values and the variables to make plots of
+  geom_line(aes(x=depth, y= measurement, group = profile_name)) + # assigning x and y axis names
   facet_wrap(~type, scales='free')
 ```
+
+## TODO
+
+-Follow up with Heckman to see if control at same lat/lon as Burn 7
+-Follow up with Heckman about curator name discrepancy (101 says Kate but this document, 102, says Katherine)
+-Determine if table in line 64 is necessary
