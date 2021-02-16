@@ -1,7 +1,7 @@
-# Heckman lithosequence
+# Worldwide soil carbon and nitrogen data
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- 'Heckman lithosequence'
+datasetName <- "Worldwide soil carbon and nitrogen data"
 
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>%
@@ -14,37 +14,31 @@ dataset_study <- citation_raw %>%
 #comparison for pre ISCN soc stock correction
 # dataset_profile_temp <- profile_raw  %>%
 #   filter(dataset_name_sub == datasetName) %>%
-#   mutate(`country (country)` = 'United States') %>%
 #   standardCast()
 
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>%
-  mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
   standardCast() %>% #comment out pipe here and take a look at the profile information to figure out how to remove ISCN soc computations
-  filter(dataset_name_soc != 'ISCN SOC stock computation') %>% #in this case just remove the whole row, no other data is lost
-  select(where(function(xx){!all(is.na(xx))})) #remove the extra soc column lingering from ISCN soc computation
+  filter(dataset_name_soc == datasetName) %>% #in this case just remove the whole row, no other data is lost
+  select(where(function(xx){!all(is.na(xx))})) %>% #remove the extra soc column lingering from ISCN soc computation
+  select(-dataset_name_soc)
 
 #comparison before SOC correction
 # dataset_layer_temp <- layer_raw %>%
 #   filter(dataset_name_sub == datasetName) %>%
-#   standardCast() %>%
-#   mutate(`country (country)` = 'United States')
+#   standardCast()
 
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>%
   standardCast() %>%
-  mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
-  mutate(dataset_name_soc = recode(dataset_name_soc, 'ISCN SOC stock computation' = '_ISCN SOC stock computation')) %>% #recode ISCN so that when we sort it it's on top to fill in the values (see next two lines of code)
-  arrange(dataset_name_sub, site_name, profile_name, layer_name, dataset_name_soc) %>% #sort the rows for the fill on the next line
-  tidyr::fill(-starts_with('soc'), .direction='down') %>% #fill in the data that was not repeated for the rows not associated with ISCN SOC computations; be careful when reusing this code that you have the right direction set for the fill!
-  filter(dataset_name_soc != '_ISCN SOC stock computation') %>% #remove the ISCN SOC stocks
+  select(-starts_with('soc')) %>% #all dataset_name_soc values are ISCN soc stock computation flags
   select(-dataset_name_soc) %>% #we don't care about the flag any more
   select(where(function(xx){!all(is.na(xx))}))
+
 ```
 
-The `Heckman lithosequence` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
-In ISCN3 the country was not set to United states originally dispite the state being identified as Arizona, ISCN3.5 now identifies this as `'United States'`.
-ISCN3 also filled in the soil carbon stocks where bulk density and organic carbon was provided, this was removed for ISCN3.5.
+The `Worldwide soil carbon and nitrogen data` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+ISCN3 all of the soil carbon stocks where bulk density and organic carbon were calculated by ISCN and thus these columns were removed for ISCN3.5.
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
@@ -66,26 +60,26 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 ## Location
 
 ```{r}
-ggplot(data =  map_data('state') %>%
-         full_join(dataset_profile %>% 
-                     mutate(region = 
-                              tolower(`state (state_province)`), by = 'region') %>%
-                     group_by(region) %>% 
-                     tally, by='region')) + 
-  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
-               color = 'black') +
-  coord_fixed(1.3) + 
-  theme_nothing() 
 
-ggplot(data =  map_data('state') %>% 
-         filter(region %in% c("arizona", "utah", "new mexico", "colorado"))) + 
+ggplot(data =  map_data("world")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
-  geom_point(data=dataset_profile, 
+  geom_point(data= dataset_profile, 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
              shape = 'x', color = 'red') +
   coord_fixed(1.3) +
-  theme_nothing() 
+  theme_nothing() +
+  labs(title = 'Profile data')
+
+ggplot(data =  map_data("world")) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  theme_nothing() +
+  labs(title = 'Layer data')
 
 ```
 
@@ -101,8 +95,6 @@ dataset_layer %>%
   arrange(n) %>%
   knitr::kable()
 ```
-
-
 
 ## Profile histograms
 
@@ -123,14 +115,15 @@ ggplot(dataset_layer %>%
                        values_to='depth') %>%
          pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
                       values_to = 'measurement', names_to = 'type')) +
-         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
-  facet_wrap(~type, scales='free')
+         geom_line(aes(x=depth, y= measurement, group = profile_name), alpha = 0.5) +
+  facet_wrap(~type, scales='free') +
+  theme_bw()
 ```
 
 ## TODO
 
-- Follow up with Heckman to get key for `root_quant_size` and `color`.
+- download and re-ingest from 10.3334/CDIAC/lue.ndp018
 
 ## Citations
 
-Please see @Heckman2009 for additional details and if you are using ISCN3 please cite.
+Please see @Zinke1986 for additional details and if you are using ISCN3 please cite.
