@@ -22,11 +22,16 @@ library(mapdata)
 ```
 
 ```{r readISCN, cache=TRUE}
-ISCN_raw <- ISCN3(dataDir = '~/Documents/Datasets/ISCN', orginalFormat = TRUE)
+#ISCN_raw <- ISCN3(dataDir = '~/Documents/Datasets/ISCN', orginalFormat = TRUE)
 
-layer_raw <- vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
+#layer_raw <- vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
 
-profile_raw <-  vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
+#profile_raw <-  vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
+
+citation_raw <- read_delim('ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', times = 12))
+dataset_raw <- read_delim('ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', times = 19))
+layer_raw <- vroom::vroom('ISCN/ISCN3_layer.csv', col_types = strrep('c', times = 95))
+profile_raw <-  vroom::vroom('ISCN/ISCN3_profile.csv', col_types = strrep('c', times = 44))
 
 #when were ISCN SOC stocks caluclated?
 
@@ -38,12 +43,12 @@ profile_raw <-  vroom::vroom('~/Documents/Datasets/ISCN/ISCN3_profile.csv', col_
 
 #remove NRCS to be replaced with new database
 #as.data.frame(ISCN_raw$layer[dataset_name_sub != 'NRCS Sept/2014', -c('ISCN 1-1 (2015-12-10)')]) %>%
-layer_raw %>%
-  filter(dataset_name_sub != 'NRCS Sept/2014') %>%
-  select(-'ISCN 1-1 (2015-12-10)') %>%
-  group_by(dataset_name_sub) %>% 
-  tally() %>% 
-  arrange(n)
+#layer_raw %>%
+  #filter(dataset_name_sub != 'NRCS Sept/2014') %>%
+ # select(-'ISCN 1-1 (2015-12-10)') %>%
+  #group_by(dataset_name_sub) %>% 
+#  tally() %>% 
+  #arrange(n)
 ```
 
 ```{r stripCalcISCN, cache=TRUE}
@@ -294,10 +299,38 @@ reduceOneOffs <- function(xx){
 ```{r subset_HSBB}
 datasetName <- 'Heckman/Swanston Biscuit Burn'
 
-dataset_study <- full_join(ISCN_raw$citation[dataset_name == datasetName] %>% select_if(not_all_na),
-                           ISCN_raw$dataset[dataset_name == datasetName] %>% select_if(not_all_na), 
-                           suffix = c('_citation', '_dataset')) %>%
+dataset_study <- citation_raw %>% 
+  filter(dataset_name == datasetName) %>%
+  select(where(function(xx){!(is.na(xx))})) %>%
+  full_join(dataset_raw %>% 
+              filter(dataset_name == datasetName) %>%
+              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
+
+noNRCS_ISCN3_profile <- profile_raw%>%
+  as.data.frame() %>%
+  filter(dataset_name_sub != 'NRCS Sept/2014' & dataset_name_sub != ('ISCN 1-1 (2015-12-10)')) %>%
+   mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
+                                  as.character(NA), `soc (g cm-2)`),
+    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
+                                as.character(NA), `soc_carbon_flag`),
+    `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
+                           as.character(NA), `soc_method`)) %>%
+  select(-dataset_name_soc)%>% #column now redundent with dataset_name_sub
+  select_if(not_all_na)
+
+noNRCS_ISCN3_layer <- layer_raw%>%
+  as.data.frame() %>%
+  filter(dataset_name_sub != 'NRCS Sept/2014' & dataset_name_sub != ('ISCN 1-1 (2015-12-10)')) %>%
+   mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc), 
+                                  as.character(NA), `soc (g cm-2)`),
+    `soc_carbon_flag` = if_else(grepl('ISCN', dataset_name_soc),
+                                as.character(NA), `soc_carbon_flag`),
+    `soc_method` = if_else(grepl('ISCN', dataset_name_soc), 
+                           as.character(NA), `soc_method`)) %>%
+  select(-dataset_name_soc)%>% #column now redundent with dataset_name_sub
+  select_if(not_all_na)
+  
 
 dataset_profile <- noNRCS_ISCN3_profile  %>%
   filter(dataset_name_sub == datasetName) %>%
