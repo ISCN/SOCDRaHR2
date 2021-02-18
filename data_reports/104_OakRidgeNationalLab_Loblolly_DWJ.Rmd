@@ -1,4 +1,4 @@
-#Oak Ridge National Lab_Loblolly_DWJ
+Oak Ridge National Lab_Loblolly_DWJ
 
 In this section, we will pull out the `Oak Ridge National Lab_Loblolly_DWJ` from ISCN3 and clean it up.
 This dataset requires the country to be set to US. Additionally, the hzn in layer and profile needs to be reset to "NA" when the symbol "?" is present.
@@ -30,7 +30,7 @@ dataset_profile <- profile_raw %>%
   standardCast() %>%
   filter(dataset_name_soc != 'ISCN SOC stock computation') #remove gapfilled values
 
-dataset_layer <- layer_raw %>% 
+dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>% #pull out info from desired dataset
   standardCast() %>%
  mutate(`country (country)` = 'United States', #set country name to United States
@@ -38,7 +38,6 @@ dataset_layer <- layer_raw %>%
            hzn == "?" ~ NA_character_,
            TRUE ~ as.character(hzn)
            ), #replace '?' in hzn with 'NA'
-         #`bd_tot (g cm-3)` = if_else(bd_method != 'gap-filled value from re-measurement of same plot in 2000', `bd_tot (g cm-3)`, NA_real_), #changing values in "bd_tot (g cm-3)" when row contains "gap-filled value from re-measurement of same plot in 2000"
          `soc (g cm-2)` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc (g cm-2)`, NA_real_), #changing values in column "soc (g cm-2)" for if a row in "dataset_name_soc" contains "ISCN"....
          `soc_carbon_flag` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_carbon_flag`, NA_character_), #changing values in "soc_carbon_flag" when row contains "ISCN"
          `soc_method` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_method`, NA_character_)) %>% #changing values in "soc_method" when row contains "ISCN"
@@ -114,7 +113,6 @@ dataset_layer %>%
   arrange(n) %>%
   knitr::kable()
 
-##need to remove soc graph and lat long graphs
 #plots graphs
 ggplot(dataset_layer %>% 
          pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'), #pivot data into long table format, specifies column names
@@ -126,5 +124,8 @@ ggplot(dataset_layer %>%
 ```
 
 #Need to Do 
-- Delete line 41-42
 -reformat graphs and rest of document
+
+## Citations
+
+Please see @Parr2006 for additional details and if you are using ISCN3 please cite.
