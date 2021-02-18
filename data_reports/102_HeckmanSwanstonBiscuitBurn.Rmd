@@ -24,13 +24,7 @@ dataset_profile <- profile_raw  %>%
   mutate(`country (country)` = 'United States') %>% #hardcode country to correct one
   standardCast() %>% #recasting column to character type
   rename(dataset_name = 'dataset_name_sub') %>% #simplifying column name
-  select(dataset_name, `site_name`, `profile_name`,
-         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`,
-         `profile_zero_ref (profile_zero_ref)`,
-         `state (state_province)`, `country (country)`, 
-         `observation_date (YYYY-MM-DD)`, 
-         `soil_series`,`ecoregion`, `surface_veg`,
-         `elevation (m)`,  `aspect_deg (degree)`, `slope (percent)`) #selecting columns that will be used to create maps when called later
+  select(-dataset_name_soc, -starts_with('soc')) #removing ISCN flags that say nothing was done for the SOC fill
 
 ## subset the layer and dataset description tables and merge them into a study table
 dataset_layer <- layer_raw %>%
@@ -38,11 +32,7 @@ dataset_layer <- layer_raw %>%
     standardCast() %>% 
   mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
   rename(dataset_name = 'dataset_name_sub') %>% #changing to more user-friendly name
-  select(dataset_name, `site_name`, `profile_name`, layer_name,
-         `lat (dec. deg)`, `long (dec. deg)`, 
-         `layer_top (cm)`, `layer_bot (cm)`,
-         `hzn`, `hzn_desgn`,
-         `c_method`, `oc (percent)`, `13c (‰)`, `14c (‰)`) #select values to be included in later graphs/tables
+  select(-dataset_name_soc, -starts_with('soc')) #removing ISCN flags that say nothing was done for the SOC fill
 ```
 
 
