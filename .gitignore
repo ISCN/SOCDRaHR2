@@ -18,10 +18,5 @@ temp/*
 #Ignore key templates
 *.numbers
 
-<<<<<<< HEAD
 #set index.rmd to be ignored for data dir issues
 index.rmd
-=======
-#set index.rm to be ignored for data dir issues
-index.Rmd
->>>>>>> bdb15c30c9c8f66eb4ad44d35b0fa202b786f185
