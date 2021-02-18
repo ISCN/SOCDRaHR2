@@ -1,13 +1,13 @@
-# Oak Ridge National Lab_Loblolly_DWJ
+#Oak Ridge National Lab_Loblolly_DWJ
 
-#In this section, we will pull out the `Oak Ridge National Lab_Loblolly_DWJ` from ISCN3 and clean it up.
-#This dataset requires the country to be set to US. Additionally, the hzn in layer and profile needs to be reset to "NA" when the symbol "?" is present.
-#In addition, gapfilled bd with sampling was set to "NA" based on method noted.
-#ISCN SOC stock computation's were removed reducing the duplicated data entries.
-#Dataset reference noted in a cryptic message, needs to be formly cited using bibtext. (https://doi.org/10.2172/921773)
+In this section, we will pull out the `Oak Ridge National Lab_Loblolly_DWJ` from ISCN3 and clean it up.
+This dataset requires the country to be set to US. Additionally, the hzn in layer and profile needs to be reset to "NA" when the symbol "?" is present.
+In addition, gapfilled bd with sampling was set to "NA" based on method noted.
+ISCN SOC stock computation's were removed reducing the duplicated data entries.
+Dataset reference noted in a cryptic message, needs to be formly cited using bibtext. (https://doi.org/10.2172/921773)
    
     
-```{r}
+```{r message=FALSE, warning=FALSE} 
 
 ## set the raw dataset to a variable
 datasetName <- 'Oak Ridge National Lab_Loblolly_DWJ'
@@ -38,7 +38,7 @@ dataset_layer <- layer_raw %>%
            hzn == "?" ~ NA_character_,
            TRUE ~ as.character(hzn)
            ), #replace '?' in hzn with 'NA'
-         `bd_tot (g cm-3)` = if_else(bd_method != 'gap-filled value from re-measurement of same plot in 2000', `bd_tot (g cm-3)`, NA_real_), #changing values in "bd_tot (g cm-3)" when row contains "gap-filled value from re-measurement of same plot in 2000"
+         #`bd_tot (g cm-3)` = if_else(bd_method != 'gap-filled value from re-measurement of same plot in 2000', `bd_tot (g cm-3)`, NA_real_), #changing values in "bd_tot (g cm-3)" when row contains "gap-filled value from re-measurement of same plot in 2000"
          `soc (g cm-2)` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc (g cm-2)`, NA_real_), #changing values in column "soc (g cm-2)" for if a row in "dataset_name_soc" contains "ISCN"....
          `soc_carbon_flag` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_carbon_flag`, NA_character_), #changing values in "soc_carbon_flag" when row contains "ISCN"
          `soc_method` = if_else(dataset_name_soc != 'ISCN SOC stock computation', `soc_method`, NA_character_)) %>% #changing values in "soc_method" when row contains "ISCN"
@@ -50,28 +50,45 @@ dataset_layer <- layer_raw %>%
 
 ```
 
-#Creates a map of the United States and highlights state where latitude and longitude locations are found.
+
+
+```{r message=FALSE, warning=FALSE} 
+
+knitr::kable(t(dataset_study))
+```
+
+
+There are the following factors in the profile:
 
 ```{r}
+knitr::kable(summary(dataset_profile %>% select_if(is.factor)))
+```
+
+And the following factors in the layers:
+```{r}
+knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
+```
+
+
+#Location
+Creates a map showing the location of sample taking within specificed state(s) and map of specified state(s) on a United States map.
+
+```{r message=FALSE, warning=FALSE} 
+
 dataset_study 
 summary(dataset_profile %>% select_if(is.factor)) #selecting data of type factor
 summary(dataset_layer %>% select_if(is.factor)) #selecting data of type factor
 
 ggplot(data =  map_data('state') %>% #specifies map data
          full_join(dataset_profile %>% #selects states the lat/long points are located in by using data_profile data
-                     mutate(region = 
-                              tolower(`state (state_province)`), by = 'region') %>%
+                     mutate(region = tolower(`state (state_province)`), by = 'region') %>%
                      group_by(region) %>% 
                      tally)) + 
   geom_polygon(aes(x=long, y = lat, group=group, fill = n), #sets attributes/visualization of states on map
                color = 'black') +
   coord_fixed(1.3) + #sets scale for coordinates, making them visible by increasing ratio
   theme_nothing() #sets ggplot theme
-```
 
-#Creates a map showing the location of sample taking within specificed state(s).
-
-```{r}
 ggplot(data =  map_data('state') %>% #selects map data
          filter(region %in% c("tennessee"))) + #filters out the state(s) to be represented 
   geom_polygon(aes(x=long, y = lat, group = group), #defines attributes of state outline/visualization
@@ -82,10 +99,10 @@ ggplot(data =  map_data('state') %>% #selects map data
   coord_fixed(1.3) + #sets scale for coordinates, making them visible by increasing ratio
   theme_nothing() #sets ggplot theme
 ```
+#Graphs
+Graphs dataset_layer data
 
-#Graphs dataset_layer data
-
-```{r}
+```{r message=FALSE, warning=FALSE} 
 #Creates long table of the unique features in dataset_layer
 dataset_layer %>% 
   pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>% 
@@ -107,3 +124,7 @@ ggplot(dataset_layer %>%
          geom_line(aes(x=depth, y= measurement, group = profile_name)) + #set attributes for graphs
   facet_wrap(~type, scales='free') #Wrap a 1d ribbon of panels into 2d
 ```
+
+#Need to Do 
+- Delete line 41-42
+-reformat graphs and rest of document
