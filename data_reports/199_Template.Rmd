@@ -6,10 +6,10 @@ datasetName <- "Jorgensen_NPS" #fix this
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>%
-  select(where(function(xx){!(is.na(xx))})) %>%
+  select(where(function(xx){!all(is.na(xx))})) %>%
   full_join(dataset_raw %>% 
               filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
+              select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
 ```
 
