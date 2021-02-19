@@ -48,8 +48,8 @@ dataset_profile <- select(dataset_profile, -dataset_name_soc)
 if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
   #if the rows are duplicated then fill in missing values by group
   dataset_profile <- dataset_profile %>%
-    group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
-    mutate_at(vars(-group_cols(), -'dataset_name_soc'), 
+    group_by(dataset_name_sub, site_name, profile_name) %>%
+    mutate_at(vars(-group_cols()), 
               function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
     ungroup() %>%
     unique() #collapase rows that are non-unique
@@ -90,7 +90,7 @@ if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_nam
   #if the rows are duplicated then fill in missing values by group
   dataset_layer <- dataset_layer %>%
     group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
-    mutate_at(vars(-group_cols(), -'dataset_name_soc'), 
+    mutate_at(vars(-group_cols()), 
               function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
     ungroup() %>%
     unique() #collapase rows that are non-unique
