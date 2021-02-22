@@ -1,10 +1,3 @@
----
-title: "103_LuPima"
-author: "Julie Bielecki"
-date: "2/2/2021"
-output: html_document
----
-
 # Lu_PIMA
 
 In this section, we will pull out the 'Lu_Pima' from ISCN3 and clean it.
@@ -37,6 +30,16 @@ dataset_study <- dateRounded %>%
               suffix = c('_citation', '_dataset'))%>% #flag common columns that are not id columns between the two tables
   standardCast() #go see index.Rmd for this function, mostly recasts the column to the right type
 
+#dataset_profile <- profile_raw  %>%
+#  filter(dataset_name_sub == datasetName)
+#sort profile name to find duplicates
+#check for duplicates and remove soc calculations, method, spatial flag (anything that starts with soc) then apply unique to get rid of duplicates
+
+#dataset_layer <- layer_raw %>%
+#  filter(dataset_name_sub == datasetName)
+#sort layer name and see if there are any duplicates
+#remove soc columns
+
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>% #choosing only the Lu_Pima entries
   mutate(`country (country)` = 'United States') %>% #assigning the country to United States
@@ -56,7 +59,7 @@ dataset_layer <- layer_raw %>%
   select(-dataset_name_soc)
 ```
 
-#Tables
+# Tables
 
 The 'r datasetname' is located in Alaska, based out of the University of Alaska - Fairbanks on Black Spruce Pines.  
 
@@ -99,7 +102,7 @@ dataset_layer %>%
 
 ##Figures
 
-```{r viz_LP}
+```{r}
 
 #world map
 ggplot(data = map_data('world2') %>%
@@ -113,6 +116,7 @@ ggplot(data = map_data('world2') %>%
   coord_fixed(1.3) + 
   theme_nothing() 
 
+#point geometry on the world
 #map zooming in on alaska
 #TODO figure out how to map alaska
 #ggplot(data =  map_data('usa') %>% 
@@ -135,3 +139,6 @@ ggplot(dataset_layer %>%
          geom_line(aes(x=depth, y= measurement, group = profile_name)) +
   facet_wrap(~type, scales='free')
 ```
+
+## Citations
+Please see @Ping2010 for additional details and if you are using ISCN3 please cite.
