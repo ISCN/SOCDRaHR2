@@ -30,7 +30,7 @@ dataset_profile <- profile_raw %>%
   standardCast() %>%
   filter(dataset_name_soc != 'ISCN SOC stock computation') #remove gapfilled values
 
-dataset_layer <- layer_raw %>% 
+dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>% #pull out info from desired dataset
   standardCast() %>%
  mutate(`country (country)` = 'United States', #set country name to United States
