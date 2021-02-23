@@ -131,7 +131,8 @@ ggplot(data =  map_data("world")) +
              shape = 'x', color = 'red') +
   coord_fixed(1.3) +
   theme_nothing() +
-  labs(title = 'Profile data')
+  labs(title = 'Profile data') #+
+  #coord_map("ortho", orientation = c(90, 0, 0))
 
 ggplot(data =  map_data("world")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
