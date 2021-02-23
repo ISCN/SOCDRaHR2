@@ -10,5 +10,7 @@ dataset_name | citation
 `Worldwide soil carbon and nitrogen data` | @Zinke1986
 `USGS_S3C` | @Buell2004
 `Northern Circumpolar Soil Carbon Database` | @Hugelius2013
+`Oak Rigdge Reservation Physical Characteristics and Natural Resources` | @Parr2006
+`UMBS_FASET` | unpublished
 
 ## All references

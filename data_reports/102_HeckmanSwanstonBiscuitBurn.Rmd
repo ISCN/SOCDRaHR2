@@ -1,38 +1,45 @@
 # Heckman/Swanston Biscuit Burn
 
-```{r}
-## set the dataset name gotten from 
-#unique(layer_raw$dataset_name_sub)
-
+```{r warning=FALSE, message=FALSE}
 datasetName <- 'Heckman/Swanston Biscuit Burn'
 
-## subset the citation and dataset description tables and merge them into a study table
-
+##### Extract the study information ####
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>% #pull out the info on the dataset we want here
   select(where(function(xx){!all(is.na(xx))})) %>% #pull out columns where values are not all "NA"
-  full_join( #put the the citation and the dataset information together
+  full_join( #put the citation and the dataset information together
     dataset_raw %>%
               filter(dataset_name == datasetName) %>% #subset the dataset table
-              select(where(function(xx){!all(is.na(xx))})), #only pull columns that are not enitrely NA values
-    suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the id columns between the two tables
+              select(where(function(xx){!all(is.na(xx))})), #only pull columns that are not entirely NA values
+    suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the ID columns between the two tables
   standardCast() #go see index.Rmd for this function, mostly recasts the column to the right types
 
 ## subset the profile and dataset description tables and merge them into a study table
+```
+
+```{r warning=FALSE, message=FALSE}
+##### Extract the profile information ####
+
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>% #pull out the info on the dataset we want here
-  mutate(`country (country)` = 'United States') %>% #hardcode country to correct one
+  mutate(`country (country)` = 'United States') %>% #state is identified so hardcoding country from "unknown" to U.S.
   standardCast() %>% #recasting column to character type
   rename(dataset_name = 'dataset_name_sub') %>% #simplifying column name
   select(-dataset_name_soc, -starts_with('soc')) #removing ISCN flags that say nothing was done for the SOC fill
 
 ## subset the layer and dataset description tables and merge them into a study table
+```
+
+```{r warning=FALSE, message=FALSE}        
+##### Extract the layer information ####
+
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>% #pull out info for only this dataset
     standardCast() %>% 
-  mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
+  mutate(`country (country)` = 'United States') %>% #hardcode country to correct one
   rename(dataset_name = 'dataset_name_sub') %>% #changing to more user-friendly name
   select(-dataset_name_soc, -starts_with('soc')) #removing ISCN flags that say nothing was done for the SOC fill
+
 ```
 
 
@@ -41,7 +48,7 @@ This data set compared data for burned and unburned soils at the site of the 200
 In ISCN3, the country was not set to United States despite the location of the collected data being identified as the state of Oregon. ISCN3.5 now identifies this as `'United States'`.
 ISCN3 filled soil carbon stock computations that created duplicated data entries, which were then removed in ISCN3.5.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
 ```
 
@@ -60,6 +67,7 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 ## Location
 
 ```{r}
+
 ##using location data to display what state/region of the United States was sampled
 ggplot(data =  map_data('state') %>%  #identifying Oregon as state of interest in this data set
          full_join(dataset_profile %>% 
@@ -70,18 +78,21 @@ ggplot(data =  map_data('state') %>%  #identifying Oregon as state of interest i
   geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
                color = 'black') + #making map outline black
   coord_fixed(1.3) + #fixing ratio  between y and x axes
-  theme_nothing() #makes blank ggplot theme
+  theme_nothing() + #prints map of U.S. with blank ggplot theme 
+  labs(title = 'Profile data')
 
 ##using location data to plot sites on a state map
 ggplot(data =  map_data('state') %>% #pull out relevant info, found in state column
-         filter(region %in% c("oregon", "washington"))) + # selecting which states to include on second map
+         filter(region %in% c("oregon", "washington"))) + #selecting which states to include on second map
   geom_polygon(aes(x=long, y = lat, group = group), # creating the shape of the map; ‘group’ connects adjacent points with lines to outline shape
                fill = 'grey', color = 'black') +  
-  geom_point(data=dataset_profile, # creating scatter plot of latitudes and longitudes from dataset_profile 
+  geom_point(data=dataset_profile, #creating scatter plot of latitudes and longitudes from dataset_profile 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`), #assigning latitude and longitude to respective axes
-             shape = 'x', color = 'red') + # locations will be marked by red x
-  coord_fixed(1.3) + #fixing ratio  between y and x axes
-  theme_nothing() 
+             shape = 'x', color = 'red') + #locations will be marked by red x
+  coord_fixed(1.3) + #fixing ratio between y and x axes
+  theme_nothing() + #prints select state map with site locations and blank ggplot theme
+  labs(title = 'Layer data')
+  
 ```
 
 
@@ -89,11 +100,11 @@ ggplot(data =  map_data('state') %>% #pull out relevant info, found in state col
 #this is useful to see for the analysis but we don't want it in the report
 #create a table that displays the names of the number and factor columns in the dataset, how many values there are in each, and how many unique values there are
 dataset_layer %>% #pipe dataset_layer
-  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>% #pivot the names of columns from dataset_layer with number values into a column called names and the values associated with the column into a column called values (All NA values are dropped)
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>% #indicating what values will be used on plots and drop all NA values
   group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>% #find how many total values and unique values each number column has
   bind_rows( #combine the number and factor column summaries into one dataframe
     dataset_layer %>% #pipe dataset_layer
-      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>% #pivot the names of columns from dataset_layer with factor values into a column called names and the values associated with the column into a column called values (All NA values are dropped)
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>% #indicating what values will be used on plots and drop all NA values
       group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>% #find how many total values and unique values each factor column has
   arrange(n) %>%
   knitr::kable() #create the table
@@ -118,17 +129,34 @@ ggplot(dataset_profile %>%
 ggplot(dataset_layer %>% 
          pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
                        values_to='depth') %>% 
-         pivot_longer(cols = c(`oc (percent)`,`13c (‰)`, `14c (‰)`), 
-                      values_to = 'measurement', names_to = 'type')) + #naming x values and the variables to make plots of
-  geom_line(aes(x=depth, y= measurement, group = profile_name)) + # assigning x and y axis names
-  facet_wrap(~type, scales='free')
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) + #indicating what values will be used on plots
+         geom_line(aes(x=depth, y= measurement, group = profile_name), alpha = 0.5) + #assigning which sets of values will be on x and y axes
+  facet_wrap(~type, scales='free') +
+  theme_bw()
 ```
 
 ## TODO
 
- - Follow up with Heckman to see if control at same lat/lon as Burn 7
- - Follow up with Heckman about curator name discrepancy (101 says Kate but this document, 102, says Katherine)
+- Follow up with Heckman to see if control at same lat/lon as Burn 7
+- Follow up with Heckman about curator name discrepancy (101 says Kate but this document, 102, says Katherine)
 
+X Rename header and file name to reflect dataset_name
+X Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
+X Check that the clean profile is correct given the orginal information
+X Check that the clean layer is correct given the orginal information
+X Check that maps are reasonable for the location
+X Summerize what the modifications were for this particular dataset
+X Create an issue on github with the template below
+X Commit and link the commit to the issue
+
+#### Github issue template
+
+- [X]  Evaluate dataset
+- [X]  Complete template checklist
+- [X]  Write up summary report narrative
+- [X]  Good commenting
+- [ ]  External review by someone else
 
 ## Citations
 
