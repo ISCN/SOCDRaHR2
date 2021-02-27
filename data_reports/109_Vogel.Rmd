@@ -57,37 +57,43 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 ```
 
 
-## Location
+##Location
 
 ```{r}
+#reference rectangle
+locs<-data.frame(long=c(209,213,213,209),lat=c(64,64,66,66))
 
-##using location data to display what state/region of the United States was sampled
-ggplot(data =  map_data('state') %>%  #identifying Alaska as state of interest in this data set
-         full_join(dataset_profile %>% 
-                     mutate(region = 
-                              tolower(`state (state_province)`), by = 'region') %>%
-                     group_by(region) %>% 
-                     tally, by='region')) + #making state of interest a different color than the rest
-  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
-               color = 'black') + #making map outline black
-  coord_fixed(1.3) + #fixing ratio  between y and x axes
-  theme_nothing() + #prints map of U.S. with blank ggplot theme 
+country <- ggplot2::map_data('world2', 'usa')
+
+ggplot(data =  map_data("world2")) +
+  geom_polygon( aes(x = long, y = lat, group = group),
+                fill = 'grey', color = "black") +
+  geom_polygon(data = pls, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  coord_cartesian(xlim=c(145, 275), ylim = c(40, 90)) +
+  theme_nothing() +
+  geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
+  geom_polygon(aes(x = long, y = lat),
+               data = locs, color = "darkblue", alpha = .5)+
   labs(title = 'Profile data')
 
-##using location data to plot sites on a state map
-ggplot(data =  map_data('state') %>% #pull out relevant info, found in state column
-         filter(region %in% c("alaska"))) + #selecting which states to include on second map
-  geom_polygon(aes(x=long, y = lat, group = group), # creating the shape of the map; ‘group’ connects adjacent points with lines to outline shape
-               fill = 'grey', color = 'black') +  
-  geom_point(data=dataset_profile, #creating scatter plot of latitudes and longitudes from dataset_profile 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`), #assigning latitude and longitude to respective axes
-             shape = 'x', color = 'red') + #locations will be marked by red x
-  coord_fixed(1.3) + #fixing ratio between y and x axes
-  theme_nothing() + #prints select state map with site locations and blank ggplot theme
+ggplot(data =  map_data("world2")) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red', size = 2) +
+  coord_cartesian(xlim=c(196, 222), ylim = c(60, 70)) +
+  theme_nothing() +
+  geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
+  geom_polygon(aes(x = long, y = lat),
+               data = locs, color = "darkblue", alpha = .5)+
   labs(title = 'Layer data')
   
 ```
-
 
 
 
