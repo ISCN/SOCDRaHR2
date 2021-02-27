@@ -1,7 +1,7 @@
-# Name HERE
+# Bockheim
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Jorgensen_NPS" #fix this
+datasetName <- "Bockheim" #fix this
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -145,45 +145,6 @@ ggplot(data =  map_data("world")) +
 
 ```
 
-## Use for Location instead if dataset is in Alaska
-```{r}
-#May need to adjust coordinates accordingly (maintain 1.3 ratio for x:y / long:lat)
-
-##reference rectangle
-#locs<-data.frame(long=c(209,213,213,209),lat=c(64,64,66,66))
-
-#country <- ggplot2::map_data('world2', 'usa')
-
-#ggplot(data =  map_data("world2")) +
-#  geom_polygon( aes(x = long, y = lat, group = group),
-#                fill = 'grey', color = "black") +
-#  geom_polygon(data = pls, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
-#  coord_cartesian(xlim=c(145, 275), ylim = c(40, 90)) +
-#  theme_nothing() +
-#  geom_point(data=locs,aes(long,lat),
-#             size=0,color= NA) +
-#  geom_polygon(aes(x = long, y = lat),
-#               data = locs, color = "darkblue", alpha = .5)+
-#  labs(title = 'Profile data')
-
-#ggplot(data =  map_data("world2")) + 
-#  geom_polygon(aes(x=long, y = lat, group = group), 
-#               fill = 'grey', color = 'black') + 
-#  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
-#  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
-#             shape = 'x', color = 'red', size = 2) +
-#  coord_cartesian(xlim=c(196, 222), ylim = c(60, 70)) +
-#  theme_nothing() +
-#geom_point(data=locs,aes(long,lat),
-#             size=0,color= NA) +
-#  geom_polygon(aes(x = long, y = lat),
-#               data = locs, color = "darkblue", alpha = .5)+
-#  labs(title = 'Layer data')
-  
-```
-
 ```{r eval=FALSE}
 #this is useful to see for the analysis but we don't want it in the report
 dataset_layer %>%
@@ -223,11 +184,11 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- Rename header and file name to reflect dataset_name
 - Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
 - Check that the clean profile is correct given the orginal information
 - Check that the clean layer is correct given the orginal information
 - Check that maps are reasonable for the location
+- Check longitude that looks like it might be wrong
 - Summerize what the modifications were for this particular dataset
 - Create an issue on github with the template below
 - Commit and link the commit to the issue
