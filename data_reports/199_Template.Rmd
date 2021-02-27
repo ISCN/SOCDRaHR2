@@ -157,7 +157,7 @@ ggplot(data =  map_data("world")) +
 #ggplot(data =  map_data("world2")) +
 #  geom_polygon( aes(x = long, y = lat, group = group),
 #                fill = 'grey', color = "black") +
-#  geom_polygon(data = pls, aes(x = long, y = lat, group = group),
+#  geom_polygon(data = country, aes(x = long, y = lat, group = group),
 #                fill = 'lightblue', color = "black") +
 #  coord_cartesian(xlim=c(145, 275), ylim = c(40, 90)) +
 #  theme_nothing() +
