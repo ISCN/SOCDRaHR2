@@ -28,7 +28,10 @@ dataset_profile <- profile_raw %>%
   filter(dataset_name_sub ==  datasetName) %>% #pull out info from desired dataset
   mutate(`country (country)` = 'United States') %>% #set country name to United States
   standardCast() %>%
-  filter(dataset_name_soc != 'ISCN SOC stock computation') #remove gapfilled values
+  filter(dataset_name_soc != 'ISCN SOC stock computation') %>% #remove gapfilled values
+  mutate(`site_note` = case_when(
+    site_note == 'see Parr and Hughes 2006' ~ 'Parr, P., & Hughes, J.F. (2006). OAK RIDGE RESERVATION PHYSICAL CHARACTERISTICS AND NATURAL RESOURCES.',
+    TRUE ~ site_note))
 
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName) %>% #pull out info from desired dataset
