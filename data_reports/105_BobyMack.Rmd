@@ -1,0 +1,156 @@
+# Boby_Mack
+
+```{r warning=FALSE, message=FALSE}
+datasetName <- "Boby_Mack" #fix this
+
+##### Extract the study information ####
+dataset_study <- citation_raw %>% 
+  filter(dataset_name == datasetName) %>%
+  select(where(function(xx){!all(is.na(xx))})) %>%
+  full_join(dataset_raw %>% 
+              filter(dataset_name == datasetName) %>%
+              select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
+  standardCast()
+```
+
+```{r warning=FALSE, message=FALSE}
+##### Extract the profile information ####
+
+#comparison for pre ISCN soc stock correction
+dataset_profile_org <- profile_raw  %>%
+   filter(dataset_name_sub == datasetName) %>%
+   standardCast()
+
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) 
+
+if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
+  #reassign rows where the ISCN tried to fill in SOC values
+  dataset_profile <- dataset_profile %>%
+    group_by(dataset_name_soc) %>%
+    mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
+                                      rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
+           `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+           soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                      rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
+           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+                                rep(NA_character_, length(soc_method)), soc_method)) %>%
+    ungroup()
+  
+}
+
+#remove the soc dataset since we've taken care of the ISCN notation
+dataset_profile <- select(dataset_profile, -dataset_name_soc)  
+
+if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
+  #if the rows are duplicated then fill in missing values by group
+  dataset_profile <- dataset_profile %>%
+    group_by(dataset_name_sub, site_name, profile_name) %>%
+    mutate_at(vars(-group_cols()), 
+              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+    ungroup() %>%
+    unique() #collapase rows that are non-unique
+}
+
+dataset_profile <- standardCast(dataset_profile)
+```
+
+```{r warning = FALSE, message = FALSE}
+##### Extract the layer infromation ####
+
+#comparison before SOC correction
+dataset_layer_org <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast()
+
+dataset_layer <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) 
+
+if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
+  #reassign rows where the ISCN tried to fill in SOC values
+  dataset_layer <- dataset_layer %>%
+    group_by(dataset_name_soc) %>%
+    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+                                rep(NA_character_, length(soc_method)), soc_method)) %>%
+    ungroup()
+  
+}
+
+#remove the soc dataset since we've taken care of the ISCN notation
+dataset_layer <- select(dataset_layer, -dataset_name_soc) 
+
+if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_name)$n > 1)){
+  #if the rows are duplicated then fill in missing values by group
+  dataset_layer <- dataset_layer %>%
+    group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+    mutate_at(vars(-group_cols()), 
+              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+    ungroup() %>%
+    unique() #collapase rows that are non-unique
+}
+
+dataset_layer <- standardCast(dataset_layer)
+
+```
+
+The `r datasetName` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+
+```{r message=FALSE, warning=FALSE}
+knitr::kable(t(dataset_study))
+```
+
+```{r viz_LP}
+
+#world map
+ggplot(data = map_data('world2') %>%
+            full_join(dataset_profile %>% 
+                     mutate(region = 
+                              tolower(`state (state_province)`), by = 'region') %>%
+                     group_by(region) %>% 
+                     tally)) + 
+  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
+               color = 'black') +
+  coord_fixed(1.3) + 
+  theme_nothing() 
+
+
+#visuals on data from table
+ggplot(dataset_layer %>% 
+         standardCast() %>%
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+```
+
+## TODO
+
+- Fix map of Alaska and have points show up on world map
+- check table visualizations
+- Correct ? in hzm in dataset_layer to NA
+- Correct O and unknowns to NA in dataset_layer
+- Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
+- Summarize what the modifications were for this particular dataset
+- Create an issue on github with the template below
+- Commit and link the commit to the issue
+
+#### Github issue template
+
+- [ ]  Evaluate dataset
+- [ ]  Complete template checklist
+- [ ]  Write up summary report narrative
+- [ ]  Good commenting
+- [ ]  External review by someone else
+
+## Citations
+
+Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
