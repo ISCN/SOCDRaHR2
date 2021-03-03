@@ -1,7 +1,11 @@
-# Name HERE
+USGS Muhs
+
+In this section, we will pull out `USGS Muhs` from ISCN3 and clean it up.
+
+This data set requires a cryptic message in the profile f the dataset to be formally cited.
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Jorgensen_NPS" #fix this
+datasetName <- "USGS Muhs"
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -19,10 +23,12 @@ dataset_study <- citation_raw %>%
 #comparison for pre ISCN soc stock correction
 dataset_profile_org <- profile_raw  %>%
    filter(dataset_name_sub == datasetName) %>%
+   mutate(`site_note` = 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.')%>%
    standardCast()
 
 dataset_profile <- profile_raw  %>%
-  filter(dataset_name_sub == datasetName) 
+  filter(dataset_name_sub == datasetName)
+  
 
 if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
