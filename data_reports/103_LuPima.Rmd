@@ -101,6 +101,7 @@ dataset_layer <- standardCast(dataset_layer)
 ```
 
 The `Lu_PIMA` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+Soil carbon columns were all calculated by ISCN3, thus these columns were removed in ISCN3.5 but no other manipulation was required.
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
