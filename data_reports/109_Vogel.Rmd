@@ -89,8 +89,6 @@ ggplot(data =  map_data("world2")) +
              shape = 'x', color = 'red', size = 2.5) +
   coord_cartesian(xlim=c(avgLong - 9.1, avgLong + 9.1), ylim = c(avgLat - 3.5, avgLat + 3.5)) +
   theme_nothing() +
-  geom_point(data=locs,aes(long,lat),
-             size=0,color= NA) +
   labs(title = 'Layer data')
   
 ```
