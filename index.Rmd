@@ -29,7 +29,7 @@ library(mapdata)
 library(knitr)
 library(tidyr)
 
-data_dir <- '~/Documents/Datasets/ISCN' #comment out and set to your directory to run this code
+data_dir <- 'ISCN3' #comment out and set to your directory to run this code
 #data_dir <- 'ISCN3' #set to your directory to run this code
 
 knitr::opts_chunk$set(echo = FALSE)
