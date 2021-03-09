@@ -187,6 +187,7 @@ ggplot(dataset_layer %>%
 - Check that the clean profile is correct given the orginal information
 - Check that the clean layer is correct given the orginal information
 - Summerize what the modifications were for this particular dataset
+- Country not set (clearly US)
 
 ## Citations
 
