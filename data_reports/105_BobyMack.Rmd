@@ -1,7 +1,7 @@
 # Boby_Mack
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Boby_Mack" #fix this
+datasetName <- "Boby_Mack" 
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -106,42 +106,87 @@ The `r datasetName` data set in ISCN3 contains `r nrow(dataset_layer)` layer-lev
 knitr::kable(t(dataset_study))
 ```
 
-```{r viz_LP}
 
-#world map
-ggplot(data = map_data('world2') %>%
-            full_join(dataset_profile %>% 
-                     mutate(region = 
-                              tolower(`state (state_province)`), by = 'region') %>%
-                     group_by(region) %>% 
-                     tally)) + 
-  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
-               color = 'black') +
-  coord_fixed(1.3) + 
-  theme_nothing() 
+There are the following factors in the profile:
+
+```{r}
+knitr::kable(summary(dataset_profile %>% select_if(is.factor)))
+```
+
+And the following factors in the layers:
+```{r}
+knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
+```
 
 
-#visuals on data from table
+## Location
+
+```{r}
+country <- ggplot2::map_data('world2', 'usa')
+
+avgLat <- dataset_layer %>%
+  pull('lat (dec. deg)') %>%
+  mean()
+
+avgLong <- dataset_layer %>%
+  pull('long (dec. deg)') %>%
+  mean() + 360
+
+ggplot(data =  map_data("world2")) +
+  geom_polygon( aes(x = long, y = lat, group = group),
+                fill = 'grey', color = "black") +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = 'black') +
+  geom_point(data = dataset_profile, aes(x = avgLong, y = avgLat), shape = 'x', color = 'red', size = 5) +
+  coord_cartesian(xlim=c(avgLong - 65, avgLong + 65), ylim = c(avgLat - 25, avgLat + 25)) +
+  theme_nothing() +
+  labs(title = 'Profile data')
+
+ggplot(data =  map_data("world2")) +
+  geom_polygon(aes(x=long, y = lat, group = group),
+               fill = 'grey', color = 'black') +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red', size = 2.5) +
+  coord_cartesian(xlim=c(avgLong - 9.1, avgLong + 9.1), ylim = c(avgLat - 3.5, avgLat + 3.5)) +
+  theme_nothing() +
+  labs(title = 'Layer data')
+```
+
+## Profile histograms
+
+```{r}
+ggplot(dataset_profile %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+  geom_histogram(aes(x=measurement)) +
+  facet_wrap(~type, scales='free') +
+  theme_bw()
+```
+
+## Depth plots
+
+```{r}
 ggplot(dataset_layer %>% 
-         standardCast() %>%
-         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+         pivot_longer(cols=c('layer_top (cm)', 'layer_bot (cm)'),
                        values_to='depth') %>%
          pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
                       values_to = 'measurement', names_to = 'type')) +
-         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
-  facet_wrap(~type, scales='free')
+         geom_line(aes(x=depth, y= measurement, group = profile_name), alpha = 0.5) +
+  facet_wrap(~type, scales='free') +
+  theme_bw()
 ```
 
 ## TODO
 
-- Fix map of Alaska and have points show up on world map
 - check table visualizations
-- Correct ? in hzm in dataset_layer to NA
-- Correct O and unknowns to NA in dataset_layer
 - Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
 - Summarize what the modifications were for this particular dataset
 - Create an issue on github with the template below
 - Commit and link the commit to the issue
+- Check that the clean profile is correct given the orginal information
+- Check that the clean layer is correct given the orginal information
 
 #### Github issue template
 
@@ -154,3 +199,20 @@ ggplot(dataset_layer %>%
 ## Citations
 
 Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+
+@article{Boby2010
+author = {Boby, Leslie A. and Schuur, Edward A. G. and Mack, Michelle C. and Verbyla, David and Johnstone, Jill F.},
+title = {Quantifying fire severity, carbon, and nitrogen emissions in Alaska's boreal forest},
+journal = {Ecological Applications},
+volume = {20},
+number = {6},
+pages = {1633-1647},
+keywords = {adventitious roots, Alaska, USA, allometric equations, black spruce, carbon emissions, forest fire, nitrogen, organic layer depth, Picea mariana, soil carbon, surface fuel consumption},
+doi = {https://doi.org/10.1890/08-2295.1},
+url = {https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/08-2295.1},
+eprint = {https://esajournals.onlinelibrary.wiley.com/doi/pdf/10.1890/08-2295.1},
+abstract = {The boreal region stores a large proportion of the world's terrestrial carbon (C) and is subject to high-intensity, stand-replacing wildfires that release C and nitrogen (N) stored in biomass and soils through combustion. While severity and extent of fires drives overall emissions, methods for accurately estimating fire severity are poorly tested in this unique region where organic soil combustion is responsible for a large proportion of total emissions. We tested a method using adventitious roots on black spruce trees (Picea mariana) in combination with canopy allometry to reconstruct prefire organic soil layers and canopy biomass in boreal black spruce forests of Alaska (USA), thus providing a basis for more accurately quantifying fire severity levels. We calibrated this adventitious-root-height method in unburned spruce stands and then tested it by comparing our biomass and soils estimates reconstructed in burned stands with actual prefire stand measurements. We applied this approach to 38 black spruce stands burned in 2004 in Alaska, where we measured organic soil and stand characteristics and estimated the amount of soil and canopy biomass, as well as C and N pools, consumed by fire. These high-intensity quantitative estimates of severity were significantly correlated to a semiquantitative visual rapid assessment tool, the composite burn index (CBI). This index has proved useful for assessing fire severity in forests in the western United States but has not yet been widely tested in the boreal forest. From our study, we conclude that using postfire measurements of adventitious roots on black spruce trees in combination with soils and tree data can be used to reconstruct prefire organic soil depths and biomass pools, providing accurate estimates of fire severity and emissions. Furthermore, using our quantitative reconstruction we show that CBI is a reasonably good predictor of biomass and soil C loss at these sites, and it shows promise for rapidly estimating fire severity across a wide range of boreal black spruce forest types, especially where the use of high-intensity measurements may be limited by cost and time.},
+year = {2010}
+}
+
+
