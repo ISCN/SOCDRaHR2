@@ -179,14 +179,7 @@ ggplot(dataset_layer %>%
 ```
 
 ## TODO
-
-- check table visualizations
-- Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
-- Summarize what the modifications were for this particular dataset
-- Create an issue on github with the template below
 - Commit and link the commit to the issue
-- Check that the clean profile is correct given the orginal information
-- Check that the clean layer is correct given the orginal information
 
 #### Github issue template
 
@@ -198,21 +191,6 @@ ggplot(dataset_layer %>%
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
-
-@article{Boby2010
-author = {Boby, Leslie A. and Schuur, Edward A. G. and Mack, Michelle C. and Verbyla, David and Johnstone, Jill F.},
-title = {Quantifying fire severity, carbon, and nitrogen emissions in Alaska's boreal forest},
-journal = {Ecological Applications},
-volume = {20},
-number = {6},
-pages = {1633-1647},
-keywords = {adventitious roots, Alaska, USA, allometric equations, black spruce, carbon emissions, forest fire, nitrogen, organic layer depth, Picea mariana, soil carbon, surface fuel consumption},
-doi = {https://doi.org/10.1890/08-2295.1},
-url = {https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/08-2295.1},
-eprint = {https://esajournals.onlinelibrary.wiley.com/doi/pdf/10.1890/08-2295.1},
-abstract = {The boreal region stores a large proportion of the world's terrestrial carbon (C) and is subject to high-intensity, stand-replacing wildfires that release C and nitrogen (N) stored in biomass and soils through combustion. While severity and extent of fires drives overall emissions, methods for accurately estimating fire severity are poorly tested in this unique region where organic soil combustion is responsible for a large proportion of total emissions. We tested a method using adventitious roots on black spruce trees (Picea mariana) in combination with canopy allometry to reconstruct prefire organic soil layers and canopy biomass in boreal black spruce forests of Alaska (USA), thus providing a basis for more accurately quantifying fire severity levels. We calibrated this adventitious-root-height method in unburned spruce stands and then tested it by comparing our biomass and soils estimates reconstructed in burned stands with actual prefire stand measurements. We applied this approach to 38 black spruce stands burned in 2004 in Alaska, where we measured organic soil and stand characteristics and estimated the amount of soil and canopy biomass, as well as C and N pools, consumed by fire. These high-intensity quantitative estimates of severity were significantly correlated to a semiquantitative visual rapid assessment tool, the composite burn index (CBI). This index has proved useful for assessing fire severity in forests in the western United States but has not yet been widely tested in the boreal forest. From our study, we conclude that using postfire measurements of adventitious roots on black spruce trees in combination with soils and tree data can be used to reconstruct prefire organic soil depths and biomass pools, providing accurate estimates of fire severity and emissions. Furthermore, using our quantitative reconstruction we show that CBI is a reasonably good predictor of biomass and soil C loss at these sites, and it shows promise for rapidly estimating fire severity across a wide range of boreal black spruce forest types, especially where the use of high-intensity measurements may be limited by cost and time.},
-year = {2010}
-}
+Please see @Boby2010 for additional details and if you are using ISCN3 please cite.
 
 
