@@ -1,8 +1,7 @@
 USGS Muhs
 
-In this section, we will pull out `USGS Muhs` from ISCN3 and clean it up.
-
-This data set requires a cryptic message in the profile f the dataset to be formally cited.
+In this section, we will pull out `USGS Muhs` from ISCN3 and clean it up. 
+Empty columns were removed of the dataset were removed and missing values were filled in. This data set required a cryptic message in the profile of the dataset to be formally cited using BibTeX. (https://doi.org/10.1016/S0277-3791(03)00167-7)
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "USGS Muhs"
@@ -129,65 +128,33 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ```{r}
 
-ggplot(data =  map_data("world")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_profile, 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
+locs<-data.frame(long=c(209,213,213,209),lat=c(64,64,66,66))
+
+country <- ggplot2::map_data('world2', 'usa')
+
+ggplot(data =  map_data("world2")) +
+  geom_polygon( aes(x = long, y = lat, group = group),
+                fill = 'grey', color = "black") +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  coord_cartesian(xlim=c(145, 275), ylim = c(40, 90)) +
   theme_nothing() +
+  geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
   labs(title = 'Profile data')
 
-ggplot(data =  map_data("world")) + 
+ggplot(data =  map_data("world2")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
-  theme_nothing() +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
+            shape = 'x', color = 'red', size = 2) +
+coord_cartesian(xlim=c(196, 222), ylim = c(60, 70)) +
+ theme_nothing() +
+geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
   labs(title = 'Layer data')
-
-```
-
-## Use for Location instead if dataset is in Alaska
-```{r}
-#May need to adjust coordinates accordingly (maintain 1.3 ratio for x:y / long:lat)
-
-##reference rectangle
-#locs<-data.frame(long=c(209,213,213,209),lat=c(64,64,66,66))
-
-#country <- ggplot2::map_data('world2', 'usa')
-
-#ggplot(data =  map_data("world2")) +
-#  geom_polygon( aes(x = long, y = lat, group = group),
-#                fill = 'grey', color = "black") +
-#  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
-#  coord_cartesian(xlim=c(145, 275), ylim = c(40, 90)) +
-#  theme_nothing() +
-#  geom_point(data=locs,aes(long,lat),
-#             size=0,color= NA) +
-#  geom_polygon(aes(x = long, y = lat),
-#               data = locs, color = "darkblue", alpha = .5)+
-#  labs(title = 'Profile data')
-
-#ggplot(data =  map_data("world2")) + 
-#  geom_polygon(aes(x=long, y = lat, group = group), 
-#               fill = 'grey', color = 'black') + 
-#  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
-#  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
-#             shape = 'x', color = 'red', size = 2) +
-#  coord_cartesian(xlim=c(196, 222), ylim = c(60, 70)) +
-#  theme_nothing() +
-#geom_point(data=locs,aes(long,lat),
-#             size=0,color= NA) +
-#  geom_polygon(aes(x = long, y = lat),
-#               data = locs, color = "darkblue", alpha = .5)+
-#  labs(title = 'Layer data')
-  
 ```
 
 ```{r eval=FALSE}
@@ -238,14 +205,7 @@ ggplot(dataset_layer %>%
 - Create an issue on github with the template below
 - Commit and link the commit to the issue
 
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Muhs2003 for additional details and if you are using ISCN3 please cite.

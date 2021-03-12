@@ -12,5 +12,6 @@ dataset_name | citation
 `Northern Circumpolar Soil Carbon Database` | @Hugelius2013
 `Oak Ridge Reservation Physical Characteristics and Natural Resources` | @Parr2006
 `UMBS_FASET` | unpublished
+`USGS_Muhs` | @Muhs2003
 
 ## All references
