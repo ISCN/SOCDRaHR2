@@ -1,7 +1,7 @@
 USGS Muhs
 
 In this section, we will pull out `USGS Muhs` from ISCN3 and clean it up. 
-Empty columns were removed of the dataset were removed and missing values were filled in. This data set required a cryptic message in the profile of the dataset to be formally cited using BibTeX. (https://doi.org/10.1016/S0277-3791(03)00167-7)
+Empty columns were removed from the dataset and missing values were filled in. This data set required a cryptic message in the profile of the dataset to be formally cited using BibTeX. (https://doi.org/10.1016/S0277-3791(03)00167-7)
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "USGS Muhs"
