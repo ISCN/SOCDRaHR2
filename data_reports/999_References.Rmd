@@ -13,5 +13,7 @@ dataset_name | citation
 `LuPima` | @Ping2010
 `Oak Ridge Reservation Physical Characteristics and Natural Resources` | @Parr2006
 `UMBS_FASET` | unpublished
+`Myers-Smith` | @MyersSmith2007
+
 
 ## All references
