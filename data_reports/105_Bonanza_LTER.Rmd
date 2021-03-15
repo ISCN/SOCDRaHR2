@@ -59,7 +59,7 @@ dataset_profile <- standardCast(dataset_profile)
 ```
 
 ```{r warning = FALSE, message = FALSE}
-##### Extract the layer infromation ####
+##### Extract the layer information ####
 
 #comparison before SOC correction
 dataset_layer_org <- layer_raw %>%
@@ -100,7 +100,7 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```
 
-The `Bonanza LTER` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5. Soil carbon columns were all calculated by ISCN3, thus these columns were removed in ISCN3.5 but no other manipulation was required.
+The `Bonanza LTER` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5. In the dataset_profile, SOC computed values were removed and duplicate entries were removed. In the dataset_layer, SOC computed values were removed.  
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
@@ -224,9 +224,8 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- Pull citation and add it to the bib file, check that citation matches the acknowledgment for study
-- Commit and link the commit to the issue
+- Data citation present, import directly from EDI for ISCN4
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Cleve1993 and @Yarie2013 for additional details and if you are using ISCN3 please cite.
