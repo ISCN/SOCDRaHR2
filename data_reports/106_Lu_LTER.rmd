@@ -1,6 +1,6 @@
 # Lu_LTER
 
-In this section, Lu_LTER from ISCN3 will be cleaned up. In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data. Nonrelevant columns were removed from layer and profile and missing values were filled in. 
+In this section, Lu_LTER from ISCN3 will be cleaned up. In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data. Nonrelevant columns were removed from layer and profile and missing values were filled in. This dataset was set in Alaska, so the Alaska Location code from the Template was used instead of the generic.
 ```{r}
 datasetName <- "Lu_LTER"
 
