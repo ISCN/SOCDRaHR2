@@ -1,13 +1,14 @@
 # Lu_LTER
 
+In this section, Lu_LTER from ISCN3 will be cleaned up. In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data. Nonrelevant columns were removed from layer and profile and missing values were filled in. 
 ```{r}
-datasetName <- "Lu_LTER" #fix this
+datasetName <- "Lu_LTER"
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
-  filter(dataset_name == datasetName) %>% #pull out the info on the dataset we want here
-  select(where(function(xx){!all(is.na(xx))})) %>% #pull out columns where values are not all "NA"
-  full_join( #put the citation and the dataset information together
+  filter(dataset_name == datasetName) %>% 
+  select(where(function(xx){!all(is.na(xx))})) %>% 
+  full_join(
     dataset_raw %>% 
               filter(dataset_name == datasetName) %>%
               select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
@@ -197,12 +198,12 @@ ggplot(dataset_layer %>%
 
 X Rename header and file name to reflect dataset_name
 X Pull citation and add it to the bib file, check that citation matches the acknowledgment for study
-- Check that the clean profile is correct given the original information
-- Check that the clean layer is correct given the original information
+X Check that the clean profile is correct given the original information
+X Check that the clean layer is correct given the original information
 X Check that maps are reasonable for the location
-- Summarize what the modifications were for this particular dataset
+X Summarize what the modifications were for this particular dataset
 X Create an issue on github with the template below
-- Commit and link the commit to the issue
+X Commit and link the commit to the issue
 
 #### Github issue template
 
@@ -214,4 +215,4 @@ X Create an issue on github with the template below
 
 ## Citations
 
-Please see @Ping2005 for additional details and if you are using ISCN3 please cite.
+Please see @Ping2000, @Ping2002, @Ping2004, @Ping2005, and @Michaelson1996 for additional details and if you are using ISCN3 please cite.
