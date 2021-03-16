@@ -6,7 +6,7 @@ dataset_name | citation
 -------------|----------
 `Heckman lithosequence` | @Heckman2009
 `Heckman/Swanston Biscuit Burn` | @Heckman2013
-`Lu_LTER` | @Ping2005
+`Lu_LTER` | @Michaelson1996, @Ping2000, @Ping2002 @Ping2004, @Ping2005
 `AK DSC Project SOC stock computation` | @Johnson2011
 `Worldwide soil carbon and nitrogen data` | @Zinke1986
 `USGS_S3C` | @Buell2004
