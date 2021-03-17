@@ -13,5 +13,5 @@ dataset_name | citation
 `LuPima` | @Ping2010
 `Oak Ridge Reservation Physical Characteristics and Natural Resources` | @Parr2006
 `UMBS_FASET` | unpublished
-
+`Bonanza LTER` | @Cleve1993; @Yarie2013
 ## All references
