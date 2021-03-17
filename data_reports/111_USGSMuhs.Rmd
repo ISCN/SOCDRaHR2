@@ -1,4 +1,4 @@
-#USGS Muhs
+#USGS Muhs 
 
 In this section, we will pull out `USGS Muhs` from ISCN3 and clean it up for ISCN 3.5. Repeated information on soil carbon stocks was removed from the layer and profile information of the data set. There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning. In addition, the site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
 
