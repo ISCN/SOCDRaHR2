@@ -1,7 +1,6 @@
-USGS Muhs
+#USGS Muhs
 
-In this section, we will pull out `USGS Muhs` from ISCN3 and clean it up. 
-Empty columns were removed from the dataset and missing values were filled in. This data set required a cryptic message in the profile of the dataset to be formally cited using BibTeX. (https://doi.org/10.1016/S0277-3791(03)00167-7)
+In this section, we will pull out `USGS Muhs` from ISCN3 and clean it up for ISCN 3.5. Repeated information on soil carbon stocks was removed from the layer and profile information of the data set. There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning. In addition, the site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "USGS Muhs"
@@ -22,11 +21,11 @@ dataset_study <- citation_raw %>%
 #comparison for pre ISCN soc stock correction
 dataset_profile_org <- profile_raw  %>%
    filter(dataset_name_sub == datasetName) %>%
-   mutate(`site_note` = 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.')%>%
    standardCast()
 
 dataset_profile <- profile_raw  %>%
-  filter(dataset_name_sub == datasetName)
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`site_note` = 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.')
   
 
 if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
