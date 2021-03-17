@@ -14,5 +14,6 @@ dataset_name | citation
 `USGS_S3C` | @Buell2004
 `AK DSC Project SOC stock computation` | @Johnson2011
 `Worldwide soil carbon and nitrogen data` | @Zinke1986
+`Bonanza LTER` | @Cleve1993; @Yarie2013
 
 ## All references
