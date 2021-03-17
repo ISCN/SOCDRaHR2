@@ -1,13 +1,7 @@
-# Name HERE
-
-The NAME HERE data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
-
+#Bonanza_LTER
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Jorgensen_NPS" #fix this
+datasetName <- "Bonanza LTER"
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -58,14 +52,14 @@ if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1))
     mutate_at(vars(-group_cols()), 
               function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
     ungroup() %>%
-    unique() #collapase rows that are non-unique
+    unique() #collapse rows that are non-unique
 }
 
 dataset_profile <- standardCast(dataset_profile)
 ```
 
 ```{r warning = FALSE, message = FALSE}
-##### Extract the layer infromation ####
+##### Extract the layer information ####
 
 #comparison before SOC correction
 dataset_layer_org <- layer_raw %>%
@@ -99,13 +93,14 @@ if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_nam
     mutate_at(vars(-group_cols()), 
               function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
     ungroup() %>%
-    unique() #collapase rows that are non-unique
+    unique() #collapse rows that are non-unique
 }
 
 dataset_layer <- standardCast(dataset_layer)
 
 ```
 
+The `Bonanza LTER` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5. In the dataset_profile, SOC computed values were removed and duplicate entries were removed. In the dataset_layer, SOC computed values were removed.  
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
@@ -128,61 +123,65 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ```{r}
 
-ggplot(data =  map_data("world")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_profile, 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
-  theme_nothing() +
-  labs(title = 'Profile data') #+
+#ggplot(data =  map_data("world")) + 
+#  geom_polygon(aes(x=long, y = lat, group = group), 
+#               fill = 'grey', color = 'black') + 
+#  geom_point(data= dataset_profile, 
+#             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+#             shape = 'x', color = 'red') +
+#  coord_fixed(1.3) +
+#  theme_nothing() +
+#  labs(title = 'Profile data') #+
   #coord_map("ortho", orientation = c(90, 0, 0))
 
-ggplot(data =  map_data("world")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
-  theme_nothing() +
-  labs(title = 'Layer data')
+#ggplot(data =  map_data("world")) + 
+#  geom_polygon(aes(x=long, y = lat, group = group), 
+#               fill = 'grey', color = 'black') + 
+#  geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
+#             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+#             shape = 'x', color = 'red') +
+#  coord_fixed(1.3) +
+#  theme_nothing() +
+#  labs(title = 'Layer data')
 
 ```
 
 ## Use for Location instead if dataset is in Alaska
 ```{r}
+#May need to adjust coordinates accordingly (maintain 1.3 ratio for x:y / long:lat)
 
-#country <- ggplot2::map_data('world2', 'usa')
-#avgLat <- dataset_layer %>% 
-#  pull('lat (dec. deg)') %>%
-#  mean()
+##reference rectangle
+locs<-data.frame(long=c(209,213,213,209),lat=c(64,64,66,66))
 
-#avgLong <- dataset_layer %>% 
-#  pull('long (dec. deg)') %>%
-#  mean() + 360
+country <- ggplot2::map_data('world2', 'usa')
 
-#ggplot(data =  map_data("world2")) +
-#  geom_polygon( aes(x = long, y = lat, group = group),
-#                fill = 'grey', color = "black") +
-#  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
-#  geom_point(data = dataset_profile, aes(x = avgLong, y = avgLat), shape = 'x', color = 'red', size = 5) +
-#  coord_cartesian(xlim=c(avgLong - 65, avgLong + 65), ylim = c(avgLat - 25, avgLat + 25)) +
-#  theme_nothing() +
-#  labs(title = 'Profile data')
+ggplot(data =  map_data("world2")) +
+  geom_polygon( aes(x = long, y = lat, group = group),
+                fill = 'grey', color = "black") +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  coord_cartesian(xlim=c(145, 275), ylim = c(40, 90)) +
+  theme_nothing() +
+  geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
+  geom_polygon(aes(x = long, y = lat),
+               data = locs, color = "darkblue", alpha = .5)+
+  labs(title = 'Profile data')
 
-#ggplot(data =  map_data("world2")) + 
-#  geom_polygon(aes(x=long, y = lat, group = group), 
-#               fill = 'grey', color = 'black') + 
-#  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
-#  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
-#             shape = 'x', color = 'red', size = 2.5) +
-#  coord_cartesian(xlim=c(avgLong - 9.1, avgLong + 9.1), ylim = c(avgLat - 3.5, avgLat + 3.5)) +
-#  theme_nothing() +
-#  labs(title = 'Layer data')
+ggplot(data =  map_data("world2")) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red', size = 2) +
+  coord_cartesian(xlim=c(196, 222), ylim = c(60, 70)) +
+  theme_nothing() +
+geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
+  geom_polygon(aes(x = long, y = lat),
+               data = locs, color = "darkblue", alpha = .5)+
+  labs(title = 'Layer data')
   
 ```
 
@@ -225,23 +224,8 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- Rename header and file name to reflect dataset_name
-- Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
-- Check that the clean profile is correct given the orginal information
-- Check that the clean layer is correct given the orginal information
-- Check that maps are reasonable for the location
-- Summerize what the modifications were for this particular dataset
-- Create an issue on github with the template below
-- Commit and link the commit to the issue
-
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
+- Data citation present, import directly from EDI for ISCN4
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Cleve1993 and @Yarie2013 for additional details and if you are using ISCN3 please cite.
