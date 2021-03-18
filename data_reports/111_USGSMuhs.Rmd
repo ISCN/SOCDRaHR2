@@ -1,15 +1,17 @@
-# UMBS_FASET
+#USGS Muhs 
+
+In this section, we will pull out `USGS Muhs` from ISCN3 and clean it up for ISCN 3.5. Repeated information on soil carbon stocks was removed from the layer and profile information of the data set. There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning. In addition, the site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "UMBS_FASET" #fix this
+datasetName <- "USGS Muhs"
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>%
-  select(where(function(xx){!(is.na(xx))})) %>%
+  select(where(function(xx){!all(is.na(xx))})) %>%
   full_join(dataset_raw %>% 
               filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
+              select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
 ```
 
@@ -22,7 +24,9 @@ dataset_profile_org <- profile_raw  %>%
    standardCast()
 
 dataset_profile <- profile_raw  %>%
-  filter(dataset_name_sub == datasetName) 
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`site_note` = 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.')
+  
 
 if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
@@ -123,26 +127,33 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ```{r}
 
-ggplot(data =  map_data("usa")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_profile, 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
+locs<-data.frame(long=c(209,213,213,209),lat=c(64,64,66,66))
+
+country <- ggplot2::map_data('world2', 'usa')
+
+ggplot(data =  map_data("world2")) +
+  geom_polygon( aes(x = long, y = lat, group = group),
+                fill = 'grey', color = "black") +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  coord_cartesian(xlim=c(145, 275), ylim = c(40, 90)) +
   theme_nothing() +
+  geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
   labs(title = 'Profile data')
 
-ggplot(data =  map_data("usa")) + 
+ggplot(data =  map_data("world2")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
-  theme_nothing() +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
+            shape = 'x', color = 'red', size = 2) +
+coord_cartesian(xlim=c(196, 222), ylim = c(60, 70)) +
+ theme_nothing() +
+geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
   labs(title = 'Layer data')
-
 ```
 
 ```{r eval=FALSE}
@@ -182,13 +193,6 @@ ggplot(dataset_layer %>%
   theme_bw()
 ```
 
-## TODO
-
-- Check that the clean profile is correct given the orginal information
-- Check that the clean layer is correct given the orginal information
-- Summerize what the modifications were for this particular dataset
-- Country not set (clearly US)
-
 ## Citations
 
-Data unpublished, please acknowledge creators instead.
+Please see @Muhs2003 for additional details and if you are using ISCN3 please cite.
