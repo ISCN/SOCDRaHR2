@@ -1,5 +1,11 @@
 # Boby_Mack
 
+In this section, we will pull out `Boby_Mack` from ISCN3 and clean it up for ISCN 3.5. Repeated information on soil carbon stocks was removed from the layer and profile information of the data set. 
+There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning. 
+Finally, the site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
+Note that data recorded as "Unknown" or "?" was left as is and NOT shifted to an NA value.
+
+
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Boby_Mack" 
 
@@ -177,17 +183,6 @@ ggplot(dataset_layer %>%
   facet_wrap(~type, scales='free') +
   theme_bw()
 ```
-
-## TODO
-- Commit and link the commit to the issue
-
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
 
 ## Citations
 
