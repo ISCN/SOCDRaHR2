@@ -1,5 +1,11 @@
 # Myers Smith
 
+The Myers Smith data set in ISCN3 contains `r nrow(dataset_layer)` layer-level rows and `r nrow(dataset_profile)` profile-level information rows after cleaning for ISCN3.5.
+ISCN3 removed repeated information in citations, so these column values were corrected and filled for ISCN3.5.
+ISCN3 filled in the soil carbon stocks where bulk density and organic carbon was provided, so these columns were removed for ISCN3.5.
+This data set was set in Alaska, so the Alaska Location code from the Template was used instead of the generic.
+
+
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Myers-Smith" 
 
@@ -103,7 +109,6 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```
 
-The `r datasetName` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
@@ -194,15 +199,7 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- Summerize what the modifications were for this particular dataset
-- note that there is actual data to be cited / reingested
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
+- This dataset contains an actual data citation to be re-ingested in next ISCN update
 
 ## Citations
 
