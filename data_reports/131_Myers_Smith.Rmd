@@ -11,7 +11,8 @@ dataset_study <- citation_raw %>%
               filter(dataset_name == datasetName) %>%
               select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast() %>%
-  replace_na(list(curator_name = 'Isla Myers-Smith', curator_organization = 'University of Edinburgh', curator_email = 'ftihm@uaf.edu', dataset_description = 'This data set contains soil data for cores from a transect from the center of the BBC collapse scar (0 m) into the surrounding burn (30 m). Thirty-five cores were collected soil cores along the transect in March 2003.'))
+  fill(curator_name, curator_organization, curator_email, dataset_description, .direction = "downup" )
+
 
 ```
 
@@ -193,12 +194,7 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- Check that the clean profile is correct given the orginal information
-- Check that the clean layer is correct given the orginal information
-- Check that maps are reasonable for the location
 - Summerize what the modifications were for this particular dataset
-- Create an issue on github with the template below
-- Commit and link the commit to the issue
 - note that there is actual data to be cited / reingested
 #### Github issue template
 
