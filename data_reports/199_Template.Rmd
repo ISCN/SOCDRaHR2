@@ -151,7 +151,7 @@ ggplot(data =  map_data("world")) +
 
 ```
 
-## Use for Location instead if dataset is in Alaska
+## Use if map is not centered around the specific region of dataset
 ```{r}
 
 #country <- ggplot2::map_data('world2', 'usa')
