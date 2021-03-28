@@ -5,8 +5,8 @@ The ggplot maps were readjusted to accurately show the datapoints and center aro
 The dataset_layer tables were adjusted to reassign the value "NA" to a column with "?".
 The clean layer and clean profile table were checked for accuracy of information.
 A citation was added to the bibliography file.
+Four columns were removed from the original dataset that remove the soc columns from both the dataset_layer table and dataset_profile table.
 
-Changes needed to be done in ISCN 4.0 include referencing the site_note in the dataset_profile table and citing a database referenced in the dataset_study table.
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Schuur" #fix this
@@ -213,6 +213,8 @@ ggplot(dataset_layer %>%
 ```
 
 ## TODO
+- [ ] Reference the site_note in the dataset_profile table
+- [ ] Cite a database referenced in the dataset_study table
 
 
 #### Github issue template
