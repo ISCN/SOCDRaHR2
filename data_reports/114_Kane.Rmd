@@ -1,7 +1,12 @@
 # Kane
 
+The Kane data set in ISCN3 contains 574 layer-level rows and 144 profile-level information rows after cleaning for ISCN3.5.
+Rows weren't removed from ISCN3 because there were no duplicated entries within the layer-level and profile-level information.
+Columns were removed from ISCN3 where information was not available throughout the dataset.
+Unclear information on vegetation remains in the `vegclass_local` section of the layer-level and profile-level information.
+
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Kane" #fix this
+datasetName <- "Kane" 
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -192,23 +197,9 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- Rename header and file name to reflect dataset_name
-- Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
-- Check that the clean profile is correct given the orginal information
-- Check that the clean layer is correct given the orginal information
-- Check that maps are reasonable for the location
-- Summerize what the modifications were for this particular dataset
-- Create an issue on github with the template below
-- Commit and link the commit to the issue
+- Inquire about cryptic vegetation information located in the `vegclass_local` columns
 
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Kane2004, @Kane2005, @Kane2009, and @Valentine2004 for additional details and if you are using ISCN3 please cite.
