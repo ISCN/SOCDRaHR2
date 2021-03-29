@@ -9,7 +9,7 @@ dataset_name | citation
 `LuPima` | @Ping2010
 `Oak Ridge Reservation Physical Characteristics and Natural Resources` | @Parr2006
 `Vogel` |  @Kane2009; @Vogel2007; @Vogel2008
-`Kane` | @Kane2004; @Kane2009
+`Kane` |  @Kane2004; @Kane2005; @Kane2009; @Valentine2004
 `UMBS_FASET` | unpublished
 `USGS_Muhs` | @Muhs2003
 `Northern Circumpolar Soil Carbon Database` | @Hugelius2013
