@@ -1,0 +1,133 @@
+# AK DSC Project SOC stock computation
+
+```{r warning=FALSE, message=FALSE}
+datasetName <- "AK DSC Project SOC stock computation"
+
+dataset_study <- citation_raw %>% 
+  filter(dataset_name == datasetName) %>%
+  select(where(function(xx){!(is.na(xx))})) %>%
+  full_join(dataset_raw %>% 
+              filter(dataset_name == datasetName) %>%
+              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
+  standardCast()
+
+#comparison for pre ISCN soc stock correction
+# dataset_profile_temp <- profile_raw  %>%
+#   filter(dataset_name_sub == datasetName) %>%
+#   standardCast()
+
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast() %>% #comment out pipe here and take a look at the profile information to figure out how to remove ISCN soc computations
+  #in this case we don't need to do anything
+  select(where(function(xx){!all(is.na(xx))})) %>% #remove the extra soc column lingering from ISCN soc computation
+  select(-dataset_name_soc)
+
+#comparison before SOC correction
+#dataset_layer_temp <- layer_raw %>%
+#  filter(dataset_name_sub == datasetName) %>%
+#  standardCast()
+
+dataset_layer <- layer_raw %>%
+  filter(dataset_name_sub == datasetName)  %>%
+  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+  mutate_at(vars(-group_cols(), -'dataset_name_soc'), 
+            function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the 
+  filter(dataset_name_soc == dataset_name_sub) %>% #only take the soc values provided by the submitter
+  select(-dataset_name_soc) %>%
+  standardCast() #we don't care about the flag any more
+
+```
+
+The `AK DSC Project SOC stock computation` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+ISCN3 had some interesting notation.
+
+```{r message=FALSE, warning=FALSE}
+knitr::kable(t(dataset_study))
+```
+
+
+There are the following factors in the profile:
+
+```{r}
+knitr::kable(summary(dataset_profile %>% select_if(is.factor)))
+```
+
+And the following factors in the layers:
+```{r}
+knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
+```
+
+
+## Location
+
+```{r}
+
+ggplot(data =  map_data("world")) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data= dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  theme_nothing() +
+  labs(title = 'Profile data')
+
+ggplot(data =  map_data("world")) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  theme_nothing() +
+  labs(title = 'Layer data')
+
+```
+
+```{r eval=FALSE}
+#this is useful to see for the analysis but we don't want it in the report
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+```
+
+## Profile histograms
+
+```{r}
+ggplot(dataset_profile %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+  geom_histogram(aes(x=measurement)) +
+  facet_wrap(~type, scales='free') +
+  theme_bw()
+```
+
+## Depth plots
+
+```{r}
+ggplot(dataset_layer %>% 
+         pivot_longer(cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name), alpha = 0.5) +
+  facet_wrap(~type, scales='free') +
+  theme_bw()
+```
+
+## TODO
+
+- download and re-ingest from 10.3334/CDIAC/lue.ndp018
+- Check comparisons in dataset_layers, needs to confirm cleaning is correct
+- check longitude and bulk density numbers, some layers look high
+
+## Citations
+
+Please see @Johnson2011 for additional details and if you are using ISCN3 please cite.
