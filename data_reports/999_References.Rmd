@@ -17,5 +17,5 @@ dataset_name | citation
 `USGS_Muhs` | @Muhs2003
 `Worldwide soil carbon and nitrogen data` | @Zinke1986
 `Bonanza LTER` | @Cleve1993; @Yarie2013
-
+`Lehmann NE US soils` | @Schmidt2000
 ## All references
