@@ -6,15 +6,17 @@ dataset_name | citation
 -------------|----------
 `Heckman lithosequence` | @Heckman2009
 `Heckman/Swanston Biscuit Burn` | @Heckman2013
+`Lu_LTER` | @Michaelson1996; @Ping2000; @Ping2002; @Ping2004; @Ping2005
+`AK DSC Project SOC stock computation` | @Johnson2011
+`USGS_S3C` | @Buell2004
+`Northern Circumpolar Soil Carbon Database` | @Hugelius2013
 `LuPima` | @Ping2010
 `Oak Ridge Reservation Physical Characteristics and Natural Resources` | @Parr2006
 `Vogel` |  @Kane2009; @Vogel2007; @Vogel2008
 `Kane` |  @Kane2004; @Kane2005; @Kane2009; @Valentine2004
 `UMBS_FASET` | unpublished
+`Myers-Smith` | @MyersSmith2007
 `USGS_Muhs` | @Muhs2003
-`Northern Circumpolar Soil Carbon Database` | @Hugelius2013
-`USGS_S3C` | @Buell2004
-`AK DSC Project SOC stock computation` | @Johnson2011
 `Worldwide soil carbon and nitrogen data` | @Zinke1986
 `Bonanza LTER` | @Cleve1993; @Yarie2013
 
