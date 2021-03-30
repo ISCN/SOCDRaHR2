@@ -1,9 +1,8 @@
 # Lehmann NE US soils
 
-The NAME HERE data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
+The Lehmann NE US soils data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
+Soil carbon stock and method were previously filled in ISCN3 and were removed in ISCN3.5
+ISCN3 had country listed as Unknown; ISCN3.5 now has country as United States since data is from NE US.
 
 
 ```{r warning=FALSE, message=FALSE}
@@ -200,8 +199,8 @@ ggplot(dataset_layer %>%
 
 X Rename header and file name to reflect dataset_name
 X Set country to United States
-- Pull citation and add it to the bib file, check that citation matches the acknowledgment for study
-- Check that the clean profile is correct given the original information
+X Pull citation and add it to the bib file, check that citation matches the acknowledgment for study
+X Check that the clean profile is correct given the original information
 X Check that the clean layer is correct given the original information
 X Check that maps are reasonable for the location
 - Summarize what the modifications were for this particular dataset
@@ -218,4 +217,4 @@ X Create an issue on github with the template below
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Schmidt2000 for additional details and if you are using ISCN3 please cite.
