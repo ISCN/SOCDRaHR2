@@ -14,6 +14,7 @@ dataset_study <- citation_raw %>%
     suffix = c('_citation', '_dataset'))%>% #flag common columns that are not the ID columns between the two tables
   standardCast() #go see index.Rmd for this function, mostly recasts the column to the right types
 
+## subset the profile and dataset description tables and merge them into a study table
 ```
 
 ```{r warning=FALSE, message=FALSE}
@@ -26,6 +27,7 @@ dataset_profile <- profile_raw  %>%
   rename(dataset_name = 'dataset_name_sub') %>% #simplifying column name
   select(-dataset_name_soc, -starts_with('soc')) #removing ISCN flags that say nothing was done for the SOC fill
 
+## subset the layer and dataset description tables and merge them into a study table
 ```
 
 ```{r warning=FALSE, message=FALSE}        

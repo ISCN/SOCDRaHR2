@@ -14,6 +14,7 @@ dataset_name | citation
 `Oak Ridge Reservation Physical Characteristics and Natural Resources` | @Parr2006
 `Vogel` |  @Kane2009; @Vogel2007; @Vogel2008
 `UMBS_FASET` | unpublished
+`Myers-Smith` | @MyersSmith2007
 `USGS_Muhs` | @Muhs2003
 `Worldwide soil carbon and nitrogen data` | @Zinke1986
 `Bonanza LTER` | @Cleve1993; @Yarie2013
