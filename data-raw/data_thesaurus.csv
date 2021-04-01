@@ -1,0 +1,2321 @@
+variable_location,data_product,data_table,provided_variable,variable, note
+column_name,ISCN3,layer,13c (‰),13c,NA
+column_name,ISCN3,layer,14c (‰),14c,NA
+column_name,ISCN3,layer,14c_sigma (‰),14c,NA
+column_name,ISCN3,layer,14c_age (BP),age,NA
+column_name,ISCN3,layer,14c_age_sigma (BP),age,NA
+column_name,ISCN3,layer,15n (‰),15n,NA
+column_name,ISCN3,profile,2d_position (2d_position),2d_position,NA
+column_name,ISCN3,citation,acknowledgement,acknowledgement,NA
+column_name,ISCN3,citation,acknowledgement_usage,acknowledgement_usage,NA
+column_name,ISCN3,layer,al_dith (specified by al_fe_units),aluminum_dithionate,NA
+column_name,ISCN3,layer,al_other (specified by al_fe_units),aluminum_other,NA
+column_name,ISCN3,layer,al_ox (specified by al_fe_units),aluminum_oxalate,NA
+column_name,ISCN3,layer,al_fe_units (extract_units),aluminum_ iron,NA
+column_name,ISCN3,layer,al_fe_method,aluminum_ iron,NA
+column_name,ISCN3,profile,aspect_deg (degree),aspect_degree,NA
+column_name,ISCN3,layer,base_sum (specified by cec_h_units),base_sum,NA
+column_name,ISCN3,layer,cec_h_units (extract_units),base_sum,NA
+column_name,ISCN3,layer,bs (percent),base_saturation,NA
+column_name,ISCN3,layer,bs_sum (percent),base_saturation_sum,NA
+column_name,ISCN3,layer,bd_method,bulk_density,NA
+column_name,ISCN3,layer,bdNRCS_prep_code,bulk_density,NA
+column_name,ISCN3,layer,bd_other (g cm-3),bulk_density,NA
+column_name,ISCN3,layer,bd_samp (g cm-3),bulk_density,NA
+column_name,ISCN3,layer,bd_tot (g cm-3),bulk_density,NA
+column_name,ISCN3,layer,bd_whole (g cm-3),bulk_density,NA
+column_name,ISCN3,layer,c_to_n (mass ratio),carbon_to_nitrogen,NA
+column_name,ISCN3,layer,cNRCS_prep_code,total_carbon,NA
+column_name,ISCN3,layer,c_method,total_carbon,NA
+column_name,ISCN3,layer,c_tot (percent),total_carbon,NA
+column_name,ISCN3,layer,ca_al (specified by bc_units),calcium_ aluminum,NA
+column_name,ISCN3,layer,bc_units (extract_units),calcium_ aluminum,NA
+column_name,ISCN3,layer,bc_method,calcium_ aluminum,NA
+column_name,ISCN3,layer,ca_ext (specified by bc_units),calcium_ extractable,NA
+column_name,ISCN3,layer,bc_units (extract_units),calcium_ extractable,NA
+column_name,ISCN3,layer,bc_method,calcium_ extractable,NA
+column_name,ISCN3,layer,caco3 (percent),caco3,NA
+column_name,ISCN3,layer,cat_exch (cmol H+ kg-1),cation_exchange_capacity,NA
+column_name,ISCN3,layer,cec_sum (specified by cec_h_units),exchangeable_cations_sum,NA
+column_name,ISCN3,layer,cec_h_units (extract_units),exchangeable_cations_sum,NA
+column_name,ISCN3,citation,citation,citation,NA
+column_name,ISCN3,citation,citation_usage,citation,NA
+column_name,ISCN3,layer,clay_tot_psa (percent),clay,NA
+column_name,ISCN3,layer,color,color,NA
+column_name,ISCN3,dataset,contact_email,contact_email,NA
+column_name,ISCN3,dataset,contact_name,contact_name,NA
+column_name,ISCN3,profile,country (country),country,NA
+column_name,ISCN3,layer,country (country),country,NA
+column_name,ISCN3,citation,curator_email,curator_email,NA
+column_name,ISCN3,dataset,curator_email,curator_email,NA
+column_name,ISCN3,citation,curator_name,curator_name,NA
+column_name,ISCN3,dataset,curator_name,curator_name,NA
+column_name,ISCN3,citation,curator_organization,curator_organization,NA
+column_name,ISCN3,dataset,curator_organization,curator_organization,NA
+column_name,ISCN3,dataset,dataset_description,dataset_description,NA
+column_name,ISCN3,citation,dataset_name,dataset_name,NA
+column_name,ISCN3,dataset,dataset_name,dataset_name,NA
+column_name,ISCN3,profile,dataset_name_sub,dataset_name,NA
+column_name,ISCN3,layer,dataset_name_sub,dataset_name,NA
+column_name,ISCN3,citation,dataset_type (dataset_type),dataset_type,NA
+column_name,ISCN3,dataset,dataset_type (dataset_type),dataset_type,NA
+column_name,ISCN3,profile,datum (datum),datum,NA
+column_name,ISCN3,layer,datum (datum),datum,NA
+column_name,ISCN3,profile,drainagecl (drainage),drainage_class,NA
+column_name,ISCN3,layer,ecec (specified by cec_h_units),effective_cation_exchange_capacity,NA
+column_name,ISCN3,layer,cec_h_units (extract_units),effective_cation_exchange_capacity,NA
+column_name,ISCN3,profile,ecoregion,ecoregion,NA
+column_name,ISCN3,profile,elevation (m),elevation,NA
+column_name,ISCN3,layer,fe_dith (specified by al_fe_units),iron_dithionate,NA
+column_name,ISCN3,layer,fe_other (specified by al_fe_units),iron_other,NA
+column_name,ISCN3,layer,fe_ox (specified by al_fe_units),iron_oxalate,NA
+column_name,ISCN3,layer,fraction_modern,fraction_modern,NA
+column_name,ISCN3,layer,fraction_modern_sigma,fraction_modern,NA
+column_name,ISCN3,layer,h_ext (specified by metal_ext_units),h_ext,NA
+column_name,ISCN3,layer,metal_ext_units (extract_units),h_ext,NA
+column_name,ISCN3,layer,metal_ext_method,h_ext,NA
+column_name,ISCN3,layer,hzn,horizon,NA
+column_name,ISCN3,layer,hzn_desgn,horizon_designation,NA
+column_name,ISCN3,layer,hzn_desgn_other,horizon_designation_other,NA
+column_name,ISCN3,layer,k_ext (specified by bc_units),potassium_extractable,NA
+column_name,ISCN3,layer,bc_units (extract_units),potassium_extractable,NA
+column_name,ISCN3,layer,bc_method,potassium_extractable,NA
+column_name,ISCN3,profile,landform (landform),landform,NA
+column_name,ISCN3,profile,landform_note,landform,NA
+column_name,ISCN3,profile,landscape (landscape),landscape,NA
+column_name,ISCN3,profile,landuse (landsat),landuse,NA
+column_name,ISCN3,profile,lat (dec. deg),latitude,NA
+column_name,ISCN3,layer,lat (dec. deg),latitude,NA
+column_name,ISCN3,dataset,soc_lcount_ISCN,soil_organic_carbon_ISCN_count,NA
+column_name,ISCN3,layer,layer_bot (cm),depth_max,NA
+column_name,ISCN3,profile,carbon_lcount,carbon_count,NA
+column_name,ISCN3,dataset,total_lcount,total_count,NA
+column_name,ISCN3,profile,total_lcount,total_count,NA
+column_name,ISCN3,layer,layer_name,layer_name,NA
+column_name,ISCN3,layer,layer_note,layer_note,NA
+column_name,ISCN3,dataset,soc_lcount,soil_organic_carbon_count,NA
+column_name,ISCN3,profile,soc_lcount,soil_organic_carbon_count,NA
+column_name,ISCN3,layer,layer_top (cm),depth_min,NA
+column_name,ISCN3,profile,locator_alias,locator_alias,NA
+column_name,ISCN3,profile,locator_parent_alias,locator_parent_alias,NA
+column_name,ISCN3,layer,locator_parent_alias,locator_parent_alias,NA
+column_name,ISCN3,layer,loi (percent),loss_on_ignition,NA
+column_name,ISCN3,profile,long (dec. deg),longitude,NA
+column_name,ISCN3,layer,long (dec. deg),longitude,NA
+column_name,ISCN3,profile,map (mm),mean_annual_precipitation,NA
+column_name,ISCN3,profile,mat (°C),mean_annual_temperature,NA
+column_name,ISCN3,layer,mg_ext (specified by bc_units),magnesium_extractable,NA
+column_name,ISCN3,layer,bc_units (extract_units),magnesium_extractable,NA
+column_name,ISCN3,layer,bc_method,magnesium_extractable,NA
+column_name,ISCN3,layer,mn_dith (specified by al_fe_units),manganese_dithionate,NA
+column_name,ISCN3,layer,mn_other (specified by al_fe_units),manganese_other,NA
+column_name,ISCN3,layer,mn_ox (specified by al_fe_units),manganese_oxalate,NA
+column_name,ISCN3,citation,modification_date (YYYY-MM-DD),modification_date,NA
+column_name,ISCN3,dataset,modification_date (YYYY-MM-DD),modification_date,NA
+column_name,ISCN3,layer,n_tot (percent),nitrogen_total,NA
+column_name,ISCN3,layer,na_ext (specified by bc_units),sodium_ extractable,NA
+column_name,ISCN3,layer,bc_units (extract_units),sodium_ extractable,NA
+column_name,ISCN3,layer,bc_method,sodium_ extractable,NA
+column_name,ISCN3,profile,observation_date (YYYY-MM-DD),observation_date,NA
+column_name,ISCN3,layer,observation_date (YYYY-MM-DD),observation_date,NA
+column_name,ISCN3,layer,oc (percent),carbon_organic,NA
+column_name,ISCN3,layer,p_bray (specified by p_units),phosphorus_extractable_bray,NA
+column_name,ISCN3,layer,p_meh (specified by p_units),phosphorus_extractable_meh,NA
+column_name,ISCN3,layer,p_other (specified by p_units),phosphorus_extractable_other,NA
+column_name,ISCN3,layer,p_ox (specified by p_units),phosphorus_extractable_oxalate,NA
+column_name,ISCN3,layer,p_units (extract_units),phosphorus_extractable_units,NA
+column_name,ISCN3,layer,p_method,phosphorus_extractable_method,NA
+column_name,ISCN3,layer,ph_method,pH,NA
+column_name,ISCN3,layer,ph_cacl,pH,NA
+column_name,ISCN3,layer,ph_h2o,pH,NA
+column_name,ISCN3,layer,ph_other,pH,NA
+column_name,ISCN3,dataset,soc_pcount_ISCN,soil_organic_carbon_ISCN_count,NA
+column_name,ISCN3,profile,layer_bot (cm),depth_max,NA
+column_name,ISCN3,dataset,total_pcount,total_count,NA
+column_name,ISCN3,profile,profile_name,profile_name,NA
+column_name,ISCN3,layer,profile_name,profile_name,NA
+column_name,ISCN3,profile,dataset_name_soc,soil_organic_carbon,NA
+column_name,ISCN3,profile,soc (g cm-2),soil_organic_carbon,NA
+column_name,ISCN3,profile,soc_method,soil_organic_carbon,NA
+column_name,ISCN3,profile,soc_carbon_flag,soil_organic_carbon,NA
+column_name,ISCN3,dataset,soc_pcount,soil_organic_carbon_count,NA
+column_name,ISCN3,profile,soc_depth (cm),soil_organic_carbon_depth,NA
+column_name,ISCN3,profile,soc_spatial_flag,soil_organic_carbon_spatial_flag,NA
+column_name,ISCN3,profile,layer_top (cm),depth_min,NA
+column_name,ISCN3,profile,profile_zero_ref (profile_zero_ref),zero_reference,NA
+column_name,ISCN3,citation,reference,reference,NA
+column_name,ISCN3,layer,root_quant_size,root_quant_size,NA
+column_name,ISCN3,layer,root_weight (g),root_weight,NA
+column_name,ISCN3,profile,runoff (runoff),runoff,NA
+column_name,ISCN3,layer,sand_tot_psa (percent),sand,NA
+column_name,ISCN3,layer,silt_tot_psa (percent),silt,NA
+column_name,ISCN3,dataset,soc_scount_ISCN,soil_organic_carbon_ISCN_count,NA
+column_name,ISCN3,dataset,total_scount,total_site_count,NA
+column_name,ISCN3,profile,site_name,site,NA
+column_name,ISCN3,layer,site_name,site,NA
+column_name,ISCN3,profile,site_note,site_description,NA
+column_name,ISCN3,profile,site_perm (site_perm),site_permeability,NA
+column_name,ISCN3,dataset,soc_scount,soil_organic_carbon_count,NA
+column_name,ISCN3,profile,slope (percent),slope,NA
+column_name,ISCN3,layer,dataset_name_soc,soil_organic_carbon,NA
+column_name,ISCN3,layer,soc (g cm-2),soil_organic_carbon,NA
+column_name,ISCN3,layer,soc_carbon_flag,soil_organic_carbon,NA
+column_name,ISCN3,layer,soc_method,soil_organic_carbon,NA
+column_name,ISCN3,profile,soil_series,soil_series,NA
+column_name,ISCN3,layer,soil_series,soil_series,NA
+column_name,ISCN3,profile,soil_taxon,soil_taxon,NA
+column_name,ISCN3,layer,soil_taxon,soil_taxon,NA
+column_name,ISCN3,profile,state (state_province),state,NA
+column_name,ISCN3,layer,state (state_province),state,NA
+column_name,ISCN3,profile,surface_veg,surface_vegetation,NA
+column_name,ISCN3,layer,textureClass,soil_texture_class,NA
+column_name,ISCN3,profile,thaw_depth_profile (cm),thaw_depth,NA
+column_name,ISCN3,profile,vegclass_local,vegetation_class,NA
+column_name,ISCN3,layer,vegclass_local,vegetation_class,NA
+column_name,ISCN3,layer,wpg2_method,coarse_fraction,NA
+column_name,ISCN3,layer,wpg2 (percent),coarse_fraction,NA
+column_name,ISCN3,layer,zn_ext (specified by metal_ext_units),zinc_extractable,NA
+column_name,ISCN3,layer,metal_ext_units (extract_units),zinc_extractable,NA
+column_name,ISCN3,layer,metal_ext_method,zinc_extractable,NA
+column_name,CCRCN,Study Information,study_id,dataset_name,NA
+column_name,CCRCN,Study Information,one_liner,one_liner,NA
+column_name,CCRCN,Study Information,study_code,study_code,NA
+column_name,CCRCN,Study Information,study_start_date,treatment_duration_start,NA
+column_name,CCRCN,Study Information,study_end_date,treatment_duration_end,NA
+column_name,CCRCN,Study Information,title,title,NA
+column_name,CCRCN,Study Information,abstract,abstract,NA
+column_name,CCRCN,Keywords,study_id,dataset_name,NA
+column_name,CCRCN,Keywords,key_words,key_words,NA
+column_name,CCRCN,Authors,study_id,dataset_name,NA
+column_name,CCRCN,Authors,last_name,last_name,NA
+column_name,CCRCN,Authors,given_name,given_name,NA
+column_name,CCRCN,Authors,institution,institution,NA
+column_name,CCRCN,Authors,email,email,NA
+column_name,CCRCN,Authors,address,address,NA
+column_name,CCRCN,Authors,phone,phone,NA
+column_name,CCRCN,Authors,corresponding_author,corresponding_author,NA
+column_name,CCRCN,Funding Sources,study_id,dataset_name,NA
+column_name,CCRCN,Funding Sources,funding_agency,funding_agency,NA
+column_name,CCRCN,Funding Sources,funding_id,funding_name,NA
+column_name,CCRCN,Funding Sources,funding_notes,funding_notes,NA
+column_name,CCRCN,Associated Publications,study_id,dataset_name,NA
+column_name,CCRCN,Associated Publications,bibtex_citation,citation,NA
+column_name,CCRCN,Associated Publications,publication_type,publication_type,NA
+column_name,CCRCN,Associated Publications,author,author,NA
+column_name,CCRCN,Associated Publications,year,year,NA
+column_name,CCRCN,Associated Publications,title,title,NA
+column_name,CCRCN,Associated Publications,journal,journal,NA
+column_name,CCRCN,Associated Publications,volume,volume,NA
+column_name,CCRCN,Associated Publications,number,number,NA
+column_name,CCRCN,Associated Publications,pages,pages,NA
+column_name,CCRCN,Associated Publications,url,url,NA
+column_name,CCRCN,Associated Publications,doi,doi,NA
+column_name,CCRCN,Associated Publications,address,address,NA
+column_name,CCRCN,Associated Publications,annote,annote,NA
+column_name,CCRCN,Associated Publications,booktitle,booktitle,NA
+column_name,CCRCN,Associated Publications,chapter,chapter,NA
+column_name,CCRCN,Associated Publications,crossref,reference,NA
+column_name,CCRCN,Associated Publications,edition,edition,NA
+column_name,CCRCN,Associated Publications,editor,editor,NA
+column_name,CCRCN,Associated Publications,howpublished,publication_method,NA
+column_name,CCRCN,Associated Publications,institution,institution,NA
+column_name,CCRCN,Associated Publications,key,key,NA
+column_name,CCRCN,Associated Publications,month,month,NA
+column_name,CCRCN,Associated Publications,note,note,NA
+column_name,CCRCN,Associated Publications,organization,organization,NA
+column_name,CCRCN,Associated Publications,publisher,publisher,NA
+column_name,CCRCN,Associated Publications,school,school,NA
+column_name,CCRCN,Associated Publications,series,series,NA
+column_name,CCRCN,Associated Publications,type,type,NA
+column_name,CCRCN,Materials and Methods,study_id,dataset_name,NA
+column_name,CCRCN,Materials and Methods,coring_method,coring_method,NA
+column_name,CCRCN,Materials and Methods,roots_flag,roots_flag,NA
+column_name,CCRCN,Materials and Methods,sediment_sieved_flag,sediment_sieved_flag,NA
+column_name,CCRCN,Materials and Methods,sediment_sieve_size,sediment_sieve_size,NA
+column_name,CCRCN,Materials and Methods,compaction_flag,compaction_flag,NA
+column_name,CCRCN,Materials and Methods,dry_bulk_density_temperature,bulk_density_dry_temperature,NA
+column_name,CCRCN,Materials and Methods,dry_bulk_density_time,bulk_density_dry_time,NA
+column_name,CCRCN,Materials and Methods,dry_bulk_density_sample_volume,bulk_density_dry_sample_volume,NA
+column_name,CCRCN,Materials and Methods,dry_bulk_density_sample_mass,bulk_density_dry_sample_mass,NA
+column_name,CCRCN,Materials and Methods,dry_bulk_density_flag,bulk_density_dry_flag,NA
+column_name,CCRCN,Materials and Methods,loss_on_ignition_temperature,loss_on_ignition_temperature,NA
+column_name,CCRCN,Materials and Methods,loss_on_ignition_time,loss_on_ignition_time,NA
+column_name,CCRCN,Materials and Methods,loss_on_ignition_sample_volume,loss_on_ignition_sample_volume,NA
+column_name,CCRCN,Materials and Methods,loss_on_ignition_sample_mass,loss_on_ignition_sample_mass,NA
+column_name,CCRCN,Materials and Methods,loss_on_ignition_flag,loss_on_ignition_flag,NA
+column_name,CCRCN,Materials and Methods,carbon_measured_or_modeled,fraction_carbon_method,NA
+column_name,CCRCN,Materials and Methods,carbonates_removed,carbonates_removed,NA
+column_name,CCRCN,Materials and Methods,carbonate_removal_method,carbonate_removal_method,NA
+column_name,CCRCN,Materials and Methods,fraction_carbon_method,fraction_carbon_method,NA
+column_name,CCRCN,Materials and Methods,fraction_carbon_type,carbon_organic,NA
+column_name,CCRCN,Materials and Methods,carbon_profile_notes,carbon_profile_notes,NA
+column_name,CCRCN,Materials and Methods,cs137_counting_method,137cs,NA
+column_name,CCRCN,Materials and Methods,pb210_counting_method,210pb,NA
+column_name,CCRCN,Materials and Methods,excess_pb210_rate,excess_210pb,NA
+column_name,CCRCN,Materials and Methods,excess_pb210_model,excess_210pb,NA
+column_name,CCRCN,Materials and Methods,ra226_assumption,226ra,NA
+column_name,CCRCN,Materials and Methods,c14_counting_method,14c,NA
+column_name,CCRCN,Materials and Methods,dating_notes,dating_notes,NA
+column_name,CCRCN,Materials and Methods,age_depth_model_reference,age_depth_model,NA
+column_name,CCRCN,Materials and Methods,age_depth_model_notes,age_depth_model,NA
+column_name,CCRCN,Site Level,study_id,dataset_name,NA
+column_name,CCRCN,Site Level,site_id,site_name,NA
+column_name,CCRCN,Site Level,site_description,site_description,NA
+column_name,CCRCN,Site Level,site_latitude_max,latitude,NA
+column_name,CCRCN,Site Level,site_latitude_min,latitude,NA
+column_name,CCRCN,Site Level,site_longitude_max,longitude,NA
+column_name,CCRCN,Site Level,site_longitude_min,longitude,NA
+column_name,CCRCN,Site Level,site_boundaries,site_boundaries,NA
+column_name,CCRCN,Site Level,salinity_class,salinity,NA
+column_name,CCRCN,Site Level,salinity_method,salinity,NA
+column_name,CCRCN,Site Level,salinity_notes,salinity,NA
+column_name,CCRCN,Site Level,vegetation_class,vegetation,NA
+column_name,CCRCN,Site Level,vegetation_method,vegetation,NA
+column_name,CCRCN,Site Level,vegetation_notes,vegetation,NA
+column_name,CCRCN,Site Level,inundation_class,inundation,NA
+column_name,CCRCN,Site Level,inundation_method,inundation,NA
+column_name,CCRCN,Site Level,inundation_notes,inundation,NA
+column_name,CCRCN,Core Level,study_id,dataset_name,NA
+column_name,CCRCN,Core Level,site_id,site_name,NA
+column_name,CCRCN,Core Level,core_id,core_name,NA
+column_name,CCRCN,Core Level,core_date,core_date,NA
+column_name,CCRCN,Core Level,core_notes,core_notes,NA
+column_name,CCRCN,Core Level,core_latitude,latitude,NA
+column_name,CCRCN,Core Level,core_longitude,longitude,NA
+column_name,CCRCN,Core Level,core_position_accuracy,position_accuracy,NA
+column_name,CCRCN,Core Level,core_position_method,position_method,NA
+column_name,CCRCN,Core Level,core_position_notes,position_notes,NA
+column_name,CCRCN,Core Level,core_elevation,elevation,NA
+column_name,CCRCN,Core Level,core_elevation_datum,elevation_datum,NA
+column_name,CCRCN,Core Level,core_elevation_accuracy,elevation_accuracy,NA
+column_name,CCRCN,Core Level,core_elevation_method,elevation_method,NA
+column_name,CCRCN,Core Level,core_elevation_notes,elevation_notes,NA
+column_name,CCRCN,Core Level,salinity_class,salinity,NA
+column_name,CCRCN,Core Level,salinity_method,salinity,NA
+column_name,CCRCN,Core Level,salinity_notes,salinity,NA
+column_name,CCRCN,Core Level,vegetation_class,vegetation,NA
+column_name,CCRCN,Core Level,vegetation_method,vegetation,NA
+column_name,CCRCN,Core Level,vegetation_notes,vegetation,NA
+column_name,CCRCN,Core Level,inundation_class,inundation,NA
+column_name,CCRCN,Core Level,inundation_method,inundation,NA
+column_name,CCRCN,Core Level,inundation_notes,inundation,NA
+column_name,CCRCN,Core Level,core_length_flag,core_length_flag,NA
+column_name,CCRCN,Soil Depth Series,study_id,dataset_name,NA
+column_name,CCRCN,Soil Depth Series,site_id,site_name,NA
+column_name,CCRCN,Soil Depth Series,core_id,core_name,NA
+column_name,CCRCN,Soil Depth Series,depth_min,depth_min,NA
+column_name,CCRCN,Soil Depth Series,depth_max,depth_max,NA
+column_name,CCRCN,Soil Depth Series,sample_id,sample_name,NA
+column_name,CCRCN,Soil Depth Series,dry_bulk_density,bulk_density,NA
+column_name,CCRCN,Soil Depth Series,fraction_organic_matter,organic_matter,NA
+column_name,CCRCN,Soil Depth Series,fraction_carbon,carbon_organic,NA
+column_name,CCRCN,Soil Depth Series,compaction_fraction,compaction_fraction,NA
+column_name,CCRCN,Soil Depth Series,compaction_notes,compaction_notes,NA
+column_name,CCRCN,Soil Depth Series,cs137_activity,137cs_activity,NA
+column_name,CCRCN,Soil Depth Series,cs137_activity_sd,137cs_activity_sd,NA
+column_name,CCRCN,Soil Depth Series,total_pb210_activity,total_210pb_activity,NA
+column_name,CCRCN,Soil Depth Series,total_pb210_activity_sd,total_210pb_activity_sd,NA
+column_name,CCRCN,Soil Depth Series,ra226_activity,226ra_activity,NA
+column_name,CCRCN,Soil Depth Series,ra226_activity_sd,226ra_activity_sd,NA
+column_name,CCRCN,Soil Depth Series,excess_pb210_activity,excess_p210pb_activity,NA
+column_name,CCRCN,Soil Depth Series,excess_pb210_activity_sd,excess_210pb_activity_sd,NA
+column_name,CCRCN,Soil Depth Series,c14_age,14c_age,NA
+column_name,CCRCN,Soil Depth Series,c14_age_sd,14c_age,NA
+column_name,CCRCN,Soil Depth Series,c14_material,14c,NA
+column_name,CCRCN,Soil Depth Series,c14_notes,14c,NA
+column_name,CCRCN,Soil Depth Series,delta_c13,delta_13c,NA
+column_name,CCRCN,Soil Depth Series,be7_activity,7be_activity,NA
+column_name,CCRCN,Soil Depth Series,be7_activity_sd,7be_activity_sd,NA
+column_name,CCRCN,Soil Depth Series,am241_activity,241am_activity,NA
+column_name,CCRCN,Soil Depth Series,am241_activity_sd,241am_activity_sd,NA
+column_name,CCRCN,Soil Depth Series,marker_date,marker_date,NA
+column_name,CCRCN,Soil Depth Series,marker_type,marker_type,NA
+column_name,CCRCN,Soil Depth Series,marker_notes,marker_notes,NA
+column_name,CCRCN,Soil Depth Series,age,age,NA
+column_name,CCRCN,Soil Depth Series,age_min,age,NA
+column_name,CCRCN,Soil Depth Series,age_max,age,NA
+column_name,CCRCN,Soil Depth Series,age_sd,age,NA
+column_name,CCRCN,Soil Depth Series,depth_interval_notes,depth_interval_notes,NA
+column_name,CCRCN,Dominant Species Present,study_id,dataset_name,NA
+column_name,CCRCN,Dominant Species Present,site_id,site_name,NA
+column_name,CCRCN,Dominant Species Present,core_id,core_name,NA
+column_name,CCRCN,Dominant Species Present,species_code,species_code,NA
+column_name,CCRCN,Anthropogenic Impacts Present,study_id,dataset_name,NA
+column_name,CCRCN,Anthropogenic Impacts Present,site_id,site_name,NA
+column_name,CCRCN,Anthropogenic Impacts Present,core_id,core_name,NA
+column_name,CCRCN,Anthropogenic Impacts Present,impact_class,impact_class,NA
+column_name,CCRCN,Study Level Species Table,study_id,dataset_name,NA
+column_name,CCRCN,Study Level Species Table,species_code,species_code,NA
+column_name,CCRCN,Study Level Species Table,genus,genus,NA
+column_name,CCRCN,Study Level Species Table,species,species,NA
+column_name,CCRCN,Study Level Species Table,sub_species,sub_species,NA
+column_name,CCRCN,Study Level Species Table,hybrid,hybrid,NA
+column_name,CCRCN,Study Level Species Table,common_name,common_name,NA
+column_name,CCRCN,Study Level Species Table,species_notes,species_notes,NA
+column_name,Crowther,Summary,Study,site_name,NA
+column_name,Crowther,Summary,%C,carbon_organic,NA
+column_name,Crowther,Summary,Avg. C Control,average_control_temperature,NA
+column_name,Crowther,Summary,Avg. C Warming,average_warming_temperature,NA
+column_name,Crowther,Summary,C Difference (Warming-Control),temperature_difference,NA
+column_name,Crowther,Summary,Length of Study (years),study_duration,NA
+column_name,Crowther,Summary,Mean delta T,mean_temperature_change,NA
+column_name,Crowther,Summary,Difference/Temp./Time,"NA",NA
+column_name,Crowther,Summary,Precipitation (avg. annual mm),mean_annual_precipitation,NA
+column_name,Crowther,Summary,Temperature (avg. annual degrees C),mean_annual_temperature,NA
+column_name,Crowther,Summary,Biome,biome,NA
+column_name,Crowther,Summary,Author Updated Biome,biome,NA
+column_name,Crowther,Summary,pH (from ISRIC),pH,NA
+column_name,Crowther,Summary,Author Updated pH,pH,NA
+column_name,Crowther,Summary,% silt,silt,NA
+column_name,Crowther,Summary,% sand,sand,NA
+column_name,Crowther,Summary,% clay,clay,NA
+column_name,Crowther,Summary,Author Updated % clay,clay,NA
+column_name,Crowther,Summary,CEC (cmol/kg),cation_exchange_capacity,NA
+column_name,Crowther,Study Names,Old Name,site_name,NA
+column_name,Crowther,Study Names,New Name,detailed_site_name,NA
+column_name,Crowther,Raw,Study,site_name,NA
+column_name,Crowther,Raw,Author,author,NA
+column_name,Crowther,Raw,Biome,biome,NA
+column_name,Crowther,Raw,Ecosystem,vegetation_species,NA
+column_name,Crowther,Raw,LAT,latitude,NA
+column_name,Crowther,Raw,LONG,longitude,NA
+column_name,Crowther,Raw,"Treatment (W=warming, C=control)",treatment_type,NA
+column_name,Crowther,Raw,Planned Warming,planned_warming_temperature,NA
+column_name,Crowther,Raw,Mean delta T,mean_temperature_change,NA
+column_name,Crowther,Raw,Lengths of Study,study_duration,NA
+column_name,Crowther,Raw,%C,carbon_organic,NA
+column_name,Crowther,Raw,Bulk density,bulk_density,NA
+column_name,Crowther,Raw,Bulk Density Avg.,bulk_density,NA
+column_name,Crowther,Raw,total C,total_carbon,NA
+column_name,Crowther,Raw,total raw C,total_raw_carbon,NA
+column_name,Crowther,Raw,%N,nitrogen,NA
+column_name,vanGestel2017,sites,site.id,site_name,NA
+column_name,vanGestel2017,sites,state.country,state_country,NA
+column_name,vanGestel2017,sites,site,site,NA
+column_name,vanGestel2017,sites,project,project,NA
+column_name,vanGestel2017,sites,lat,latitude,NA
+column_name,vanGestel2017,sites,lon,longitude,NA
+column_name,vanGestel2017,sites,elevation,elevation,NA
+column_name,vanGestel2017,sites,mat,mean_annual_temperature,NA
+column_name,vanGestel2017,sites,map,mean_annual_precipitation,NA
+column_name,vanGestel2017,sites,treatments,treatment_type,NA
+column_name,vanGestel2017,sites,technique,technique,NA
+column_name,vanGestel2017,sites,season,season,NA
+column_name,vanGestel2017,sites,biome,biome,NA
+column_name,vanGestel2017,sites,sub.biome,sub_biome,NA
+column_name,vanGestel2017,sites,species,vegetation_species,NA
+column_name,vanGestel2017,sites,soil.type,soil_type,NA
+column_name,vanGestel2017,sites,soil.texture.class,soil_texture_class,NA
+column_name,vanGestel2017,sites,perc.sand,sand,NA
+column_name,vanGestel2017,sites,perc.silt,silt,NA
+column_name,vanGestel2017,sites,perc.clay,clay,NA
+column_name,vanGestel2017,sites,start.date,treatment_duration_start,NA
+column_name,vanGestel2017,sites,C.pool.abg,carbon_pool_above_ground,NA
+column_name,vanGestel2017,sites,C.pool.bwg,carbon_pool_below_ground,NA
+column_name,vanGestel2017,sites,N.pool.abg,nitrogen_pool_above_ground,NA
+column_name,vanGestel2017,sites,N.pool.bwg,nitrogen_pool_below_ground,NA
+column_name,vanGestel2017,sites,P.pool.bwg,phosphorus_pool_above_ground,NA
+column_name,vanGestel2017,sites,soil.depth.pool,depth,NA
+column_name,vanGestel2017,sites,Ndep.rate,nitrogen_deposition_rate,NA
+column_name,vanGestel2017,sites,bulk.density,bulk_density,NA
+column_name,vanGestel2017,sites,pH,pH,NA
+column_name,vanGestel2017,sites,percent.om,organic_matter,NA
+column_name,vanGestel2017,sites,source,source,NA
+column_name,vanGestel2017,sites,notes,notes,NA
+column_name,vanGestel2017,sites,Reference,reference,NA
+column_name,vanGestel2017,soc,site.id,site_name,NA
+column_name,vanGestel2017,soc,trt,treatment_type,NA
+column_name,vanGestel2017,soc,technique,technique,NA
+column_name,vanGestel2017,soc,season,season,NA
+column_name,vanGestel2017,soc,trt.size.bg,treatment_size_below_ground,NA
+column_name,vanGestel2017,soc,soilT.depth,depth_soil_temperature,NA
+column_name,vanGestel2017,soc,trt.size.abg,treatment_size_above_ground,NA
+column_name,vanGestel2017,soc,trt.size.units,treatment_size_units,NA
+column_name,vanGestel2017,soc,start.date,treatment_duration_start,NA
+column_name,vanGestel2017,soc,measurement.date,measurement_date,NA
+column_name,vanGestel2017,soc,duration,treatment_duration,NA
+column_name,vanGestel2017,soc,remove,remove,NA
+column_name,vanGestel2017,soc,multi.year,multiyear,NA
+column_name,vanGestel2017,soc,control.mean,control_mean,NA
+column_name,vanGestel2017,soc,control.se,control_standard_error,NA
+column_name,vanGestel2017,soc,control.n,control_size,NA
+column_name,vanGestel2017,soc,trt.mean,treatment_mean,NA
+column_name,vanGestel2017,soc,trt.se,treatment_standard_error,NA
+column_name,vanGestel2017,soc,trt.n,treatment_size,NA
+column_name,vanGestel2017,soc,unit,unit,NA
+column_name,vanGestel2017,soc,variable,variable,NA
+column_name,vanGestel2017,soc,soil.horizon,soil_horizon,NA
+column_name,vanGestel2017,soc,bulk.density,input,NA
+column_name,vanGestel2017,soc,source,source,NA
+column_name,vanGestel2017,soc,notes,notes,NA
+column_name,vanGestel2017,soc,reference,reference,NA
+column_name,vanGestel2017,bd_calculation,site.id,site_name,NA
+column_name,vanGestel2017,bd_calculation,percent.som,percent_soil_organic_matter,NA
+column_name,vanGestel2017,bd_calculation,bd,bulk_density,NA
+column_name,vanGestel2017,bd_calculation,soil.horizon,soil_horizon,NA
+column_name,vanGestel2017,bd_calculation,notes,notes,NA
+column_name,vanGestel2017,plant,site.id,site_name,NA
+column_name,vanGestel2017,plant,trt,treatment_type,NA
+column_name,vanGestel2017,plant,technique,technique,NA
+column_name,vanGestel2017,plant,season,season,NA
+column_name,vanGestel2017,plant,trt.size.bg,treatment_size_below_ground,NA
+column_name,vanGestel2017,plant,soilT.depth,depth_soil_temperature,NA
+column_name,vanGestel2017,plant,trt.size.abg,treatment_size_above_ground,NA
+column_name,vanGestel2017,plant,trt.size.units,treatment_size_units,NA
+column_name,vanGestel2017,plant,species,vegetation_species,NA
+column_name,vanGestel2017,plant,start.date,treatment_duration_start,NA
+column_name,vanGestel2017,plant,measurement.date,measurement_date,NA
+column_name,vanGestel2017,plant,duration,treatment_duration,NA
+column_name,vanGestel2017,plant,remove,remove,NA
+column_name,vanGestel2017,plant,multi.year,multiyear,NA
+column_name,vanGestel2017,plant,control.mean,control_mean,NA
+column_name,vanGestel2017,plant,control.se,control_standard_error,NA
+column_name,vanGestel2017,plant,control.n,control_size,NA
+column_name,vanGestel2017,plant,trt.mean,treatment_mean,NA
+column_name,vanGestel2017,plant,trt.se,treatment_standard_error,NA
+column_name,vanGestel2017,plant,trt.n,treatment_size,NA
+column_name,vanGestel2017,plant,unit,unit,NA
+column_name,vanGestel2017,plant,variable,variable,NA
+column_name,vanGestel2017,plant,soil.horizon,soil_horizon,NA
+column_name,vanGestel2017,plant,source,source,NA
+column_name,vanGestel2017,plant,notes,notes,NA
+column_name,vanGestel2017,plant,reference,reference,NA
+column_name,vanGestel2017,plant,input,input,NA
+column_name,ISRaD,interstitial,entry_name,dataset_name,NA
+column_name,ISRaD,interstitial,site_name,site_name,NA
+column_name,ISRaD,interstitial,pro_name,profile_name,NA
+column_name,ISRaD,interstitial,ist_name,interstitial_name,NA
+column_name,ISRaD,interstitial,ist_obs_date_y,observation_date,NA
+column_name,ISRaD,interstitial,ist_obs_date_m,observation_date,NA
+column_name,ISRaD,interstitial,ist_obs_date_d,observation_date,NA
+column_name,ISRaD,interstitial,ist_all_org_neg,all_org_neg,NA
+column_name,ISRaD,interstitial,ist_depth,depth,NA
+column_name,ISRaD,interstitial,ist_notes,interstitial_notes,NA
+column_name,ISRaD,interstitial,ist_phase,interstitial_phase,NA
+column_name,ISRaD,interstitial,ist_analyte,analyte,NA
+column_name,ISRaD,interstitial,ist_method,interstitial_sampling_method,NA
+column_name,ISRaD,interstitial,ist_storage_method,interstitial_sample_storage_method,NA
+column_name,ISRaD,interstitial,ist_time_dur,time_dur,NA
+column_name,ISRaD,interstitial,ist_temp,temperature,NA
+column_name,ISRaD,interstitial,ist_source_O2,source_O2,NA
+column_name,ISRaD,interstitial,ist_source_H2O,source_H2O,NA
+column_name,ISRaD,interstitial,ist_concentration,concentration,NA
+column_name,ISRaD,interstitial,ist_13c,13c,NA
+column_name,ISRaD,interstitial,ist_13c_sd,13c,NA
+column_name,ISRaD,interstitial,ist_18o,18o,NA
+column_name,ISRaD,interstitial,ist_2h,2h,NA
+column_name,ISRaD,interstitial,ist_rc_lab,rc_lab,NA
+column_name,ISRaD,interstitial,ist_rc_lab_number,rc_lab,NA
+column_name,ISRaD,interstitial,ist_rc_year,rc_year,NA
+column_name,ISRaD,interstitial,ist_14c,14c,NA
+column_name,ISRaD,interstitial,ist_14c_sigma,14c,NA
+column_name,ISRaD,interstitial,ist_14c_sd,14c,NA
+column_name,ISRaD,interstitial,ist_fraction_modern,fraction_modern,NA
+column_name,ISRaD,interstitial,ist_fraction_modern_sigma,fraction_modern,NA
+column_name,ISRaD,interstitial,ist_fraction_modern_sd,fraction_modern,NA
+column_name,ISRaD,metadata,entry_name,entry_name,NA
+column_name,ISRaD,metadata,doi,doi,NA
+column_name,ISRaD,metadata,compilation_doi,doi,NA
+column_name,ISRaD,metadata,curator_name,curator_name,NA
+column_name,ISRaD,metadata,curator_organization,curator_organization,NA
+column_name,ISRaD,metadata,curator_email,email,NA
+column_name,ISRaD,metadata,modification_date_y,modification_date,NA
+column_name,ISRaD,metadata,modification_date_m,modification_date,NA
+column_name,ISRaD,metadata,modification_date_d,modification_date,NA
+column_name,ISRaD,metadata,contact_name,contact_name,NA
+column_name,ISRaD,metadata,contact_email,email,NA
+column_name,ISRaD,metadata,contact_orcid_id,contact_orcid_id,NA
+column_name,ISRaD,metadata,bibliographical_reference,citation,NA
+column_name,ISRaD,metadata,metadata_note,metadata_note,NA
+column_name,ISRaD,metadata,associated_datasets,associated_datasets,NA
+column_name,ISRaD,metadata,template_version,template_version,NA
+column_name,ISRaD,site,entry_name,dataset_name,NA
+column_name,ISRaD,site,site_name,site_name,NA
+column_name,ISRaD,site,site_lat,latitude,NA
+column_name,ISRaD,site,site_long,longitude,NA
+column_name,ISRaD,site,site_datum,datum,NA
+column_name,ISRaD,site,site_elevation,elevation,NA
+column_name,ISRaD,site,site_note,site_description,NA
+column_name,ISRaD,profile,entry_name,dataset_name,NA
+column_name,ISRaD,profile,site_name,site_name,NA
+column_name,ISRaD,profile,plot_name,plot_name,NA
+column_name,ISRaD,profile,pro_name,profile_name,NA
+column_name,ISRaD,profile,pro_note,profile_note,NA
+column_name,ISRaD,profile,pro_lat,latitude,NA
+column_name,ISRaD,profile,pro_long,longitude,NA
+column_name,ISRaD,profile,pro_elevation,elevation,NA
+column_name,ISRaD,profile,pro_treatment,treatment_type,NA
+column_name,ISRaD,profile,pro_treatment_note,treatment_type,NA
+column_name,ISRaD,profile,pro_comp,composite,NA
+column_name,ISRaD,profile,pro_reps,replicate,NA
+column_name,ISRaD,profile,pro_MAT,mean_annual_temperature,NA
+column_name,ISRaD,profile,pro_MAP,mean_annual_precipitation,NA
+column_name,ISRaD,profile,pro_peatland,peatland,NA
+column_name,ISRaD,profile,pro_usda_soil_order,usda_soil_order,NA
+column_name,ISRaD,profile,pro_soil_series,soil_series,NA
+column_name,ISRaD,profile,pro_soil_taxon,soil_taxonomy,NA
+column_name,ISRaD,profile,pro_soil_taxon_sys,soil_taxonomy,NA
+column_name,ISRaD,profile,pro_chrono_name,chronosequence_name,NA
+column_name,ISRaD,profile,pro_soil_age,soil_age,NA
+column_name,ISRaD,profile,pro_soil_age_note,soil_age,NA
+column_name,ISRaD,profile,pro_MAST,mean_annual_soil_temperature,NA
+column_name,ISRaD,profile,pro_MASWC,mean_annual_water_content,NA
+column_name,ISRaD,profile,pro_land_cover,land_cover,NA
+column_name,ISRaD,profile,pro_lc_phenology,land_cover_phenology,NA
+column_name,ISRaD,profile,pro_lc_leaf_type,land_cover_morphology,NA
+column_name,ISRaD,profile,pro_lc_photosyn_path,land_cover_photosynthetic_pathway,NA
+column_name,ISRaD,profile,pro_veg_note,vegetation_note,NA
+column_name,ISRaD,profile,pro_NPP,net_primary_productivity,NA
+column_name,ISRaD,profile,pro_bedrock_depth,bedrock_depth,NA
+column_name,ISRaD,profile,pro_complete,complete_profile,NA
+column_name,ISRaD,profile,pro_depth_water,water_table_depth,NA
+column_name,ISRaD,profile,pro_thaw_depth,thaw_depth,NA
+column_name,ISRaD,profile,pro_parent_material,parent_material,NA
+column_name,ISRaD,profile,pro_parent_chem,parent_chemistry,NA
+column_name,ISRaD,profile,pro_parent_material_notes,parent_material,NA
+column_name,ISRaD,profile,pro_2d_position,2d_position,NA
+column_name,ISRaD,profile,pro_aspect,aspect_class,NA
+column_name,ISRaD,profile,pro_aspect_deg,aspect_degree,NA
+column_name,ISRaD,profile,pro_slope,slope,NA
+column_name,ISRaD,profile,pro_slope_shape,slope_shape,NA
+column_name,ISRaD,profile,pro_drainage_class,drainage_class,NA
+column_name,ISRaD,profile,pro_soc,soil_organic_carbon,NA
+column_name,ISRaD,profile,pro_soc_sigma,soil_organic_carbon,NA
+column_name,ISRaD,profile,pro_soc_depth,depth_mean,NA
+column_name,ISRaD,profile,pro_catchment_area,catchment_area,NA
+column_name,ISRaD,profile,pro_permafrost,permafrost,NA
+column_name,ISRaD,profile,pro_thermokarst,thermokarst,NA
+column_name,ISRaD,profile,pro_deforested,deforested,NA
+column_name,ISRaD,profile,pro_water_body,water_body_type,NA
+column_name,ISRaD,profile,pro_water_body_name,water_body_name,NA
+column_name,ISRaD,flux,entry_name,dataset_name,NA
+column_name,ISRaD,flux,site_name,site_name,NA
+column_name,ISRaD,flux,plot_name,plot_name,NA
+column_name,ISRaD,flux,pro_name,profile_name,NA
+column_name,ISRaD,flux,flx_name,flux_name,NA
+column_name,ISRaD,flux,flx_lat,latitude,NA
+column_name,ISRaD,flux,flx_long,longitude,NA
+column_name,ISRaD,flux,flx_obs_date_y,observation_date,NA
+column_name,ISRaD,flux,flx_obs_date_m,observation_date,NA
+column_name,ISRaD,flux,flx_obs_date_d,observation_date,NA
+column_name,ISRaD,flux,flx_notes,flx_notes,NA
+column_name,ISRaD,flux,flx_pathway,flx_pathway,NA
+column_name,ISRaD,flux,flx_pathway_note,flx_pathway_note,NA
+column_name,ISRaD,flux,flx_analyte,analyte,NA
+column_name,ISRaD,flux,flx_ecosystem_component,flx_ecosystem_component,NA
+column_name,ISRaD,flux,flx_method,flx_method,NA
+column_name,ISRaD,flux,flx_method_note,flx_method_note,NA
+column_name,ISRaD,flux,flx_storage_method,flx_storage_method,NA
+column_name,ISRaD,flux,flx_duration,flx_duration,NA
+column_name,ISRaD,flux,flx_keeling_plot,flx_keeling_plot,NA
+column_name,ISRaD,flux,flx_atm_correction,flx_atm_correction,NA
+column_name,ISRaD,flux,flx_source_temp,source_temp,NA
+column_name,ISRaD,flux,flx_source_O2,source_O2,NA
+column_name,ISRaD,flux,flx_source_H2O,source_H2O,NA
+column_name,ISRaD,flux,flx_rate,flx_rate,NA
+column_name,ISRaD,flux,flx_rate_sd,flx_rate_sd,NA
+column_name,ISRaD,flux,flx_rate_units,flx_rate_units,NA
+column_name,ISRaD,flux,flx_analyte_conc,analyte_conc,NA
+column_name,ISRaD,flux,flx_discharge_rate,discharge_rate,NA
+column_name,ISRaD,flux,flx_aquatic_ph,aquatic_ph,NA
+column_name,ISRaD,flux,flx_aquatic_cond,aquatic_conductivity,NA
+column_name,ISRaD,flux,flx_13c,13c,NA
+column_name,ISRaD,flux,flx_13c_sd,13c,NA
+column_name,ISRaD,flux,flx_18o,18o,NA
+column_name,ISRaD,flux,flx_2h,2h,NA
+column_name,ISRaD,flux,flx_rc_lab,rc_lab,NA
+column_name,ISRaD,flux,flx_rc_lab_number,rc_lab,NA
+column_name,ISRaD,flux,flx_rc_year,rc_year,NA
+column_name,ISRaD,flux,flx_14c,14c,NA
+column_name,ISRaD,flux,flx_14c_sigma,14c,NA
+column_name,ISRaD,flux,flx_14c_sd,14c,NA
+column_name,ISRaD,flux,flx_fraction_modern,fraction_modern,NA
+column_name,ISRaD,flux,flx_fraction_modern_sigma,fraction_modern,NA
+column_name,ISRaD,flux,flx_fraction_modern_sd,fraction_modern,NA
+column_name,ISRaD,layer,entry_name,dataset_name,NA
+column_name,ISRaD,layer,site_name,site_name,NA
+column_name,ISRaD,layer,pro_name,profile_name,NA
+column_name,ISRaD,layer,lyr_name,layer_name,NA
+column_name,ISRaD,layer,lyr_obs_date_y,observation_date,NA
+column_name,ISRaD,layer,lyr_obs_date_m,observation_date,NA
+column_name,ISRaD,layer,lyr_obs_date_d,observation_date,NA
+column_name,ISRaD,layer,lyr_all_org_neg,all_org_neg,NA
+column_name,ISRaD,layer,lyr_top,depth_min,NA
+column_name,ISRaD,layer,lyr_bot,depth_max,NA
+column_name,ISRaD,layer,lyr_hzn,soil_horizon,NA
+column_name,ISRaD,layer,lyr_comp,composite,NA
+column_name,ISRaD,layer,lyr_igsn,international_geo_sample_number,NA
+column_name,ISRaD,layer,lyr_note,layer_note,NA
+column_name,ISRaD,layer,lyr_color,color,NA
+column_name,ISRaD,layer,lyr_color_dry,color_dry,NA
+column_name,ISRaD,layer,lyr_burn_ev,burn_evidence,NA
+column_name,ISRaD,layer,lyr_bd_samp,bulk_density_sample,NA
+column_name,ISRaD,layer,lyr_bd_tot,bulk_density_total,NA
+column_name,ISRaD,layer,lyr_bd_notes,bd_notes,NA
+column_name,ISRaD,layer,lyr_sand_tot_psa,sand,NA
+column_name,ISRaD,layer,lyr_silt_tot_psa,silt,NA
+column_name,ISRaD,layer,lyr_clay_tot_psa,clay,NA
+column_name,ISRaD,layer,lyr_coarse_tot,coarse_fraction,NA
+column_name,ISRaD,layer,lyr_coarse_size_thresh,coarse_size_thresh,NA
+column_name,ISRaD,layer,lyr_coarse_density,coarse_density,NA
+column_name,ISRaD,layer,lyr_texture_class,soil_texture_class,NA
+column_name,ISRaD,layer,lyr_bet_surface_area,bet_surface_area,NA
+column_name,ISRaD,layer,lyr_ph_cacl,pH_cacl,NA
+column_name,ISRaD,layer,lyr_ph_h2o,pH_h2o,NA
+column_name,ISRaD,layer,lyr_ph,pH,NA
+column_name,ISRaD,layer,lyr_ph_method,pH,NA
+column_name,ISRaD,layer,lyr_cat_exch,cation_exchange_capacity,NA
+column_name,ISRaD,layer,lyr_base_sum,base_sum,NA
+column_name,ISRaD,layer,lyr_cec_sum,exchangeable_cations_sum,NA
+column_name,ISRaD,layer,lyr_ca_exch,calcium_ extractable,NA
+column_name,ISRaD,layer,lyr_na_exch,sodium_ extractable,NA
+column_name,ISRaD,layer,lyr_mg_exch,magnesium_extractable,NA
+column_name,ISRaD,layer,lyr_k_exch,potassium_extractable,NA
+column_name,ISRaD,layer,lyr_ecec,effective_cation_exchange_capacity,NA
+column_name,ISRaD,layer,lyr_bs,base_saturation,NA
+column_name,ISRaD,layer,lyr_c_inorg,carbon_inorganic,NA
+column_name,ISRaD,layer,lyr_c_org,carbon_organic,NA
+column_name,ISRaD,layer,lyr_c_tot,total_carbon,NA
+column_name,ISRaD,layer,lyr_soc,soil_organic_carbon,NA
+column_name,ISRaD,layer,lyr_soc_sigma,soil_organic_carbon,NA
+column_name,ISRaD,layer,lyr_n_tot,nitrogen_total,NA
+column_name,ISRaD,layer,lyr_son,soil_organic_nitrogen,NA
+column_name,ISRaD,layer,lyr_c_to_n,carbon_to_nitrogen,NA
+column_name,ISRaD,layer,lyr_loi,loss_on_ignition,NA
+column_name,ISRaD,layer,lyr_ha_fa,ha_fa,NA
+column_name,ISRaD,layer,lyr_15n,15n,NA
+column_name,ISRaD,layer,lyr_13c,13c,NA
+column_name,ISRaD,layer,lyr_rc_lab,rc_lab,NA
+column_name,ISRaD,layer,lyr_rc_lab_number,rc_lab,NA
+column_name,ISRaD,layer,lyr_rc_year,rc_year,NA
+column_name,ISRaD,layer,lyr_14c,14c,NA
+column_name,ISRaD,layer,lyr_14c_sigma,14c,NA
+column_name,ISRaD,layer,lyr_14c_sd,14c,NA
+column_name,ISRaD,layer,lyr_fraction_modern,fraction_modern,NA
+column_name,ISRaD,layer,lyr_fraction_modern_sigma,fraction_modern,NA
+column_name,ISRaD,layer,lyr_fraction_modern_sd,fraction_modern,NA
+column_name,ISRaD,layer,lyr_mbc_method,mbc_method,NA
+column_name,ISRaD,layer,lyr_raw_mbc,raw_mbc,NA
+column_name,ISRaD,layer,lyr_reported_mbc,reported_mbc,NA
+column_name,ISRaD,layer,lyr_p_ext,phosphorus_extractable,NA
+column_name,ISRaD,layer,lyr_p_units,phosphorus_units,NA
+column_name,ISRaD,layer,lyr_p_method,phosphorus_method,NA
+column_name,ISRaD,layer,lyr_p_tot,phosphorus_total,NA
+column_name,ISRaD,layer,lyr_p_stock,phosphorus_stock,NA
+column_name,ISRaD,layer,lyr_fe_py,iron_pyrophosphate,NA
+column_name,ISRaD,layer,lyr_al_py,aluminum_pyrophosphate,NA
+column_name,ISRaD,layer,lyr_fe_al_py,iron_alumium_pyrophosphate,NA
+column_name,ISRaD,layer,lyr_si_py,silicon_pyrophosphate,NA
+column_name,ISRaD,layer,lyr_c_py,carbon_pyrophosphate,NA
+column_name,ISRaD,layer,lyr_py_notes,pyrophosphate_notes,NA
+column_name,ISRaD,layer,lyr_fe_ox,iron_oxalate,NA
+column_name,ISRaD,layer,lyr_al_ox,aluminum_oxalate,NA
+column_name,ISRaD,layer,lyr_si_ox,silicon_oxalate,NA
+column_name,ISRaD,layer,lyr_c_ox,carbon_oxalate,NA
+column_name,ISRaD,layer,lyr_noncrystalline_ox,noncrystalline_oxalate,NA
+column_name,ISRaD,layer,lyr_ox_notes,oxalate_notes,NA
+column_name,ISRaD,layer,lyr_fe_hy,iron_hydroxylamine,NA
+column_name,ISRaD,layer,lyr_al_hy,aluminum_ hydroxylamine,NA
+column_name,ISRaD,layer,lyr_si_hy,silicon_ hydroxylamine,NA
+column_name,ISRaD,layer,lyr_c_hy,carbon_hydroxylamine,NA
+column_name,ISRaD,layer,lyr_hy_notes,hydroxylamine_notes,NA
+column_name,ISRaD,layer,lyr_fe_dith,iron_dithionate,NA
+column_name,ISRaD,layer,lyr_al_dith,aluminum_dithionate,NA
+column_name,ISRaD,layer,lyr_si_dith,silicon_dithionate,NA
+column_name,ISRaD,layer,lyr_dith_notes,dithionate_notes,NA
+column_name,ISRaD,layer,lyr_quartz,quartz,NA
+column_name,ISRaD,layer,lyr_alkali_feldspar,alkali_feldspar,NA
+column_name,ISRaD,layer,lyr_plag_feldspar,plagioclase_feldspar,NA
+column_name,ISRaD,layer,lyr_mica_chlorite,mica_chlorite,NA
+column_name,ISRaD,layer,lyr_amphibole,amphibole,NA
+column_name,ISRaD,layer,lyr_pyroxine,pyroxine,NA
+column_name,ISRaD,layer,lyr_olivine,olivine,NA
+column_name,ISRaD,layer,lyr_volc_glass,volcanic_glass,NA
+column_name,ISRaD,layer,lyr_kaol_halloy,kaolinite_halloysite,NA
+column_name,ISRaD,layer,lyr_smect_vermic,smectite_vermincullite,NA
+column_name,ISRaD,layer,lyr_gibbsite,gibbsite,NA
+column_name,ISRaD,layer,lyr_fe_oxides,iron_oxides,NA
+column_name,ISRaD,layer,lyr_imog_alloph,imogolite_allophane,NA
+column_name,ISRaD,layer,lyr_ferrihydrite,ferrihydrite,NA
+column_name,ISRaD,layer,lyr_calcite_dolomite,calcite_dolomite,NA
+column_name,ISRaD,layer,lyr_zeolite,zeolite,NA
+column_name,ISRaD,layer,lyr_bd_samp_fill_extra,bd_samp_fill_extra,NA
+column_name,ISRaD,layer,lyr_c_org_fill_extra,c_org_fill_extra,NA
+column_name,ISRaD,layer,lyr_soc_fill_extra,soc_fill_extra,NA
+column_name,ISRaD,layer,lyr_14c_fill_extra,14c_fill_extra,NA
+column_name,ISRaD,layer,lyr_fill_notes_extra,fill_notes_extra,NA
+column_name,ISRaD,fraction,entry_name,dataset_name,NA
+column_name,ISRaD,fraction,site_name,site_name,NA
+column_name,ISRaD,fraction,pro_name,profile_name,NA
+column_name,ISRaD,fraction,lyr_name,layer_name,NA
+column_name,ISRaD,fraction,frc_name,fraction_name,NA
+column_name,ISRaD,fraction,frc_input,fraction_input,NA
+column_name,ISRaD,fraction,frc_property,fraction_property,NA
+column_name,ISRaD,fraction,frc_scheme,fraction_scheme,NA
+column_name,ISRaD,fraction,frc_scheme_units,fraction_scheme_units,NA
+column_name,ISRaD,fraction,frc_lower,fraction_lower,NA
+column_name,ISRaD,fraction,frc_upper,fraction_upper,NA
+column_name,ISRaD,fraction,frc_agent,fraction_agent,NA
+column_name,ISRaD,fraction,frc_scheme_conc,scheme_conc,NA
+column_name,ISRaD,fraction,frc_comp,composite,NA
+column_name,ISRaD,fraction,frc_note,fraction_note,NA
+column_name,ISRaD,fraction,frc_mass_perc,fraction_mass_perc,NA
+column_name,ISRaD,fraction,frc_obs_date_y,observation_date,NA
+column_name,ISRaD,fraction,frc_obs_date_m,observation_date,NA
+column_name,ISRaD,fraction,frc_obs_date_d,observation_date,NA
+column_name,ISRaD,fraction,frc_bet_surface_area,bet_surface_area,NA
+column_name,ISRaD,fraction,frc_c_perc,fraction_c_perc,NA
+column_name,ISRaD,fraction,frc_c_tot,total_carbon,NA
+column_name,ISRaD,fraction,frc_c_org,carbon_organic,NA
+column_name,ISRaD,fraction,frc_c_inorg,carbon_inorganic,NA
+column_name,ISRaD,fraction,frc_n_tot,nitrogen_total,NA
+column_name,ISRaD,fraction,frc_c_to_n,carbon_to_nitrogen,NA
+column_name,ISRaD,fraction,frc_15n,15n,NA
+column_name,ISRaD,fraction,frc_13c,13c,NA
+column_name,ISRaD,fraction,frc_rc_lab,rc_lab,NA
+column_name,ISRaD,fraction,frc_rc_lab_number,rc_lab,NA
+column_name,ISRaD,fraction,frc_rc_year,rc_year,NA
+column_name,ISRaD,fraction,frc_14c,14c,NA
+column_name,ISRaD,fraction,frc_14c_sigma,14c,NA
+column_name,ISRaD,fraction,frc_14c_sd,14c,NA
+column_name,ISRaD,fraction,frc_fraction_modern,fraction_modern,NA
+column_name,ISRaD,fraction,frc_fraction_modern_sigma,fraction_modern,NA
+column_name,ISRaD,fraction,frc_fraction_modern_sd,fraction_modern,NA
+column_name,ISRaD,fraction,frc_mbc_method,mbc_method,NA
+column_name,ISRaD,fraction,frc_raw_mbc,raw_mbc,NA
+column_name,ISRaD,fraction,frc_reported_mbc,reported_mbc,NA
+column_name,ISRaD,fraction,frc_fe_py,iron_pyrophosphate,NA
+column_name,ISRaD,fraction,frc_al_py,aluminum_pyrophosphate,NA
+column_name,ISRaD,fraction,frc_fe_al_py,iron_alumium_pyrophosphate,NA
+column_name,ISRaD,fraction,frc_si_py,silicon_pyrophosphate,NA
+column_name,ISRaD,fraction,frc_c_py,carbon_pyrophosphate,NA
+column_name,ISRaD,fraction,frc_py_notes,pyrophosphate_notes,NA
+column_name,ISRaD,fraction,frc_fe_ox,iron_oxalate,NA
+column_name,ISRaD,fraction,frc_al_ox,aluminum_oxalate,NA
+column_name,ISRaD,fraction,frc_si_ox,silicon_oxalate,NA
+column_name,ISRaD,fraction,frc_c_ox,carbon_oxalate,NA
+column_name,ISRaD,fraction,frc_noncrystalline_ox,noncrystalline_oxalate,NA
+column_name,ISRaD,fraction,frc_ox_notes,oxalate_notes,NA
+column_name,ISRaD,fraction,frc_fe_hy,iron_hydroxylamine,NA
+column_name,ISRaD,fraction,frc_al_hy,aluminum_ hydroxylamine,NA
+column_name,ISRaD,fraction,frc_si_hy,silicon_ hydroxylamine,NA
+column_name,ISRaD,fraction,frc_c_hy,carbon_hydroxylamine,NA
+column_name,ISRaD,fraction,frc_hy_notes,hydroxylamine_notes,NA
+column_name,ISRaD,fraction,frc_fe_dith,iron_dithionate,NA
+column_name,ISRaD,fraction,frc_al_dith,aluminum_dithionate,NA
+column_name,ISRaD,fraction,frc_si_dith,silicon_dithionate,NA
+column_name,ISRaD,fraction,frc_quartz,quartz,NA
+column_name,ISRaD,fraction,frc_alkali_feldspar,alkali_feldspar,NA
+column_name,ISRaD,fraction,frc_plag_feldspar,plagioclase_feldspar,NA
+column_name,ISRaD,fraction,frc_mica_chlorite,mica_chlorite,NA
+column_name,ISRaD,fraction,frc_amphibole,amphibole,NA
+column_name,ISRaD,fraction,frc_pyroxine,pyroxine,NA
+column_name,ISRaD,fraction,frc_olivine,olivine,NA
+column_name,ISRaD,fraction,frc_volc_glass,volcanic_glass,NA
+column_name,ISRaD,fraction,frc_kaol_halloy,kaolinite_halloysite,NA
+column_name,ISRaD,fraction,frc_smect_vermic,smectite_vermincullite,NA
+column_name,ISRaD,fraction,frc_gibbsite,gibbsite,NA
+column_name,ISRaD,fraction,frc_fe_oxides,iron_oxides,NA
+column_name,ISRaD,fraction,frc_imog_alloph,imogolite_allophane,NA
+column_name,ISRaD,fraction,frc_ferrihydrite,ferrihydrite,NA
+column_name,ISRaD,fraction,frc_zeolite,zeolite,NA
+column_name,ISRaD,incubation,entry_name,dataset_name,NA
+column_name,ISRaD,incubation,site_name,site_name,NA
+column_name,ISRaD,incubation,pro_name,profile_name,NA
+column_name,ISRaD,incubation,lyr_name,layer_name,NA
+column_name,ISRaD,incubation,frc_name,fraction_name,NA
+column_name,ISRaD,incubation,inc_name,incubation_name,NA
+column_name,ISRaD,incubation,inc_type,incubation_type,NA
+column_name,ISRaD,incubation,inc_note,incubation_note,NA
+column_name,ISRaD,incubation,inc_obs_date_y,observation_date,NA
+column_name,ISRaD,incubation,inc_obs_date_m,observation_date,NA
+column_name,ISRaD,incubation,inc_obs_date_d,observation_date,NA
+column_name,ISRaD,incubation,inc_duration,treatment_duration,NA
+column_name,ISRaD,incubation,inc_duration_type,duration_type,NA
+column_name,ISRaD,incubation,inc_anaerobic,anaerobic,NA
+column_name,ISRaD,incubation,inc_analyte,analyte,NA
+column_name,ISRaD,incubation,inc_temp,temperature,NA
+column_name,ISRaD,incubation,inc_moisture_type,moisture_type,NA
+column_name,ISRaD,incubation,inc_moisture,moisture,NA
+column_name,ISRaD,incubation,inc_moisture_units,moisture_units,NA
+column_name,ISRaD,incubation,inc_C_respired,C_respired,NA
+column_name,ISRaD,incubation,inc_flux,flux_rate,NA
+column_name,ISRaD,incubation,inc_flux_units,flux_rate_units,NA
+column_name,ISRaD,incubation,inc_13c,13c,NA
+column_name,ISRaD,incubation,inc_13c_sd,13c,NA
+column_name,ISRaD,incubation,inc_rc_lab,rc_lab,NA
+column_name,ISRaD,incubation,inc_rc_lab_number,rc_lab,NA
+column_name,ISRaD,incubation,inc_rc_year,rc_year,NA
+column_name,ISRaD,incubation,inc_14c,14c,NA
+column_name,ISRaD,incubation,inc_14c_sigma,14c,NA
+column_name,ISRaD,incubation,inc_14c_sd,14c,NA
+column_name,ISRaD,incubation,inc_fraction_modern,fraction_modern,NA
+column_name,ISRaD,incubation,inc_fraction_modern_sigma,fraction_modern,NA
+column_name,ISRaD,incubation,inc_fraction_modern_sd,fraction_modern,NA
+column_name,ISCNTemplate,metadata,curator_name,curator_name,NA
+column_name,ISCNTemplate,metadata,curator_organization,curator_organization,NA
+column_name,ISCNTemplate,metadata,curator_email,curator_email,NA
+column_name,ISCNTemplate,metadata,modification_date,modification_date,NA
+column_name,ISCNTemplate,metadata,contact_name,contact_name,NA
+column_name,ISCNTemplate,metadata,contact_email,contact_email,NA
+column_name,ISCNTemplate,metadata,dataset_name,dataset_name,NA
+column_name,ISCNTemplate,metadata,dataset_description,dataset_description,NA
+column_name,ISCNTemplate,metadata,reference,reference,NA
+column_name,ISCNTemplate,metadata,citation,citation,NA
+column_name,ISCNTemplate,metadata,citation_usage,citation_usage,NA
+column_name,ISCNTemplate,metadata,acknowledgement,acknowledgement,NA
+column_name,ISCNTemplate,metadata,acknowledgement_usage,acknowledgement_usage,NA
+column_name,ISCNTemplate,metadata,c_est_method,carbon_estimation,NA
+column_name,ISCNTemplate,metadata,c_est_note,carbon_estimation,NA
+column_name,ISCNTemplate,metadata,lab_method,lab_method,NA
+column_name,ISCNTemplate,metadata,metadata_general,metadata_general,NA
+column_name,ISCNTemplate,metadata,missdata_param,missdata_param,NA
+column_name,ISCNTemplate,metadata,resample,resample,NA
+column_name,ISCNTemplate,metadata,funding_organization,funding_agency,NA
+column_name,ISCNTemplate,site,site_name,site_name,NA
+column_name,ISCNTemplate,site,site_note,site_description,NA
+column_name,ISCNTemplate,site,country,country,NA
+column_name,ISCNTemplate,site,province,province,NA
+column_name,ISCNTemplate,site,state,state,NA
+column_name,ISCNTemplate,site,county,county,NA
+column_name,ISCNTemplate,site,lat,latitude,NA
+column_name,ISCNTemplate,site,long,longitude,NA
+column_name,ISCNTemplate,site,datum,datum,NA
+column_name,ISCNTemplate,site,location_acc,location_accuracy,NA
+column_name,ISCNTemplate,site,elevation,elevation,NA
+column_name,ISCNTemplate,site,vegclass_nat,vegetation_class,NA
+column_name,ISCNTemplate,site,vegclass,vegetation_class,NA
+column_name,ISCNTemplate,site,vegclass_local,vegetation_class,NA
+column_name,ISCNTemplate,site,vegclass_local_type,vegetation_class,NA
+column_name,ISCNTemplate,site,veg_note,vegetation_class,NA
+column_name,ISCNTemplate,site,landscape,landscape,NA
+column_name,ISCNTemplate,site,landform,landform,NA
+column_name,ISCNTemplate,site,2d_position,2d_position,NA
+column_name,ISCNTemplate,site,landform_note,landform,NA
+column_name,ISCNTemplate,site,parent,parent,NA
+column_name,ISCNTemplate,site,aspect_deg,aspect_degree,NA
+column_name,ISCNTemplate,site,aspect_cl,aspect_class,NA
+column_name,ISCNTemplate,site,slope,slope,NA
+column_name,ISCNTemplate,site,stand_age,max_stand_age,NA
+column_name,ISCNTemplate,site,stand_maturity,stand_maturity,NA
+column_name,ISCNTemplate,site,successional_status,successional_status,NA
+column_name,ISCNTemplate,site,drainagecl,drainage_class,NA
+column_name,ISCNTemplate,site,depth_water,depth_water,NA
+column_name,ISCNTemplate,site,thaw_depth_site,depth_site_thaw,NA
+column_name,ISCNTemplate,site,bedrock_depth,depth_bedrock,NA
+column_name,ISCNTemplate,site,climate_station,climate_station,NA
+column_name,ISCNTemplate,site,ffdays,frost_free_days,NA
+column_name,ISCNTemplate,site,flood_freq,flood_frequency,NA
+column_name,ISCNTemplate,site,geo_form,geologic_formation,NA
+column_name,ISCNTemplate,site,map,mean_annual_precipitation,NA
+column_name,ISCNTemplate,site,mat,mean_annual_temperature,NA
+column_name,ISCNTemplate,site,mast,mean_annual_soil_temperature,NA
+column_name,ISCNTemplate,site,pond_freq,ponding_frequency,NA
+column_name,ISCNTemplate,site,runoff,runoff,NA
+column_name,ISCNTemplate,site,site_perm,site_permeability,NA
+column_name,ISCNTemplate,site,water_table_duration,water_table_duration,NA
+column_name,ISCNTemplate,site,cflux_note,carbon_flux_note,NA
+column_name,ISCNTemplate,site,climate_note,climate_note,NA
+column_name,ISCNTemplate,site,eco_note,ecoregion_note,NA
+column_name,ISCNTemplate,site,photo_note,photo_note,NA
+column_name,ISCNTemplate,site,soiltemp_note,soil_temperature_note,NA
+column_name,ISCNTemplate,site,add_note,additional_notes,NA
+column_name,ISCNTemplate,site,soc,soil_organic_carbon,NA
+column_name,ISCNTemplate,site,soc_type,soil_type,NA
+column_name,ISCNTemplate,site,soc_pcount,soil_organic_carbon_count,NA
+column_name,ISCNTemplate,site,soc_depth,soil_organic_carbon_depth,NA
+column_name,ISCNTemplate,site,soc_sigma,soil_organic_carbon,NA
+column_name,ISCNTemplate,site,soc_method,soil_organic_carbon,NA
+column_name,ISCNTemplate,cluster,cluster_name,cluster_name,NA
+column_name,ISCNTemplate,cluster,cluster_note,cluster_note,NA
+column_name,ISCNTemplate,profile,site_name,site_name,NA
+column_name,ISCNTemplate,profile,cluster_name,cluster_name,NA
+column_name,ISCNTemplate,profile,profile_name,profile_name,NA
+column_name,ISCNTemplate,profile,profile_note,profile_note,NA
+column_name,ISCNTemplate,profile,layer_method,layer_method,NA
+column_name,ISCNTemplate,profile,profile_method,profile_method,NA
+column_name,ISCNTemplate,profile,observation_date,observation_date,NA
+column_name,ISCNTemplate,profile,observation_date_acc,observation_date,NA
+column_name,ISCNTemplate,profile,transect_flag,transect_flag,NA
+column_name,ISCNTemplate,profile,surface_veg,surface_vegetation,NA
+column_name,ISCNTemplate,profile,soil_taxon,soil_taxon,NA
+column_name,ISCNTemplate,profile,soil_series,soil_series,NA
+column_name,ISCNTemplate,profile,add_taxon_flag,add_taxon_flag,NA
+column_name,ISCNTemplate,profile,thaw_depth_profile,thaw_depth_profile,NA
+column_name,ISCNTemplate,profile,sampler_names,sampler_names,NA
+column_name,ISCNTemplate,profile,soc,soil_organic_carbon,NA
+column_name,ISCNTemplate,profile,soc_type,soil_type,NA
+column_name,ISCNTemplate,profile,soc_depth,soil_organic_carbon_depth,NA
+column_name,ISCNTemplate,profile,soc_method,soil_organic_carbon,NA
+column_name,ISCNTemplate,profile,soc_sigma,soil_organic_carbon,NA
+column_name,ISCNTemplate,profile,soc_lcount,soil_organic_carbon_count,NA
+column_name,ISCNTemplate,layer,site_name,site_name,NA
+column_name,ISCNTemplate,layer,cluster_name,cluster_name,NA
+column_name,ISCNTemplate,layer,profile_name,profile_name,NA
+column_name,ISCNTemplate,layer,layer_name,layer_name,NA
+column_name,ISCNTemplate,layer,layer_number,layer_number,NA
+column_name,ISCNTemplate,layer,labeled_addition,labeled_addition,NA
+column_name,ISCNTemplate,layer,layer_top,depth_min,NA
+column_name,ISCNTemplate,layer,layer_bot,depth_max,NA
+column_name,ISCNTemplate,layer,hzn_desgn,horizon_designation,NA
+column_name,ISCNTemplate,layer,hzn_desgn_other,horizon_designation_other,NA
+column_name,ISCNTemplate,layer,hzn_desgn_other_note,horizon_designation_other,NA
+column_name,ISCNTemplate,layer,layer_note,layer_note,NA
+column_name,ISCNTemplate,layer,c_method,soil_organic_carbon,NA
+column_name,ISCNTemplate,layer,c_method,total_carbon,NA
+column_name,ISCNTemplate,layer,color,color,NA
+column_name,ISCNTemplate,layer,burn_ev,burn_evidence,NA
+column_name,ISCNTemplate,layer,bd_method,bulk_density,NA
+column_name,ISCNTemplate,layer,bd_samp,bulk_density,NA
+column_name,ISCNTemplate,layer,bd_tot,bulk_density,NA
+column_name,ISCNTemplate,layer,bd_whole,bulk_density,NA
+column_name,ISCNTemplate,layer,bd_other,bulk_density,NA
+column_name,ISCNTemplate,layer,ph_method,ph,NA
+column_name,ISCNTemplate,layer,ph_cacl,ph,NA
+column_name,ISCNTemplate,layer,ph_h2o,ph,NA
+column_name,ISCNTemplate,layer,ph_other,ph,NA
+column_name,ISCNTemplate,layer,caco3,caco3,NA
+column_name,ISCNTemplate,layer,sand_tot_psa,sand,NA
+column_name,ISCNTemplate,layer,silt_tot_psa,silt,NA
+column_name,ISCNTemplate,layer,clay_tot_psa,clay,NA
+column_name,ISCNTemplate,layer,wpg2_method,coarse_fraction,NA
+column_name,ISCNTemplate,layer,wpg2,coarse_fraction,NA
+column_name,ISCNTemplate,layer,cat_exch,cation_exchange_capacity,NA
+column_name,ISCNTemplate,layer,gwc,gravimetric_water_content,NA
+column_name,ISCNTemplate,layer,vwc,volumetric_water_content,NA
+column_name,ISCNTemplate,layer,soc,soil_organic_carbon,NA
+column_name,ISCNTemplate,layer,soc_type,soil_type,NA
+column_name,ISCNTemplate,layer,soc_sigma,soil_organic_carbon,NA
+column_name,ISCNTemplate,layer,soc_method,soil_organic_carbon,NA
+column_name,ISCNTemplate,layer,c_tot,total_carbon,NA
+column_name,ISCNTemplate,layer,oc,carbon_organic,NA
+column_name,ISCNTemplate,layer,c_method,carbon_organic,NA
+column_name,ISCNTemplate,layer,n_tot,nitrogen_total,NA
+column_name,ISCNTemplate,layer,c_to_n,carbon_to_nitrogen,NA
+column_name,ISCNTemplate,layer,loi,loss_on_ignition,NA
+column_name,ISCNTemplate,layer,root_quant_size,root_quant_size,NA
+column_name,ISCNTemplate,layer,root_weight,root_weight,NA
+column_name,ISCNTemplate,layer,15n,15n,NA
+column_name,ISCNTemplate,layer,13c,13c,NA
+column_name,ISCNTemplate,layer,rc_lab,radiocarbon_lab,NA
+column_name,ISCNTemplate,layer,rc_lab_number,radiocarbon_lab_number,NA
+column_name,ISCNTemplate,layer,rc_year,radiocarbon_lab_year,NA
+column_name,ISCNTemplate,layer,14c,14c,NA
+column_name,ISCNTemplate,layer,14c_sigma,14c,NA
+column_name,ISCNTemplate,layer,14c_age,age,NA
+column_name,ISCNTemplate,layer,14c_age_sigma,age,NA
+column_name,ISCNTemplate,layer,fraction_modern,fraction_modern,NA
+column_name,ISCNTemplate,layer,fraction_modern_sigma,fraction_modern,NA
+column_name,ISCNTemplate,layer,textureClass,soil_texture_class,NA
+column_name,ISCNTemplate,fraction,site_name,site,NA
+column_name,ISCNTemplate,fraction,cluster_name,cluster_name,NA
+column_name,ISCNTemplate,fraction,profile_name,profile_name,NA
+column_name,ISCNTemplate,fraction,layer_name,layer_name,NA
+column_name,ISCNTemplate,fraction,fraction_name,fraction_name,NA
+column_name,ISCNTemplate,fraction,fraction_number,fraction_number,NA
+column_name,ISCNTemplate,fraction,labeled_addition,labeled_addition,NA
+column_name,ISCNTemplate,fraction,fraction_scheme,fraction_scheme,NA
+column_name,ISCNTemplate,fraction,fraction_property,fraction_property,NA
+column_name,ISCNTemplate,fraction,fraction_scheme_units,fraction_scheme,NA
+column_name,ISCNTemplate,fraction,fraction_type,fraction_type,NA
+column_name,ISCNTemplate,fraction,fraction_agent,fraction_agent,NA
+column_name,ISCNTemplate,fraction,fraction_note,fraction_note,NA
+column_name,ISCNTemplate,fraction,fraction_c_perc,fraction_carbon_percent,NA
+column_name,ISCNTemplate,fraction,fraction_mass_perc,fraction_mass_percent,NA
+column_name,ISCNTemplate,fraction,oc,carbon_organic,NA
+column_name,ISCNTemplate,fraction,c_method,carbon_organic,NA
+column_name,ISCNTemplate,fraction,c_tot,total_carbon,NA
+column_name,ISCNTemplate,fraction,c_method,total_carbon,NA
+column_name,ISCNTemplate,fraction,n_tot,nitrogen_total,NA
+column_name,ISCNTemplate,fraction,c_to_n,carbon_to_nitrogen,NA
+column_name,ISCNTemplate,fraction,loi,loss_on_ignition,NA
+column_name,ISCNTemplate,fraction,15n,15n,NA
+column_name,ISCNTemplate,fraction,13c,13c,NA
+column_name,ISCNTemplate,fraction,rc_lab,radiocarbon_lab,NA
+column_name,ISCNTemplate,fraction,rc_lab_number,radiocarbon_lab_number,NA
+column_name,ISCNTemplate,fraction,rc_year,radiocarbon_lab_year,NA
+column_name,ISCNTemplate,fraction,14c,14c,NA
+column_name,ISCNTemplate,fraction,14c_sigma,14c,NA
+column_name,ISCNTemplate,fraction,14c_age,age,NA
+column_name,ISCNTemplate,fraction,14c_age_sigma,age,NA
+column_name,ISCNTemplate,fraction,fraction_modern,fraction_modern,NA
+column_name,ISCNTemplate,fraction,fraction_modern_sigma,fraction_modern,NA
+column_name,ISCNTemplate,gas,site_name,site_name,NA
+column_name,ISCNTemplate,gas,cluster_name,cluster_name,NA
+column_name,ISCNTemplate,gas,profile_name,profile_name,NA
+column_name,ISCNTemplate,gas,layer_name,layer_name,NA
+column_name,ISCNTemplate,gas,gas_name,gas_name,NA
+column_name,ISCNTemplate,gas,rc_lab,radiocarbon_lab,NA
+column_name,ISCNTemplate,gas,rc_lab_number,radiocarbon_lab_number,NA
+column_name,ISCNTemplate,gas,rc_year,radiocarbon_lab_year,NA
+column_name,ISCNTemplate,gas,labeled_addition,labeled_addition,NA
+column_name,ISCNTemplate,gas,gas_number,gas_number,NA
+column_name,ISCNTemplate,gas,gas_type,gas_type,NA
+column_name,ISCNTemplate,gas,gas_note,gas_note,NA
+column_name,ISCNTemplate,gas,gas_time_series,gas_time_series,NA
+column_name,ISCNTemplate,gas,c_method,CH4_concentration,NA
+column_name,ISCNTemplate,gas,c_method,CO2_concentration,NA
+column_name,ISCNTemplate,gas,collection_method,collection_method,NA
+column_name,ISCNTemplate,gas,collection_loc,field_or_incubation,NA
+column_name,ISCNTemplate,gas,15n,15n,NA
+column_name,ISCNTemplate,gas,c_conc_CO2,CO2_concentration,NA
+column_name,ISCNTemplate,gas,13c_CO2,13c_CO2,NA
+column_name,ISCNTemplate,gas,14c_CO2,14c_CO2,NA
+column_name,ISCNTemplate,gas,14c_CO2_sigma,14c_CO2,NA
+column_name,ISCNTemplate,gas,14c_age_CO2,14c_age_CO2,NA
+column_name,ISCNTemplate,gas,14c_age_CO2_sigma,14c_age_CO2,NA
+column_name,ISCNTemplate,gas,fraction_modern_CO2,fraction_modern_CO2,NA
+column_name,ISCNTemplate,gas,fraction_modern_CO2_sigma,fraction_modern_CO2,NA
+column_name,ISCNTemplate,gas,c_conc_CH4,CH4_concentration,NA
+column_name,ISCNTemplate,gas,13c_CH4,13c_CH4,NA
+column_name,ISCNTemplate,gas,14c_CH4,14c_CH4,NA
+column_name,ISCNTemplate,gas,14c_CH4_sigma,14c_CH4,NA
+column_name,ISCNTemplate,gas,14c_age_CH4,14c_age_CH4,NA
+column_name,ISCNTemplate,gas,14c_age_CH4_sigma,14c_age_CH4,NA
+column_name,ISCNTemplate,gas,fraction_modern_CH4,fraction_modern_CH4,NA
+column_name,ISCNTemplate,gas,fraction_modern_CH4_sigma,fraction_modern_CH4,NA
+column_name,ISCNTemplate,other,site_name,site_name,NA
+column_name,ISCNTemplate,other,cluster_name,cluster_name,NA
+column_name,ISCNTemplate,other,profile_name,profile_name,NA
+column_name,ISCNTemplate,other,layer_name,layer_name,NA
+column_name,ISCNTemplate,other,other_name,other_name,NA
+column_name,ISCNTemplate,other,labeled_addition,labeled_addition,NA
+column_name,ISCNTemplate,other,other_number,other_number,NA
+column_name,ISCNTemplate,other,other_type,other_type,NA
+column_name,ISCNTemplate,other,other_note,other_note,NA
+column_name,ISCNTemplate,other,collection_method,collection_method,NA
+column_name,ISCNTemplate,other,c_method,total_carbon,NA
+column_name,ISCNTemplate,other,c_method,carbon_organic,NA
+column_name,ISCNTemplate,other,processing_method,processing_method,NA
+column_name,ISCNTemplate,other,oc,carbon_organic,NA
+column_name,ISCNTemplate,other,c_tot,total_carbon,NA
+column_name,ISCNTemplate,other,n_tot,nitrogen_total,NA
+column_name,ISCNTemplate,other,c_to_n,carbon_to_nitrogen,NA
+column_name,ISCNTemplate,other,plant_species,vegetation_species,NA
+column_name,ISCNTemplate,other,root_live_flag,root_live_flag,NA
+column_name,ISCNTemplate,other,root_quant_size,root_quant_size,NA
+column_name,ISCNTemplate,other,compound_formula,compound_formula,NA
+column_name,ISCNTemplate,other,compound,compound,NA
+column_name,ISCNTemplate,other,15n,15n,NA
+column_name,ISCNTemplate,other,13c,13c,NA
+column_name,ISCNTemplate,other,rc_lab,radiocarbon_lab,NA
+column_name,ISCNTemplate,other,rc_lab_number,radiocarbon_lab_number,NA
+column_name,ISCNTemplate,other,rc_year,radiocarbon_lab_year,NA
+column_name,ISCNTemplate,other,14c,14c,NA
+column_name,ISCNTemplate,other,14c_sigma,14c,NA
+column_name,ISCNTemplate,other,14c_age,14c_age,NA
+column_name,ISCNTemplate,other,14c_age_sigma,14c_age,NA
+column_name,ISCNTemplate,other,fraction_modern,fraction_modern,NA
+column_name,ISCNTemplate,other,fraction_modern_sigma,fraction_modern,NA
+column_name,ISCNTemplate,disturbance,site_name,site_name,NA
+column_name,ISCNTemplate,disturbance,dist_clearcut_date,dist_clearcut_date,NA
+column_name,ISCNTemplate,disturbance,dist_clearcut_removal_type,dist_clearcut_removal_type,NA
+column_name,ISCNTemplate,disturbance,dist_clearcut_removal_perc,dist_clearcut_removal_perc,NA
+column_name,ISCNTemplate,disturbance,dist_clearcut_date_qual,dist_clearcut_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_clearcut_date_note,dist_clearcut_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_crop_residue_date,dist_crop_residue_date,NA
+column_name,ISCNTemplate,disturbance,dist_crop_residue_type,dist_crop_residue_type,NA
+column_name,ISCNTemplate,disturbance,dist_crop_residue_perc,dist_crop_residue_perc,NA
+column_name,ISCNTemplate,disturbance,dist_crop_residue_date_qual,dist_crop_residue_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_crop_residue_date_note,dist_crop_residue_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_fire_date,dist_fire_date,NA
+column_name,ISCNTemplate,disturbance,dist_fire_severity,dist_fire_severity,NA
+column_name,ISCNTemplate,disturbance,dist_fire_date_qual,dist_fire_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_fire_date_note,dist_fire_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_fwd_removal_date,dist_fwd_removal_date,NA
+column_name,ISCNTemplate,disturbance,dist_fwd_removal_perc,dist_fwd_removal_perc,NA
+column_name,ISCNTemplate,disturbance,dist_fwd_removal_date_qual,dist_fwd_removal_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_fwd_removal_date_note,dist_fwd_removal_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_general_date,dist_general_date,NA
+column_name,ISCNTemplate,disturbance,dist_general_date_qual,dist_general_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_general_date_note,dist_general_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_grazed_date,dist_grazed_date,NA
+column_name,ISCNTemplate,disturbance,dist_grazed_spp,dist_grazed_spp,NA
+column_name,ISCNTemplate,disturbance,dist_grazed_stocking,dist_grazed_stocking,NA
+column_name,ISCNTemplate,disturbance,dist_grazed_live_weight,dist_grazed_live_weight,NA
+column_name,ISCNTemplate,disturbance,dist_grazed_onplot,dist_grazed_onplot,NA
+column_name,ISCNTemplate,disturbance,dist_grazed_daynight,dist_grazed_daynight,NA
+column_name,ISCNTemplate,disturbance,dist_grazed_date_qual,dist_grazed_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_grazed_date_note,dist_grazed_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_harvest_date,dist_harvest_date,NA
+column_name,ISCNTemplate,disturbance,dist_harvest_residue_type,dist_harvest_residue_type,NA
+column_name,ISCNTemplate,disturbance,dist_harvest_residue_perc,dist_harvest_residue_perc,NA
+column_name,ISCNTemplate,disturbance,dist_harvest_spp,dist_harvest_spp,NA
+column_name,ISCNTemplate,disturbance,dist_harvest_date_qual,dist_harvest_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_harvest_date_note,dist_harvest_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_herbicide_date,dist_herbicide_date,NA
+column_name,ISCNTemplate,disturbance,dist_herbicide_type,dist_herbicide_type,NA
+column_name,ISCNTemplate,disturbance,dist_herbicide_kgha,dist_herbicide_kgha,NA
+column_name,ISCNTemplate,disturbance,dist_herbicide_date_qual,dist_herbicide_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_herbicide_date_note,dist_herbicide_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_insect_and_pathogen_date,dist_insect_and_pathogen_date,NA
+column_name,ISCNTemplate,disturbance,dist_insect_and_pathogen_date_qual,dist_insect_and_pathogen_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_insect_and_pathogen_date_note,dist_insect_and_pathogen_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_irrigation_date,dist_irrigation_date,NA
+column_name,ISCNTemplate,disturbance,dist_irrigation_water,dist_irrigation_water,NA
+column_name,ISCNTemplate,disturbance,dist_irrigation_drain_depth,dist_irrigation_drain_depth,NA
+column_name,ISCNTemplate,disturbance,dist_irrigation_date_qual,dist_irrigation_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_irrigation_date_note,dist_irrigation_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_liming_date,dist_liming_date,NA
+column_name,ISCNTemplate,disturbance,dist_liming_kgha,dist_liming_kgha,NA
+column_name,ISCNTemplate,disturbance,dist_liming_date_qual,dist_liming_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_liming_date_note,dist_liming_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_m_fertilization_date,dist_m_fertilization_date,NA
+column_name,ISCNTemplate,disturbance,dist_m_fertilization_type,dist_m_fertilization_type,NA
+column_name,ISCNTemplate,disturbance,dist_m_fertilization_kgha,dist_m_fertilization_kgha,NA
+column_name,ISCNTemplate,disturbance,dist_m_fertilization_form,dist_m_fertilization_form,NA
+column_name,ISCNTemplate,disturbance,dist_m_fertilization_method,dist_m_fertilization_method,NA
+column_name,ISCNTemplate,disturbance,dist_m_fertilization_date_qual,dist_m_fertilization_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_m_fertilization_date_note,dist_m_fertilization_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_natural_regeneration_date,dist_natural_regeneration_date,NA
+column_name,ISCNTemplate,disturbance,dist_natural_regeneration_type,dist_natural_regeneration_type,NA
+column_name,ISCNTemplate,disturbance,dist_natural_regeneration_date_qual,dist_natural_regeneration_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_natural_regeneration_date_note,dist_natural_regeneration_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_o_fertilization_date,dist_o_fertilization_date,NA
+column_name,ISCNTemplate,disturbance,dist_o_fertilization_type,dist_o_fertilization_type,NA
+column_name,ISCNTemplate,disturbance,dist_o_fertilization_kgha,dist_o_fertilization_kgha,NA
+column_name,ISCNTemplate,disturbance,dist_o_fertilization_c,dist_o_fertilization_c,NA
+column_name,ISCNTemplate,disturbance,dist_o_fertilization_n,dist_o_fertilization_n,NA
+column_name,ISCNTemplate,disturbance,dist_o_fertilization_method,dist_o_fertilization_method,NA
+column_name,ISCNTemplate,disturbance,dist_o_fertilization_date_qual,dist_o_fertilization_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_o_fertilization_date_note,dist_o_fertilization_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_pesticide_date,dist_pesticide_date,NA
+column_name,ISCNTemplate,disturbance,dist_pesticide_kgha,dist_pesticide_kgha,NA
+column_name,ISCNTemplate,disturbance,dist_pesticide_type,dist_pesticide_type,NA
+column_name,ISCNTemplate,disturbance,dist_pesticide_date_qual,dist_pesticide_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_pesticide_date_note,dist_pesticide_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_planting_date,dist_planting_date,NA
+column_name,ISCNTemplate,disturbance,dist_planting_seed,dist_planting_seed,NA
+column_name,ISCNTemplate,disturbance,dist_planting_spp,dist_planting_spp,NA
+column_name,ISCNTemplate,disturbance,dist_planting_date_qual,dist_planting_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_planting_date_note,dist_planting_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_storm_date,dist_storm_date,NA
+column_name,ISCNTemplate,disturbance,dist_storm_date_qual,dist_storm_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_storm_date_note,dist_storm_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_thinning_date,dist_thinning_date,NA
+column_name,ISCNTemplate,disturbance,dist_thinning_removal_type,dist_thinning_removal_type,NA
+column_name,ISCNTemplate,disturbance,dist_thinning_perc,dist_thinning_perc,NA
+column_name,ISCNTemplate,disturbance,dist_thinning_basal_area,dist_thinning_basal_area,NA
+column_name,ISCNTemplate,disturbance,dist_thinning_date_qual,dist_thinning_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_thinning_date_note,dist_thinning_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_tillage_date,dist_tillage_date,NA
+column_name,ISCNTemplate,disturbance,dist_tillage_type,dist_tillage_type,NA
+column_name,ISCNTemplate,disturbance,dist_tillage_depth,dist_tillage_depth,NA
+column_name,ISCNTemplate,disturbance,dist_tillage_date_qual,dist_tillage_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_tillage_date_note,dist_tillage_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_ungrazed_date,dist_ungrazed_date,NA
+column_name,ISCNTemplate,disturbance,dist_ungrazed_duration,dist_ungrazed_duration,NA
+column_name,ISCNTemplate,disturbance,dist_ungrazed_date_qual,dist_ungrazed_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_ungrazed_date_note,dist_ungrazed_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_wildfire_date,dist_wildfire_date,NA
+column_name,ISCNTemplate,disturbance,dist_wildfire_severity,dist_wildfire_severity,NA
+column_name,ISCNTemplate,disturbance,dist_wildfire_date_qual,dist_wildfire_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_wildfire_date_note,dist_wildfire_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_underburn_date,dist_underburn_date,NA
+column_name,ISCNTemplate,disturbance,dist_underburn_perc,dist_underburn_perc,NA
+column_name,ISCNTemplate,disturbance,dist_underburn_date_qual,dist_underburn_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_underburn_date_note,dist_underburn_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_windthrow_date,dist_windthrow_date,NA
+column_name,ISCNTemplate,disturbance,dist_windthrow_perc,dist_windthrow_perc,NA
+column_name,ISCNTemplate,disturbance,dist_windthrow_date_qual,dist_windthrow_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_windthrow_date_note,dist_windthrow_date_note,NA
+column_name,ISCNTemplate,disturbance,dist_woody_encroachment_date,dist_woody_encroachment_date,NA
+column_name,ISCNTemplate,disturbance,dist_woody_encroachment_date_qual,dist_woody_encroachment_date_qual,NA
+column_name,ISCNTemplate,disturbance,dist_woody_encroachment_date_note,dist_woody_encroachment_date_note,NA
+column_name,ISCNTemplate,cluster,site_name,site_name,NA
+column_name,ISCNTemplate,cluster,soc,soil_organic_carbon,NA
+column_name,ISCNTemplate,cluster,soc_type,soil_type,NA
+column_name,ISCNTemplate,cluster,soc_pcount,soil_organic_carbon_count,NA
+column_name,ISCNTemplate,cluster,soc_depth,soil_organic_carbon_depth,NA
+column_name,ISCNTemplate,cluster,soc_sigma,soil_organic_carbon,NA
+column_name,ISCNTemplate,cluster,soc_method,soil_organic_carbon,NA
+column_name,SoDaH-Site_KEY_V2,location,curator_PersonName,curator_name,NA
+column_name,SoDaH-Site_KEY_V2,location,curator_organization,curator_organization,NA
+column_name,SoDaH-Site_KEY_V2,location,curator_email,email,NA
+column_name,SoDaH-Site_KEY_V2,location,modification_date,modification_date,NA
+column_name,SoDaH-Site_KEY_V2,location,author_PersonName,author,NA
+column_name,SoDaH-Site_KEY_V2,location,author_email,email,NA
+column_name,SoDaH-Site_KEY_V2,location,author_orcid_id,contact_orcid_id,NA
+column_name,SoDaH-Site_KEY_V2,location,addit_contact_person,additional_contact_person,NA
+column_name,SoDaH-Site_KEY_V2,location,addit_contact_email,email,NA
+column_name,SoDaH-Site_KEY_V2,location,bibliographical_reference,citation,NA
+column_name,SoDaH-Site_KEY_V2,location,data_doi,doi,NA
+column_name,SoDaH-Site_KEY_V2,location,header_row,header_row_number,NA
+column_name,SoDaH-Site_KEY_V2,location,NA_1,missing_value,NA
+column_name,SoDaH-Site_KEY_V2,location,NA_2,missing_value,NA
+column_name,SoDaH-Site_KEY_V2,location,network,network,NA
+column_name,SoDaH-Site_KEY_V2,location,site_code,site_code,NA
+column_name,SoDaH-Site_KEY_V2,location,location_name,location_name,NA
+column_name,SoDaH-Site_KEY_V2,location,lat,latitude,NA
+column_name,SoDaH-Site_KEY_V2,location,long,longitude,NA
+column_name,SoDaH-Site_KEY_V2,location,datum,latitude_longitude_datum,NA
+column_name,SoDaH-Site_KEY_V2,location,elevation,elevation,NA
+column_name,SoDaH-Site_KEY_V2,location,map,mean_annual_percipitation,NA
+column_name,SoDaH-Site_KEY_V2,location,mat,mean_annual_temperature,NA
+column_name,SoDaH-Site_KEY_V2,location,clim_avg_yrs,climate_averaging_period,NA
+column_name,SoDaH-Site_KEY_V2,location,tx_start,treatment_duration_start,NA
+column_name,SoDaH-Site_KEY_V2,location,aspect_deg,aspect_degree,NA
+column_name,SoDaH-Site_KEY_V2,location,aspect_class,aspect_class,NA
+column_name,SoDaH-Site_KEY_V2,location,slope,slope,NA
+column_name,SoDaH-Site_KEY_V2,location,slope_shape,slope_shape,NA
+column_name,SoDaH-Site_KEY_V2,location,drainage_class,drainage_class,NA
+column_name,SoDaH-Site_KEY_V2,location,depth_water,depth_water,NA
+column_name,SoDaH-Site_KEY_V2,location,parent_transport,parent_transport,NA
+column_name,SoDaH-Site_KEY_V2,location,parent_material,parent_material,NA
+column_name,SoDaH-Site_KEY_V2,location,rock_chem,bedrock_chemistry,NA
+column_name,SoDaH-Site_KEY_V2,location,land_cover,land_cover,NA
+column_name,SoDaH-Site_KEY_V2,location,eco_region,ecoregion,NA
+column_name,SoDaH-Site_KEY_V2,location,loc_texture_class,soil_texture_class,NA
+column_name,SoDaH-Site_KEY_V2,location,plant,vegetation_species,NA
+column_name,SoDaH-Site_KEY_V2,location,lit_c,fine_litterfall_carbon,NA
+column_name,SoDaH-Site_KEY_V2,location,lit_n,fine_litterfall_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,location,lit_p,fine_litterfall_phosphorus,NA
+column_name,SoDaH-Site_KEY_V2,location,lit_cn,fine_litterfall_carbon_to_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,location,lit_lig,aboveground_litterfall_lignin,NA
+column_name,SoDaH-Site_KEY_V2,location,lit_lit_n,aboveground_litterfall_lignin_to_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,location,npp,net_primary_productivity,NA
+column_name,SoDaH-Site_KEY_V2,location,anpp,aboveground_net_primary_productivity,NA
+column_name,SoDaH-Site_KEY_V2,location,bnpp,belowground_net_primary_productivity,NA
+column_name,SoDaH-Site_KEY_V2,location,bnpp_notes,belowground_net_primary_productivity,NA
+column_name,SoDaH-Site_KEY_V2,location,agb,aboveground_biomass,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb,root_biomass,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb_lowerdiam,root biomass_diameter,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb_upperdiam,root biomass_diameter,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb_type,root_biomass_type,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb_notes,root_biomass,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb_c,root_biomass_carbon,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb_n,root_biomass_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb_cn,root_biomass_carbon_to_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,location,bgb_lignin,root_biomass_lignin,NA
+column_name,SoDaH-Site_KEY_V2,location,wood_lit_c,wood_litterfall_carbon_flux,NA
+column_name,SoDaH-Site_KEY_V2,location,wood_lit_n,wood_litterfall_nitrogen_flux,NA
+column_name,SoDaH-Site_KEY_V2,location,wood_lit_cn,wood_litterfall_carbon_to_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,location,align_1,alignment_notes_profile_data,NA
+column_name,SoDaH-Site_KEY_V2,location,align_2,alignment_notes_profile_data,NA
+column_name,SoDaH-Site_KEY_V2,location,loc_comments,comments,NA
+column_name,SoDaH-Site_KEY_V2,location,time_series,time_series,NA
+column_name,SoDaH-Site_KEY_V2,location,gradient,gradient_study,NA
+column_name,SoDaH-Site_KEY_V2,location,experiments,experimental_manipulations,NA
+column_name,SoDaH-Site_KEY_V2,location,control_id,control_samples_identifier,NA
+column_name,SoDaH-Site_KEY_V2,location,number_treatments,treatments_number,NA
+column_name,SoDaH-Site_KEY_V2,location,merge_align,merge_align,NA
+column_name,SoDaH-Site_KEY_V2,location,key_version,key_version,NA
+column_name,SoDaH-Site_KEY_V2,profile,L1,experimental_level_1,NA
+column_name,SoDaH-Site_KEY_V2,profile,L2,experimental_level_2,NA
+column_name,SoDaH-Site_KEY_V2,profile,L3,experimental_level_3,NA
+column_name,SoDaH-Site_KEY_V2,profile,L4,experimental_level_4,NA
+column_name,SoDaH-Site_KEY_V2,profile,L5,experimental_level_5,NA
+column_name,SoDaH-Site_KEY_V2,profile,L6,experimental_level_6,NA
+column_name,SoDaH-Site_KEY_V2,profile,tx_L1,treatment_1_level,NA
+column_name,SoDaH-Site_KEY_V2,profile,tx_L2,treatment_2_level,NA
+column_name,SoDaH-Site_KEY_V2,profile,tx_L3,treatment_3_level,NA
+column_name,SoDaH-Site_KEY_V2,profile,tx_L4,treatment_4_level,NA
+column_name,SoDaH-Site_KEY_V2,profile,tx_L5,treatment_5_level,NA
+column_name,SoDaH-Site_KEY_V2,profile,tx_L6,treatment_6_level,NA
+column_name,SoDaH-Site_KEY_V2,profile,observation_date,observation_date,NA
+column_name,SoDaH-Site_KEY_V2,profile,veg_note_profile,vegetation,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_c_tot,total_carbon,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_soc,soil_organic_carbon,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_soc_stock,bulk_layer_organic_carbon_stock,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_loi,loss_on_ignition,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_som_WalkleyBlack,bulk_layer_soil_organic_matter,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_n_tot,nitrogen_total,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_n_tot_stock,nitrogen_total_stock,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_c_to_n,carbon_to_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_15n,15n,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_13c,13c,NA
+column_name,SoDaH-Site_KEY_V2,layer,layer_top,depth_min,NA
+column_name,SoDaH-Site_KEY_V2,layer,layer_bot,depth_max,NA
+column_name,SoDaH-Site_KEY_V2,layer,layer_mid,depth_mean,NA
+column_name,SoDaH-Site_KEY_V2,layer,hzn,horizon,NA
+column_name,SoDaH-Site_KEY_V2,layer,bd_samp,bulk_density_sample,NA
+column_name,SoDaH-Site_KEY_V2,layer,bd_tot,bulk_density_total,NA
+column_name,SoDaH-Site_KEY_V2,layer,^bd_,bulk_density,NA
+column_name,SoDaH-Site_KEY_V2,layer,ph_cacl,pH_cacl,NA
+column_name,SoDaH-Site_KEY_V2,layer,ph_h2o,pH_h2o,NA
+column_name,SoDaH-Site_KEY_V2,layer,ph_other,pH_other,NA
+column_name,SoDaH-Site_KEY_V2,layer,sand,sand,NA
+column_name,SoDaH-Site_KEY_V2,layer,silt,silt,NA
+column_name,SoDaH-Site_KEY_V2,layer,clay,clay,NA
+column_name,SoDaH-Site_KEY_V2,layer,coarse_frac,coarse_fraction,NA
+column_name,SoDaH-Site_KEY_V2,layer,coarse_tot,coarse_size_thresh,NA
+column_name,SoDaH-Site_KEY_V2,profile,profile_texture_class,soil_texture_class,NA
+column_name,SoDaH-Site_KEY_V2,layer,bet_surface_area,bet_surface_area,NA
+column_name,SoDaH-Site_KEY_V2,layer,caco3,caco3,NA
+column_name,SoDaH-Site_KEY_V2,layer,Ca,calcium_ extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,Mg,magnesium_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,K,potassium_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,Na,sodium_ extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,cat_exch,cation_exchange_capacity,NA
+column_name,SoDaH-Site_KEY_V2,layer,base_sum,base_sum,NA
+column_name,SoDaH-Site_KEY_V2,layer,cec_sum,exchangeable_cations_sum,NA
+column_name,SoDaH-Site_KEY_V2,layer,ecec,effective_cation_exchange_capacity,NA
+column_name,SoDaH-Site_KEY_V2,layer,bs,base_saturation,NA
+column_name,SoDaH-Site_KEY_V2,layer,mbc_raw,microbial_biomass_carbon_raw,NA
+column_name,SoDaH-Site_KEY_V2,layer,mbc_trans,microbial_biomass_carbon_reported,NA
+column_name,SoDaH-Site_KEY_V2,layer,mbn_raw,microbial_biomass_nitrogen_raw,NA
+column_name,SoDaH-Site_KEY_V2,layer,mbn_trans,microbial_biomass_nitrogen_reported,NA
+column_name,SoDaH-Site_KEY_V2,layer,mbp_raw,microbial_biomass_phosphorus_raw,NA
+column_name,SoDaH-Site_KEY_V2,layer,mbp_trans,microbial_biomass_phosphorus_reported,NA
+column_name,SoDaH-Site_KEY_V2,layer,mb_cn,microbial_biomass_carbon_to_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,layer,mb_cp,microbial_biomass_carbon_to_phosphorus,NA
+column_name,SoDaH-Site_KEY_V2,layer,mb_np,microbial_biomass_nitrogen_to_phosphorus,NA
+column_name,SoDaH-Site_KEY_V2,layer,mbc_method,mbc_method,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_ex_1,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_1_method,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,"NA",p_1_notes,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_ex_2,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_2_method,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,"NA",p_2_notes,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_ex_3,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_3_method,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,"NA",p_3_notes,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_ex_4,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_4_method,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,"NA",p_4_notes,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_ex_5,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,p_5_method,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,"NA",p_5_notes,phosphorus_extractable,NA
+column_name,SoDaH-Site_KEY_V2,layer,n_min,net_nitrogen_mineralization,NA
+column_name,SoDaH-Site_KEY_V2,profile,soil_taxon,soil_taxonomy,NA
+column_name,SoDaH-Site_KEY_V2,profile,soil_series,soil_series,NA
+column_name,SoDaH-Site_KEY_V2,profile,bedrock_depth,depth_bedrock,NA
+column_name,SoDaH-Site_KEY_V2,profile,thaw_depth_profile,thaw_depth_profile,NA
+column_name,SoDaH-Site_KEY_V2,profile,fire_freq,fire_frequency,NA
+column_name,SoDaH-Site_KEY_V2,profile,comment_profile,comments,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_al_py,aluminum_pyrophosphate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_si_py,silicon_pyrophosphate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_c_py,carbon_pyrophosphate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_py$,pyrophosphate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_fe_ox,iron_oxalate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_al_ox,aluminum_oxalate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_si_ox,silicon_oxalate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_ox$,oxalate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_fe_hy,iron_hydroxylamine,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_al_hy,aluminum_ hydroxylamine,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_si_hy,silicon_ hydroxylamine,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_c_hy,carbon_hydroxylamine,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_hy$,hydroxylamine,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_fe_dith,iron_dithionate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_al_dith,aluminum_dithionate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_si_dith,silicon_dithionate,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_dith$,dithionite,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_quartz,quartz,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_alkali_feldspar,alkali_feldspar,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_plag_feldspar,plagioclase_feldspar,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_mica_chlorite,mica_chlorite,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_amphibole,amphibole,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_pyroxine,pyroxine,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_olivine,olivine,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_volc_glass,volcanic_glass,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_kaol_halloy,kaolinite_halloysite,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_smect_vermic,smectite_vermincullite,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_gibbsite,gibbsite,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_fe_oxides,iron_oxides,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_imog_alloph,imogolite_allophane,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_ferrihydrite,ferrihydrite,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_radiolabID,rc_lab,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_radiolab_lyrnum,rc_lab,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_radioanlys_yr,rc_year,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_14c,14c,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_14c_sdv,14c,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_frc_modern,fraction_modern,NA
+column_name,SoDaH-Site_KEY_V2,layer,lyr_frc_modern_sdv,fraction_modern,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_scheme,fraction_scheme,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_property,fraction_property,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_scheme_units,fraction_scheme_units,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_low_cutoff,cutoff_numerical,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_high_cutoff,cutoff_numerical,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_extr_conc,concentration,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_sqtl,sequential_fractionation,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_seq_order,fraction_sequencing_order,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_composite,composite,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_notes,fraction_note,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_c_perc,fraction_c_perc,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_mass_perc,fraction_mass_perc,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_c_tot,total_carbon,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_oc,carbon_organic,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_n_tot,nitrogen_total,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_c_to_n,carbon_to_nitrogen,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_15n,15n,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_13c,13c,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_radiolabID,rc_lab,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_radiolab_lyrnum,rc_lab,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_radioanlys_yr,rc_year,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_14c,14c,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_14c_sdv,14c,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_frc_modern,fraction_modern,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_frc_modern_sdv,fraction_modern,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_quartz,quartz,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_alkali_feldspar,alkali_feldspar,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_plag_feldspar,plagioclase_feldspar,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_mica_chlorite,mica_chlorite,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_amphibole,amphibole,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_pyroxine,pyroxine,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_olivine,olivine,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_volc_glass,volcanic_glass,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_kaol_halloy,kaolinite_halloysite,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_smect_vermic,smectite_vermincullite,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_gibbsite,gibbsite,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_fe_oxides,iron_oxides,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_imog_alloph,imogolite_allophane,NA
+column_name,SoDaH-Site_KEY_V2,fraction,frc_ferrihydrite,ferrihydrite,NA
+column_name,WoSIS_2019,attributes,code,attribute_code,NA
+column_name,WoSIS_2019,attributes,type,attribute_type,NA
+column_name,WoSIS_2019,attributes,attribute,attribute,NA
+column_name,WoSIS_2019,attributes,unit,attribute_unit,NA
+column_name,WoSIS_2019,attributes,profiles,attribute_proflles,NA
+column_name,WoSIS_2019,attributes,layers,attribute_layers,NA
+column_name,WoSIS_2019,attributes,description,attribute_description,NA
+column_name,WoSIS_2019,attributes,accuracy,attribute_accuracy,NA
+column_name,WoSIS_2019,layers_chemical,profile_id,profile_id,NA
+column_name,WoSIS_2019,layers_chemical,profile_layer_id,profile_id,NA
+column_name,WoSIS_2019,layers_chemical,upper_depth,depth_min,NA
+column_name,WoSIS_2019,layers_chemical,lower_depth,depth_max,NA
+column_name,WoSIS_2019,layers_chemical,layer_name,layer_name,NA
+column_name,WoSIS_2019,layers_chemical,litter,litter,NA
+column_name,WoSIS_2019,layers_chemical,tceq_value,caco3,NA
+column_name,WoSIS_2019,layers_chemical,tceq_value_avg,caco3,NA
+column_name,WoSIS_2019,layers_chemical,tceq_method,caco3,NA
+column_name,WoSIS_2019,layers_chemical,tceq_date,caco3,NA
+column_name,WoSIS_2019,layers_chemical,tceq_dataset_id,caco3,NA
+column_name,WoSIS_2019,layers_chemical,tceq_profile_code,caco3,NA
+column_name,WoSIS_2019,layers_chemical,tceq_licence,caco3,NA
+column_name,WoSIS_2019,layers_chemical,cecph7_value,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph7_value_avg,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph7_method,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph7_date,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph7_dataset_id,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph7_profile_code,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph7_licence,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph8_value,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph8_value_avg,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph8_method,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph8_date,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph8_dataset_id,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph8_profile_code,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,cecph8_licence,cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,ecec_value,effective_cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,ecec_value_avg,effective_cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,ecec_method,effective_cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,ecec_date,effective_cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,ecec_dataset_id,effective_cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,ecec_profile_code,effective_cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,ecec_licence,effective_cation_exchange_capacity,NA
+column_name,WoSIS_2019,layers_chemical,elco20_value,electrical_conductivity_2.0,NA
+column_name,WoSIS_2019,layers_chemical,elco20_value_avg,electrical_conductivity_2.0,NA
+column_name,WoSIS_2019,layers_chemical,elco20_method,electrical_conductivity_2.0,NA
+column_name,WoSIS_2019,layers_chemical,elco20_date,electrical_conductivity_2.0,NA
+column_name,WoSIS_2019,layers_chemical,elco20_dataset_id,electrical_conductivity_2.0,NA
+column_name,WoSIS_2019,layers_chemical,elco20_profile_code,electrical_conductivity_2.0,NA
+column_name,WoSIS_2019,layers_chemical,elco20_licence,electrical_conductivity_2.0,NA
+column_name,WoSIS_2019,layers_chemical,elco25_value,electrical_conductivity_2.5,NA
+column_name,WoSIS_2019,layers_chemical,elco25_value_avg,electrical_conductivity_2.5,NA
+column_name,WoSIS_2019,layers_chemical,elco25_method,electrical_conductivity_2.5,NA
+column_name,WoSIS_2019,layers_chemical,elco25_date,electrical_conductivity_2.5,NA
+column_name,WoSIS_2019,layers_chemical,elco25_dataset_id,electrical_conductivity_2.5,NA
+column_name,WoSIS_2019,layers_chemical,elco25_profile_code,electrical_conductivity_2.5,NA
+column_name,WoSIS_2019,layers_chemical,elco25_licence,electrical_conductivity_2.5,NA
+column_name,WoSIS_2019,layers_chemical,elco50_value,electrical_conductivity_5.0,NA
+column_name,WoSIS_2019,layers_chemical,elco50_value_avg,electrical_conductivity_5.0,NA
+column_name,WoSIS_2019,layers_chemical,elco50_method,electrical_conductivity_5.0,NA
+column_name,WoSIS_2019,layers_chemical,elco50_date,electrical_conductivity_5.0,NA
+column_name,WoSIS_2019,layers_chemical,elco50_dataset_id,electrical_conductivity_5.0,NA
+column_name,WoSIS_2019,layers_chemical,elco50_profile_code,electrical_conductivity_5.0,NA
+column_name,WoSIS_2019,layers_chemical,elco50_licence,electrical_conductivity_5.0,NA
+column_name,WoSIS_2019,layers_chemical,elcosp_value,electrical_conductivity_saturated_paste,NA
+column_name,WoSIS_2019,layers_chemical,elcosp_value_avg,electrical_conductivity_saturated_paste,NA
+column_name,WoSIS_2019,layers_chemical,elcosp_method,electrical_conductivity_saturated_paste,NA
+column_name,WoSIS_2019,layers_chemical,elcosp_date,electrical_conductivity_saturated_paste,NA
+column_name,WoSIS_2019,layers_chemical,elcosp_dataset_id,electrical_conductivity_saturated_paste,NA
+column_name,WoSIS_2019,layers_chemical,elcosp_profile_code,electrical_conductivity_saturated_paste,NA
+column_name,WoSIS_2019,layers_chemical,elcosp_licence,electrical_conductivity_saturated_paste,NA
+column_name,WoSIS_2019,layers_chemical,orgc_value,soil_organic_carbon,NA
+column_name,WoSIS_2019,layers_chemical,orgc_value_avg,soil_organic_carbon,NA
+column_name,WoSIS_2019,layers_chemical,orgc_method,soil_organic_carbon,NA
+column_name,WoSIS_2019,layers_chemical,orgc_date,soil_organic_carbon,NA
+column_name,WoSIS_2019,layers_chemical,orgc_dataset_id,soil_organic_carbon,NA
+column_name,WoSIS_2019,layers_chemical,orgc_profile_code,soil_organic_carbon,NA
+column_name,WoSIS_2019,layers_chemical,orgc_licence,soil_organic_carbon,NA
+column_name,WoSIS_2019,layers_chemical,phca_value,pH_cacl2,NA
+column_name,WoSIS_2019,layers_chemical,phca_value_avg,pH_cacl2,NA
+column_name,WoSIS_2019,layers_chemical,phca_method,pH_cacl2,NA
+column_name,WoSIS_2019,layers_chemical,phca_date,pH_cacl2,NA
+column_name,WoSIS_2019,layers_chemical,phca_dataset_id,pH_cacl2,NA
+column_name,WoSIS_2019,layers_chemical,phca_profile_code,pH_cacl2,NA
+column_name,WoSIS_2019,layers_chemical,phca_licence,pH_cacl2,NA
+column_name,WoSIS_2019,layers_chemical,phaq_value,pH_h2o,NA
+column_name,WoSIS_2019,layers_chemical,phaq_value_avg,pH_h2o,NA
+column_name,WoSIS_2019,layers_chemical,phaq_method,pH_h2o,NA
+column_name,WoSIS_2019,layers_chemical,phaq_date,pH_h2o,NA
+column_name,WoSIS_2019,layers_chemical,phaq_dataset_id,pH_h2o,NA
+column_name,WoSIS_2019,layers_chemical,phaq_profile_code,pH_h2o,NA
+column_name,WoSIS_2019,layers_chemical,phaq_licence,pH_h2o,NA
+column_name,WoSIS_2019,layers_chemical,phkc_value,pH_kcl,NA
+column_name,WoSIS_2019,layers_chemical,phkc_value_avg,pH_kcl,NA
+column_name,WoSIS_2019,layers_chemical,phkc_method,pH_kcl,NA
+column_name,WoSIS_2019,layers_chemical,phkc_date,pH_kcl,NA
+column_name,WoSIS_2019,layers_chemical,phkc_dataset_id,pH_kcl,NA
+column_name,WoSIS_2019,layers_chemical,phkc_profile_code,pH_kcl,NA
+column_name,WoSIS_2019,layers_chemical,phkc_licence,pH_kcl,NA
+column_name,WoSIS_2019,layers_chemical,phnf_value,pH_naf,NA
+column_name,WoSIS_2019,layers_chemical,phnf_value_avg,pH_naf,NA
+column_name,WoSIS_2019,layers_chemical,phnf_method,pH_naf,NA
+column_name,WoSIS_2019,layers_chemical,phnf_date,pH_naf,NA
+column_name,WoSIS_2019,layers_chemical,phnf_dataset_id,pH_naf,NA
+column_name,WoSIS_2019,layers_chemical,phnf_profile_code,pH_naf,NA
+column_name,WoSIS_2019,layers_chemical,phnf_licence,pH_naf,NA
+column_name,WoSIS_2019,layers_chemical,phpbyi_value,phosphorus_extractable_bray,NA
+column_name,WoSIS_2019,layers_chemical,phpbyi_value_avg,phosphorus_extractable_bray,NA
+column_name,WoSIS_2019,layers_chemical,phpbyi_method,phosphorus_extractable_bray,NA
+column_name,WoSIS_2019,layers_chemical,phpbyi_date,phosphorus_extractable_bray,NA
+column_name,WoSIS_2019,layers_chemical,phpbyi_dataset_id,phosphorus_extractable_bray,NA
+column_name,WoSIS_2019,layers_chemical,phpbyi_profile_code,phosphorus_extractable_bray,NA
+column_name,WoSIS_2019,layers_chemical,phpbyi_licence,phosphorus_extractable_bray,NA
+column_name,WoSIS_2019,layers_chemical,phpmh3_value,phosphorus_extractable_meh,NA
+column_name,WoSIS_2019,layers_chemical,phpmh3_value_avg,phosphorus_extractable_meh,NA
+column_name,WoSIS_2019,layers_chemical,phpmh3_method,phosphorus_extractable_meh,NA
+column_name,WoSIS_2019,layers_chemical,phpmh3_date,phosphorus_extractable_meh,NA
+column_name,WoSIS_2019,layers_chemical,phpmh3_dataset_id,phosphorus_extractable_meh,NA
+column_name,WoSIS_2019,layers_chemical,phpmh3_profile_code,phosphorus_extractable_meh,NA
+column_name,WoSIS_2019,layers_chemical,phpmh3_licence,phosphorus_extractable_meh,NA
+column_name,WoSIS_2019,layers_chemical,phpols_value,pH_p_olsen,NA
+column_name,WoSIS_2019,layers_chemical,phpols_value_avg,pH_p_olsen,NA
+column_name,WoSIS_2019,layers_chemical,phpols_method,pH_p_olsen,NA
+column_name,WoSIS_2019,layers_chemical,phpols_date,pH_p_olsen,NA
+column_name,WoSIS_2019,layers_chemical,phpols_dataset_id,pH_p_olsen,NA
+column_name,WoSIS_2019,layers_chemical,phpols_profile_code,pH_p_olsen,NA
+column_name,WoSIS_2019,layers_chemical,phpols_licence,pH_p_olsen,NA
+column_name,WoSIS_2019,layers_chemical,phprtn_value,pH_p_retention,NA
+column_name,WoSIS_2019,layers_chemical,phprtn_value_avg,pH_p_retention,NA
+column_name,WoSIS_2019,layers_chemical,phprtn_method,pH_p_retention,NA
+column_name,WoSIS_2019,layers_chemical,phprtn_date,pH_p_retention,NA
+column_name,WoSIS_2019,layers_chemical,phprtn_dataset_id,pH_p_retention,NA
+column_name,WoSIS_2019,layers_chemical,phprtn_profile_code,pH_p_retention,NA
+column_name,WoSIS_2019,layers_chemical,phprtn_licence,pH_p_retention,NA
+column_name,WoSIS_2019,layers_chemical,phptot_value,phosphorus_total,NA
+column_name,WoSIS_2019,layers_chemical,phptot_value_avg,phosphorus_total,NA
+column_name,WoSIS_2019,layers_chemical,phptot_method,phosphorus_total,NA
+column_name,WoSIS_2019,layers_chemical,phptot_date,phosphorus_total,NA
+column_name,WoSIS_2019,layers_chemical,phptot_dataset_id,phosphorus_total,NA
+column_name,WoSIS_2019,layers_chemical,phptot_profile_code,phosphorus_total,NA
+column_name,WoSIS_2019,layers_chemical,phptot_licence,phosphorus_total,NA
+column_name,WoSIS_2019,layers_chemical,phpwsl_value,pH_p_water_soluble,NA
+column_name,WoSIS_2019,layers_chemical,phpwsl_value_avg,pH_p_water_soluble,NA
+column_name,WoSIS_2019,layers_chemical,phpwsl_method,pH_p_water_soluble,NA
+column_name,WoSIS_2019,layers_chemical,phpwsl_date,pH_p_water_soluble,NA
+column_name,WoSIS_2019,layers_chemical,phpwsl_dataset_id,pH_p_water_soluble,NA
+column_name,WoSIS_2019,layers_chemical,phpwsl_profile_code,pH_p_water_soluble,NA
+column_name,WoSIS_2019,layers_chemical,phpwsl_licence,pH_p_water_soluble,NA
+column_name,WoSIS_2019,layers_chemical,totc_value,total_carbon,NA
+column_name,WoSIS_2019,layers_chemical,totc_value_avg,total_carbon,NA
+column_name,WoSIS_2019,layers_chemical,totc_method,total_carbon,NA
+column_name,WoSIS_2019,layers_chemical,totc_date,total_carbon,NA
+column_name,WoSIS_2019,layers_chemical,totc_dataset_id,total_carbon,NA
+column_name,WoSIS_2019,layers_chemical,totc_profile_code,total_carbon,NA
+column_name,WoSIS_2019,layers_chemical,totc_licence,total_carbon,NA
+column_name,WoSIS_2019,layers_chemical,nitkjd_value,nitrogen_total,NA
+column_name,WoSIS_2019,layers_chemical,nitkjd_value_avg,nitrogen_total,NA
+column_name,WoSIS_2019,layers_chemical,nitkjd_method,nitrogen_total,NA
+column_name,WoSIS_2019,layers_chemical,nitkjd_date,nitrogen_total,NA
+column_name,WoSIS_2019,layers_chemical,nitkjd_dataset_id,nitrogen_total,NA
+column_name,WoSIS_2019,layers_chemical,nitkjd_profile_code,nitrogen_total,NA
+column_name,WoSIS_2019,layers_chemical,nitkjd_licence,nitrogen_total,NA
+column_name,WoSIS_2019,layers_physical,profile_id,profile_id,NA
+column_name,WoSIS_2019,layers_physical,profile_layer_id,profile_id,NA
+column_name,WoSIS_2019,layers_physical,upper_depth,depth_min,NA
+column_name,WoSIS_2019,layers_physical,lower_depth,depth_max,NA
+column_name,WoSIS_2019,layers_physical,layer_name,layer_name,NA
+column_name,WoSIS_2019,layers_physical,litter,litter,NA
+column_name,WoSIS_2019,layers_physical,bdfi33_value,bulk_density_fine_earth_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdfi33_value_avg,bulk_density_fine_earth_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdfi33_method,bulk_density_fine_earth_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdfi33_date,bulk_density_fine_earth_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdfi33_dataset_id,bulk_density_fine_earth_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdfi33_profile_code,bulk_density_fine_earth_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdfi33_licence,bulk_density_fine_earth_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdfiad_value,bulk_density_fine_earth_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiad_value_avg,bulk_density_fine_earth_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiad_method,bulk_density_fine_earth_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiad_date,bulk_density_fine_earth_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiad_dataset_id,bulk_density_fine_earth_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiad_profile_code,bulk_density_fine_earth_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiad_licence,bulk_density_fine_earth_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfifm_value,bulk_density_fine_earth_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdfifm_value_avg,bulk_density_fine_earth_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdfifm_method,bulk_density_fine_earth_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdfifm_date,bulk_density_fine_earth_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdfifm_dataset_id,bulk_density_fine_earth_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdfifm_profile_code,bulk_density_fine_earth_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdfifm_licence,bulk_density_fine_earth_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdfiod_value,bulk_density_fine_earth_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiod_value_avg,bulk_density_fine_earth_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiod_method,bulk_density_fine_earth_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiod_date,bulk_density_fine_earth_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiod_dataset_id,bulk_density_fine_earth_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiod_profile_code,bulk_density_fine_earth_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdfiod_licence,bulk_density_fine_earth_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdws33_value,bulk_density_whole_soil_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdws33_value_avg,bulk_density_whole_soil_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdws33_method,bulk_density_whole_soil_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdws33_date,bulk_density_whole_soil_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdws33_dataset_id,bulk_density_whole_soil_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdws33_profile_code,bulk_density_whole_soil_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdws33_licence,bulk_density_whole_soil_33pKa,NA
+column_name,WoSIS_2019,layers_physical,bdwsad_value,bulk_density_whole_soil_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsad_value_avg,bulk_density_whole_soil_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsad_method,bulk_density_whole_soil_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsad_date,bulk_density_whole_soil_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsad_dataset_id,bulk_density_whole_soil_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsad_profile_code,bulk_density_whole_soil_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsad_licence,bulk_density_whole_soil_air_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsfm_value,bulk_density_whole_soil_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdwsfm_value_avg,bulk_density_whole_soil_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdwsfm_method,bulk_density_whole_soil_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdwsfm_date,bulk_density_whole_soil_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdwsfm_dataset_id,bulk_density_whole_soil_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdwsfm_profile_code,bulk_density_whole_soil_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdwsfm_licence,bulk_density_whole_soil_feild_moist,NA
+column_name,WoSIS_2019,layers_physical,bdwsod_value,bulk_density_whole_soil_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsod_value_avg,bulk_density_whole_soil_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsod_method,bulk_density_whole_soil_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsod_date,bulk_density_whole_soil_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsod_dataset_id,bulk_density_whole_soil_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsod_profile_code,bulk_density_whole_soil_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,bdwsod_licence,bulk_density_whole_soil_oven_dry,NA
+column_name,WoSIS_2019,layers_physical,clay_value,clay,NA
+column_name,WoSIS_2019,layers_physical,clay_value_avg,clay,NA
+column_name,WoSIS_2019,layers_physical,clay_method,clay,NA
+column_name,WoSIS_2019,layers_physical,clay_date,clay,NA
+column_name,WoSIS_2019,layers_physical,clay_dataset_id,clay,NA
+column_name,WoSIS_2019,layers_physical,clay_profile_code,clay,NA
+column_name,WoSIS_2019,layers_physical,clay_licence,clay,NA
+column_name,WoSIS_2019,layers_physical,cfgr_value,coarse_fragments_gravimetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfgr_value_avg,coarse_fragments_gravimetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfgr_method,coarse_fragments_gravimetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfgr_date,coarse_fragments_gravimetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfgr_dataset_id,coarse_fragments_gravimetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfgr_profile_code,coarse_fragments_gravimetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfgr_licence,coarse_fragments_gravimetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfvo_value,coarse_fragments_volumetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfvo_value_avg,coarse_fragments_volumetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfvo_method,coarse_fragments_volumetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfvo_date,coarse_fragments_volumetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfvo_dataset_id,coarse_fragments_volumetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfvo_profile_code,coarse_fragments_volumetric_total,NA
+column_name,WoSIS_2019,layers_physical,cfvo_licence,coarse_fragments_volumetric_total,NA
+column_name,WoSIS_2019,layers_physical,sand_value,sand,NA
+column_name,WoSIS_2019,layers_physical,sand_value_avg,sand,NA
+column_name,WoSIS_2019,layers_physical,sand_method,sand,NA
+column_name,WoSIS_2019,layers_physical,sand_date,sand,NA
+column_name,WoSIS_2019,layers_physical,sand_dataset_id,sand,NA
+column_name,WoSIS_2019,layers_physical,sand_profile_code,sand,NA
+column_name,WoSIS_2019,layers_physical,sand_licence,sand,NA
+column_name,WoSIS_2019,layers_physical,silt_value,silt,NA
+column_name,WoSIS_2019,layers_physical,silt_value_avg,silt,NA
+column_name,WoSIS_2019,layers_physical,silt_method,silt,NA
+column_name,WoSIS_2019,layers_physical,silt_date,silt,NA
+column_name,WoSIS_2019,layers_physical,silt_dataset_id,silt,NA
+column_name,WoSIS_2019,layers_physical,silt_profile_code,silt,NA
+column_name,WoSIS_2019,layers_physical,silt_licence,silt,NA
+column_name,WoSIS_2019,layers_physical,wg0100_value,Water_retention_gravimetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0100_value_avg,Water_retention_gravimetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0100_method,Water_retention_gravimetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0100_date,Water_retention_gravimetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0100_dataset_id,Water_retention_gravimetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0100_profile_code,Water_retention_gravimetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0100_licence,Water_retention_gravimetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0010_value,Water_retention_gravimetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0010_value_avg,Water_retention_gravimetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0010_method,Water_retention_gravimetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0010_date,Water_retention_gravimetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0010_dataset_id,Water_retention_gravimetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0010_profile_code,Water_retention_gravimetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0010_licence,Water_retention_gravimetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wg1500_value,Water_retention_gravimetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg1500_value_avg,Water_retention_gravimetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg1500_method,Water_retention_gravimetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg1500_date,Water_retention_gravimetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg1500_dataset_id,Water_retention_gravimetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg1500_profile_code,Water_retention_gravimetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg1500_licence,Water_retention_gravimetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0200_value,Water_retention_gravimetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0200_value_avg,Water_retention_gravimetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0200_method,Water_retention_gravimetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0200_date,Water_retention_gravimetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0200_dataset_id,Water_retention_gravimetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0200_profile_code,Water_retention_gravimetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0200_licence,Water_retention_gravimetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0033_value,Water_retention_gravimetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0033_value_avg,Water_retention_gravimetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0033_method,Water_retention_gravimetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0033_date,Water_retention_gravimetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0033_dataset_id,Water_retention_gravimetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0033_profile_code,Water_retention_gravimetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0033_licence,Water_retention_gravimetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0500_value,Water_retention_gravimetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0500_value_avg,Water_retention_gravimetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0500_method,Water_retention_gravimetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0500_date,Water_retention_gravimetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0500_dataset_id,Water_retention_gravimetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0500_profile_code,Water_retention_gravimetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0500_licence,Water_retention_gravimetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0006_value,Water_retention_gravimetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0006_value_avg,Water_retention_gravimetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0006_method,Water_retention_gravimetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0006_date,Water_retention_gravimetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0006_dataset_id,Water_retention_gravimetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0006_profile_code,Water_retention_gravimetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wg0006_licence,Water_retention_gravimetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0100_value,Water_retention_volumetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0100_value_avg,Water_retention_volumetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0100_method,Water_retention_volumetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0100_date,Water_retention_volumetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0100_dataset_id,Water_retention_volumetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0100_profile_code,Water_retention_volumetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0100_licence,Water_retention_volumetric_100kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0010_value,Water_retention_volumetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0010_value_avg,Water_retention_volumetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0010_method,Water_retention_volumetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0010_date,Water_retention_volumetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0010_dataset_id,Water_retention_volumetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0010_profile_code,Water_retention_volumetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0010_licence,Water_retention_volumetric_10kPa,NA
+column_name,WoSIS_2019,layers_physical,wv1500_value,Water_retention_volumetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv1500_value_avg,Water_retention_volumetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv1500_method,Water_retention_volumetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv1500_date,Water_retention_volumetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv1500_dataset_id,Water_retention_volumetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv1500_profile_code,Water_retention_volumetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv1500_licence,Water_retention_volumetric_1500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0200_value,Water_retention_volumetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0200_value_avg,Water_retention_volumetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0200_method,Water_retention_volumetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0200_date,Water_retention_volumetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0200_dataset_id,Water_retention_volumetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0200_profile_code,Water_retention_volumetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0200_licence,Water_retention_volumetric_200kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0033_value,Water_retention_volumetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0033_value_avg,Water_retention_volumetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0033_method,Water_retention_volumetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0033_date,Water_retention_volumetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0033_dataset_id,Water_retention_volumetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0033_profile_code,Water_retention_volumetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0033_licence,Water_retention_volumetric_33kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0500_value,Water_retention_volumetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0500_value_avg,Water_retention_volumetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0500_method,Water_retention_volumetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0500_date,Water_retention_volumetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0500_dataset_id,Water_retention_volumetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0500_profile_code,Water_retention_volumetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0500_licence,Water_retention_volumetric_500kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0006_value,Water_retention_volumetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0006_value_avg,Water_retention_volumetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0006_method,Water_retention_volumetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0006_date,Water_retention_volumetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0006_dataset_id,Water_retention_volumetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0006_profile_code,Water_retention_volumetric_6kPa,NA
+column_name,WoSIS_2019,layers_physical,wv0006_licence,Water_retention_volumetric_6kPa,NA
+column_name,WoSIS_2019,profiles,profile_id,profile_id,NA
+column_name,WoSIS_2019,profiles,dataset_id,dataset_name,NA
+column_name,WoSIS_2019,profiles,country_id,country,NA
+column_name,WoSIS_2019,profiles,country_name,country,NA
+column_name,WoSIS_2019,profiles,geom_accuracy,geom_accuracy,NA
+column_name,WoSIS_2019,profiles,latitude,latitude,NA
+column_name,WoSIS_2019,profiles,longitude,longitude,NA
+column_name,WoSIS_2019,profiles,dsds,depth_max,NA
+column_name,WoSIS_2019,profiles,cfao_version,fao_legend,NA
+column_name,WoSIS_2019,profiles,cfao_major_group_code,fao_legend,NA
+column_name,WoSIS_2019,profiles,cfao_major_group,fao_legend,NA
+column_name,WoSIS_2019,profiles,cfao_soil_unit_code,fao_legend,NA
+column_name,WoSIS_2019,profiles,cfao_soil_unit,fao_legend,NA
+column_name,WoSIS_2019,profiles,cwrb_version,world_reference_base_soil_resources,NA
+column_name,WoSIS_2019,profiles,cwrb_reference_soil_group_code,world_reference_base_soil_resources,NA
+column_name,WoSIS_2019,profiles,cwrb_reference_soil_group,world_reference_base_soil_resources,NA
+column_name,WoSIS_2019,profiles,cwrb_prefix_qualifier,world_reference_base_soil_resources,NA
+column_name,WoSIS_2019,profiles,cwrb_suffix_qualifier,world_reference_base_soil_resources,NA
+column_name,WoSIS_2019,profiles,cstx_version,USDA_soil_taxonomy,NA
+column_name,WoSIS_2019,profiles,cstx_order_name,USDA_soil_taxonomy,NA
+column_name,WoSIS_2019,profiles,cstx_suborder,USDA_soil_taxonomy,NA
+column_name,WoSIS_2019,profiles,cstx_great_group,USDA_soil_taxonomy,NA
+column_name,WoSIS_2019,profiles,cstx_subgroup,USDA_soil_taxonomy,NA
+column_name,vanGestel,soil C,site.id,site_name,NA
+column_name,vanGestel,soil C,trt,treatment_type,NA
+column_name,vanGestel,soil C,technique,technique,NA
+column_name,vanGestel,soil C,season,season,NA
+column_name,vanGestel,soil C,trt.size.bg,treatment_size_below_ground,NA
+column_name,vanGestel,soil C,soilT.depth,depth_soil_temperature,NA
+column_name,vanGestel,soil C,trt.size.abg,treatment_size_above_ground,NA
+column_name,vanGestel,soil C,trt.size.units,treatment_size_units,NA
+column_name,vanGestel,soil C,start.date,treatment_duration_start,NA
+column_name,vanGestel,soil C,measurement.date,measurement_date,NA
+column_name,vanGestel,soil C,duration,treatment_duration,NA
+column_name,vanGestel,soil C,remove,remove,NA
+column_name,vanGestel,soil C,multi.year,multiyear,NA
+column_name,vanGestel,soil C,control.mean,control_mean,NA
+column_name,vanGestel,soil C,control.se,control_standard_error,NA
+column_name,vanGestel,soil C,control.n,control_size,NA
+column_name,vanGestel,soil C,trt.mean,treatment_mean,NA
+column_name,vanGestel,soil C,trt.se,treatment_standard_error,NA
+column_name,vanGestel,soil C,trt.n,treatment_size,NA
+column_name,vanGestel,soil C,unit,unit,NA
+column_name,vanGestel,soil C,variable,variable,NA
+column_name,vanGestel,soil C,soil.horizon,soil_horizon,NA
+column_name,vanGestel,soil C,bulk.density,bulk_density,NA
+column_name,vanGestel,soil C,source,source,NA
+column_name,vanGestel,soil C,notes,notes,NA
+column_name,vanGestel,soil C,reference,reference,NA
+column_name,vanGestel,Rsoil,site.id,site_name,NA
+column_name,vanGestel,Rsoil,trt,treatment_type,NA
+column_name,vanGestel,Rsoil,technique,technique,NA
+column_name,vanGestel,Rsoil,season,season,NA
+column_name,vanGestel,Rsoil,trt.size.bg,treatment_size_below_ground,NA
+column_name,vanGestel,Rsoil,soilT.depth,depth_soil_temperature,NA
+column_name,vanGestel,Rsoil,trt.size.abg,treatment_size_above_ground,NA
+column_name,vanGestel,Rsoil,trt.size.units,treatment_size_units,NA
+column_name,vanGestel,Rsoil,start.date,treatment_duration_start,NA
+column_name,vanGestel,Rsoil,measurement.date,measurement_date,NA
+column_name,vanGestel,Rsoil,duration,treatment_duration,NA
+column_name,vanGestel,Rsoil,remove,remove,NA
+column_name,vanGestel,Rsoil,multi.year,multiyear,NA
+column_name,vanGestel,Rsoil,control.mean,control_mean,NA
+column_name,vanGestel,Rsoil,control.se,control_standard_error,NA
+column_name,vanGestel,Rsoil,control.n,control_size,NA
+column_name,vanGestel,Rsoil,trt.mean,treatment_mean,NA
+column_name,vanGestel,Rsoil,trt.se,treatment_standard_error,NA
+column_name,vanGestel,Rsoil,trt.n,treatment_type,NA
+column_name,vanGestel,Rsoil,unit,unit,NA
+column_name,vanGestel,Rsoil,variable,variable,NA
+column_name,vanGestel,Rsoil,source,source,NA
+column_name,vanGestel,Rsoil,notes,notes,NA
+column_name,vanGestel,Rsoil,reference,reference,NA
+column_name,vanGestel,biomass,site.id,site_name,NA
+column_name,vanGestel,biomass,trt,treatment_type,NA
+column_name,vanGestel,biomass,technique,technique,NA
+column_name,vanGestel,biomass,season,season,NA
+column_name,vanGestel,biomass,trt.size.bg,treatment_size_below_ground,NA
+column_name,vanGestel,biomass,soilT.depth,depth_soil_temperature,NA
+column_name,vanGestel,biomass,trt.size.abg,treatment_size_above_ground,NA
+column_name,vanGestel,biomass,trt.size.units,treatment_size_units,NA
+column_name,vanGestel,biomass,species,vegetation_species,NA
+column_name,vanGestel,biomass,start.date,treatment_duration_start,NA
+column_name,vanGestel,biomass,measurement.date,measurement_date,NA
+column_name,vanGestel,biomass,duration,treatment_duration,NA
+column_name,vanGestel,biomass,remove,remove,NA
+column_name,vanGestel,biomass,multi.year,multiyear,NA
+column_name,vanGestel,biomass,control.mean,control_mean,NA
+column_name,vanGestel,biomass,control.se,control_standard_error,NA
+column_name,vanGestel,biomass,control.n,control_size,NA
+column_name,vanGestel,biomass,trt.mean,treatment_mean,NA
+column_name,vanGestel,biomass,trt.se,treatment_standard_error,NA
+column_name,vanGestel,biomass,trt.n,treatment_size,NA
+column_name,vanGestel,biomass,unit,unit,NA
+column_name,vanGestel,biomass,variable,variable,NA
+column_name,vanGestel,biomass,soil.horizon,soil_horizon,NA
+column_name,vanGestel,biomass,source,source,NA
+column_name,vanGestel,biomass,notes,notes,NA
+column_name,vanGestel,biomass,reference,reference,NA
+column_name,vanGestel,biomass,input,input,NA
+column_name,vanGestel,site info,site.id,site_name,NA
+column_name,vanGestel,site info,state.country,state_country,NA
+column_name,vanGestel,site info,site,site,NA
+column_name,vanGestel,site info,project,project,NA
+column_name,vanGestel,site info,lat,latitude,NA
+column_name,vanGestel,site info,lon,longitude,NA
+column_name,vanGestel,site info,elevation,elevation,NA
+column_name,vanGestel,site info,mat,mean_annual_temperature,NA
+column_name,vanGestel,site info,map,mean_annual_precipitation,NA
+column_name,vanGestel,site info,treatments,treatment_type,NA
+column_name,vanGestel,site info,technique,technique,NA
+column_name,vanGestel,site info,season,season,NA
+column_name,vanGestel,site info,biome,biome,NA
+column_name,vanGestel,site info,sub.biome,sub_biome,NA
+column_name,vanGestel,site info,species,vegetation_species,NA
+column_name,vanGestel,site info,soil.type,soil_type,NA
+column_name,vanGestel,site info,soil.texture.class,soil_texture_class,NA
+column_name,vanGestel,site info,perc.sand,sand,NA
+column_name,vanGestel,site info,perc.silt,silt,NA
+column_name,vanGestel,site info,perc.clay,clay,NA
+column_name,vanGestel,site info,start.date,treatment_duration_start,NA
+column_name,vanGestel,site info,C.pool.abg,carbon_pool_above_ground,NA
+column_name,vanGestel,site info,C.pool.bwg,carbon_pool_below_ground,NA
+column_name,vanGestel,site info,N.pool.abg,nitrogen_pool_above_ground,NA
+column_name,vanGestel,site info,N.pool.bwg,nitrogen_pool_below_ground,NA
+column_name,vanGestel,site info,P.pool.bwg,phosphorus_pool_above_ground,NA
+column_name,vanGestel,site info,soil.depth.pool,depth,NA
+column_name,vanGestel,site info,Ndep.rate,nitrogen_deposition_rate,NA
+column_name,vanGestel,site info,bulk.density,bulk_density,NA
+column_name,vanGestel,site info,pH,pH,NA
+column_name,vanGestel,site info,percent.om,organic_matter,NA
+column_name,vanGestel,site info,source,source,NA
+column_name,vanGestel,site info,notes,notes,NA
+column_name,vanGestel,site info,Reference,reference,NA
+column_name,vanGestel,soil moisture,site.id,site_name,NA
+column_name,vanGestel,soil moisture,trt,treatment_type,NA
+column_name,vanGestel,soil moisture,technique,technique,NA
+column_name,vanGestel,soil moisture,season,season,NA
+column_name,vanGestel,soil moisture,trt.size.bg,treatment_size_below_ground,NA
+column_name,vanGestel,soil moisture,soilT.depth,depth_soil_temperature,NA
+column_name,vanGestel,soil moisture,trt.size.abg,treatment_size_above_ground,NA
+column_name,vanGestel,soil moisture,trt.size.units,treatment_size_units,NA
+column_name,vanGestel,soil moisture,start.date,treatment_duration_start,NA
+column_name,vanGestel,soil moisture,measurement.date,measurement_date,NA
+column_name,vanGestel,soil moisture,control.mean,control_mean,NA
+column_name,vanGestel,soil moisture,control.se,control_standard_error,NA
+column_name,vanGestel,soil moisture,control.n,control_size,NA
+column_name,vanGestel,soil moisture,trt.mean,treatment_mean,NA
+column_name,vanGestel,soil moisture,trt.se,treatment_standard_error,NA
+column_name,vanGestel,soil moisture,trt.n,treatment_size,NA
+column_name,vanGestel,soil moisture,unit,unit,NA
+column_name,vanGestel,soil moisture,variable,variable,NA
+column_name,vanGestel,soil moisture,soil.horizon,soil_horizon,NA
+column_name,vanGestel,soil moisture,source,source,NA
+column_name,vanGestel,soil moisture,notes,notes,NA
+column_name,vanGestel,soil moisture,reference,reference,NA
+column_name,vanGestel,correlation BD-OM,site,site,NA
+column_name,vanGestel,correlation BD-OM,bulk.density,bulk_density,NA
+column_name,vanGestel,correlation BD-OM,percent.om,organic_matter,NA
+column_name,vanGestel,correlation BD-OM,source,source,NA
+column_name,vanGestel,correlation BD-OM,notes,notes,NA
+column_name,vanGestel,correlation BD-OM,Reference,reference,NA
+column_name,SIDb_restructured,study,level1,site_id,NA
+column_name,SIDb_restructured,study,citationKey,citationKey,NA
+column_name,SIDb_restructured,study,doi,doi,NA
+column_name,SIDb_restructured,study,entryAuthor,author,NA
+column_name,SIDb_restructured,study,entryCreationDate,observation_date,NA
+column_name,SIDb_restructured,study,contactName,contact_name,NA
+column_name,SIDb_restructured,study,contactEmail,contact_email,NA
+column_name,SIDb_restructured,study,study,dataset_name,NA
+column_name,SIDb_restructured,study,entryNote,note,NA
+column_name,SIDb_restructured,siteInfo,level1,site_id,NA
+column_name,SIDb_restructured,siteInfo,siteIndex,site_index,NA
+column_name,SIDb_restructured,siteInfo,coordinates_latitude_numeric,latitude,NA
+column_name,SIDb_restructured,siteInfo,coordinates_longitude_numeric,longitude,NA
+column_name,SIDb_restructured,siteInfo,elevation,elevation,NA
+column_name,SIDb_restructured,siteInfo,MAT,mean_annual_temperature,NA
+column_name,SIDb_restructured,siteInfo,MAP_numeric,mean_annual_precipitation,NA
+column_name,SIDb_restructured,siteInfo,permafrost_activeLayer_numeric,active_layer,NA
+column_name,SIDb_restructured,siteInfo,site,site_id,NA
+column_name,SIDb_restructured,siteInfo,country,country,NA
+column_name,SIDb_restructured,siteInfo,landCover,biome,NA
+column_name,SIDb_restructured,siteInfo,vegNote,vegetation,NA
+column_name,SIDb_restructured,siteInfo,soilTaxonomy_soilOrder,soil_order,NA
+column_name,SIDb_restructured,siteInfo,soilTaxonomy_soilFamily,soil_type,NA
+column_name,SIDb_restructured,siteInfo,soilTaxonomy_classificationSystem,classification_system,NA
+column_name,SIDb_restructured,siteInfo,permafrost_permafrostExist,permafrost,NA
+column_name,SIDb_restructured,siteInfo,soilTaxonomy_soilSeries,soil_series,NA
+column_name,SIDb_restructured,siteInfo,coordinates_latitude_character,latitude,NA
+column_name,SIDb_restructured,siteInfo,coordinates_longitude_character,longitude,NA
+column_name,SIDb_restructured,siteInfo,MAP_character,mean_annual_precipitation,NA
+column_name,SIDb_restructured,siteInfo,soilTaxonomy_soilfamily,soil_type,NA
+column_name,SIDb_restructured,siteInfo,soilTaxonomy_surfaceAtm,atmospheric_interface,yes or no
+column_name,SIDb_restructured,siteInfo,permafrost_activeLayer_character,active_layer,need to find units
+column_name,SIDb_restructured,incubationInfo,level1,site_id,NA
+column_name,SIDb_restructured,incubationInfo,samplePreparation_intactCore.logical,sample_prep_intact_core,NA
+column_name,SIDb_restructured,incubationInfo,samplePreparation_rootPicking,sample_prep_root_picking,NA
+column_name,SIDb_restructured,incubationInfo,depthInfo_surfaceAtm,atmospheric_interface,NA
+column_name,SIDb_restructured,incubationInfo,samplePreparation_sieving,sample_prep_sieving,NA
+column_name,SIDb_restructured,incubationInfo,samplePreparation_rockPicking,sample_prep_rock_picking,NA
+column_name,SIDb_restructured,incubationInfo,anaerobic,anaerobic,NA
+column_name,SIDb_restructured,incubationInfo,incDesc,incubation_note,NA
+column_name,SIDb_restructured,incubationInfo,moisture_units,moisture_units,NA
+column_name,SIDb_restructured,incubationInfo,replicates_type,replicates_type,NA
+column_name,SIDb_restructured,incubationInfo,gasAnalyzer,gas_analyzer,NA
+column_name,SIDb_restructured,incubationInfo,depthInfo_horizon,soil_horizon,NA
+column_name,SIDb_restructured,incubationInfo,glucose_units,glucose,NA
+column_name,SIDb_restructured,incubationInfo,oxygen_units,O2_measured,NA
+column_name,SIDb_restructured,incubationInfo,samplePreparation_intactCore.string,sample_prep_intact_core,NA
+column_name,SIDb_restructured,incubationInfo,g13CWheatStraw_units,g13CWheatStraw,NA
+column_name,SIDb_restructured,incubationInfo,depthInfo_top,depth_min,NA
+column_name,SIDb_restructured,incubationInfo,depthInfo_bottom,depth_max,NA
+column_name,SIDb_restructured,incubationInfo,depthInfo_midDepth,depth_mean,NA
+column_name,SIDb_restructured,incubationInfo,moisture_value,moisture,NA
+column_name,SIDb_restructured,incubationInfo,replicates_value,replicates,NA
+column_name,SIDb_restructured,incubationInfo,incubationTime,treatment_duration,NA
+column_name,SIDb_restructured,incubationInfo,samplePreparation_sieving.num,sample_prep_sieving,NA
+column_name,SIDb_restructured,incubationInfo,glucose_value,glucose,NA
+column_name,SIDb_restructured,incubationInfo,temperature,temperature,NA
+column_name,SIDb_restructured,incubationInfo,preincubationTime,treatment_duration,NA
+column_name,SIDb_restructured,incubationInfo,g13CWheatStraw_value,g13CWheatStraw,NA
+column_name,SIDb_restructured,initConditions,level1,site_id,NA
+column_name,SIDb_restructured,initConditions,site,site,NA
+column_name,SIDb_restructured,initConditions,elevatedCO2,elevatedCO2,NA
+column_name,SIDb_restructured,initConditions,carbonMean,total_carbon,NA
+column_name,SIDb_restructured,initConditions,carbonSD,total_carbon,NA
+column_name,SIDb_restructured,initConditions,carbonSE,total_carbon,NA
+column_name,SIDb_restructured,initConditions,carbonUnits,total_carbon,NA
+column_name,SIDb_restructured,initConditions,nitrogenMean,nitrogen_total,NA
+column_name,SIDb_restructured,initConditions,nitrogenSD,nitrogen_total,NA
+column_name,SIDb_restructured,initConditions,nitrogenSE,nitrogen_total,NA
+column_name,SIDb_restructured,initConditions,nitrogenUnits,nitrogen_total,NA
+column_name,SIDb_restructured,initConditions,bulkDensityMean,bulk_density,NA
+column_name,SIDb_restructured,initConditions,bulkDensitySD,bulk_density,NA
+column_name,SIDb_restructured,initConditions,bulkDensitySE,bulk_density,NA
+column_name,SIDb_restructured,initConditions,replicates,replicates,NA
+column_name,SIDb_restructured,initConditions,pH,pH,NA
+column_name,SIDb_restructured,initConditions,redox,redox,NA
+column_name,SIDb_restructured,initConditions,percentClay,clay,NA
+column_name,SIDb_restructured,initConditions,percentSand,sand,NA
+column_name,SIDb_restructured,initConditions,percentSilt,silt,NA
+column_name,SIDb_restructured,initConditions,microbialBiomass,microbial_biomass,NA
+column_name,SIDb_restructured,initConditions,microbialBiomassUnits,microbial_biomass,NA
+column_name,SIDb_restructured,initConditions,landCover,biome,NA
+column_name,SIDb_restructured,initConditions,organicCarbonStock,carbon_organic,NA
+column_name,SIDb_restructured,initConditions,organicCarbonStockUnits,carbon_organic,NA
+column_name,SIDb_restructured,initConditions,nitrogenStock,nitrogen_total_stock,NA
+column_name,SIDb_restructured,initConditions,nitrogenStockUnits,NA,NA
+column_name,SIDb_restructured,initConditions,microbialBiomassUnits.n,NA,NA
+column_name,SIDb_restructured,initConditions,fieldWarming,field_warming,NA
+column_name,SIDb_restructured,initConditions,midDepth,depth_mean,NA
+column_name,SIDb_restructured,initConditions,vegetation,vegetation,NA
+column_name,SIDb_restructured,initConditions,experimentalTreatment_1,treatment_type,NA
+column_name,SIDb_restructured,initConditions,experimentalTreatment_2,treatment_type,NA
+column_name,SIDb_restructured,initConditions,experimentalTreatment_3,treatment_type,NA
+column_name,SIDb_restructured,initConditions,horizon,soil_horizon,NA
+column_name,SIDb_restructured,initConditions,CECtot,cation_exchange_capacity,NA
+column_name,SIDb_restructured,initConditions,CECtotUnits,cation_exchange_capacity,NA
+column_name,SIDb_restructured,initConditions,BStotal,base_saturation_sum,NA
+column_name,SIDb_restructured,initConditions,BStotalUnits,base_saturation_sum,NA
+column_name,SIDb_restructured,initConditions,Si,silicon,NA
+column_name,SIDb_restructured,initConditions,Al,aluminum,NA
+column_name,SIDb_restructured,initConditions,Fe,iron,NA
+column_name,SIDb_restructured,initConditions,Mn,manganese,NA
+column_name,SIDb_restructured,initConditions,P,phosphorus,NA
+column_name,SIDb_restructured,initConditions,SiUnits,silicon,NA
+column_name,SIDb_restructured,initConditions,AlUnits,aluminum,NA
+column_name,SIDb_restructured,initConditions,FeUnits,iron,NA
+column_name,SIDb_restructured,initConditions,MnUnits,manganese,NA
+column_name,SIDb_restructured,initConditions,PUnits,phosphorus,NA
+column_name,SIDb_restructured,initConditions,Al.Si,NA,NA
+column_name,SIDb_restructured,initConditions,mineralDensityMean,mineral_density,NA
+column_name,SIDb_restructured,initConditions,SOCstockMean,soil_organic_carbon,NA
+column_name,SIDb_restructured,initConditions,SOCstockSD,soil_organic_carbon,NA
+column_name,SIDb_restructured,initConditions,SOCstockUnits,soil_organic_carbon,NA
+column_name,SIDb_restructured,initConditions,respirationMean,respiration,NA
+column_name,SIDb_restructured,initConditions,respirationSD,respiration,NA
+column_name,SIDb_restructured,initConditions,respirationUnits,respiration,NA
+column_name,SIDb_restructured,initConditions,SOCminAssocMean,NA,NA
+column_name,SIDb_restructured,initConditions,SOCminAssocSD,NA,NA
+column_name,SIDb_restructured,initConditions,SOCminAssocUnits,NA,NA
+column_name,SIDb_restructured,initConditions,oxides,oxides,NA
+column_name,SIDb_restructured,initConditions,oxidesUnits,oxides,NA
+column_name,SIDb_restructured,initConditions,soil,soil_type,NA
+column_name,SIDb_restructured,initConditions,forest,forest,NA
+column_name,SIDb_restructured,initConditions,temperature,temperature,NA
+column_name,SIDb_restructured,initConditions,burn,burn_evidence,NA
+column_name,SIDb_restructured,initConditions,acidic,acidity,NA
+column_name,SIDb_restructured,initConditions,minOrg,mineral_or_organic,NA
+column_name,SIDb_restructured,initConditions,speciesName,vegetation_species,NA
+column_name,SIDb_restructured,initConditions,top,depth_min,NA
+column_name,SIDb_restructured,initConditions,bottom,depth_max,NA
+column_name,SIDb_restructured,initConditions,depthUnits,depth_units,NA
+column_name,SIDb_restructured,initConditions,bulkDensityUnits,bulk_density,NA
+column_name,SIDb_restructured,initConditions,waterHoldingCapacityMean,water_holding_capacity,NA
+column_name,SIDb_restructured,initConditions,waterHoldingCapacitySE,water_holding_capacity,NA
+column_name,SIDb_restructured,initConditions,waterHoldingCapacityUnits,water_holding_capacity,NA
+column_name,SIDb_restructured,initConditions,pHMean,pH,NA
+column_name,SIDb_restructured,initConditions,pHSE,pH,NA
+column_name,SIDb_restructured,initConditions,cnRatioMean,carbon_to_nitrogen,NA
+column_name,SIDb_restructured,initConditions,cnRatioSE,carbon_to_nitrogen,NA
+column_name,SIDb_restructured,initConditions,loiMean,loss_on_ignition,NA
+column_name,SIDb_restructured,initConditions,loiSE,loss_on_ignition,NA
+column_name,SIDb_restructured,initConditions,loiUnits,loss_on_ignition,NA
+column_name,SIDb_restructured,initConditions,d13C,NA,NA
+column_name,SIDb_restructured,initConditions,elevation,elevation,NA
+column_name,SIDb_restructured,initConditions,drainage,drainage_class,NA
+column_name,SIDb_restructured,initConditions,fieldReplicates,field_replicates,NA
+column_name,SIDb_restructured,timeSeries,level1,site_id,NA
+column_name,SIDb_restructured,timeSeries,timeSeriesIndex,NA,NA
+column_name,SIDb_restructured,timeSeries,column_name,column_name,NA
+column_name,SIDb_restructured,timeSeries,value,NA,NA
+column_name,SIDb_restructured,variables,level1,site_id,NA
+column_name,SIDb_restructured,variables,column_name,column_name,NA
+column_name,SIDb_restructured,variables,temperature,temperature,NA
+column_name,SIDb_restructured,variables,moisture,moisture,NA
+column_name,SIDb_restructured,variables,midDepth,depth_mean,NA
+column_name,SIDb_restructured,variables,top,depth_min,NA
+column_name,SIDb_restructured,variables,bottom,depth_max,NA
+column_name,SIDb_restructured,variables,oxygen,O2_measured,NA
+column_name,SIDb_restructured,variables,elevation,elevation,NA
+column_name,SIDb_restructured,variables,replicates,replicates,NA
+column_name,SIDb_restructured,variables,name,variable_name,NA
+column_name,SIDb_restructured,variables,units,variable_units,NA
+column_name,SIDb_restructured,variables,varDesc,variable_description,NA
+column_name,SIDb_restructured,variables,site,site,NA
+column_name,SIDb_restructured,variables,elevatedCO2,elevatedCO2,NA
+column_name,SIDb_restructured,variables,gasMeasured,gas_measured,NA
+column_name,SIDb_restructured,variables,primaryVariable,primary_variable,NA
+column_name,SIDb_restructured,variables,landCover,biome,NA
+column_name,SIDb_restructured,variables,fieldWarming,field_warming,NA
+column_name,SIDb_restructured,variables,statistic,statistic,NA
+column_name,SIDb_restructured,variables,vegetation,vegetation,NA
+column_name,SIDb_restructured,variables,horizon,soil_horizon,NA
+column_name,SIDb_restructured,variables,cellulose,cellulose,NA
+column_name,SIDb_restructured,variables,soil,soil_type,NA
+column_name,SIDb_restructured,variables,amendment,amendment,NA
+column_name,SIDb_restructured,variables,forest,forest,NA
+column_name,SIDb_restructured,variables,acidic,acidity,NA
+column_name,SIDb_restructured,variables,minOrg,mineral_or_organic,NA
+column_name,SIDb_restructured,variables,burn,burn_evidence,NA
+column_name,SIDb_restructured,variables,disturbance,disturbance_type,NA
+column_name,SIDb_restructured,variables,drainage,drainage_class,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,curator_PersonName,curator_name,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,curator_organization,curator_organization,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,curator_email,email,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,modification_date,modification_date,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,author_PersonName,author,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,author_email,email,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,author_orcid_id,contact_orcid_id,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,addit_contact_person,additional_contact_person,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,addit_contact_email,email,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bibliographical_reference,citation,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,data_doi,doi,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,header_row,header_row_number,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,NA_1,missing_value,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,NA_2,missing_value,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,network,network,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,site_code,site_code,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,location_name,location_name,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lat,latitude,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,long,longitude,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,datum,latitude_longitude_datum,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,elevation,elevation,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,map,mean_annual_percipitation,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,mat,mean_annual_temperature,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,clim_avg_yrs,climate_averaging_period,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_start,treatment_duration_start,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,aspect_deg,aspect_degree,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,aspect_class,aspect_class,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,slope,slope,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,slope_shape,slope_shape,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,drainage_class,drainage_class,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,depth_water,depth_water,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,parent_transport,parent_transport,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,parent_material,parent_material,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,rock_chem,bedrock_chemistry,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,land_cover,land_cover,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,eco_region,ecoregion,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,loc_texture_class,soil_texture_class,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,plant,vegetation_species,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lit_n,fine_litterfall_nitrogen,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lit_p,fine_litterfall_phosphorus,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lit_cn,fine_litterfall_carbon_to_nitrogen,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lit_lig,aboveground_litterfall_lignin,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,npp,net_primary_productivity,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,anpp,aboveground_net_primary_productivity,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bnpp,belowground_net_primary_productivity,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bnpp_notes,belowground_net_primary_productivity,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,agb,aboveground_biomass,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bgb,root_biomass,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bgb_lowerdiam,root biomass_diameter,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bgb_upperdiam,root biomass_diameter,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bgb_type,root_biomass_type,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bgb_notes,root_biomass,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bgb_c,root_biomass_carbon,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bgb_n,root_biomass_nitrogen,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bgb_cn,root_biomass_carbon_to_nitrogen,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,wood_lit_c,wood_litterfall_carbon_flux,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,align_1,alignment_notes_profile_data,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,align_2,alignment_notes_profile_data,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,loc_comments,comments,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,time_series,time_series,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,gradient,gradient_study,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,experiments,experimental_manipulations,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,control_id,control_samples_identifier,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,number_treatments,treatments_number,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,merge_align,merge_align,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,key_version,key_version,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L1,experimental_level_1,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L2,experimental_level_2,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L3,experimental_level_3,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L4,experimental_level_4,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L5,experimental_level_5,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L1,treatment_1_level,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L2,treatment_2_level,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L3,treatment_3_level,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L4,treatment_4_level,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L5,treatment_5_level,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L6,treatment_6_level,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,observation_date,observation_date,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,veg_note_profile,vegetation,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_c_tot,total_carbon,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_soc,soil_organic_carbon,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_soc_stock,bulk_layer_organic_carbon_stock,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_loi,loss_on_ignition,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_som_WalkleyBlack,bulk_layer_soil_organic_matter,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_n_tot,nitrogen_total,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_n_tot_stock,nitrogen_total_stock,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_c_to_n,carbon_to_nitrogen,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_15n,15n,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_13c,13c,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,layer_top,depth_min,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,layer_bot,depth_max,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,layer_mid,depth_mean,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,hzn,horizon,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bd_samp,bulk_density_sample,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bd_tot,bulk_density_total,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,ph_cacl,pH_cacl,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,ph_h2o,pH_h2o,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,ph_other,pH_other,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,sand,sand,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,silt,silt,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,clay,clay,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,coarse_frac,coarse_fraction,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,coarse_tot,coarse_size_thresh,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,profile_texture_class,soil_texture_class,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,caco3,caco3,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,Ca,calcium_ extractable,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,Mg,magnesium_extractable,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,K,potassium_extractable,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,Na,sodium_ extractable,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,cat_exch,cation_exchange_capacity,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,base_sum,base_sum,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,cec_sum,exchangeable_cations_sum,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,ecec,effective_cation_exchange_capacity,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bs,base_saturation,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,mbc_raw,microbial_biomass_carbon_raw,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,mbc_trans,microbial_biomass_carbon_reported,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,p_ex_1,phosphorus_extractable,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,p_ex_2,phosphorus_extractable,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,p_ex_3,phosphorus_extractable,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,p_ex_4,phosphorus_extractable,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,n_min,net_nitrogen_mineralization,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,soil_taxon,soil_taxonomy,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,soil_series,soil_series,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,comment_profile,comments,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_al_py,aluminum_pyrophosphate,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_si_py,silicon_pyrophosphate,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_fe_ox,iron_oxalate,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_al_ox,aluminum_oxalate,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_si_ox,silicon_oxalate,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_fe_dith,iron_dithionate,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_al_dith,aluminum_dithionate,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_si_dith,silicon_dithionate,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,frc_scheme,fraction_scheme,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,frc_low_cutoff,cutoff_numerical,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,frc_high_cutoff,cutoff_numerical,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,frc_notes,fraction_note,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,frc_c_tot,total_carbon,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,frc_oc,carbon_organic,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,frc_n_tot,nitrogen_total,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,frc_c_to_n,carbon_to_nitrogen,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,google_dir,google_directory,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,data_file,data_file,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,google_id,google_id,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L1_level,Table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L1_level,treatment_table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L2_level,Table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L3_level,Table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L4_level,Table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L2_level,treatment_table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L3_level,treatment_table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,L5_level,Table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L4_level,treatment_table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,litterfall_anpp,litterfall_aboveground_net_primary_productivity,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L5_level,treatment_table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,tx_L6_level,treatment_table_key,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,bd_methods_notes,bulk_density_total,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,layer_thick_calc,NA,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_soc_stock_calc,NA,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,lyr_n_stock_calc,NA,NA
+column_name,LTERWG_Filtered_SOM,Filtered_SOM_data,control_sample,control_sample,NA

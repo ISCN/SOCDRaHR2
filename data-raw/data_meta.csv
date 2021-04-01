@@ -1,0 +1,1622 @@
+data_product,data_table,data_column,data_type,entry
+ISCN3,layer,13c (‰),unit,permille
+ISCN3,layer,14c (‰),unit,permille
+ISCN3,layer,14c_sigma (‰),unit,permille
+ISCN3,layer,14c_age (BP),method,14C age model
+ISCN3,layer,14c_age (BP),unit,BP
+ISCN3,layer,15n (‰),unit,permille
+ISCN3,layer,al_dith (specified by al_fe_units),method,Oxalate Extractable Al
+ISCN3,layer,al_other (specified by al_fe_units),method,Other Extractable Al
+ISCN3,layer,al_ox (specified by al_fe_units),method,Oxalate Extractable Al
+ISCN3,profile,aspect_deg (degree),unit,degree
+ISCN3,layer,bs (percent),unit,percent
+ISCN3,layer,bs_sum (percent),unit,percent
+ISCN3,layer,bd_other (g cm-3),description,Bulk Density Other
+ISCN3,layer,bd_other (g cm-3),unit,g cm-3
+ISCN3,layer,bd_samp (g cm-3),description,"Bulk Density, Coarse Fragments Removed"
+ISCN3,layer,bd_samp (g cm-3),unit,g cm-3
+ISCN3,layer,bd_tot (g cm-3),description,Bulk Density With Coarse Fragments
+ISCN3,layer,bd_tot (g cm-3),unit,g cm-3
+ISCN3,layer,bd_whole (g cm-3),description,Bulk Density Minus Estimated Coarse Fragments
+ISCN3,layer,bd_whole (g cm-3),unit,g cm-3
+ISCN3,layer,bdNRCS_prep_code,control_vocabulary,[[reference NRCS Soil lab manual]]
+ISCN3,layer,c_to_n (mass ratio),unit,mass ratio
+ISCN3,layer,cNRCS_prep_code,control_vocabulary,[[reference NRCS Soil lab manual]]
+ISCN3,layer,c_tot (percent),unit,percent
+ISCN3,layer,caco3 (percent),unit,percent
+ISCN3,layer,cat_exch (cmol H+ kg-1),unit,cmol H+ kg-1
+ISCN3,layer,clay_tot_psa (percent),unit,percent
+ISCN3,profile,dataset_name_sub,description,Submition database
+ISCN3,layer,dataset_name_sub,description,Submition database
+ISCN3,profile,dataset_name_soc,description,SOC data source
+ISCN3,layer,datum (datum),unit,datum
+ISCN3,profile,elevation (m),unit,m
+ISCN3,layer,fe_dith (specified by al_fe_units),method,Dithionite Extractable Fe
+ISCN3,layer,fe_other (specified by al_fe_units),method,Other Extractable Fe
+ISCN3,layer,fe_ox (specified by al_fe_units),method,Oxalate Extractable Fe
+ISCN3,profile,landscape (landscape),vocabulary_family,landscape
+ISCN3,profile,landuse (landsat),vocabulary_family,landsat
+ISCN3,profile,lat (dec. deg),unit,degrees
+ISCN3,layer,lat (dec. deg),unit,degrees
+ISCN3,layer,layer_bot (cm),unit,cm
+ISCN3,layer,layer_top (cm),unit,cm
+ISCN3,layer,layer_bot (cm),description,Bottom bound
+ISCN3,layer,layer_top (cm),description,Upper bound
+ISCN3,layer,loi (percent),unit,percent
+ISCN3,layer,loi (percent),description,Loss on ignition
+ISCN3,profile,long (dec. deg),unit,degrees
+ISCN3,layer,long (dec. deg),unit,degrees
+ISCN3,profile,locator_alias,description,location alias for reconstruction
+ISCN3,profile,locator_parent_alias,description,reference to parent location alias
+ISCN3,layer,locator_parent_alias,description,reference to parent location alias
+ISCN3,profile,map (mm),unit,mm
+ISCN3,profile,mat (°C),unit,°C
+ISCN3,citation,modification_date (YYYY-MM-DD),unit,YYYY-MM-DD
+ISCN3,dataset,modification_date (YYYY-MM-DD),unit,YYYY-MM-DD
+ISCN3,layer,mn_dith (specified by al_fe_units),method,Dithionite Extractable Mn
+ISCN3,layer,mn_other (specified by al_fe_units),method,Other Extractable Mn
+ISCN3,layer,mn_ox (specified by al_fe_units),method,Oxalate Extractable Mn
+ISCN3,layer,n_tot (percent),unit,percent
+ISCN3,layer,oc (percent),unit,percent
+ISCN3,layer,p_bray (specified by p_units),method,Bray extraction of P
+ISCN3,layer,p_meh (specified by p_units),method,Meh extraction of P
+ISCN3,layer,p_other (specified by p_units),method,Other extraction of P
+ISCN3,layer,p_ox (specified by p_units),method,Ox extraction of P
+ISCN3,layer,ph_cacl,method,CaCl extracted pH
+ISCN3,layer,ph_h2o,method,H2O extracted pH
+ISCN3,layer,ph_other,method,Other extracted pH
+ISCN3,profile,layer_bot (cm),unit,cm
+ISCN3,profile,soc (g cm-2),unit,g cm-2
+ISCN3,profile,soc_depth (cm),unit,cm
+ISCN3,profile,layer_top (cm),unit,cm
+ISCN3,layer,root_weight (g),unit,g
+ISCN3,profile,runoff (runoff),control_vocabulary,runoff
+ISCN3,layer,sand_tot_psa (percent),unit,percent
+ISCN3,layer,silt_tot_psa (percent),unit,percent
+ISCN3,profile,slope (percent),unit,percent
+ISCN3,layer,soc (g cm-2),unit,g cm-2
+ISCN3,profile,thaw_depth_profile (cm),unit,cm
+ISCN3,layer,wpg2 (percent),unit,percent
+ISCN3,"NA",version,description,ISCN 1-1 (2015-12-10)
+CCRCN,Associated Publications,year,unit,YYYY
+CCRCN,Associated Publications,month,unit,MM
+CCRCN,Materials and Methods,sediment_sieve_size,unit,mm
+CCRCN,Materials and Methods,dry_bulk_density_temperature,unit,degree-C
+CCRCN,Materials and Methods,dry_bulk_density_time,unit,hour
+CCRCN,Materials and Methods,dry_bulk_density_sample_volume,unit,cm3
+CCRCN,Materials and Methods,dry_bulk_density_sample_mass,unit,g
+CCRCN,Materials and Methods,loss_on_ignition_temperature,unit,degree-C
+CCRCN,Materials and Methods,loss_on_ignition_time,unit,hour
+CCRCN,Materials and Methods,loss_on_ignition_sample_volume,unit,cm3
+CCRCN,Materials and Methods,loss_on_ignition_sample_mass,unit,g
+CCRCN,Site Level,site_latitude_max,unit,degrees
+CCRCN,Site Level,site_latitude_min,unit,degrees
+CCRCN,Site Level,site_longitude_max,unit,degrees
+CCRCN,Site Level,site_longitude_min,unit,degrees
+CCRCN,Core Level,core_date,unit,YYYY-MM-DD
+CCRCN,Core Level,core_latitude,unit,degrees
+CCRCN,Core Level,core_longitude,unit,degrees
+CCRCN,Core Level,core_position_accuracy,unit,m
+CCRCN,Core Level,core_elevation,unit,m
+CCRCN,Core Level,core_elevation_accuracy,unit,m
+CCRCN,Soil Depth Series,depth_min,unit,cm
+CCRCN,Soil Depth Series,depth_max,unit,cm
+CCRCN,Soil Depth Series,dry_bulk_density,unit,g cm-3
+CCRCN,Soil Depth Series,cs137_activity,unit,kg-1 s-1
+CCRCN,Soil Depth Series,cs137_activity_sd,unit,kg-1 s-1
+CCRCN,Soil Depth Series,total_pb210_activity,unit,kg-1 s-1
+CCRCN,Soil Depth Series,total_pb210_activity_sd,unit,kg-1 s-1
+CCRCN,Soil Depth Series,ra226_activity,unit,kg-1 s-1
+CCRCN,Soil Depth Series,ra226_activity_sd,unit,kg-1 s-1
+CCRCN,Soil Depth Series,excess_pb210_activity_sd,unit,kg-1 s-1
+CCRCN,Soil Depth Series,c14_age,unit,radiocarbonYear
+CCRCN,Soil Depth Series,c14_age_sd,unit,radiocarbonYear
+CCRCN,Soil Depth Series,delta_c13,unit,ppm
+CCRCN,Soil Depth Series,be7_activity,unit,kg-1 s-1
+CCRCN,Soil Depth Series,be7_activity_sd,unit,kg-1 s-1
+CCRCN,Soil Depth Series,am241_activity,unit,kg-1 s-1
+CCRCN,Soil Depth Series,am241_activity_sd,unit,kg-1 s-1
+CCRCN,Soil Depth Series,marker_date,unit,YYYY-MM-DD
+CCRCN,Soil Depth Series,age,unit,year
+CCRCN,Soil Depth Series,age_min,unit,year
+CCRCN,Soil Depth Series,age_max,unit,year
+CCRCN,Soil Depth Series,age_sd,unit,year
+CCRCN,Study Information,one_liner,description,NA
+CCRCN,Study Information,study_code,description,NA
+CCRCN,Study Information,study_start_date,description,NA
+CCRCN,Study Information,study_end_date,description,NA
+CCRCN,Study Information,abstract,description,NA
+CCRCN,Keywords,key_words,description,NA
+CCRCN,Authors,last_name,description,NA
+CCRCN,Authors,given_name,description,NA
+CCRCN,Authors,email,description,NA
+CCRCN,Authors,phone,description,NA
+CCRCN,Authors,corresponding_author,description,NA
+CCRCN,Funding Sources,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+CCRCN,Funding Sources,funding_agency,description,"Agency name funding the research, spelled out, no acronyms."
+CCRCN,Funding Sources,funding_id,description,Code used by the agency to track the project funding.
+CCRCN,Funding Sources,funding_notes,description,Any other submitter-generated notes about the project funding.
+CCRCN,Associated Publications,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+CCRCN,Associated Publications,bibtex_citation,description,Submitters can associate multiple BibTeX style citations with the dataset. They can also include the same information by filling out following attributes in tabular form if more convenient than BibTeX formatting.
+CCRCN,Associated Publications,publication_type,description,Code indicating the type of publication the study originates from.
+CCRCN,Associated Publications,author,description,The names of the author separated by “and”.
+CCRCN,Associated Publications,year,description,"The year of publication or, if unpublished, the year of creation."
+CCRCN,Associated Publications,title,description,The title of the work.
+CCRCN,Associated Publications,journal,description,The journal or magazine the work was published in.
+CCRCN,Associated Publications,volume,description,The volume of a journal or multi-volume book.
+CCRCN,Associated Publications,number,description,"The “(issue) number” of a journal, magazine, or tech-report, if applicable. (Most publications have a “volume”, but no “number” field.)."
+CCRCN,Associated Publications,pages,description,"Page numbers, separated either by commas or double-hyphens."
+CCRCN,Associated Publications,url,description,Permanent web address where the work can be located.
+CCRCN,Associated Publications,doi,description,Digital object identifier associated with the work.
+CCRCN,Associated Publications,address,description,"Publisher’s address (usually just the city, but can be the full address for lesser-known publishers)."
+CCRCN,Associated Publications,annote,description,An annotation for annotated bibliography styles (not typical).
+CCRCN,Associated Publications,booktitle,description,"The title of the book, if only part of it is being cited."
+CCRCN,Associated Publications,chapter,description,The chapter number.
+CCRCN,Associated Publications,crossref,description,The key of the cross-referenced entry.
+CCRCN,Associated Publications,edition,description,"The edition of a book, long form (such as “First” or “Second”)."
+CCRCN,Associated Publications,editor,description,The name(s) of the editor(s).
+CCRCN,Associated Publications,howpublished,description,"How it was published, if the publishing method is nonstandard."
+CCRCN,Associated Publications,institution,description,"The institution that was involved in the publishing, but not necessarily the publisher."
+CCRCN,Associated Publications,key,description,A hidden field used for specifying or overriding the alphabetical order of entries (when the “author” and “editor” fields are missing). Note that this is very different from the key (mentioned just after this list) that is used to cite or cross-reference the entry.
+CCRCN,Associated Publications,month,description,"The month of publication (or, if unpublished, the month of creation)."
+CCRCN,Associated Publications,note,description,Miscellaneous extra information.
+CCRCN,Associated Publications,organization,description,The conference sponsor.
+CCRCN,Associated Publications,publisher,description,The publisher’s name.
+CCRCN,Associated Publications,school,description,The school where the thesis was written.
+CCRCN,Associated Publications,series,description,The series of books the book was published in (e.g. “The Hardy Boys” or “Lecture Notes in Computer Science”).
+CCRCN,Associated Publications,type,description,"The field overriding the default type of publication (e.g. “Research Note” for techreport, “{PhD} dissertation” for phdthesis, “Section” for inbook/incollection)."
+CCRCN,Materials and Methods,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+CCRCN,Materials and Methods,coring_method,description,Code indicating what type of device was used to collect soil depth profiles.
+CCRCN,Materials and Methods,roots_flag,description,Code indicating whether live roots were included or excluded from carbon assessments.
+CCRCN,Materials and Methods,sediment_sieved_flag,description,Code indicating whether or not sediment was sieved prior to carbon measurements.
+CCRCN,Materials and Methods,sediment_sieve_size,description,"If sediment was sieved, the size of sieve used."
+CCRCN,Materials and Methods,compaction_flag,description,Code indicating how the authors qualified or quantified compaction of the core.
+CCRCN,Materials and Methods,dry_bulk_density_temperature,description,Temperature at which samples were dried to measure dry bulk density. This can include either samples that were freeze dried or oven dried.
+CCRCN,Materials and Methods,dry_bulk_density_time,description,Time over which samples were dried to measure dry bulk density.
+CCRCN,Materials and Methods,dry_bulk_density_sample_volume,description,"Sample volume used for bulk density measurements, if held constant."
+CCRCN,Materials and Methods,dry_bulk_density_sample_mass,description,"Sample mass used for bulk density measurements, if held constant."
+CCRCN,Materials and Methods,dry_bulk_density_flag,description,Any notable codes regarding how the authors quantified dry bulk density.
+CCRCN,Materials and Methods,loss_on_ignition_temperature,description,Temperature at which samples were combusted to estimate fraction organic matter.
+CCRCN,Materials and Methods,loss_on_ignition_time,description,Time over which samples were combusted to estimate fraction organic matter.
+CCRCN,Materials and Methods,loss_on_ignition_sample_volume,description,"Sample volume used for loss on ignition, if held constant."
+CCRCN,Materials and Methods,loss_on_ignition_sample_mass,description,"Sample mass used for loss on ignition, if held constant."
+CCRCN,Materials and Methods,loss_on_ignition_flag,description,Common codes regarding loss on ignition methodology.
+CCRCN,Materials and Methods,carbon_measured_or_modeled,description,Code indicating whether fraction carbon was measured or estimated as a function of organic matter.
+CCRCN,Materials and Methods,carbonates_removed,description,Whether or not carbonates were removed prior to calculating fraction organic carbon.
+CCRCN,Materials and Methods,carbonate_removal_method,description,The method used to remove carbonates prior to measuring fraction carbon.
+CCRCN,Materials and Methods,fraction_carbon_method,description,"Code indicating the method for which fraction carbon was measured or modeled (Note: regression based models are permitted, but the use of the Bemmelen factor [0.58 gOC gOM-1] is discouraged)."
+CCRCN,Materials and Methods,fraction_carbon_type,description,Code indicating whether fraction_carbon refers to organic or total carbon.
+CCRCN,Materials and Methods,carbon_profile_notes,description,"Any other submitter defined notes describing methodologies for determining dry bulk density, organic matter fraction, and carbon fraction."
+CCRCN,Materials and Methods,cs137_counting_method,description,Code indicating the method used for determining radiocesium activity.
+CCRCN,Materials and Methods,pb210_counting_method,description,Code indicating the method used for determining lead 210 activity.
+CCRCN,Materials and Methods,excess_pb210_rate,description,Code indicating the mass or accretion rate used in the excess_pb_210_model
+CCRCN,Materials and Methods,excess_pb210_model,description,Code indicating the model used to estimate excess lead 210.
+CCRCN,Materials and Methods,ra226_assumption,description,Code indicating the assumption used to estimate the core's background 226Ra levels.
+CCRCN,Materials and Methods,c14_counting_method,description,Code indicating the method used for determining radiocarbon activity.
+CCRCN,Materials and Methods,dating_notes,description,Any submitter defined notes elaborating on the process of dating the core not yet made clear by the coding.
+CCRCN,Materials and Methods,age_depth_model_reference,description,Code indicating the reference or 0 year of the age depth model.
+CCRCN,Materials and Methods,age_depth_model_notes,description,Any submitter defined notes on how the age depth model was created.
+CCRCN,Site Level,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+CCRCN,Site Level,site_id,description,Site identification code unique to each study.
+CCRCN,Site Level,site_description,description,Site description including relevant study details and political geographic units. Some of these descriptions can be automated by the ingestion code.
+CCRCN,Site Level,site_latitude_max,description,Maximum latitude defining a bounding box for the site in decimal degree World Geodedic System of 1984 (WGS84). This can also be generated automatically by the ingestion code.
+CCRCN,Site Level,site_latitude_min,description,Minimum latitude defining a bounding box for the site in decimal degree WGS84. This can also be generated automatically by the ingestion code.
+CCRCN,Site Level,site_longitude_max,description,Maximum longitude defining a bounding box for the site in decimal degree WGS84. This can also be generated automatically by the ingestion code.
+CCRCN,Site Level,site_longitude_min,description,Minimum longitude defining a bounding box for the site in decimal degree WGS84. This can also be generated automatically by the ingestion code.
+CCRCN,Site Level,site_boundaries,description,"As an alternative to submitting or automatically generating a bounding box, submitters can include a shapefile (.shp) or keyhole markup language (.kml) documenting the geographic boundaries of the site. This can be converted to and stored in well known text (WTK) format."
+CCRCN,Site Level,salinity_notes,description,Any relevant submitter generated notes on how salinity_class was determined.
+CCRCN,Site Level,vegetation_class,description,Code based on submitter field observations or measurement indicating dominant wetland vegetation type.
+CCRCN,Site Level,inundation_notes,description,Any relevant submitter generated notes on how inundation was determined
+CCRCN,Core Level,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+CCRCN,Core Level,site_id,description,Site identification code unique to each study.
+CCRCN,Core Level,core_id,description,Core identification code unique to each site.
+CCRCN,Core Level,core_date,description,Date of core collection.
+CCRCN,Core Level,core_notes,description,Any other relevant submitter generated notes on how cores were collected.
+CCRCN,Core Level,core_latitude,description,Positional latitude of the core in decimal degree WGS84.
+CCRCN,Core Level,core_longitude,description,Positional longitude of the core in decimal degree WGS84.
+CCRCN,Core Level,core_position_accuracy,description,"Accuracy of latitude and longitude measurement, if determined and recorded."
+CCRCN,Core Level,core_position_method,description,Code indicating how latitude and longitude were determined.
+CCRCN,Core Level,core_position_notes,description,Any relevant submitter generated notes on how latitude and longitude were determined.
+CCRCN,Core Level,core_elevation,description,Surface elevation of the core relative to defined datum.
+CCRCN,Core Level,core_elevation_datum,description,The datum relative to which the core elevation was measured against (For a complete list of datum names and aliases please refer to the ISO Geodedic Registry https://iso.registry.bespire.eu/register/geodetic/VerticalDatum).
+CCRCN,Core Level,core_elevation_accuracy,description,"Accuracy of elevation measurement, if determined and recorded"
+CCRCN,Core Level,core_elevation_method,description,Code indicating how elevation was determined
+CCRCN,Core Level,core_elevation_notes,description,Any relevant submitter generated notes on how elevation was determined
+CCRCN,Core Level,salinity_class,description,"Code based on submitter field observation or measurement indicating average annual salinity (Note: Palustrine and freshwater should only include tidal wetlands, or wetlands that are potentially/formerly tidal but artificially freshened due to artificial tidal restrictions)."
+CCRCN,Core Level,salinity_method,description,Indicate whether salinity_class was determined using a field observation or a measurement
+CCRCN,Core Level,vegetation_method,description,Indicate whether vegetation_class was determined using a field observation or a measurement
+CCRCN,Core Level,vegetation_notes,description,Any relevant submitter generated notes on how vegetation_class and dominant_species were determined.
+CCRCN,Core Level,inundation_class,description,Code based on submitter field observation or measurement indicating how often the coring location is inundated.
+CCRCN,Core Level,inundation_method,description,Indicate whether inundation_class was determined using a field observation or a measurement
+CCRCN,Core Level,core_length_flag,description,"Indicated whether or not the coring team believes they recovered a full sediment profile, down to bedrock, or other non-marsh interface."
+CCRCN,Soil Depth Series,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+CCRCN,Soil Depth Series,site_id,description,Site identification code unique to each study.
+CCRCN,Soil Depth Series,core_id,description,Core identification code unique to each site.
+CCRCN,Soil Depth Series,depth_min,description,Minimum depth of a sampling increment.
+CCRCN,Soil Depth Series,depth_max,description,Maximum depth of a sampling increment.
+CCRCN,Soil Depth Series,sample_id,description,"Sample identification unique to the core. This should be used in the case that there are relevant lab specific sample codes, or in the case that there are multiple replicate samples."
+CCRCN,Soil Depth Series,dry_bulk_density,description,Dry mass per unit volume of a soil sample. This does not include ash free bulk density.
+CCRCN,Soil Depth Series,fraction_organic_matter,description,Mass of organic matter relative to sample dry mass. Ash free bulk density should not be used here but should be expressed as a loss on ignition fraction.
+CCRCN,Soil Depth Series,fraction_carbon,description,Mass of carbon relative to sample dry mass.
+CCRCN,Soil Depth Series,compaction_fraction,description,Fraction of the sample depth interval reduced due to compaction.
+CCRCN,Soil Depth Series,compaction_notes,description,Any submitter generated notes on compaction.
+CCRCN,Soil Depth Series,cs137_activity,description,Radioactivity counts per unit dry weight for radiocesium (137Cs).
+CCRCN,Soil Depth Series,cs137_activity_sd,description,1 standard deviation of uncertainty associated with cs137_activity.
+CCRCN,Soil Depth Series,total_pb210_activity,description,Total radioactivity counts per unit dry weight for excess lead 210 (210Pb).
+CCRCN,Soil Depth Series,total_pb210_activity_sd,description,1 standard deviation of uncertainty associated with total_pb210_activity.
+CCRCN,Soil Depth Series,ra226_activity,description,Total radioactivity counts per unit dry weight for Radium 226 (226Ra) if measured as part of the 210Pb dating process.
+CCRCN,Soil Depth Series,ra226_activity_sd,description,1 standard deviation of uncertainty associated with ra226_activity.
+CCRCN,Soil Depth Series,excess_pb210_activity,description,Excess radioactivity counts per unit dry weight for excess lead 210 (210Pb).
+CCRCN,Soil Depth Series,excess_pb210_activity_sd,description,1 standard deviation of uncertainty associated with excess_pb210_activity.
+CCRCN,Soil Depth Series,c14_age,description,Radiocarbon age as estimated from AMS measurements.
+CCRCN,Soil Depth Series,c14_age_sd,description,Estimated uncertainty in c14_age.
+CCRCN,Soil Depth Series,c14_material,description,Description of the material selected for radiocarbon (14C) dating.
+CCRCN,Soil Depth Series,c14_notes,description,Any relevant submitter generated notes on 14C dating process.
+CCRCN,Soil Depth Series,delta_c13,description,The isotopic signature of 13C. This is oftentimes measured along with c14_age and can be useful for analyzing carbon lability and provenance.
+CCRCN,Soil Depth Series,be7_activity,description,Radioactivity counts per unit dry weight for 7Be
+CCRCN,Soil Depth Series,be7_activity_sd,description,Estimated uncertainty in be7_activity.
+CCRCN,Soil Depth Series,am241_activity,description,Radioactivity counts per unit dry weight for 241Am
+CCRCN,Soil Depth Series,am241_activity_sd,description,Estimated uncertainty in am241_activity.
+CCRCN,Soil Depth Series,marker_date,description,"The age of any other dated depth horizon such as an artificial marker, pollen horizon, pollution horizon, etc."
+CCRCN,Soil Depth Series,marker_type,description,Code indicating the type of marker.
+CCRCN,Soil Depth Series,marker_notes,description,Any other submitter generated notes about the origin of the marker.
+CCRCN,Soil Depth Series,age,description,"Most likely, median, or mean age of the depth interval from submitter generated age depth model."
+CCRCN,Soil Depth Series,age_min,description,Minimum age of the depth interval from submitter generated age depth model.
+CCRCN,Soil Depth Series,age_max,description,Maximum age of the depth interval from submitter generated age depth model.
+CCRCN,Soil Depth Series,age_sd,description,Standard deviation of age estimate from submitter generated age depth model.
+CCRCN,Soil Depth Series,depth_interval_notes,description,Any other submitter generated notes specific to the depth interval.
+CCRCN,Dominant Species Present,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+CCRCN,Dominant Species Present,site_id,description,Site identification code unique to each study.
+CCRCN,Dominant Species Present,core_id,description,Core identification code unique to each site.
+CCRCN,Dominant Species Present,species_code,description,Code associated with a species or a vegetation assemblage.
+CCRCN,Anthropogenic Impacts Present,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+CCRCN,Anthropogenic Impacts Present,core_id,description,Core identification code unique to each site.
+CCRCN,Anthropogenic Impacts Present,site_id,description,Site identification code unique to each study.
+CCRCN,Anthropogenic Impacts Present,impact_class,description,Code indicating any major anthropogenic impacts historically and currently affecting the coring location.
+CCRCN,Study Level Species Table,genus,description,Genus according to the most up to date classification.
+CCRCN,Study Level Species Table,species,description,Species according to the most up to date classification.
+CCRCN,Study Level Species Table,sub_species,description,Any nomenclature referring to subspecies special cases.
+CCRCN,Study Level Species Table,hybrid,description,Any nomenclature referring to special cases of hybridization.
+CCRCN,Study Level Species Table,common_name,description,"Common name associated with the species, especially if it is referred to in any accompanying text."
+CCRCN,Study Level Species Table,species_notes,description,Any other submitter defined notes regarding the species.
+CCRCN,Study Level Species Table,study_id,description,"Unique identifier for the study made up of the first author's family name, as well as the second author's or 'et al.' if more than three, then publication year spearated by underscores. See worksCited.bib for more detail."
+Crowther,Summary,%C,unit,percent
+Crowther,Summary,Avg. C Control,unit,degree-C
+Crowther,Summary,Avg. C Warming,unit,degree-C
+Crowther,Summary,C Difference (Warming-Control),unit,degree-C
+Crowther,Summary,Length of Study (years),unit,year
+Crowther,Summary,Mean delta T,unit,degree-C
+Crowther,Summary,Precipitation (avg. annual mm),unit,mm yr-1
+Crowther,Summary,Temperature (avg. annual degrees C),unit,average annual °C
+Crowther,Summary,% silt,unit,percent
+Crowther,Summary,% sand,unit,percent
+Crowther,Summary,% clay,unit,percent
+Crowther,Summary,Author Updated % clay,unit,percent
+Crowther,Summary,CEC (cmol/kg),unit,cmol H+ kg-1
+Crowther,Raw,LAT,unit,degrees
+Crowther,Raw,LONG,unit,degrees
+Crowther,Raw,Planned Warming,unit,degree-C
+Crowther,Raw,Mean delta T,unit,degree-C
+Crowther,Raw,Lengths of Study,unit,years
+Crowther,Raw,%C,unit,percent
+Crowther,Raw,Bulk density,unit,g cm-3
+Crowther,Raw,Bulk Density Avg.,unit,g cm-3
+Crowther,Raw,total C,unit,g cm-3
+Crowther,Raw,total raw C,unit,g cm-3
+Crowther,Raw,%N,unit,percent
+vanGestel2017,sites,lat,unit,degrees
+vanGestel2017,sites,lon,unit,degrees
+vanGestel2017,sites,elevation,unit,m
+vanGestel2017,sites,mat,unit,degree-C
+vanGestel2017,sites,map,unit,mm
+vanGestel2017,sites,treatments,control_vocabulary,"T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel2017,sites,soil.texture.class,control_vocabulary,"loamy, sandy, sandy clay loam etc."
+vanGestel2017,sites,perc.sand,unit,percent
+vanGestel2017,sites,perc.silt,unit,percent
+vanGestel2017,sites,perc.clay,unit,percent
+vanGestel2017,sites,C.pool.abg,unit,g m-2
+vanGestel2017,sites,C.pool.bwg,unit,g m-2
+vanGestel2017,sites,N.pool.abg,unit,g m-2
+vanGestel2017,sites,N.pool.bwg,unit,g m-2
+vanGestel2017,sites,P.pool.bwg,unit,g m-2
+vanGestel2017,sites,soil.depth.pool,unit,cm
+vanGestel2017,sites,Ndep.rate,unit,g N m-2 y-1
+vanGestel2017,sites,bulk.density,unit,g mL-1
+vanGestel2017,sites,percent.om,unit,percent
+vanGestel2017,soc,duration,unit,months
+vanGestel2017,soc,trt,control_vocabulary,"T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel2017,soc,soil.horizon,unit,"NA"
+vanGestel2017,soc,bulk.density,unit,g mL-1
+vanGestel2017,bd_calculation,percent.som,unit,percent
+vanGestel2017,bd_calculation,bd,unit,g mL-1
+vanGestel2017,bd_calculation,soil.horizon,unit,"NA"
+vanGestel2017,plant,soilT.depth,unit,cm
+vanGestel2017,plant,duration,unit,months
+vanGestel2017,plant,soil.horizon,unit,"NA"
+vanGestel2017,plant,remove,control_vocabulary,"Yes or No. If yes, the data are duplicated (e.g. if I had raw data versus mean values)."
+vanGestel2017,plant,multi.year,control_vocabulary,"Yes or blank. If yes, the data extracted from a paper were data pooled across years."
+vanGestel2017,plant,input,control_vocabulary,"Plant biomass. Options are related to aboveground (a), belowground (b), or whole plant (w)"
+ISRaD,interstitial,ist_obs_date_y,unit,YYYY
+ISRaD,interstitial,ist_obs_date_m,unit,YYYY
+ISRaD,interstitial,ist_obs_date_d,unit,YYYY
+ISRaD,interstitial,ist_depth,unit,cm
+ISRaD,interstitial,ist_time_dur,unit,days
+ISRaD,interstitial,ist_temp,unit,°C
+ISRaD,interstitial,ist_source_O2,unit,percent
+ISRaD,interstitial,ist_source_H2O,unit,percent
+ISRaD,interstitial,"NA",unit,ist_concentration_units
+ISRaD,interstitial,ist_13c,unit,permille
+ISRaD,interstitial,ist_13c_sd,unit,permille
+ISRaD,interstitial,ist_18o,unit,permille
+ISRaD,interstitial,ist_2h,unit,permille
+ISRaD,interstitial,ist_rc_year,unit,year
+ISRaD,interstitial,ist_14c,unit,permille
+ISRaD,interstitial,ist_14c_sigma,unit,permille
+ISRaD,interstitial,ist_14c_sd,unit,permille
+ISRaD,metadata,modification_date_y,unit,YYYY
+ISRaD,metadata,modification_date_m,unit,MM
+ISRaD,metadata,modification_date_y,unit,DD
+ISRaD,metadata,contact_orcid_id,unit,ORCID #
+ISRaD,metadata,template_version,unit,YYYYMMDDHH
+ISRaD,site,site_lat,unit,degrees
+ISRaD,site,site_long,unit,degrees
+ISRaD,site,site_elevation,unit,m
+ISRaD,profile,pro_lat,unit,degrees
+ISRaD,profile,pro_long,unit,degrees
+ISRaD,profile,pro_elevation,unit,m
+ISRaD,profile,pro_reps,unit,positive integer
+ISRaD,profile,pro_MAT,unit,°C
+ISRaD,profile,pro_MAP,unit,mm yr-1
+ISRaD,profile,pro_soil_age,unit,Ky
+ISRaD,profile,pro_MAST,unit,°C
+ISRaD,profile,pro_MASWC,unit,percent
+ISRaD,profile,pro_NPP,unit,g C m-2 yr-1
+ISRaD,profile,pro_bedrock_depth,unit,cm
+ISRaD,profile,pro_depth_water,unit,cm
+ISRaD,profile,pro_thaw_depth,unit,cm
+ISRaD,profile,pro_aspect,unit,direction
+ISRaD,profile,pro_aspect_deg,unit,degree
+ISRaD,profile,pro_slope,unit,percent
+ISRaD,profile,pro_soc,unit,g cm-2
+ISRaD,profile,pro_soc_sigma,unit,g cm-2
+ISRaD,profile,pro_soc_depth,unit,cm
+ISRaD,profile,pro_catchment_area,unit,km2
+ISRaD,profile,pro_deforested,unit,percent
+ISRaD,flux,flx_lat,unit,degrees
+ISRaD,flux,flx_long,unit,degrees
+ISRaD,flux,flx_obs_date_y,unit,YYYY
+ISRaD,flux,flx_obs_date_m,unit,MM
+ISRaD,flux,flx_obs_date_d,unit,DD
+ISRaD,flux,flx_duration,unit,numeric
+ISRaD,flux,"NA",value_string,flx_duration_units
+ISRaD,flux,flx_source_temp,unit,°C
+ISRaD,flux,flx_source_O2,unit,percent
+ISRaD,flux,flx_source_H2O,unit,percent
+ISRaD,flux,flx_rate,unit,numeric
+ISRaD,flux,flx_rate_sd,unit,numeric
+ISRaD,flux,flx_analyte_conc,unit,mgC L-1
+ISRaD,flux,flx_discharge_rate,unit,m3 s-1
+ISRaD,flux,flx_aquatic_cond,unit,microS cm-1
+ISRaD,flux,flx_13c,unit,permille
+ISRaD,flux,flx_13c_sd,unit,permille
+ISRaD,flux,flx_18o,unit,permille
+ISRaD,flux,flx_2h,unit,permille
+ISRaD,flux,flx_rc_year,unit,YYYY
+ISRaD,flux,flx_14c,unit,permille
+ISRaD,flux,flx_14c_sigma,unit,permille
+ISRaD,flux,flx_14c_sd,unit,permille
+ISRaD,layer,lyr_obs_date_y,unit,YYYY
+ISRaD,layer,lyr_obs_date_m,unit,MM
+ISRaD,layer,lyr_obs_date_d,unit,DD
+ISRaD,layer,lyr_top,unit,cm
+ISRaD,layer,lyr_bot,unit,cm
+ISRaD,layer,lyr_igsn,unit,numeric
+ISRaD,layer,lyr_bd_samp,unit,g cm-3
+ISRaD,layer,lyr_bd_tot,unit,g cm-3
+ISRaD,layer,lyr_sand_tot_psa,unit,percent
+ISRaD,layer,lyr_silt_tot_psa,unit,percent
+ISRaD,layer,lyr_clay_tot_psa,unit,percent
+ISRaD,layer,lyr_coarse_tot,unit,percent
+ISRaD,layer,lyr_coarse_size_thresh,unit,mm
+ISRaD,layer,lyr_coarse_density,unit,g cm-3
+ISRaD,layer,lyr_bet_surface_area,unit,m2 g-1
+ISRaD,layer,lyr_cat_exch,unit,cmol H+ kg-1
+ISRaD,layer,lyr_base_sum,unit,meq 100g-1
+ISRaD,layer,lyr_cec_sum,unit,meq 100g-1
+ISRaD,layer,lyr_ca_exch,unit,meq 100g-1
+ISRaD,layer,lyr_na_exch,unit,meq 100g-1
+ISRaD,layer,lyr_mg_exch,unit,meq 100g-1
+ISRaD,layer,lyr_k_exch,unit,meq 100g-1
+ISRaD,layer,lyr_ecec,unit,meq 100g-1
+ISRaD,layer,lyr_bs,unit,percent
+ISRaD,layer,lyr_c_inorg,unit,percent
+ISRaD,layer,lyr_c_org,unit,percent
+ISRaD,layer,lyr_c_tot,unit,percent
+ISRaD,layer,lyr_soc,unit,g cm-2
+ISRaD,layer,lyr_soc_sigma,unit,g cm-2
+ISRaD,layer,lyr_n_tot,unit,percent
+ISRaD,layer,lyr_son,unit,g cm-2
+ISRaD,layer,lyr_loi,unit,percent
+ISRaD,layer,lyr_15n,unit,permille
+ISRaD,layer,lyr_13c,unit,permille
+ISRaD,layer,lyr_rc_year,unit,YYYY
+ISRaD,layer,lyr_14c,unit,permille
+ISRaD,layer,lyr_14c_sigma,unit,permille
+ISRaD,layer,lyr_14c_sd,unit,permille
+ISRaD,layer,lyr_raw_mbc,unit,mgC g-1
+ISRaD,layer,lyr_reported_mbc,unit,mgC g-1
+ISRaD,layer,lyr_p_tot,unit,mg g-1
+ISRaD,layer,lyr_p_stock,unit,g cm-2
+ISRaD,layer,lyr_fe_py,unit,mg g-1
+ISRaD,layer,lyr_al_py,unit,mg g-1
+ISRaD,layer,lyr_fe_al_py,unit,mg g-1
+ISRaD,layer,lyr_si_py,unit,mg g-1
+ISRaD,layer,lyr_c_py,unit,mg g-1
+ISRaD,layer,lyr_fe_ox,unit,mg g-1
+ISRaD,layer,lyr_al_ox,unit,mg g-1
+ISRaD,layer,lyr_si_ox,unit,mg g-1
+ISRaD,layer,lyr_c_ox,unit,mg g-1
+ISRaD,layer,lyr_noncrystalline_ox,unit,mg g-1
+ISRaD,layer,lyr_fe_hy,unit,mg g-1
+ISRaD,layer,lyr_al_hy,unit,mg g-1
+ISRaD,layer,lyr_si_hy,unit,mg g-1
+ISRaD,layer,lyr_c_hy,unit,mg g-1
+ISRaD,layer,lyr_fe_dith,unit,mg g-1
+ISRaD,layer,lyr_al_dith,unit,mg g-1
+ISRaD,layer,lyr_si_dith,unit,mg g-1
+ISRaD,layer,lyr_quartz,unit,percent
+ISRaD,layer,lyr_alkali_feldspar,unit,percent
+ISRaD,layer,lyr_plag_feldspar,unit,percent
+ISRaD,layer,lyr_mica_chlorite,unit,percent
+ISRaD,layer,lyr_amphibole,unit,percent
+ISRaD,layer,lyr_pyroxine,unit,percent
+ISRaD,layer,lyr_olivine,unit,percent
+ISRaD,layer,lyr_volc_glass,unit,percent
+ISRaD,layer,lyr_kaol_halloy,unit,percent
+ISRaD,layer,lyr_smect_vermic,unit,percent
+ISRaD,layer,lyr_gibbsite,unit,percent
+ISRaD,layer,lyr_fe_oxides,unit,percent
+ISRaD,layer,lyr_imog_alloph,unit,percent
+ISRaD,layer,lyr_ferrihydrite,unit,percent
+ISRaD,layer,lyr_calcite_dolomite,unit,percent
+ISRaD,layer,lyr_zeolite,unit,percent
+ISRaD,layer,lyr_bd_samp_fill_extra,unit,g cm-3
+ISRaD,layer,lyr_c_org_fill_extra,unit,percent
+ISRaD,layer,lyr_soc_fill_extra,unit,g cm-2
+ISRaD,layer,lyr_14c_fill_extra,unit,percent
+ISRaD,fraction,frc_scheme_conc,unit,mol L-1
+ISRaD,fraction,frc_mass_perc,unit,percent
+ISRaD,fraction,frc_obs_date_y,unit,YYYY
+ISRaD,fraction,frc_obs_date_m,unit,MM
+ISRaD,fraction,frc_obs_date_d,unit,DD
+ISRaD,fraction,frc_bet_surface_area,unit,m2 g-1
+ISRaD,fraction,frc_c_perc,unit,percent
+ISRaD,fraction,frc_c_tot,unit,percent
+ISRaD,fraction,frc_c_org,unit,percent
+ISRaD,fraction,frc_c_inorg,unit,percent
+ISRaD,fraction,frc_n_tot,unit,percent
+ISRaD,fraction,frc_15n,unit,permille
+ISRaD,fraction,frc_13c,unit,permille
+ISRaD,fraction,frc_rc_year,unit,YYYY
+ISRaD,fraction,frc_14c,unit,permille
+ISRaD,fraction,frc_14c_sigma,unit,permille
+ISRaD,fraction,frc_14c_sd,unit,permille
+ISRaD,fraction,frc_raw_mbc,unit,mgC g-1
+ISRaD,fraction,frc_reported_mbc,unit,mgC g-1
+ISRaD,fraction,frc_fe_py,unit,mg g-1
+ISRaD,fraction,frc_al_py,unit,mg g-1
+ISRaD,fraction,frc_fe_al_py,unit,mg g-1
+ISRaD,fraction,frc_si_py,unit,mg g-1
+ISRaD,fraction,frc_c_py,unit,mg g-1
+ISRaD,fraction,frc_fe_ox,unit,mg g-1
+ISRaD,fraction,frc_al_ox,unit,mg g-1
+ISRaD,fraction,frc_si_ox,unit,mg g-1
+ISRaD,fraction,frc_c_ox,unit,mg g-1
+ISRaD,fraction,frc_noncrystalline_ox,unit,mg g-1
+ISRaD,fraction,frc_fe_hy,unit,mg g-1
+ISRaD,fraction,frc_al_hy,unit,mg g-1
+ISRaD,fraction,frc_si_hy,unit,mg g-1
+ISRaD,fraction,frc_c_hy,unit,mg g-1
+ISRaD,fraction,frc_fe_dith,unit,mg g-1
+ISRaD,fraction,frc_al_dith,unit,mg g-1
+ISRaD,fraction,frc_si_dith,unit,mg g-1
+ISRaD,fraction,frc_quartz,unit,percent
+ISRaD,fraction,frc_alkali_feldspar,unit,percent
+ISRaD,fraction,frc_plag_feldspar,unit,percent
+ISRaD,fraction,frc_mica_chlorite,unit,percent
+ISRaD,fraction,frc_amphibole,unit,percent
+ISRaD,fraction,frc_pyroxine,unit,percent
+ISRaD,fraction,frc_olivine,unit,percent
+ISRaD,fraction,frc_volc_glass,unit,percent
+ISRaD,fraction,frc_kaol_halloy,unit,percent
+ISRaD,fraction,frc_smect_vermic,unit,percent
+ISRaD,fraction,frc_gibbsite,unit,percent
+ISRaD,fraction,frc_fe_oxides,unit,percent
+ISRaD,fraction,frc_imog_alloph,unit,percent
+ISRaD,fraction,frc_ferrihydrite,unit,percent
+ISRaD,fraction,frc_zeolite,unit,percent
+ISRaD,incubation,inc_obs_date_y,unit,YYYY
+ISRaD,incubation,inc_obs_date_m,unit,MM
+ISRaD,incubation,inc_obs_date_d,unit,DD
+ISRaD,incubation,inc_duration,unit,days
+ISRaD,incubation,inc_temp,unit,°C
+ISRaD,incubation,inc_C_respired,unit,percent
+ISRaD,incubation,inc_13c,unit,permille
+ISRaD,incubation,inc_13c_sd,unit,permille
+ISRaD,incubation,inc_rc_year,unit,YYYY
+ISRaD,incubation,inc_14c,unit,permille
+ISRaD,incubation,inc_14c_sigma,unit,permille
+ISRaD,incubation,inc_14c_sd,unit,permille
+ISRaD,layer,entry_name,description,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis."
+ISRaD,layer,site_name,description,"A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels."
+ISRaD,layer,pro_name,description,"A unique name for a single profile. Values should match those reported in the orginal study. If no other information is available, value can be numeric. For NRCS data it is the same as “Pedon ID”."
+ISRaD,layer,lyr_name,description,"A unqiue layer identifier. Most commonly a concatination of the profile name and layer depth range is used. For example: ""profile1_0-10"""
+ISRaD,layer,lyr_obs_date_y,description,Year when sample was collected
+ISRaD,layer,lyr_obs_date_m,description,Month when sample was collected
+ISRaD,layer,lyr_obs_date_d,description,Day when sample was collected
+ISRaD,layer,lyr_all_org_neg,description,"Flag if mineral interface is unknown and depth is measured from atmosphere interface, e.g. peat cores"
+ISRaD,layer,lyr_top,description,The upper depth of the sampling interval
+ISRaD,layer,lyr_bot,description,The lower depth of the sampling intercal
+ISRaD,layer,lyr_hzn,description,Follow conventions of the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 2-2 through 2-4). Note that datasets originally using another convention will be modified for this column. If a different convention was used it can be entered in Horizon Designation Other.
+ISRaD,layer,lyr_comp,description,Use if the layer analyzed is a composite of multiple samples from the same depth interval
+ISRaD,layer,lyr_igsn,description,"The International Geo Sample Number (IGSN, http://www.geosamples.org/aboutigsn) is used to identify and track soil layers."
+ISRaD,layer,lyr_note,description,Notes on layer
+ISRaD,layer,lyr_color,description,Color of moist soil based on the Munsell soil color chart.
+ISRaD,layer,lyr_color_dry,description,Color of dry soil based on Munsell color system
+ISRaD,layer,lyr_burn_ev,description,Descriptive information indicating evidence of burning within the layer.
+ISRaD,layer,lyr_bd_samp,description,"Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater than 1 cm diameter removed."
+ISRaD,layer,lyr_bd_tot,description,"Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater than 1 cm diameter included."
+ISRaD,layer,lyr_bd_notes,description,Please reference or describe the methods used to determine bulk density.
+ISRaD,layer,lyr_sand_tot_psa,description,"Percent by weight of soil particles greater than 0.05 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986."
+ISRaD,layer,lyr_silt_tot_psa,description,"Percent by weight of soil particles in the size range from 0.002 to 0.050 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986."
+ISRaD,layer,lyr_clay_tot_psa,description,"Percent by weight of soil particles less than 0.002 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986."
+ISRaD,layer,lyr_coarse_tot,description,The mass percent of sample above a coarse fraction threshold . The default threshold is 2mm. Specify alternative values in coarse_size_threshold
+ISRaD,layer,lyr_coarse_size_thresh,description,The size threshold used to define the coarse fraction. The default is 2mm
+ISRaD,layer,lyr_coarse_density,description,Measured or estimated density of coarse fraction
+ISRaD,layer,lyr_texture_class,description,The soil textural classification (USDA categories)
+ISRaD,layer,lyr_bet_surface_area,description,Bulk surface area of sample as measured using the Brunauer–Emmett–Teller (BET) method
+ISRaD,layer,lyr_ph_cacl,description,1:2 soil-CaCl2 is the pH of a sample measured in 0.01M CaCl2 at a 1:2 soil:solution ratio.
+ISRaD,layer,lyr_ph_h2o,description,"1:1 distilled water and soil paste. If pH was done by a different method, then enter it into one of the other soil pH fields."
+ISRaD,layer,lyr_ph,description,pH measurements  other than 1:1 soil and distilled water paste or in CaCl2.
+ISRaD,layer,lyr_ph_method,description,pH measurements method other than 1:1 soil and distilled water paste or in CaCl2.
+ISRaD,layer,lyr_cat_exch,description,"Cation Exchange Capacity. Document the extractant solution in the metadata worksheet, Lab Analysis Method."
+ISRaD,layer,lyr_base_sum,description,Total exchangeable base content
+ISRaD,layer,lyr_cec_sum,description,Total exchangeable cation content
+ISRaD,layer,lyr_ca_exch,description,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted."
+ISRaD,layer,lyr_na_exch,description,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted."
+ISRaD,layer,lyr_mg_exch,description,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted."
+ISRaD,layer,lyr_k_exch,description,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted."
+ISRaD,layer,lyr_ecec,description,"Abundance of individual exchangeable cations  (Ca, Na, Mg, or K) per 100 grams of soil extactracted."
+ISRaD,layer,lyr_bs,description,The percentage of soil exchangeable sites occupied by base cations
+ISRaD,layer,lyr_c_inorg,description,Percent weight of inorganic carbon in a dried soil sample. This is often calculated by subrating measurements of organic carbon from total carbon.
+ISRaD,layer,lyr_c_org,description,"Percent by weight of organic carbon (i.e., after inorganic carbon has been removed)  in a dried soil sample."
+ISRaD,layer,lyr_c_tot,description,"Percent by weight of total carbon (i.e., inorganic + organic C)  in the dried, milled soil sample."
+ISRaD,layer,lyr_soc,description,"The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer."
+ISRaD,layer,lyr_soc_sigma,description,"The data contributor's calculated soil organic carbon stock standard deviation for the site, cluster, profile or layer."
+ISRaD,layer,lyr_n_tot,description,Percent by weight of nitrogen (organic and inorganic) in an oven-dried sample (the laboratory analytical concentration).
+ISRaD,layer,lyr_son,description,Reported stock of organic soil N
+ISRaD,layer,lyr_c_to_n,description,"Mass ratio of total carbon to total nitrogen, as calculated from the total carbon and total nitrogen concentrations of the bulk layer, fraction, or other sample type."
+ISRaD,layer,lyr_loi,description,Percent by weight of the organic content of the <2mm fraction is the organic material lost after ignition. It is reported on a <2 mm base. Please document the method in the associated Carbon Analysis Method.
+ISRaD,layer,lyr_ha_fa,description,Ratio of layer C in humic acids vs. fulvic acids
+ISRaD,layer,lyr_15n,description,Per mille signature of δ15N relative to air (international standard).
+ISRaD,layer,lyr_13c,description,Delta 13C signature of observed flux (VPBD)
+ISRaD,layer,lyr_rc_lab,description,Official Radiocarbon Laboratory ID (look up here)
+ISRaD,layer,lyr_rc_lab_number,description,ID number assigned by radiocarbon laboratory to reported measurement
+ISRaD,layer,lyr_rc_year,description,Year in which radiocarbon measurment was made
+ISRaD,layer,lyr_14c,description,Delta 14C measurement of flux in per mil units
+ISRaD,layer,lyr_14c_sigma,description,Flux Δ14C standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,layer,lyr_14c_sd,description,Flux Δ14C sample standard deviation; use only if Δ14C of replicates reported as a mean value
+ISRaD,layer,lyr_fraction_modern,description,"Deviation of the sample from modern. Modern is defined as 95% of the radiocarbon concentration (in AD 1950) of NBS Oxalic Acid standard, 13C-corrected."
+ISRaD,layer,lyr_fraction_modern_sigma,description,Flux Fraction Modern standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,layer,lyr_fraction_modern_sd,description,Flux Fraction Modern sample standard deviation; use only if FM of replicates reported as a mean value
+ISRaD,layer,lyr_mbc_method,description,The method used to estimate microbial biomass.
+ISRaD,layer,lyr_raw_mbc,description,"mg of microbial biomass C per g of soil, e.g. from TOC analyzer (use for chloroform fumigation extraction data, etc.)"
+ISRaD,layer,lyr_reported_mbc,description,"mg of microbial biomass C per g of soil, e.g. following conversion from SIR rates (use for substrate induced respiration data, etc.)"
+ISRaD,layer,lyr_p_ext,description,Phosphorus extracted from soil
+ISRaD,layer,lyr_p_units,description,Units for reported extractable phosphorus data
+ISRaD,layer,lyr_p_method,description,Method used for extractable phosphorsus
+ISRaD,layer,lyr_p_tot,description,Concentration of total layer phosphorus per gram of soil
+ISRaD,layer,lyr_p_stock,description,Stock of phosphorus in bulk soil (coarse fragments excluded)
+ISRaD,layer,lyr_fe_py,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted."
+ISRaD,layer,lyr_al_py,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted."
+ISRaD,layer,lyr_fe_al_py,description,Combined mass of Fe and Al extracted from soil with sodium pyrophosphate per gram of soil extracted.
+ISRaD,layer,lyr_si_py,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted."
+ISRaD,layer,lyr_c_py,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted."
+ISRaD,layer,lyr_py_notes,description,"Notes on sodium pyrophosphate extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed)."
+ISRaD,layer,lyr_fe_ox,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate  per gram of soil extracted."
+ISRaD,layer,lyr_al_ox,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate  per gram of soil extracted."
+ISRaD,layer,lyr_si_ox,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate  per gram of soil extracted."
+ISRaD,layer,lyr_c_ox,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate  per gram of soil extracted."
+ISRaD,layer,lyr_noncrystalline_ox,description,Total non-crystalline mineral content of soil extracted with ammonium oxalate per gram of soil extracted.
+ISRaD,layer,lyr_ox_notes,description,"Notes on ammonium oxalate  extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed)."
+ISRaD,layer,lyr_fe_hy,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted."
+ISRaD,layer,lyr_al_hy,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted."
+ISRaD,layer,lyr_si_hy,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted."
+ISRaD,layer,lyr_c_hy,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted."
+ISRaD,layer,lyr_hy_notes,description,"Notes on hydroxylamine  extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed)."
+ISRaD,layer,lyr_fe_dith,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted."
+ISRaD,layer,lyr_al_dith,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted."
+ISRaD,layer,lyr_si_dith,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted."
+ISRaD,layer,lyr_dith_notes,description,"Notes on dithionite extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed)."
+ISRaD,layer,lyr_quartz,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_alkali_feldspar,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_plag_feldspar,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_mica_chlorite,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_amphibole,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_pyroxine,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_olivine,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_volc_glass,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_kaol_halloy,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_smect_vermic,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_gibbsite,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_fe_oxides,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_imog_alloph,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_ferrihydrite,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_calcite_dolomite,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_zeolite,description,"Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,layer,lyr_bd_samp_fill_extra,description,"Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater than 1 cm diameter removed."
+ISRaD,layer,lyr_c_org_fill_extra,description,"Percent by weight of organic carbon (i.e., after inorganic carbon has been removed)  in a dried soil sample."
+ISRaD,layer,lyr_soc_fill_extra,description,"The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer."
+ISRaD,layer,lyr_14c_fill_extra,description,?
+ISRaD,layer,lyr_fill_notes_extra,description,Please describe the rationale behind expert estimated values
+ISRaD,fraction,entry_name,description,"Standardized dataset name: ""first author_ publication year."" Synthesis studies should report multiple entries for each dataset in the synthesis."
+ISRaD,fraction,site_name,description,"A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels."
+ISRaD,fraction,pro_name,description,"A unique name for a single profile. Values should match those reported in the orginal study. If no other information is available, value can be numeric. For NRCS data it is the same as “Pedon ID”."
+ISRaD,fraction,lyr_name,description,"A unqiue layer identifier. Most commonly a concatination of the profile name and layer depth range is used. For example: ""profile1_0-10"""
+ISRaD,fraction,frc_name,description,A unique name identifier for fraction. Often this is a concatination of layer_name and the frc_property
+ISRaD,fraction,frc_input,description,This is either the layer_name or frc_name (of a different fraction) that was used as the input to this fractionation. Specifying the frc_input allows for tracking multistep fractionations
+ISRaD,fraction,frc_property,description,"The value of the chemical or physical property that defines the fraction as unique from the others in its scheme,"
+ISRaD,fraction,frc_scheme,description,"The scheme used to isolate the fraction, e.g., density, size, aggregate, chemical."
+ISRaD,fraction,frc_scheme_units,description,"The units of measurement of the property that defines a fraction as unique, e.g. for density fractions, ""g cm-3""."
+ISRaD,fraction,frc_lower,description,The upper boundary of the property that defines the fraction measured in units defined by frc_scheme_units
+ISRaD,fraction,frc_upper,description,The lower boundary of the property that defines the fraction measured in units defined by frc_scheme_units
+ISRaD,fraction,frc_agent,description,A specification of fractionation scheme details. Acceptable options depend on what fractionation scheme is selected.
+ISRaD,fraction,frc_scheme_conc,description,"When the fractionation scheme is a chemical extraction, this is the concentration of extractant."
+ISRaD,fraction,frc_comp,description,Was fractionation method applied to a composite sample?
+ISRaD,fraction,frc_note,description,Notes on fractionation procedure.
+ISRaD,fraction,frc_mass_perc,description,"Percent of total sample mass recovered from fractationation (note: this is for total sample, not just carbon)"
+ISRaD,fraction,frc_obs_date_y,description,Year when measurement was observed or recorded
+ISRaD,fraction,frc_obs_date_m,description,Month when measurement was observed or recorded
+ISRaD,fraction,frc_obs_date_d,description,Day when measurement was observed or recorded
+ISRaD,fraction,frc_bet_surface_area,description,Bulk surface area of sample as measured using the Brunauer–Emmett–Teller (BET) method
+ISRaD,fraction,frc_c_perc,description,Percent of total carbon mass isolated from fractionation.
+ISRaD,fraction,frc_c_tot,description,"Percent by weight of total carbon (i.e., inorganic + organic C) in the fraction"
+ISRaD,fraction,frc_c_org,description,"Percent by weight of organic carbon (i.e., after inorganic carbon has been removed) in the fraction"
+ISRaD,fraction,frc_c_inorg,description,Percent weight of inorganic carbon in the fraction. This is often calculated by subrating measurements of organic carbon from total carbon.
+ISRaD,fraction,frc_n_tot,description,Percent by weight of nitrogen (organic and inorganic) in an oven- dried sample (the laboratory analytical concentration).
+ISRaD,fraction,frc_c_to_n,description,"Mass ratio of total carbon to total nitrogen, as calculated from the total carbon and total nitrogen concentrations of the bulk layer, fraction, or other sample type."
+ISRaD,fraction,frc_15n,description,Per mille signature of δ15N relative to air (international standard).
+ISRaD,fraction,frc_13c,description,Delta 13C signature of observed flux (VPBD)
+ISRaD,fraction,frc_rc_lab,description,Official Radiocarbon Laboratory ID (look up here)
+ISRaD,fraction,frc_rc_lab_number,description,ID number assigned by radiocarbon laboratory to reported measurement
+ISRaD,fraction,frc_rc_year,description,Year in which radiocarbon measurment was made
+ISRaD,fraction,frc_14c,description,Delta 14C measurement of flux in per mil units
+ISRaD,fraction,frc_14c_sigma,description,Flux Δ14C standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,fraction,frc_14c_sd,description,Flux Δ14C sample standard deviation; use only if Δ14C of replicates reported as a mean value
+ISRaD,fraction,frc_fraction_modern,description,"Deviation of the sample from modern. Modern is defined as 95% of the radiocarbon concentration (in AD 1950) of NBS Oxalic Acid standard, 13C-corrected."
+ISRaD,fraction,frc_fraction_modern_sigma,description,Flux Fraction Modern standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,fraction,frc_fraction_modern_sd,description,Flux Fraction Modern sample standard deviation; use only if FM of replicates reported as a mean value
+ISRaD,fraction,frc_mbc_method,description,The method used to esimate microbial biomass.
+ISRaD,fraction,frc_raw_mbc,description,"mg of microbial biomass C per g of soil, e.g. from TOC analyzer (use for chloroform fumigation extraction data, etc.)"
+ISRaD,fraction,frc_reported_mbc,description,"mg of microbial biomass C per g of soil, e.g. following conversion from SIR rates (use for substrate induced respiration data, etc.)"
+ISRaD,fraction,frc_fe_py,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted."
+ISRaD,fraction,frc_al_py,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted."
+ISRaD,fraction,frc_fe_al_py,description,Combined mass of Fe and Al extracted from soil with sodium pyrophosphate per gram of soil extracted.
+ISRaD,fraction,frc_si_py,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted."
+ISRaD,fraction,frc_c_py,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with sodium pyrophosphate per gram of soil extracted."
+ISRaD,fraction,frc_py_notes,description,"Notes on sodium pyrophosphate extraction including concentration of extractant, solid to solution ration, and sequential or parallel extraction design (if other extractions were also performed)."
+ISRaD,fraction,frc_fe_ox,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate per gram of soil extracted."
+ISRaD,fraction,frc_al_ox,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate per gram of soil extracted."
+ISRaD,fraction,frc_si_ox,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate per gram of soil extracted."
+ISRaD,fraction,frc_c_ox,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with ammonium oxalate per gram of soil extracted."
+ISRaD,fraction,frc_noncrystalline_ox,description,Total non-crystalline mineral content of soil extracted with ammonium oxalate per gram of soil extracted.
+ISRaD,fraction,frc_ox_notes,description,"Notes on ammonium oxalate extraction including concentration of extractant, solid to solution ration, and sequential or parallel extraction design (if other extractions were also performed)."
+ISRaD,fraction,frc_fe_hy,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine reported per gram of soil extracted."
+ISRaD,fraction,frc_al_hy,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine reported per gram of soil extracted."
+ISRaD,fraction,frc_si_hy,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine reported per gram of soil extracted."
+ISRaD,fraction,frc_c_hy,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine reported per gram of soil extracted."
+ISRaD,fraction,frc_hy_notes,description,"Notes on hydroxylamine extraction including concentration of extractant, solid to solution ration, and sequential or parallel extraction design (if other extractions were also performed)."
+ISRaD,fraction,frc_fe_dith,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine reported per gram of soil extracted."
+ISRaD,fraction,frc_al_dith,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine reported per gram of soil extracted."
+ISRaD,fraction,frc_si_dith,description,"Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine reported per gram of soil extracted."
+ISRaD,fraction,frc_quartz,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_alkali_feldspar,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_plag_feldspar,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_mica_chlorite,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_amphibole,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_pyroxine,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_olivine,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_volc_glass,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_kaol_halloy,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_smect_vermic,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_gibbsite,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_fe_oxides,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_imog_alloph,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_ferrihydrite,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,fraction,frc_zeolite,description,"Quantitative or qualitative mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+ISRaD,metadata,entry_name,description,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis."
+ISRaD,metadata,doi,description,"Digital Object Identifier. Please look this number up at journal webpage even if it is not reported in PDF. Alphanumeric string only. Do not include ""http://doi.org"""
+ISRaD,metadata,compilation_doi,description,"Digital Object Identifier. Please look this number up at journal webpage even if it is not reported in PDF. Alphanumeric string only. Do not include ""http://doi.org"""
+ISRaD,metadata,curator_name,description,"Name of person completing template or, in the case of synthesis efforts, the author of the synthesis."
+ISRaD,metadata,curator_organization,description,Professional affiliation
+ISRaD,metadata,curator_email,description,Current Contact email
+ISRaD,metadata,modification_date_y,description,Date template was last modified (year)
+ISRaD,metadata,modification_date_m,description,Date template was last modified (month)
+ISRaD,metadata,modification_date_d,description,Date template was last modified (day)
+ISRaD,metadata,contact_name,description,Name of corresponding author from the dataset or synthesis
+ISRaD,metadata,contact_email,description,Current email of corresponding author of dataset of synthesis
+ISRaD,metadata,contact_orcid_id,description,ORCID number of corresponding author (if reported)
+ISRaD,metadata,bibliographical_reference,description,Citation for study (if applicable)
+ISRaD,metadata,metadata_note,description,"Any comments regarding missing data, available data not included in publication, or other pertinent aspects of the study or dataset."
+ISRaD,metadata,associated_datasets,description,List any associated datasets that may report the same data contained in the primary entry
+ISRaD,metadata,template_version,description,"DO NOT EDIT (year, month, day, hour of template version (UTC))"
+ISRaD,site,entry_name,description,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis. Values must match across levels."
+ISRaD,site,site_name,description,"A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels."
+ISRaD,site,site_lat,description,"Latitude of site reported as decimal degrees. The precision of the coordinates reported are up the user. For conversion of degree minute second values to decimal degrees, please see the following resource: https://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees"
+ISRaD,site,site_long,description,"Longitude of site reported as decimal degrees. The precision of the coordinates reported are up the user. For conversion of degree minute second values to decimal degrees, please see the following resource: https://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees"
+ISRaD,site,site_datum,description,Latitude/Longitude datum against which Latitude and Longitude are reported. Default = WGS84
+ISRaD,site,site_elevation,description,"The elevation at the site as determined by topo map, GPS, altimeter, etc. Contributed value is assumed accurate within several meters regardless of method used."
+ISRaD,site,site_note,description,"Various notes on and descriptions of the site other than C flux, climate, photo or vegetation. May include local names for physiographic features, which may or may not appear on USGS Topographic Quadrangles."
+ISRaD,interstitial,entry_name,description,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis."
+ISRaD,interstitial,site_name,description,"A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels."
+ISRaD,interstitial,pro_name,description,"A unique name for a single profile. Values should match those reported in the orginal study. If no other information is available, value can be numeric. For NRCS data it is the same as “Pedon ID”."
+ISRaD,interstitial,ist_name,description,A unqiue interstitial observation identifier
+ISRaD,interstitial,ist_obs_date_y,description,Year when measurement was observed or recorded
+ISRaD,interstitial,ist_obs_date_m,description,Month when measurement was observed or recorded
+ISRaD,interstitial,ist_obs_date_d,description,Day when measurement was observed or recorded
+ISRaD,interstitial,ist_all_org_neg,description,Flag if mineral interface is unknown and depth is measured from atmosphere interface
+ISRaD,interstitial,ist_depth,description,Depth of interstitial observation
+ISRaD,interstitial,ist_notes,description,"Notes about interstitial measurement/collection method, etc."
+ISRaD,interstitial,ist_phase,description,Matter phase of interstitial sample
+ISRaD,interstitial,ist_analyte,description,Analyte for interstitial observation
+ISRaD,interstitial,ist_method,description,Type of extraction method for interstitial sampling
+ISRaD,interstitial,ist_storage_method,description,Type of container used to store/collect interstitial sample
+ISRaD,interstitial,ist_time_dur,description,Duration of collection period in days (or decimal days)
+ISRaD,interstitial,ist_temp,description,"Temperature of flux source, e.g. soil, stream, etc."
+ISRaD,interstitial,ist_source_O2,description,For aquatic fluxes enter the percent oxygen content of flux source
+ISRaD,interstitial,ist_source_H2O,description,For soil fluxes enter the water content of the soil (volumetric)
+ISRaD,interstitial,ist_concentration,description,Concentration of interstitial analyte (mg C L-1)
+ISRaD,interstitial,ist_concentration_units,description,Units for ist_concentration
+ISRaD,interstitial,ist_13c,description,Delta 13C signature of observed flux (VPBD)
+ISRaD,interstitial,ist_13c_sd,description,Standard deviation of 13C signature of observed flux (VPBD)
+ISRaD,interstitial,ist_18o,description,d18O per mille
+ISRaD,interstitial,ist_2h,description,deuterium per mille
+ISRaD,interstitial,ist_rc_lab,description,Official Radiocarbon Laboratory ID (look up here)
+ISRaD,interstitial,ist_rc_lab_number,description,ID number assigned by radiocarbon laboratory to reported measurement
+ISRaD,interstitial,ist_rc_year,description,Year in which radiocarbon measurment was made
+ISRaD,interstitial,ist_14c,description,Delta 14C measurement of flux in per mil units
+ISRaD,interstitial,ist_14c_sigma,description,Flux Δ14C standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,interstitial,ist_14c_sd,description,Flux Δ14C sample standard deviation; use only if Δ14C of replicates reported as a mean value
+ISRaD,interstitial,ist_fraction_modern,description,"Deviation of the sample from modern. Modern is defined as 95% of the radiocarbon concentration (in AD 1950) of NBS Oxalic Acid standard, 13C-corrected."
+ISRaD,interstitial,ist_fraction_modern_sigma,description,Flux Fraction Modern standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,interstitial,ist_fraction_modern_sd,description,Flux Fraction Modern sample standard deviation; use only if FM of replicates reported as a mean value
+ISRaD,profile,entry_name,description,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis."
+ISRaD,profile,site_name,description,"A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels."
+ISRaD,profile,plot_name,description,"Denote sub-site scale groupings for data, e.g. plots"
+ISRaD,profile,pro_name,description,"A unique name for a single profile. Values should match those reported in the orginal study. If no other information is available, value can be numeric. For NRCS data it is the same as “Pedon ID”."
+ISRaD,profile,pro_note,description,"Supplemental information describing location detail, alternative profile naming, additional references, or other information"
+ISRaD,profile,pro_lat,description,"Latitude and Longitude of profile locations. These fields are for reporting fine-scale (<1 km) spatial locations. For larger differences in location, the Site designation should be used. Datum should match that specified for the Site."
+ISRaD,profile,pro_long,description,"Latitude and Longitude of profile locations. These fields are for reporting fine-scale (<1 km) spatial locations. For larger differences in location, the Site designation should be used. Datum should match that specified for the Site."
+ISRaD,profile,pro_elevation,description,Elevation for a specific profile. Only needs to be entered if different from site elevation.
+ISRaD,profile,pro_treatment,description,Indication of whether samples were collected from a natural soil (control) or one subjected to an experimental treatment. Blank values are assumed to represent control conditions.
+ISRaD,profile,pro_treatment_note,description,"If samples are from an exerimental treatment, provide a description of the treatment type (warming, isotopic label, rainout, etc)."
+ISRaD,profile,pro_comp,description,"Are Profile data from composite sample? When no value is entered, it is assumed samples were not a composite"
+ISRaD,profile,pro_reps,description,"The number of replicates averaged for the data reported, blank cells or a value of 1 indicate no replication"
+ISRaD,profile,pro_MAT,description,Mean annual temperature measured at loction of the soil profile.
+ISRaD,profile,pro_MAP,description,Mean annual precipitation measured at location of the soil profile.
+ISRaD,profile,pro_peatland,description,Is peat present in this profile? Yes if peatland. Blank if not present.
+ISRaD,profile,pro_usda_soil_order,description,The soil order in USDA soil taxonomy
+ISRaD,profile,pro_soil_series,description,The soil series name of the profile in USDA soil taxonomy
+ISRaD,profile,pro_soil_taxon,description,"Use this field in combination with ""pro_soil_taxon_sys"" to record non-USDA soil taxonomy or additional USDA soil taxonomic descriptors"
+ISRaD,profile,pro_soil_taxon_sys,description,"The relevant soil taxonomic classification system for data entered in the ""pro_soil_taxon"" column"
+ISRaD,profile,pro_chrono_name,description,Group name assigned to a particular chronosequence
+ISRaD,profile,pro_soil_age,description,The age of the soil in thousands of years (Ky)
+ISRaD,profile,pro_soil_age_note,description,"Additional notes regarding soil age determination, chronosequence grouping, etc."
+ISRaD,profile,pro_MAST,description,Mean annual soil temperature as estimated for the entire profile. Depth specific values may be reported at the Layer level.
+ISRaD,profile,pro_MASWC,description,Mean annual soil moisture content as estimated for the entire profile in units of % water holding capacity. Depth specific values may be reported at the Layer level.
+ISRaD,profile,pro_land_cover,description,The general landcover classificiation
+ISRaD,profile,pro_lc_phenology,description,Vegetation phenology for forest and shrubland types
+ISRaD,profile,pro_lc_leaf_type,description,Leaf morphology for forests
+ISRaD,profile,pro_lc_photosyn_path,description,Vegetation photosynthetic pathway (applicable mainly to grassland)
+ISRaD,profile,pro_veg_note,description,"Provide additional detail of vegetation information including species composition, basal area, aboveground biomass, etc."
+ISRaD,profile,pro_NPP,description,Net primary productivity associated with profile location
+ISRaD,profile,pro_bedrock_depth,description,The observed depth to the top of the bedrock layer.
+ISRaD,profile,pro_complete,description,Flag indicating confidence that profile was sampled completely (down to parent rock or C horizon with minimal C content)
+ISRaD,profile,pro_depth_water,description,Measure or estimate the depth from the ground surface to the stabilized contact with free- standing water in an open bore-hole or well at the time of sampling.
+ISRaD,profile,pro_thaw_depth,description,"The depth to the frozen surface of the profile. For Alaska sites, this applies only if sampled after August 15 and should be left blank if sampled before."
+ISRaD,profile,pro_parent_material,description,Generalized geologic type describing the geologic or organic precursors of the soil
+ISRaD,profile,pro_parent_chem,description,General parent material chemical composition
+ISRaD,profile,pro_parent_material_notes,description,Additional details regarding the soil parent material
+ISRaD,profile,pro_2d_position,description,2-dimensional position of the site on the Landform on which it is located. See USDA- NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 3-38 through 3-41). This information supplements Landscape and Landform to describe the geographic setting of the site.
+ISRaD,profile,pro_aspect,description,The cardinal direction that the slope faces at a site. Use this field if only if you do not provide the azimuth of the Site Aspect in compass degrees.
+ISRaD,profile,pro_aspect_deg,description,"The numerical observation of aspect at the site. The compass bearing (corrected for declination) that a slope faces, looking downslope. If the site has no slope leave blank."
+ISRaD,profile,pro_slope,description,The angle of the ground surface through the site and in the direction that overland water would flow. Make observations facing downslope to avoid errors associated with some brands of clinometers. If the site has no slope leave blank.
+ISRaD,profile,pro_slope_shape,description,General descriport of surface shape at soil profile sampling location.
+ISRaD,profile,pro_drainage_class,description,The frequency and duration of wet periods in conditions similar to those under as defined by the USDA NRCS.
+ISRaD,profile,pro_soc,description,The data contributor's calculated soil organic carbon stock value for the profile
+ISRaD,profile,pro_soc_sigma,description,"The standard deviation of the site, cluster, profile, or layer-level calculated soil organic carbon stock. (For layer soil organic carbon stocks, this may be based on analytical or sampling replicates of %C or bulk density measurements)."
+ISRaD,profile,pro_soc_depth,description,"The depth to which profiles were sampled to quantify the mean site, cluster, or profile calculated soil organic carbon stocks."
+ISRaD,profile,pro_catchment_area,description,Catchment area drained in km^2
+ISRaD,profile,pro_permafrost,description,Is permafrost present at this profile? Yes if present. Blank if not present.
+ISRaD,profile,pro_thermokarst,description,Are thermokarst features present at this profile? Yes if present. Blank if not present.
+ISRaD,profile,pro_deforested,description,Percent of landscape deforested (or of catchment area)
+ISRaD,profile,pro_water_body,description,"Type of water body (Eg: lake, mainstem, tributary, etc)"
+ISRaD,profile,pro_water_body_name,description,"River name, lake name, etc. for different profiles collected from same water body. Group identifier for aquatic profiles. (Use is similar to plot_name or pro_chrono_name)."
+ISRaD,incubation,entry_name,description,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis."
+ISRaD,incubation,site_name,description,"A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels."
+ISRaD,incubation,pro_name,description,"A unique name for a single profile. Values should match those reported in the orginal study. If no other information is available, value can be numeric. For NRCS data it is the same as “Pedon ID”."
+ISRaD,incubation,lyr_name,description,"A unqiue layer identifier. Most commonly a concatination of the profile name and layer depth range is used. For example: ""profile1_0-10"""
+ISRaD,incubation,frc_name,description,"Name of associated fraction, if applicable"
+ISRaD,incubation,inc_name,description,Unique name for sample incubated (use to distinguish between replicates)
+ISRaD,incubation,inc_type,description,Material incubated
+ISRaD,incubation,inc_note,description,Notes pertaining to incubation
+ISRaD,incubation,inc_obs_date_y,description,Year when measurement was observed or recorded
+ISRaD,incubation,inc_obs_date_m,description,Month when measurement was observed or recorded
+ISRaD,incubation,inc_obs_date_d,description,Day when measurement was observed or recorded
+ISRaD,incubation,inc_duration,description,Duration of incubation in days
+ISRaD,incubation,inc_duration_type,description,Categorical description of incubation duration
+ISRaD,incubation,inc_anaerobic,description,"Is incubation anaerobic? Yes if anaerobic, blank defaults to aerobic"
+ISRaD,incubation,inc_analyte,description,"Is data for CH4 or CO2? ""CH4"" if methane analyzed, leave blank for CO2"
+ISRaD,incubation,inc_temp,description,Temperature at which incubation was conducted prior to observation
+ISRaD,incubation,inc_moisture_type,description,Modification of moisture content of soil prior to the start of incubation period
+ISRaD,incubation,inc_moisture,description,Numerical measurement of moisture content (gravimetric)
+ISRaD,incubation,inc_moisture_units,description,Units of moisture
+ISRaD,incubation,inc_C_respired,description,"Quantity of C respired during incubation period, expressed as a percentage of initial sample C"
+ISRaD,incubation,inc_flux,description,Flux rate of C during incubation period (mg C/g soil/day)
+ISRaD,incubation,inc_flux_units,description,Units of flux
+ISRaD,incubation,inc_13c,description,Delta 13C signature of observed flux (VPBD)
+ISRaD,incubation,inc_13c_sd,description,Standard deviation of 13C signature of observed flux (VPBD)
+ISRaD,incubation,inc_rc_lab,description,Official Radiocarbon Laboratory ID (look up here)
+ISRaD,incubation,inc_rc_lab_number,description,ID number assigned by radiocarbon laboratory to reported measurement
+ISRaD,incubation,inc_rc_year,description,Year in which radiocarbon measurment was made
+ISRaD,incubation,inc_14c,description,Delta 14C measurement of flux in per mil units
+ISRaD,incubation,inc_14c_sigma,description,Flux Δ14C standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,incubation,inc_14c_sd,description,Flux Δ14C sample standard deviation; use only if Δ14C of replicates reported as a mean value
+ISRaD,incubation,inc_fraction_modern,description,"Deviation of the sample from modern. Modern is defined as 95% of the radiocarbon concentration (in AD 1950) of NBS Oxalic Acid standard, 13C-corrected."
+ISRaD,incubation,inc_fraction_modern_sigma,description,Flux Fraction Modern standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,incubation,inc_fraction_modern_sd,description,Flux Fraction Modern sample standard deviation; use only if FM of replicates reported as a mean value
+ISRaD,flux,entry_name,description,"Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis."
+ISRaD,flux,site_name,description,"A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels."
+ISRaD,flux,plot_name,description,Name of plot associated with flux data
+ISRaD,flux,pro_name,description,Name of profile associated with flux data
+ISRaD,flux,flx_name,description,Name of profile associated with flux data
+ISRaD,flux,flx_lat,description,"Latitude and Longitude of flux locations. These fields are for reporting fine-scale (<1 km) spatial locations. For larger differences in location, the Site designation should be used. Datum should match that specified for the Site."
+ISRaD,flux,flx_long,description,NA
+ISRaD,flux,flx_obs_date_y,description,Year when flux measurement was observed or recorded
+ISRaD,flux,flx_obs_date_m,description,Month when flux measurement was observed or recorded
+ISRaD,flux,flx_obs_date_d,description,Day when flux measurement was observed or recorded
+ISRaD,flux,flx_notes,description,"Notes about flux measurement/collection method, etc."
+ISRaD,flux,flx_pathway,description,Pathway by which flux exited the soil system
+ISRaD,flux,flx_pathway_note,description,Notes about flux pathway
+ISRaD,flux,flx_analyte,description,Flux analyte
+ISRaD,flux,flx_ecosystem_component,description,"Ecological description of flux source, e.g. plant (autotrophic), soil surface chamber (ecosystem), etc."
+ISRaD,flux,flx_method,description,Methodology used to collect flux analyte
+ISRaD,flux,flx_method_note,description,Additional notes about flux collection method if different from standard methodology
+ISRaD,flux,flx_storage_method,description,Type of storage container or method used to collect flux analyte
+ISRaD,flux,flx_duration,description,Duration of collection period prior to flux measurement or time since previous measurement
+ISRaD,flux,flx_duration_units,description,Units for flux duration
+ISRaD,flux,flx_keeling_plot,description,Was source isotopic signature estimated? (no need for atm. correction)
+ISRaD,flux,flx_atm_correction,description,Was source isotopic signature corrected for atmospheric contamination (mixing model)?
+ISRaD,flux,flx_source_temp,description,"Temperature of flux source, e.g. soil, stream, etc."
+ISRaD,flux,flx_source_O2,description,For aquatic fluxes enter the percent oxygen content of flux source
+ISRaD,flux,flx_source_H2O,description,For soil fluxes enter the water content of the soil (volumetric)
+ISRaD,flux,flx_rate,description,Rate of observed flux (g C m-2 d-1)
+ISRaD,flux,flx_rate_sd,description,Standard deviation of observed flux rate
+ISRaD,flux,flx_rate_units,description,Units of flux
+ISRaD,flux,flx_analyte_conc,description,Concentration in mgC/L (aquatic)
+ISRaD,flux,flx_discharge_rate,description,Instantaneous discharge (m3/s)
+ISRaD,flux,flx_aquatic_ph,description,pH of water for aquatic fluxes
+ISRaD,flux,flx_aquatic_cond,description,Conductivity in microS/cm
+ISRaD,flux,flx_13c,description,Delta 13C signature of observed flux (VPBD)
+ISRaD,flux,flx_13c_sd,description,Standard deviation of 13C signature of observed flux (VPBD)
+ISRaD,flux,flx_18o,description,d18O per mille
+ISRaD,flux,flx_2h,description,deuterium per mille
+ISRaD,flux,flx_rc_lab,description,Official Radiocarbon Laboratory ID (look up here)
+ISRaD,flux,flx_rc_lab_number,description,ID number assigned by radiocarbon laboratory to reported measurement
+ISRaD,flux,flx_rc_year,description,Year in which radiocarbon measurment was made
+ISRaD,flux,flx_14c,description,Delta 14C measurement of flux in per mil units
+ISRaD,flux,flx_14c_sigma,description,Flux Δ14C standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,flux,flx_14c_sd,description,Flux Δ14C sample standard deviation; use only if Δ14C of replicates reported as a mean value
+ISRaD,flux,flx_fraction_modern,description,"Deviation of the sample from modern. Modern is defined as 95% of the radiocarbon concentration (in AD 1950) of NBS Oxalic Acid standard, 13C-corrected."
+ISRaD,flux,flx_fraction_modern_sigma,description,Flux Fraction Modern standard deviation as reported by the AMS facility as analytical error estimate
+ISRaD,flux,flx_fraction_modern_sd,description,Flux Fraction Modern sample standard deviation; use only if FM of replicates reported as a mean value
+ISCNTemplate,site,lat,unit,degrees
+ISCNTemplate,site,long,unit,degrees
+ISCNTemplate,site,location_acc,unit,m
+ISCNTemplate,site,elevation,unit,m
+ISCNTemplate,site,aspect_deg,unit,degree
+ISCNTemplate,site,slope,unit,percent
+ISCNTemplate,site,stand_age,unit,years
+ISCNTemplate,site,depth_water,unit,cm
+ISCNTemplate,site,thaw_depth_site,unit,cm
+ISCNTemplate,site,bedrock_depth,unit,cm
+ISCNTemplate,site,ffdays,unit,days
+ISCNTemplate,site,map,unit,mm
+ISCNTemplate,site,mat,unit,degrees C
+ISCNTemplate,site,mast,unit,degrees C
+ISCNTemplate,site,water_table_duration,unit,days
+ISCNTemplate,site,soc,unit,g cm-2
+ISCNTemplate,site,soc_sigma,unit,g cm-2
+ISCNTemplate,site,soc_method,unit,g cm-2
+ISCNTemplate,site,2d_position,controled_vocabulary,2d_position
+ISCNTemplate,site,soc_depth,unit,cm
+ISCNTemplate,profile,transect_flag,controled_vocabulary,yes_blank
+ISCNTemplate,profile,add_taxon_flag,controled_vocabulary,yes_blank
+ISCNTemplate,profile,thaw_depth_profile,unit,cm
+ISCNTemplate,profile,soc,unit,g cm-2
+ISCNTemplate,profile,soc_sigma,unit,g cm-2
+ISCNTemplate,profile,soc_depth,unit,cm
+ISCNTemplate,layer,layer_top,unit,cm
+ISCNTemplate,layer,layer_bot,unit,cm
+ISCNTemplate,layer,bd_samp,method,"Bulk Density, Coarse Fragments Removed"
+ISCNTemplate,layer,bd_samp,unit,g cm-3
+ISCNTemplate,layer,bd_tot,method,Bulk Density With Coarse Fragments
+ISCNTemplate,layer,bd_tot,unit,g cm-3
+ISCNTemplate,layer,bd_whole,method,Bulk Density Minus Estimated Coarse Fragments
+ISCNTemplate,layer,bd_whole,unit,g cm-3
+ISCNTemplate,layer,bd_other,method,Bulk Density Other
+ISCNTemplate,layer,bd_other,unit,g cm-3
+ISCNTemplate,layer,caco3,unit,percent
+ISCNTemplate,layer,sand_tot_psa,unit,percent
+ISCNTemplate,layer,silt_tot_psa,unit,percent
+ISCNTemplate,layer,clay_tot_psa,unit,percent
+ISCNTemplate,layer,wpg2,unit,percent
+ISCNTemplate,layer,cat_exch,unit,cmol H+ kg-1
+ISCNTemplate,layer,gwc,unit,percent
+ISCNTemplate,layer,vwc,unit,percent
+ISCNTemplate,layer,soc,unit,g cm-2
+ISCNTemplate,layer,soc_sigma,unit,g cm-2
+ISCNTemplate,layer,c_tot,unit,percent
+ISCNTemplate,layer,oc,unit,percent
+ISCNTemplate,layer,n_tot,unit,percent
+ISCNTemplate,layer,c_to_n,unit,mass mass-1
+ISCNTemplate,layer,loi,unit,percent
+ISCNTemplate,layer,root_weight,unit,g
+ISCNTemplate,layer,15n,unit,permille
+ISCNTemplate,layer,13c,unit,permille
+ISCNTemplate,layer,14c,unit,permille
+ISCNTemplate,layer,14c_sigma,unit,permille
+ISCNTemplate,layer,14c_age,method,Age model from 14C
+ISCNTemplate,layer,14c_age,unit,years
+ISCNTemplate,layer,14c_age_sigma,unit,years
+ISCNTemplate,fraction,fraction_c_perc,unit,percent
+ISCNTemplate,fraction,fraction_mass_perc,unit,percent
+ISCNTemplate,fraction,oc,unit,percent
+ISCNTemplate,fraction,c_tot,unit,percent
+ISCNTemplate,fraction,n_tot,unit,percent
+ISCNTemplate,fraction,c_to_n,unit,mass mass-1
+ISCNTemplate,fraction,loi,unit,percent
+ISCNTemplate,fraction,15n,unit,permille
+ISCNTemplate,fraction,13c,unit,permille
+ISCNTemplate,fraction,rc_year,unit,YYYY
+ISCNTemplate,fraction,14c,unit,permille
+ISCNTemplate,fraction,14c_sigma,unit,permille
+ISCNTemplate,fraction,14c_age,unit,years
+ISCNTemplate,fraction,14c_age_sigma,unit,years
+ISCNTemplate,gas,15n,unit,permille
+ISCNTemplate,gas,c_conc_CO2,unit,ppm
+ISCNTemplate,gas,14c_CO2,unit,permille
+ISCNTemplate,gas,14c_CO2_sigma,unit,permille
+ISCNTemplate,gas,14c_age_CO2,unit,years
+ISCNTemplate,gas,14c_age_CO2_sigma,unit,years
+ISCNTemplate,gas,c_conc_CH4,unit,ppm
+ISCNTemplate,gas,13c_CH4,unit,permille
+ISCNTemplate,gas,14c_CH4,unit,permille
+ISCNTemplate,gas,14c_CH4_sigma,unit,permille
+ISCNTemplate,gas,14c_age_CH4,unit,years
+ISCNTemplate,gas,14c_age_CH4_sigma,unit,years
+ISCNTemplate,other,oc,unit,percent
+ISCNTemplate,other,c_tot,unit,percent
+ISCNTemplate,other,n_tot,unit,percent
+ISCNTemplate,other,c_to_n,unit,ratio
+ISCNTemplate,other,15n,unit,permille
+ISCNTemplate,other,13c,unit,permille
+ISCNTemplate,other,rc_year,unit,years
+ISCNTemplate,other,14c,unit,permille
+ISCNTemplate,other,14c_sigma,unit,permille
+ISCNTemplate,other,14c_age,unit,BP
+ISCNTemplate,other,14c_age_sigma,unit,BP
+ISCNTemplate,disturbance,dist_clearcut_removal_perc,unit,percent
+ISCNTemplate,disturbance,dist_crop_residue_perc,unit,percent
+ISCNTemplate,disturbance,dist_fwd_removal_perc,unit,percent
+ISCNTemplate,disturbance,dist_grazed_stocking,unit,?
+ISCNTemplate,disturbance,dist_grazed_live_weight,unit,?
+ISCNTemplate,disturbance,dist_grazed_onplot,unit,days month-1
+ISCNTemplate,disturbance,dist_harvest_residue_perc,unit,percent
+ISCNTemplate,disturbance,dist_herbicide_kgha,unit,Kg ha-1
+ISCNTemplate,disturbance,dist_irrigation_water,unit,mm
+ISCNTemplate,disturbance,dist_irrigation_drain_depth,unit,m
+ISCNTemplate,disturbance,dist_liming_kgha,unit,Kg ha-1
+ISCNTemplate,disturbance,dist_m_fertilization_kgha,unit,Kg ha-1
+ISCNTemplate,disturbance,dist_o_fertilization_kgha,unit,Kg ha-1
+ISCNTemplate,disturbance,dist_o_fertilization_c,unit,percent
+ISCNTemplate,disturbance,dist_o_fertilization_n,unit,percent
+ISCNTemplate,disturbance,dist_pesticide_kgha,unit,Kg ha-1
+ISCNTemplate,disturbance,dist_planting_seed,unit,N ha-1
+ISCNTemplate,disturbance,dist_thinning_perc,unit,percent
+ISCNTemplate,disturbance,dist_tillage_depth,unit,m
+ISCNTemplate,disturbance,dist_ungrazed_duration,unit,months
+ISCNTemplate,disturbance,dist_underburn_perc,unit,percent
+ISCNTemplate,disturbance,dist_windthrow_perc,unit,percent
+ISCNTemplate,cluster,soc,unit,g cm-2
+ISCNTemplate,cluster,soc_type,unit,ccon_type
+ISCNTemplate,cluster,soc_depth,unit,cm
+ISCNTemplate,cluster,soc_sigma,unit,g cm-2
+SoDaH-Site_KEY_V2,location,lat,unit,degrees
+SoDaH-Site_KEY_V2,location,long,unit,degrees
+SoDaH-Site_KEY_V2,location,elevation,unit,m
+SoDaH-Site_KEY_V2,location,map,unit,mm
+SoDaH-Site_KEY_V2,location,mat,unit,°C
+SoDaH-Site_KEY_V2,location,clim_avg_yrs,unit,years
+SoDaH-Site_KEY_V2,location,aspect_deg,unit,degree
+SoDaH-Site_KEY_V2,location,slope,unit,percent
+SoDaH-Site_KEY_V2,location,depth_water,unit,?
+SoDaH-Site_KEY_V2,layer,lyr_c_tot,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_soc,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_soc_stock,unit,g C m-2
+SoDaH-Site_KEY_V2,layer,lyr_loi,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_som_WalkleyBlack,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_n_tot,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_n_tot_stock,unit,g N m-2
+SoDaH-Site_KEY_V2,layer,lyr_15n,unit,permille
+SoDaH-Site_KEY_V2,layer,lyr_13c,unit,permille
+SoDaH-Site_KEY_V2,layer,layer_top,unit,cm
+SoDaH-Site_KEY_V2,layer,layer_bot,unit,cm
+SoDaH-Site_KEY_V2,layer,layer_mid,unit,cm
+SoDaH-Site_KEY_V2,layer,bd_samp,unit,g cm-3
+SoDaH-Site_KEY_V2,layer,bd_tot,unit,g cm-3
+SoDaH-Site_KEY_V2,layer,sand,unit,percent
+SoDaH-Site_KEY_V2,layer,silt,unit,percent
+SoDaH-Site_KEY_V2,layer,clay,unit,percent
+SoDaH-Site_KEY_V2,layer,coarse_frac,unit,percent
+SoDaH-Site_KEY_V2,layer,coarse_tot,unit,mm
+SoDaH-Site_KEY_V2,layer,caco3,unit,percent
+SoDaH-Site_KEY_V2,layer,Ca,unit,mmol kg-1
+SoDaH-Site_KEY_V2,layer,Mg,unit,mmol kg-1
+SoDaH-Site_KEY_V2,layer,K,unit,mmol kg-1
+SoDaH-Site_KEY_V2,layer,Na,unit,mmol kg-1
+SoDaH-Site_KEY_V2,layer,cat_exch,unit,cmol H+ kg-1
+SoDaH-Site_KEY_V2,layer,base_sum,unit,meq 100g-1
+SoDaH-Site_KEY_V2,layer,cec_sum,unit,meq 100g-1
+SoDaH-Site_KEY_V2,layer,ecec,unit,meq 100g-1
+SoDaH-Site_KEY_V2,layer,bs,unit,percent
+SoDaH-Site_KEY_V2,layer,mbc_raw,unit,mgC g-1
+SoDaH-Site_KEY_V2,layer,mbc_trans,unit,mgC g-1
+SoDaH-Site_KEY_V2,layer,mbn_raw,unit,mgN g-1
+SoDaH-Site_KEY_V2,layer,mbn_trans,unit,mgN g-1
+SoDaH-Site_KEY_V2,layer,mbp_raw,unit,mgP g-1
+SoDaH-Site_KEY_V2,layer,mbp_trans,unit,mgN g-1
+SoDaH-Site_KEY_V2,layer,n_min,unit,mg g-1 d-1
+SoDaH-Site_KEY_V2,profile,bedrock_depth,unit,cm
+SoDaH-Site_KEY_V2,profile,thaw_depth_profile,unit,cm
+SoDaH-Site_KEY_V2,layer,lyr_al_py,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_si_py,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_c_py,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_fe_ox,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_al_ox,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_si_ox,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_fe_hy,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_al_hy,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_si_hy,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_c_hy,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_hy$,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_fe_dith,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_al_dith,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_si_dith,unit,mg g-1
+SoDaH-Site_KEY_V2,layer,lyr_quartz,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_alkali_feldspar,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_plag_feldspar,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_mica_chlorite,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_amphibole,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_pyroxine,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_olivine,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_volc_glass,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_kaol_halloy,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_smect_vermic,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_gibbsite,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_fe_oxides,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_imog_alloph,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_ferrihydrite,unit,percent
+SoDaH-Site_KEY_V2,layer,lyr_radioanlys_yr,unit,YYYY
+SoDaH-Site_KEY_V2,layer,lyr_14c,unit,permille
+SoDaH-Site_KEY_V2,layer,lyr_14c_sdv,unit,permille
+SoDaH-Site_KEY_V2,fraction,frc_extr_conc,unit,mol
+SoDaH-Site_KEY_V2,fraction,frc_c_perc,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_mass_perc,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_c_tot,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_oc,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_n_tot,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_15n,unit,permille
+SoDaH-Site_KEY_V2,fraction,frc_13c,unit,permille
+SoDaH-Site_KEY_V2,fraction,frc_radioanlys_yr,unit,YYYY
+SoDaH-Site_KEY_V2,fraction,frc_14c,unit,permille
+SoDaH-Site_KEY_V2,fraction,frc_14c_sdv,unit,permille
+SoDaH-Site_KEY_V2,fraction,frc_quartz,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_alkali_feldspar,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_plag_feldspar,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_mica_chlorite,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_amphibole,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_pyroxine,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_olivine,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_volc_glass,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_kaol_halloy,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_smect_vermic,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_gibbsite,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_fe_oxides,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_imog_alloph,unit,percent
+SoDaH-Site_KEY_V2,fraction,frc_ferrihydrite,unit,percent
+WoSIS_2019,layers_chemical,upper_depth,unit,cm
+WoSIS_2019,layers_chemical,lower_depth,unit,cm
+WoSIS_2019,layers_chemical,tceq_value,unit,g kg-1
+WoSIS_2019,layers_chemical,tceq_value_avg,unit,g kg-1
+WoSIS_2019,layers_chemical,tceq_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,cecph7_value,unit,cmol(c) kg-1
+WoSIS_2019,layers_chemical,cecph7_value_avg,unit,cmol(c) kg-1
+WoSIS_2019,layers_chemical,cecph7_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,cecph8_value,unit,cmol(c) kg-1
+WoSIS_2019,layers_chemical,cecph8_value_avg,unit,cmol(c) kg-1
+WoSIS_2019,layers_chemical,cecph8_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,ecec_value,unit,cmol(c) kg-1
+WoSIS_2019,layers_chemical,ecec_value_avg,unit,cmol(c) kg-1
+WoSIS_2019,layers_chemical,ecec_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,elco20_value,unit,dS m-1
+WoSIS_2019,layers_chemical,elco20_value_avg,unit,dS m-1
+WoSIS_2019,layers_chemical,elco20_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,elco25_value,unit,dS m-1
+WoSIS_2019,layers_chemical,elco25_value_avg,unit,dS m-1
+WoSIS_2019,layers_chemical,elco25_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,elco50_value,unit,dS m-1
+WoSIS_2019,layers_chemical,elco50_value_avg,unit,dS m-1
+WoSIS_2019,layers_chemical,elco50_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,elcosp_value,unit,dS m-1
+WoSIS_2019,layers_chemical,elcosp_value_avg,unit,dS m-1
+WoSIS_2019,layers_chemical,elcosp_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,orgc_value,unit,g kg-1
+WoSIS_2019,layers_chemical,orgc_value_avg,unit,g kg-1
+WoSIS_2019,layers_chemical,orgc_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phca_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phaq_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phkc_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phnf_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phpbyi_value,unit,mg kg-1
+WoSIS_2019,layers_chemical,phpbyi_value_avg,unit,mg kg-1
+WoSIS_2019,layers_chemical,phpbyi_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phpmh3_value,unit,mg kg-1
+WoSIS_2019,layers_chemical,phpmh3_value_avg,unit,mg kg-1
+WoSIS_2019,layers_chemical,phpmh3_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phpols_value,unit,mg kg-1
+WoSIS_2019,layers_chemical,phpols_value_avg,unit,mg kg-1
+WoSIS_2019,layers_chemical,phpols_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phprtn_value,unit,mg kg-1
+WoSIS_2019,layers_chemical,phprtn_value_avg,unit,mg kg-1
+WoSIS_2019,layers_chemical,phprtn_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phptot_value,unit,mg kg-1
+WoSIS_2019,layers_chemical,phptot_value_avg,unit,mg kg-1
+WoSIS_2019,layers_chemical,phptot_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,phpwsl_value,unit,mg kg-1
+WoSIS_2019,layers_chemical,phpwsl_value_avg,unit,mg kg-1
+WoSIS_2019,layers_chemical,phpwsl_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,totc_value,unit,g kg-1
+WoSIS_2019,layers_chemical,totc_value_avg,unit,g kg-1
+WoSIS_2019,layers_chemical,totc_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_chemical,nitkjd_value,unit,g kg-1
+WoSIS_2019,layers_chemical,nitkjd_value_avg,unit,g kg-1
+WoSIS_2019,layers_chemical,nitkjd_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,upper_depth,unit,cm
+WoSIS_2019,layers_physical,lower_depth,unit,cm
+WoSIS_2019,layers_physical,bdfi33_value,unit,kg dm-3
+WoSIS_2019,layers_physical,bdfi33_value_avg,unit,kg dm-3
+WoSIS_2019,layers_physical,bdfi33_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,bdfiad_value,unit,kg dm-3
+WoSIS_2019,layers_physical,bdfiad_value_avg,unit,kg dm-3
+WoSIS_2019,layers_physical,bdfiad_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,bdfifm_value,unit,kg dm-3
+WoSIS_2019,layers_physical,bdfifm_value_avg,unit,kg dm-3
+WoSIS_2019,layers_physical,bdfifm_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,bdfiod_value,unit,kg dm-3
+WoSIS_2019,layers_physical,bdfiod_value_avg,unit,kg dm-3
+WoSIS_2019,layers_physical,bdfiod_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,bdws33_value,unit,kg dm-3
+WoSIS_2019,layers_physical,bdws33_value_avg,unit,kg dm-3
+WoSIS_2019,layers_physical,bdws33_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,bdwsad_value,unit,kg dm-3
+WoSIS_2019,layers_physical,bdwsad_value_avg,unit,kg dm-3
+WoSIS_2019,layers_physical,bdwsad_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,bdwsfm_value,unit,kg dm-3
+WoSIS_2019,layers_physical,bdwsfm_value_avg,unit,kg dm-3
+WoSIS_2019,layers_physical,bdwsfm_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,bdwsod_value,unit,kg dm-3
+WoSIS_2019,layers_physical,bdwsod_value_avg,unit,kg dm-3
+WoSIS_2019,layers_physical,bdwsod_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,clay_value,unit,g 100g-1
+WoSIS_2019,layers_physical,clay_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,clay_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,cfgr_value,unit,g 100g-1
+WoSIS_2019,layers_physical,cfgr_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,cfgr_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,cfvo_value,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,cfvo_value_avg,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,cfvo_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,sand_value,unit,g 100g-1
+WoSIS_2019,layers_physical,sand_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,sand_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,silt_value,unit,g 100g-1
+WoSIS_2019,layers_physical,silt_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,silt_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wg0100_value,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0100_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0100_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wg0010_value,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0010_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0010_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wg1500_value,unit,g 100g-1
+WoSIS_2019,layers_physical,wg1500_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,wg1500_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wg0200_value,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0200_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0200_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wg0033_value,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0033_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0033_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wg0500_value,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0500_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0500_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wg0006_value,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0006_value_avg,unit,g 100g-1
+WoSIS_2019,layers_physical,wg0006_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wv0100_value,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0100_value_avg,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0100_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wv0010_value,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0010_value_avg,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0010_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wv1500_value,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv1500_value_avg,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv1500_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wv0200_value,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0200_value_avg,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0200_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wv0033_value,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0033_value_avg,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0033_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wv0500_value,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0500_value_avg,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0500_date,unit,YYYY-MM-DD
+WoSIS_2019,layers_physical,wv0006_value,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0006_value_avg,unit,cm3 100cm-3
+WoSIS_2019,layers_physical,wv0006_date,unit,YYYY-MM-DD
+WoSIS_2019,profiles,latitude,unit,degrees
+WoSIS_2019,profiles,longitude,unit,degrees
+WoSIS_2019,profiles,dsds,unit,cm
+vanGestel,soil C,trt,control_vocabulary,"T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel,soil C,soilT.depth,unit,°C
+vanGestel,soil C,start.date,unit,month-year
+vanGestel,soil C,measurement.date,unit,month-year
+vanGestel,soil C,duration,unit,years
+vanGestel,soil C,remove,control_vocabulary,"Yes or No. If yes, the data are duplicated (e.g. if I had raw data versus mean values)."
+vanGestel,soil C,multi.year,control_vocabulary,"Yes or blank. If yes, the data extracted from a paper were data pooled across years."
+vanGestel,soil C,soil.horizon,unit,?
+vanGestel,soil C,bulk.density,unit,?
+vanGestel,Rsoil,trt,control_vocabulary,"T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel,Rsoil,soilT.depth,unit,°C
+vanGestel,Rsoil,start.date,unit,month-year
+vanGestel,Rsoil,measurement.date,unit,month-year
+vanGestel,Rsoil,duration,unit,years
+vanGestel,Rsoil,remove,control_vocabulary,"Yes or No. If yes, the data are duplicated (e.g. if I had raw data versus mean values)."
+vanGestel,Rsoil,multi.year,control_vocabulary,"Yes or blank. If yes, the data extracted from a paper were data pooled across years."
+vanGestel,biomass,trt,control_vocabulary,"T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel,biomass,soilT.depth,unit,°C
+vanGestel,biomass,start.date,unit,month-year
+vanGestel,biomass,measurement.date,unit,month-year
+vanGestel,biomass,duration,unit,years
+vanGestel,biomass,remove,control_vocabulary,"Yes or No. If yes, the data are duplicated (e.g. if I had raw data versus mean values)."
+vanGestel,biomass,multi.year,control_vocabulary,"Yes or blank. If yes, the data extracted from a paper were data pooled across years."
+vanGestel,biomass,soil.horizon,unit,value_num
+vanGestel,biomass,input,control_vocabulary,"Plant biomass. Options are related to aboveground (a), belowground (b), or whole plant (w)"
+vanGestel,site info,lat,unit,degrees
+vanGestel,site info,lon,unit,degrees
+vanGestel,site info,elevation,unit,m
+vanGestel,site info,mat,unit,°C
+vanGestel,site info,map,unit,mm
+vanGestel,site info,treatments,control_vocabulary,The applied treatments (in a multifactorial study it was indicated by the highest level: e.g. T x H2O x N (fertilization)
+vanGestel,site info,soil.texture.class,control_vocabulary,"Yes or blank. If yes, the data extracted from a paper were data pooled across years."
+vanGestel,site info,perc.sand,unit,percent
+vanGestel,site info,perc.silt,unit,percent
+vanGestel,site info,perc.clay,unit,percent
+vanGestel,site info,start.date,unit,month-year
+vanGestel,site info,C.pool.abg,unit,?
+vanGestel,site info,C.pool.bwg,unit,?
+vanGestel,site info,N.pool.abg,unit,?
+vanGestel,site info,N.pool.bwg,unit,?
+vanGestel,site info,P.pool.bwg,unit,?
+vanGestel,site info,soil.depth.pool,unit,cm
+vanGestel,site info,Ndep.rate,unit,g N m-2 y-1
+vanGestel,site info,bulk.density,unit,?
+vanGestel,site info,percent.om,unit,percent
+vanGestel,soil moisture,trt,control_vocabulary,"T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel,soil moisture,soilT.depth,unit,°C
+vanGestel,soil moisture,start.date,unit,month-year
+vanGestel,soil moisture,measurement.date,unit,month-year
+vanGestel,soil moisture,soil.horizon,unit,?
+vanGestel,correlation BD-OM,bulk.density,unit,?
+vanGestel,correlation BD-OM,percent.om,unit,percent
+vanGestel,site info,biome,description,Biome that the study was conducted in
+vanGestel,soil C,bulk.density,description,observed bulk density of the soil
+vanGestel,site info,bulk.density,description,observed bulk density of the soil
+vanGestel,correlation BD-OM,bulk.density,description,observed bulk density of the soil
+vanGestel,site info,C.pool.abg,description,cabon pool size above ground
+vanGestel,site info,C.pool.bwg,description,cabon pool size below ground
+vanGestel,soil C,control.mean,description,mean value of the variable of interest (see column 'variable') for the control
+vanGestel,Rsoil,control.mean,description,mean value of the variable of interest (see column 'variable') for the control
+vanGestel,biomass,control.mean,description,mean value of the variable of interest (see column 'variable') for the control
+vanGestel,soil moisture,control.mean,description,mean value of the variable of interest (see column 'variable') for the control
+vanGestel,soil C,control.n,description,number of replicates used for the control
+vanGestel,Rsoil,control.n,description,number of replicates used for the control
+vanGestel,biomass,control.n,description,number of replicates used for the control
+vanGestel,soil moisture,control.n,description,number of replicates used for the control
+vanGestel,soil C,control.se,description,standard error of the mean of the variable of interest for the control
+vanGestel,Rsoil,control.se,description,standard error of the mean of the variable of interest for the control
+vanGestel,biomass,control.se,description,standard error of the mean of the variable of interest for the control
+vanGestel,soil moisture,control.se,description,standard error of the mean of the variable of interest for the control
+vanGestel,soil C,duration,description,Length of the experiment (between start date and measurement date)
+vanGestel,Rsoil,duration,description,Length of the experiment (between start date and measurement date)
+vanGestel,biomass,duration,description,Length of the experiment (between start date and measurement date)
+vanGestel,site info,elevation,description,elevation of the study site
+vanGestel,biomass,input,description,"Plant biomass. Options are related to aboveground (a), belowground (b), or whole plant (w)"
+vanGestel,site info,lat,description,latitude of the study
+vanGestel,site info,lon,description,longitude of the study
+vanGestel,site info,map,description,mean annual precipitation (mm)
+vanGestel,site info,mat,description,mean annual temperature (in C)
+vanGestel,soil C,measurement.date,description,Date of the measurements for which we obtained the data
+vanGestel,Rsoil,measurement.date,description,Date of the measurements for which we obtained the data
+vanGestel,biomass,measurement.date,description,Date of the measurements for which we obtained the data
+vanGestel,soil moisture,measurement.date,description,Date of the measurements for which we obtained the data
+vanGestel,soil C,multi.year,description,"Yes or blank. If yes, the data extracted from a paper were data pooled across years."
+vanGestel,Rsoil,multi.year,description,"Yes or blank. If yes, the data extracted from a paper were data pooled across years."
+vanGestel,biomass,multi.year,description,"Yes or blank. If yes, the data extracted from a paper were data pooled across years."
+vanGestel,site info,N.pool.abg,description,nitrogen pool size above ground
+vanGestel,site info,N.pool.bwg,description,nitrogen pool size below ground
+vanGestel,site info,Ndep.rate,description,nitrogen deposition rate (g N/m2/y)
+vanGestel,soil C,notes,description,"any remarks related to the study, just in case we see something unusual. An example is one of my entries: ""soil samples taken once at peak biomass; n=8 until 2003 (afterwards; fire reduced it to n=6)"""
+vanGestel,Rsoil,notes,description,"any remarks related to the study, just in case we see something unusual. An example is one of my entries: ""soil samples taken once at peak biomass; n=8 until 2003 (afterwards; fire reduced it to n=6)"""
+vanGestel,biomass,notes,description,"any remarks related to the study, just in case we see something unusual. An example is one of my entries: ""soil samples taken once at peak biomass; n=8 until 2003 (afterwards; fire reduced it to n=6)"""
+vanGestel,site info,notes,description,"any remarks related to the study, just in case we see something unusual. An example is one of my entries: ""soil samples taken once at peak biomass; n=8 until 2003 (afterwards; fire reduced it to n=6)"""
+vanGestel,soil moisture,notes,description,"any remarks related to the study, just in case we see something unusual. An example is one of my entries: ""soil samples taken once at peak biomass; n=8 until 2003 (afterwards; fire reduced it to n=6)"""
+vanGestel,correlation BD-OM,notes,description,"any remarks related to the study, just in case we see something unusual. An example is one of my entries: ""soil samples taken once at peak biomass; n=8 until 2003 (afterwards; fire reduced it to n=6)"""
+vanGestel,site info,P.pool.bwg,description,phosporus pool size below ground
+vanGestel,site info,perc.clay,description,% clay
+vanGestel,site info,perc.sand,description,% sand
+vanGestel,site info,perc.silt,description,% silt
+vanGestel,site info,percent.om,description,% soil organic matter
+vanGestel,correlation BD-OM,percent.om,description,% soil organic matter
+vanGestel,site info,pH,description,soil pH
+vanGestel,site info,project,description,"project name (e.g., for Brandbjerg it was CLIMAITE )"
+vanGestel,soil C,reference,description,The published paper from which the data were extracted
+vanGestel,Rsoil,reference,description,The published paper from which the data were extracted
+vanGestel,biomass,reference,description,The published paper from which the data were extracted
+vanGestel,site info,Reference,description,The published paper from which the data were extracted
+vanGestel,soil moisture,reference,description,The published paper from which the data were extracted
+vanGestel,correlation BD-OM,Reference,description,The published paper from which the data were extracted
+vanGestel,soil C,remove,description,"Yes or No. If yes, the data are duplicated (e.g. if I had raw data versus mean values)."
+vanGestel,Rsoil,remove,description,"Yes or No. If yes, the data are duplicated (e.g. if I had raw data versus mean values)."
+vanGestel,biomass,remove,description,"Yes or No. If yes, the data are duplicated (e.g. if I had raw data versus mean values)."
+vanGestel,soil C,season,description,the season in which the study was conducted; yearround is one of the options
+vanGestel,Rsoil,season,description,the season in which the study was conducted; yearround is one of the options
+vanGestel,biomass,season,description,the season in which the study was conducted; yearround is one of the options
+vanGestel,site info,season,description,the season in which the study was conducted; yearround is one of the options
+vanGestel,soil moisture,season,description,the season in which the study was conducted; yearround is one of the options
+vanGestel,site info,site,description,site name (e.g. Brandbjerg which has study.id 'Brand' - see for example biomass data)
+vanGestel,correlation BD-OM,site,description,site.id
+vanGestel,soil C,site.id,description,site identifier
+vanGestel,Rsoil,site.id,description,site identifier
+vanGestel,biomass,site.id,description,site identifier
+vanGestel,site info,site.id,description,site identifier
+vanGestel,soil moisture,site.id,description,site identifier
+vanGestel,site info,soil.depth.pool,description,"soil depth for which the C, N or P belowground pool size were calculated for"
+vanGestel,soil C,soil.horizon,description,"soil horizon sampled, used to determine the value of the variable of interest"
+vanGestel,biomass,soil.horizon,description,"soil horizon sampled, used to determine the value of the variable of interest"
+vanGestel,soil moisture,soil.horizon,description,"soil horizon sampled, used to determine the value of the variable of interest"
+vanGestel,site info,soil.texture.class,description,"Soil texture class (e.g. loamy, sandy, sandy clay loam etc.)"
+vanGestel,site info,soil.type,description,Soil classification - as described in the study (so could be the European classification or WRB)
+vanGestel,soil C,soilT.depth,description,temperature that the soil temperature sensor was at
+vanGestel,Rsoil,soilT.depth,description,temperature that the soil temperature sensor was at
+vanGestel,biomass,soilT.depth,description,temperature that the soil temperature sensor was at
+vanGestel,soil moisture,soilT.depth,description,temperature that the soil temperature sensor was at
+vanGestel,soil C,source,description,"figure or table number, supplemental info etc."
+vanGestel,Rsoil,source,description,"figure or table number, supplemental info etc."
+vanGestel,biomass,source,description,"figure or table number, supplemental info etc."
+vanGestel,site info,source,description,"figure or table number, supplemental info etc."
+vanGestel,soil moisture,source,description,"figure or table number, supplemental info etc."
+vanGestel,correlation BD-OM,source,description,"figure or table number, supplemental info etc."
+vanGestel,biomass,species,description,species of plant
+vanGestel,site info,species,description,"The plant species of focus or present in the study. For example, for the Abisko bog: Sphagnum fuscum; Empetrum nigrum; Betula nana; Rubus chamaemorus; Andromeda polifolia; Calamagrostis lapponica; Vaccinium uliginosum"
+vanGestel,soil C,start.date,description,Date the experiment started
+vanGestel,Rsoil,start.date,description,Date the experiment started
+vanGestel,biomass,start.date,description,Date the experiment started
+vanGestel,site info,start.date,description,start date of experiment
+vanGestel,soil moisture,start.date,description,start date of experiment
+vanGestel,site info,state.country,description,state and/or country
+vanGestel,site info,sub.biome,description,"More specific info about the biome. For example: for grassland, the more specific category could be shortgrass prairie."
+vanGestel,soil C,technique,description,"Description of the technique applied for the treatment effect (e.g. IR heaters, heating cables for temperature, sprinklers or drip tubes for irrigation, FACE or other for elevated CO2)"
+vanGestel,Rsoil,technique,description,"Description of the technique applied for the treatment effect (e.g. IR heaters, heating cables for temperature, sprinklers or drip tubes for irrigation, FACE or other for elevated CO2)"
+vanGestel,biomass,technique,description,"Description of the technique applied for the treatment effect (e.g. IR heaters, heating cables for temperature, sprinklers or drip tubes for irrigation, FACE or other for elevated CO2)"
+vanGestel,site info,technique,description,"Description of the technique applied for the treatment effect (e.g. IR heaters, heating cables for temperature, sprinklers or drip tubes for irrigation, FACE or other for elevated CO2)"
+vanGestel,soil moisture,technique,description,"Description of the technique applied for the treatment effect (e.g. IR heaters, heating cables for temperature, sprinklers or drip tubes for irrigation, FACE or other for elevated CO2)"
+vanGestel,site info,treatments,description,The applied treatments (in a multifactorial study it was indicated by the highest level: e.g. T x H2O x N (fertilization)
+vanGestel,soil C,trt,description,"treatment; for example: T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel,Rsoil,trt,description,"treatment; for example: T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel,biomass,trt,description,"treatment; for example: T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel,soil moisture,trt,description,"treatment; for example: T = temperature (warming), H2O = irrigated, D = Drought, co2 = elevated CO2, clipping = biomass removal, etc.)"
+vanGestel,soil C,trt.mean,description,mean value of the variable of interest (see column 'variable') for the treatment
+vanGestel,Rsoil,trt.mean,description,mean value of the variable of interest (see column 'variable') for the treatment
+vanGestel,biomass,trt.mean,description,mean value of the variable of interest (see column 'variable') for the treatment
+vanGestel,soil moisture,trt.mean,description,mean value of the variable of interest (see column 'variable') for the treatment
+vanGestel,soil C,trt.n,description,number of replicates used for the treatment
+vanGestel,Rsoil,trt.n,description,number of replicates used for the treatment
+vanGestel,biomass,trt.n,description,number of replicates used for the treatment
+vanGestel,soil moisture,trt.n,description,number of replicates used for the treatment
+vanGestel,soil C,trt.se,description,standard error of the mean of the variable of interest for the treatment
+vanGestel,Rsoil,trt.se,description,standard error of the mean of the variable of interest for the treatment
+vanGestel,biomass,trt.se,description,standard error of the mean of the variable of interest for the treatment
+vanGestel,soil moisture,trt.se,description,standard error of the mean of the variable of interest for the treatment
+vanGestel,soil C,trt.size.abg,description,"the treatment effect size aboveground (i.e., in the air or plant canopy above the soil surface)"
+vanGestel,Rsoil,trt.size.abg,description,"the treatment effect size aboveground (i.e., in the air or plant canopy above the soil surface)"
+vanGestel,biomass,trt.size.abg,description,"the treatment effect size aboveground (i.e., in the air or plant canopy above the soil surface)"
+vanGestel,soil moisture,trt.size.abg,description,"the treatment effect size aboveground (i.e., in the air or plant canopy above the soil surface)"
+vanGestel,soil C,trt.size.bg,description,the treatment effect size belowground (e.g. what is the temperature difference at 5 cm (or other depth) in the warmed treatment). The value is the difference between warmed and control plots ('control' being flexibly defined for multifactorial experiments - see Readme)
+vanGestel,Rsoil,trt.size.bg,description,the treatment effect size belowground (e.g. what is the temperature difference at 5 cm (or other depth) in the warmed treatment). The value is the difference between warmed and control plots ('control' being flexibly defined for multifactorial experiments - see Readme)
+vanGestel,biomass,trt.size.bg,description,the treatment effect size belowground (e.g. what is the temperature difference at 5 cm (or other depth) in the warmed treatment). The value is the difference between warmed and control plots ('control' being flexibly defined for multifactorial experiments - see Readme)
+vanGestel,soil moisture,trt.size.bg,description,the treatment effect size belowground (e.g. what is the temperature difference at 5 cm (or other depth) in the warmed treatment). The value is the difference between warmed and control plots ('control' being flexibly defined for multifactorial experiments - see Readme)
+vanGestel,soil C,trt.size.units,description,"Units of the treatment effect. For example, temperature data are in Celsius, CO2 was generally in ppm, fertilizer addition could be in g/m2/y, and for irrigation it was many others, such as % of annual rainfall."
+vanGestel,Rsoil,trt.size.units,description,"Units of the treatment effect. For example, temperature data are in Celsius, CO2 was generally in ppm, fertilizer addition could be in g/m2/y, and for irrigation it was many others, such as % of annual rainfall."
+vanGestel,biomass,trt.size.units,description,"Units of the treatment effect. For example, temperature data are in Celsius, CO2 was generally in ppm, fertilizer addition could be in g/m2/y, and for irrigation it was many others, such as % of annual rainfall."
+vanGestel,soil moisture,trt.size.units,description,"Units of the treatment effect. For example, temperature data are in Celsius, CO2 was generally in ppm, fertilizer addition could be in g/m2/y, and for irrigation it was many others, such as % of annual rainfall."
+vanGestel,soil C,unit,description,unit of the variable of interest
+vanGestel,Rsoil,unit,description,unit of the variable of interest
+vanGestel,biomass,unit,description,unit of the variable of interest
+vanGestel,soil moisture,unit,description,unit of the variable of interest
+vanGestel,soil C,variable,description,variable of interest
+vanGestel,Rsoil,variable,description,variable of interest
+vanGestel,biomass,variable,description,variable of interest
+vanGestel,soil moisture,variable,description,variable of interest
+SIDb_restructured,study,entryCreationDate,unit,YYYY-MM-DD
+SIDb_restructured,siteInfo,coordinates_latitude_numeric,unit,decimal units
+SIDb_restructured,siteInfo,coordinates_longitude_numeric,unit,decimal units
+SIDb_restructured,siteInfo,elevation,unit,m
+SIDb_restructured,siteInfo,MAT,unit,°C
+SIDb_restructured,siteInfo,MAP_numeric,unit,mm
+SIDb_restructured,siteInfo,permafrost_activeLayer_numeric,unit,m
+SIDb_restructured,siteInfo,landCover,control_vocabulary,"bare, cultivated, forest, rangeland/grassland, shrubland, urban, wetland, tundra"
+SIDb_restructured,siteInfo,soilTaxonomy_classificationSystem,control_vocabulary,"USDA, FAO, and WRB"
+SIDb_restructured,siteInfo,permafrost_permafrostExist,control_vocabulary,"Yes or blank if no (if yes, permafrost must exist at the site)"
+SIDb_restructured,siteInfo,soilTaxonomy_surfaceAtm,control_vocabulary,"blank if zero is organic/mineral interface, yes if zero is atmospheric interface"
+SIDb_restructured,incubationInfo,samplePreparation_intactCore.logical,control_vocabulary,yes or no
+SIDb_restructured,incubationInfo,samplePreparation_rootPicking,control_vocabulary,yes or no
+SIDb_restructured,incubationInfo,depthInfo_surfaceAtm,control_vocabulary,"blank if zero is organic/mineral interface, yes if zero is atmospheric interface"
+SIDb_restructured,incubationInfo,samplePreparation_sieving,control_vocabulary,"no, or mesh size in mm"
+SIDb_restructured,incubationInfo,samplePreparation_rockPicking,control_vocabulary,yes or no
+SIDb_restructured,incubationInfo,anaerobic,control_vocabulary,"Yes if headspace flushed with N2 or He, blank if aerobic"
+SIDb_restructured,incubationInfo,moisture_units,control_vocabulary,"percentGWC, percentFieldCapacity, percentWaterFilledPoreSpace"
+SIDb_restructured,incubationInfo,replicates_type,control_vocabulary,field or lab
+SIDb_restructured,incubationInfo,glucose_units,unit,NA
+SIDb_restructured,incubationInfo,oxygen_units,unit,NA
+SIDb_restructured,incubationInfo,samplePreparation_intactCore.string,control_vocabulary,yes or no
+SIDb_restructured,incubationInfo,g13CWheatStraw_units,unit,g13CWheatStraw 200gSoil-1
+SIDb_restructured,incubationInfo,depthInfo_top,unit,cm
+SIDb_restructured,incubationInfo,depthInfo_bottom,unit,cm
+SIDb_restructured,incubationInfo,depthInfo_midDepth,unit,cm
+SIDb_restructured,incubationInfo,moisture_value,control_vocabulary,If moisture is an experimental treatment with multiple levels leave blank and specify in variables section
+SIDb_restructured,incubationInfo,incubationTime,unit,days
+SIDb_restructured,incubationInfo,samplePreparation_sieving.num,control_vocabulary,"no, or mesh size in mm"
+SIDb_restructured,incubationInfo,temperature,unit,°C
+SIDb_restructured,incubationInfo,preincubationTime,unit,days
+SIDb_restructured,initConditions,elevatedCO2,control_vocabulary,control or elevated
+SIDb_restructured,initConditions,carbonUnits,control_vocabulary,"percent, g gSoil-1, mg gSoil-1, or microg gSoil-1"
+SIDb_restructured,initConditions,nitrogenUnits,control_vocabulary,"percent, g gSoil-1, mg gSoil-1, or microg gSoil-1"
+SIDb_restructured,initConditions,bulkDensityMean,unit,g cm-3
+SIDb_restructured,initConditions,redox,unit,mV
+SIDb_restructured,initConditions,percentClay,unit,percent
+SIDb_restructured,initConditions,percentSand,unit,percent
+SIDb_restructured,initConditions,percentSilt,unit,percent
+SIDb_restructured,initConditions,microbialBiomassUnits,unit,NA
+SIDb_restructured,initConditions,landCover,control_vocabulary,"bare, cultivated, forest, rangeland/grassland, shrubland, urban, wetland, tundra"
+SIDb_restructured,initConditions,organicCarbonStockUnits,unit,Mg ha-1
+SIDb_restructured,initConditions,nitrogenStockUnits,unit,Mg ha-1
+SIDb_restructured,initConditions,fieldWarming,control_vocabulary,control or warming
+SIDb_restructured,initConditions,midDepth,unit,cm
+SIDb_restructured,initConditions,CECtotUnits,unit,cmolc kg-1
+SIDb_restructured,initConditions,BStotalUnits,unit,NA
+SIDb_restructured,initConditions,SiUnits,unit,g kg-1
+SIDb_restructured,initConditions,AlUnits,unit,g kg-1
+SIDb_restructured,initConditions,FeUnits,unit,g kg-1
+SIDb_restructured,initConditions,MnUnits,unit,g kg-1
+SIDb_restructured,initConditions,PUnits,unit,g kg-1
+SIDb_restructured,initConditions,SOCstockUnits,unit,kg m-2
+SIDb_restructured,initConditions,respirationUnits,unit,gCCO2 gSOC-1 hr-1
+SIDb_restructured,initConditions,SOCminAssocUnits,unit,percentSOCstockMean
+SIDb_restructured,initConditions,oxidesUnits,unit,g kg-1
+SIDb_restructured,initConditions,temperature,unit,°C
+SIDb_restructured,initConditions,burn,control_vocabulary,burned or unburned
+SIDb_restructured,initConditions,acidic,control_vocabulary,acidic or unacidic
+SIDb_restructured,initConditions,minOrg,control_vocabulary,mineral soil or organic soil
+SIDb_restructured,initConditions,top,unit,cm
+SIDb_restructured,initConditions,bottom,unit,cm
+SIDb_restructured,initConditions,depthUnits,unit,cm
+SIDb_restructured,initConditions,bulkDensityUnits,unit,NA
+SIDb_restructured,initConditions,waterHoldingCapacityUnits,unit,gH2O gSoil-1
+SIDb_restructured,initConditions,loiUnits,unit,percent
+SIDb_restructured,initConditions,elevation,unit,m
+SIDb_restructured,initConditions,drainage,control_vocabulary,"wellDrained, modWellDrained, or poorlyDrained"
+SIDb_restructured,variables,temperature,unit,°C
+SIDb_restructured,variables,midDepth,unit,cm
+SIDb_restructured,variables,top,unit,cm
+SIDb_restructured,variables,bottom,unit,cm
+SIDb_restructured,variables,elevation,unit,m
+SIDb_restructured,variables,units,control_vocabulary,Units in which this variable is provided if not a factor
+SIDb_restructured,variables,elevatedCO2,control_vocabulary,control or elevated
+SIDb_restructured,variables,gasMeasured,control_vocabulary,"Blank if CO2, Other valid entries are: CH4, N2O, 13CO2, 14CO2, 13CH4, etc. Leave blank if multiple gases measured and specify in variables section"
+SIDb_restructured,variables,landCover,control_vocabulary,"Land cover of the site. Valid fields are: bare, cultivated, forest, rangeland/grassland, shrubland, urban, wetland, tundra"
+SIDb_restructured,variables,fieldWarming,control_vocabulary,conrtrol or warming
+SIDb_restructured,variables,statistic,control_vocabulary,"Leave blank if mean values. Other valid fields include: SD, SE, and none (if a single rep)"
+SIDb_restructured,variables,acidic,control_vocabulary,acidic or unacidic
+SIDb_restructured,variables,minOrg,control_vocabulary,mineral soil or organic soil
+SIDb_restructured,variables,burn,control_vocabulary,burned or unburned
+SIDb_restructured,variables,drainage,control_vocabulary,"wellDrained, modWellDrained, or poorlyDrained"
+LTERWG_Filtered_SOM,NA,bd_samp,unit,g cm-3
+LTERWG_Filtered_SOM,NA,clim_avg_yrs,unit,years
+LTERWG_Filtered_SOM,NA,elevation,unit,m
+LTERWG_Filtered_SOM,NA,experiments,control_vocabulary,yes or no
+LTERWG_Filtered_SOM,NA,gradient,control_vocabulary,yes or no
+LTERWG_Filtered_SOM,NA,lat,unit,degrees
+LTERWG_Filtered_SOM,NA,long,unit,degrees
+LTERWG_Filtered_SOM,NA,map,unit,mm
+LTERWG_Filtered_SOM,NA,mat,unit,°C
+LTERWG_Filtered_SOM,NA,modification_date,unit,MM-DD-YYYY
+LTERWG_Filtered_SOM,NA,time_series,control_vocabulary,yes or no
+LTERWG_Filtered_SOM,NA,tx_start,unit,year
+LTERWG_Filtered_SOM,NA,observation_date,unit,MM-DD-YYYY
+LTERWG_Filtered_SOM,NA,lyr_soc,unit,percent
+LTERWG_Filtered_SOM,NA,lyr_n_tot,unit,percent
+LTERWG_Filtered_SOM,NA,layer_top,unit,cm
+LTERWG_Filtered_SOM,NA,layer_bot,unit,cm
+LTERWG_Filtered_SOM,NA,frc_oc,unit,percent
+LTERWG_Filtered_SOM,NA,frc_n_tot,unit,percent
+LTERWG_Filtered_SOM,NA,lyr_soc_stock,unit,g C m-2
+LTERWG_Filtered_SOM,NA,lyr_n_tot_stock,unit,g N m-2
+LTERWG_Filtered_SOM,NA,veg_note_profile,control_vocabulary,species names
+LTERWG_Filtered_SOM,NA,sand,unit,percent
+LTERWG_Filtered_SOM,NA,silt,unit,percent
+LTERWG_Filtered_SOM,NA,clay,unit,percent
+LTERWG_Filtered_SOM,NA,mbc_trans,unit,mgC g-1
+LTERWG_Filtered_SOM,NA,mbn_raw,unit,mgN g-1
+LTERWG_Filtered_SOM,NA,n_min,unit,mg g-1 d-1
+LTERWG_Filtered_SOM,NA,aspect_deg,unit,degrees
+LTERWG_Filtered_SOM,NA,lyr_13c,unit,permille
+LTERWG_Filtered_SOM,NA,lyr_15n,unit,permille
+LTERWG_Filtered_SOM,NA,layer_mid,unit,cm
+LTERWG_Filtered_SOM,NA,lyr_loi,unit,percent
+LTERWG_Filtered_SOM,NA,bd_tot,unit,g cm-3
+LTERWG_Filtered_SOM,NA,cat_exch,unit,cmol H+ kg-1
+LTERWG_Filtered_SOM,NA,lyr_c_tot,unit,percent
+LTERWG_Filtered_SOM,NA,cec_sum,unit,meq 100g-1
+LTERWG_Filtered_SOM,NA,bs,unit,percent
+LTERWG_Filtered_SOM,NA,Ca,unit,mmol kg-1
+LTERWG_Filtered_SOM,NA,Mg,unit,mmol kg-1
+LTERWG_Filtered_SOM,NA,K,unit,mmol kg-1
+LTERWG_Filtered_SOM,NA,Na,unit,mmol kg-1
+LTERWG_Filtered_SOM,NA,base_sum,unit,meq 100g-1
+LTERWG_Filtered_SOM,NA,lyr_al_py,unit,mg g-1
+LTERWG_Filtered_SOM,NA,lyr_si_py,unit,mg g-1
+LTERWG_Filtered_SOM,NA,lyr_fe_ox,unit,mg g-1
+LTERWG_Filtered_SOM,NA,lyr_al_ox,unit,mg g-1
+LTERWG_Filtered_SOM,NA,lyr_si_ox,unit,mg g-1
+LTERWG_Filtered_SOM,NA,lyr_fe_dith,unit,mg g-1
+LTERWG_Filtered_SOM,NA,lyr_si_dith,unit,mg g-1
+LTERWG_Filtered_SOM,NA,ecec,unit,meq 100g-1
+LTERWG_Filtered_SOM,NA,lyr_som_WalkleyBlack,unit,percent
+LTERWG_Filtered_SOM,NA,caco3,unit,percent
+LTERWG_Filtered_SOM,NA,coarse_frac,unit,percent
+LTERWG_Filtered_SOM,NA,coarse_tot,unit,mm
+LTERWG_Filtered_SOM,NA,lyr_al_dith,unit,mg g-1
+LTERWG_Filtered_SOM,NA,frc_c_tot,unit,percent
+LTERWG_Filtered_SOM,NA,control_sample,control_vocabulary,True or False
