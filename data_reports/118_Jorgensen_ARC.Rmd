@@ -1,5 +1,10 @@
 #Jorgensen_ARCN 
 
+In this section, we will pull out `Boby_Mack` from ISCN3 and clean it up for ISCN 3.5.
+There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning.
+Finally, the site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
+Note cryptic note in the Vegclass_local and textureClass column
+
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Jorgensen_ARCN" #fix this
 
@@ -185,26 +190,6 @@ ggplot(dataset_layer %>%
   facet_wrap(~type, scales='free') +
   theme_bw()
 ```
-
-## TODO
-
-- Rename header and file name to reflect dataset_name
-- Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
-- Check that the clean profile is correct given the orginal information
-- Check that the clean layer is correct given the orginal information
-- Check that maps are reasonable for the location
-- Summerize what the modifications were for this particular dataset
-- Create an issue on github with the template below
-- Commit and link the commit to the issue
-
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
-
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Jorgenson2009 for additional details and if you are using ISCN3 please cite.
