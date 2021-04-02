@@ -2,7 +2,7 @@
 
 The USGS Harden Yazoo data set in ISCN3 contains 234 layer-level rows and 35 profile-level information rows after cleaning for ISCN3.5.
 Half of the rows (234) of dataset_layer were removed from ISCN3 because they were repetitive entries from ISCN stock computation.
-3 columns of dataset_layer were removed from ISCN3 because they were determined using soc. (ASK ABOUT REMAINING SOC COLUMN)
+3 columns of dataset_layer were removed from ISCN3 because they were determined using soc.
 17 rows of dataset_profile were removed from ISCN3 because they were filled using ISCN stock computation.
 5 columns of dataset_profile were removed from ISCN 3 because they were determined using soc.
 Values in column  country (country) were reassigned to "united States" in the dataset_layer and dataset_profile tables because it was the known location of the collection state.
@@ -241,6 +241,7 @@ ggplot(dataset_layer %>%
 ```
 
 ## TODO
+- [ ] Fix remaining SOC column in Dataset_layer table?
 
 
 #### Github issue template
