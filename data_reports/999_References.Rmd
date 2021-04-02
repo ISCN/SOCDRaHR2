@@ -13,6 +13,7 @@ data_report number | dataset_name | citation
 109 | `Vogel` |  @Kane2009; @Vogel2007; @Vogel2008
 110 | `Myers-Smith` | @MyersSmith2007
 111 | `USGS Muhs` | @Muhs2003
+112 | `USGS Harden Yazoo` | @Harden1999; @Huntington1998
 114 | `Kane` |  @Kane2004; @Kane2005; @Kane2009; @Valentine2004
 115 | `Bonanza LTER` | @Cleve1993; @Yarie2013
 117 | `UMBS_FASET` | unpublished

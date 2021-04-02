@@ -1,4 +1,4 @@
-# Name HERE
+# USGS Harden Yazoo
 
 The NAME HERE data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
 Rows were/weren't removed from ISCN3 because of reasons.
@@ -7,7 +7,7 @@ Values in columns were reassigned to XX because of reasons.
 
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Jorgensen_NPS" #fix this
+datasetName <- "USGS_Harden_Yazoo" 
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
