@@ -240,7 +240,7 @@ ggplot(dataset_layer %>%
 - [X]  Evaluate dataset
 - [ ]  Complete template checklist
 - [X]  Write up summary report narrative
-- [ ]  Good commenting
+- [x]  Good commenting
 - [ ]  External review by someone else
 
 ## Citations
