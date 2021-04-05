@@ -20,6 +20,7 @@ This report considers each one separately, and reports on the location of the da
 
 ```{r setup, message=FALSE, echo=FALSE}
 library(data.table)
+#library(SOCDRaH2)
 library(tidyverse)
 library(lubridate)
 library(tibble)
@@ -62,7 +63,6 @@ profile_raw <-  vroom::vroom(file.path(data_dir, 'ISCN3_profile.csv'), col_types
 
 layer_raw <- vroom::vroom(file.path(data_dir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
 ```
-
 
 ## ISCN3 structure
 

@@ -1,4 +1,4 @@
-# Name HERE
+# dataset name
 
 The NAME HERE data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
 Rows were/weren't removed from ISCN3 because of reasons.
@@ -7,7 +7,7 @@ Values in columns were reassigned to XX because of reasons.
 
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Jorgensen_NPS" #fix this
+datasetName <- "dataset Name" 
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -151,7 +151,8 @@ ggplot(data =  map_data("world")) +
 
 ```
 
-## Use for Location instead if map shows world rather than specific region
+
+## Use if map is not centered around the specific region of dataset
 ```{r}
 
 #country <- ggplot2::map_data('world2', 'usa')

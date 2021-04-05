@@ -1,13 +1,13 @@
-# Lehmann NE US soils
 
-The NAME HERE data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
+# Kane
 
+The Kane data set in ISCN3 contains 574 layer-level rows and 144 profile-level information rows after cleaning for ISCN3.5.
+Rows weren't removed from ISCN3 because there were no duplicated entries within the layer-level and profile-level information.
+Columns were removed from ISCN3 where information was not available throughout the dataset.
+Unclear information on vegetation remains in the `vegclass_local` section of the layer-level and profile-level information.
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Lehmann NE US soils" #fix this
+datasetName <- "Kane" 
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -28,8 +28,7 @@ dataset_profile_org <- profile_raw  %>%
    standardCast()
 
 dataset_profile <- profile_raw  %>%
-  filter(dataset_name_sub == datasetName) %>% 
-  mutate(`country (country)` = 'United States')
+  filter(dataset_name_sub == datasetName) 
 
 if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
@@ -74,9 +73,8 @@ dataset_layer_org <- layer_raw %>%
   standardCast()
 
 dataset_layer <- layer_raw %>%
-  filter(dataset_name_sub == datasetName) %>% 
-  mutate(`country (country)` = 'United States')
-  
+  filter(dataset_name_sub == datasetName) 
+
 if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
   dataset_layer <- dataset_layer %>%
@@ -108,6 +106,7 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```
 
+The `r datasetName` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
@@ -130,25 +129,32 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ```{r}
 
-ggplot(data =  map_data("world")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_profile, 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
-  theme_nothing() +
-  labs(title = 'Profile data') #+
-  #coord_map("ortho", orientation = c(90, 0, 0))
+locs<-data.frame(long=c(209,213,213,209),lat=c(64,64,66,66))
 
-ggplot(data =  map_data("world")) + 
+country <- ggplot2::map_data('world2', 'usa')
+
+ggplot(data =  map_data("world2")) +
+  geom_polygon( aes(x = long, y = lat, group = group),
+                fill = 'grey', color = "black") +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  coord_cartesian(xlim=c(145, 275), ylim = c(40, 90)) +
+  theme_nothing() +
+  geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
+  labs(title = 'Profile data')
+
+ggplot(data =  map_data("world2")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
-  theme_nothing() +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
+            shape = 'x', color = 'red', size = 2) +
+coord_cartesian(xlim=c(196, 222), ylim = c(60, 70)) +
+ theme_nothing() +
+geom_point(data=locs,aes(long,lat),
+             size=0,color= NA) +
   labs(title = 'Layer data')
 
 ```
@@ -192,25 +198,9 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-X Rename header and file name to reflect dataset_name
-X Set country to United States
-- Remove layer_note column?
-- Pull citation and add it to the bib file, check that citation matches the acknowledgment for study
-- Check that the clean profile is correct given the original information
-X Check that the clean layer is correct given the original information
-- Check that maps are reasonable for the location
-- Summarize what the modifications were for this particular dataset
-X Create an issue on github with the template below
-- Commit and link the commit to the issue
+- Inquire about cryptic vegetation information located in the `vegclass_local` columns
 
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Kane2004, @Kane2005, @Kane2009, and @Valentine2004 for additional details and if you are using ISCN3 please cite.
