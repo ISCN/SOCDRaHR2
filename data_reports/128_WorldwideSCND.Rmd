@@ -1,17 +1,12 @@
 # Worldwide soil carbon and nitrogen data
 
-The `Worldwide soil carbon and nitrogen data` data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
-
 The `Worldwide soil carbon and nitrogen data` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
 In dataset_profile, three columns were removed due to being SOC calculated and 5287 rows were removed due to being duplicate rows (unique function was applied). 
 In dataset_layer, four columns were removed due to being SOC calculated and 233 rows were removed due to being duplicate rows (unique function was applied).
 
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Worldwide soil carbon and nitrogen data" #fix this
+datasetName <- "Worldwide soil carbon and nitrogen data"
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -110,6 +105,16 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```
 
+## Running Summaries to Make Sure Only Duplicates Were Removed
+
+```{r}
+length(summary(as.factor(as.character(dataset_profile_org$profile_name)), maxsum = 22000))
+#To guarantee that only duplicates were removed, the value of unique dataset_profile_org$profile_name should be the same amount of objects as dataset_profile
+#4357 = 4357
+length(summary(as.factor(as.character(dataset_layer_org$layer_name)), maxsum = 22000))
+#To guarantee that only duplicates were removed, the value of unique dataset_layer_org$layer_name should be the same amount of objects as dataset_layer
+#21736 != 21739
+```
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
