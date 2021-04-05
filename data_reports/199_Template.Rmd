@@ -1,13 +1,13 @@
-# dataset name
+# dataset Name
 
-The NAME HERE data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
+The dataset Name data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
 Rows were/weren't removed from ISCN3 because of reasons.
 Columns were/weren't removed from ISCN3 because of reasons.
 Values in columns were reassigned to XX because of reasons.
 
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "dataset Name" 
+datasetName <- "USGS Harden" 
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 

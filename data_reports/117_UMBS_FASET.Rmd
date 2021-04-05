@@ -6,6 +6,7 @@ Columns were removed from ISCN3 because of ISCN SOC computation.
 Values in the "hzn" column of the dataset_layer table were reassigned to an NA character from "?", a nonspecific character.
 Values in column  country (country) were reassigned to "united States" in the dataset_layer and dataset_profile tables because it was the known location of the collection state.
 Ggplot maps were modified to ensure datasets accurately focused on Michigan, United States.
+A citation was pulled regarding the unpublished dataset and placed in the bibliography but should be revisted in ISCN 4.
 
 
 ```{r warning=FALSE, message=FALSE}
@@ -231,18 +232,16 @@ ggplot(dataset_layer %>%
 ```
 
 ## TODO
-
-- Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
-- Commit and link the commit to the issue
+- Data is unpublished, and references "100 yrs of research." Revisit in ISCN 4.
 
 #### Github issue template
 
 - [X]  Evaluate dataset
-- [ ]  Complete template checklist
+- [X]  Complete template checklist
 - [X]  Write up summary report narrative
 - [x]  Good commenting
-- [ ]  External review by someone else
+- [X]  External review by someone else
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Nave for additional details and if you are using ISCN3 please cite.
