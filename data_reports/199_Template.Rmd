@@ -7,7 +7,7 @@ Values in columns were reassigned to XX because of reasons.
 
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "USGS Harden" 
+datasetName <- "dataset Name" 
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
