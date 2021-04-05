@@ -5,7 +5,7 @@ Soil carbon stock and method were previously filled in ISCN3 and were removed in
 ISCN3 had country listed as Unknown; ISCN3.5 now has country as United States since data is from NE US.
 
 
-```{r warning=FALSE, message=FALSE}
+```{r}
 datasetName <- "Lehmann NE US soils" #fix this
 
 ##### Extract the study information ####
@@ -18,7 +18,7 @@ dataset_study <- citation_raw %>%
   standardCast()
 ```
 
-```{r warning=FALSE, message=FALSE}
+```{r}
 ##### Extract the profile information ####
 
 #comparison for pre ISCN soc stock correction
@@ -64,7 +64,7 @@ if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1))
 dataset_profile <- standardCast(dataset_profile)
 ```
 
-```{r warning = FALSE, message = FALSE}
+```{r}
 ##### Extract the layer infromation ####
 
 #comparison before SOC correction
@@ -108,7 +108,7 @@ dataset_layer <- standardCast(dataset_layer)
 ```
 
 
-```{r message=FALSE, warning=FALSE}
+```{r}
 knitr::kable(t(dataset_study))
 ```
 
@@ -158,7 +158,7 @@ ggplot(data =  map_data("world2")) +
   labs(title = 'Layer data')
 ```
 
-```{r eval=FALSE}
+```{r}
 #this is useful to see for the analysis but we don't want it in the report
 dataset_layer %>%
   pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
@@ -197,15 +197,6 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-X Rename header and file name to reflect dataset_name
-X Set country to United States
-X Pull citation and add it to the bib file, check that citation matches the acknowledgment for study
-X Check that the clean profile is correct given the original information
-X Check that the clean layer is correct given the original information
-X Check that maps are reasonable for the location
-X Summarize what the modifications were for this particular dataset
-X Create an issue on github with the template below
-X Commit and link the commit to the issue
 
 #### Github issue template
 
