@@ -135,9 +135,9 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ```{r}
 
-ggplot(data =  map_data("world")) + 
+ggplot(data =  map_data("state")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
+               fill = 'lightblue', color = 'black') + 
   geom_point(data= dataset_profile, 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
              shape = 'x', color = 'red') +
@@ -149,6 +149,8 @@ ggplot(data =  map_data("world")) +
 ggplot(data =  map_data("world")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
+  geom_polygon(data = map_data("usa"), aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
   geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
              shape = 'x', color = 'red') +
@@ -156,42 +158,10 @@ ggplot(data =  map_data("world")) +
   theme_nothing() +
   labs(title = 'Layer data')
 
-```
 
-
-## Use if map is not centered around the specific region of dataset
-```{r}
-
-country <- ggplot2::map_data('world2', 'usa')
-avgLat <- dataset_layer %>% 
-  pull('lat (dec. deg)') %>%
-  mean()
-
-avgLong <- dataset_layer %>% 
-  pull('long (dec. deg)') %>%
-  mean() + 360
-
-ggplot(data =  map_data("world2")) +
-  geom_polygon( aes(x = long, y = lat, group = group),
-                fill = 'grey', color = "black") +
-  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-                fill = 'lightblue', color = "black") +
-  geom_point(data = dataset_profile, aes(x = avgLong, y = avgLat), shape = 'x', color = 'red', size = 5) +
-  coord_cartesian(xlim=c(avgLong - 65, avgLong + 65), ylim = c(avgLat - 25, avgLat + 25)) +
-  theme_nothing() +
-  labs(title = 'Profile data')
-
-ggplot(data =  map_data("world2")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-                fill = 'lightblue', color = "black") +
-  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red', size = 2.5) +
-  coord_cartesian(xlim=c(avgLong - 9.1, avgLong + 9.1), ylim = c(avgLat - 3.5, avgLat + 3.5)) +
-  theme_nothing() +
-  labs(title = 'Layer data')
-  
+#ggplot() + 
+ # geom_polygon( data=MainStates, aes(x=long, y=lat, group=group),
+                #color="black", fill="lightblue" )
 ```
 
 ```{r eval=FALSE}
