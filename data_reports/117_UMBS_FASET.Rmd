@@ -233,6 +233,7 @@ ggplot(dataset_layer %>%
 
 ## TODO
 - Data is unpublished, and references "100 yrs of research." Revisit in ISCN 4.
+- Check and see if data is still being collected at this research site
 
 #### Github issue template
 
@@ -244,4 +245,4 @@ ggplot(dataset_layer %>%
 
 ## Citations
 
-Please see @Nave for additional details and if you are using ISCN3 please cite.
+This data is uncited and unpublished.
