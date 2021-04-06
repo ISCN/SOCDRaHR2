@@ -15,6 +15,7 @@ dataset_name | citation
 `Vogel` |  @Kane2009; @Vogel2007; @Vogel2008
 `Kane` |  @Kane2004; @Kane2005; @Kane2009; @Valentine2004
 `UMBS_FASET` | unpublished
+`Oak Ridge National Lab TDE`| @Fröberg2008
 `Myers-Smith` | @MyersSmith2007
 `USGS_Muhs` | @Muhs2003
 `Worldwide soil carbon and nitrogen data` | @Zinke1986
