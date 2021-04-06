@@ -1,13 +1,17 @@
-# dataset name
+# Worldwide soil carbon and nitrogen data
 
-The NAME HERE data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
+The `Worldwide soil carbon and nitrogen data` data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
 Rows were/weren't removed from ISCN3 because of reasons.
 Columns were/weren't removed from ISCN3 because of reasons.
 Values in columns were reassigned to XX because of reasons.
 
+The `Worldwide soil carbon and nitrogen data` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+In dataset_profile, three columns were removed due to being SOC calculated and 5287 rows were removed due to being duplicate rows (unique function was applied). 
+In dataset_layer, four columns were removed due to being SOC calculated and 233 rows were removed due to being duplicate rows (unique function was applied).
+
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "dataset Name" 
+datasetName <- "Worldwide soil carbon and nitrogen data" #fix this
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -151,7 +155,7 @@ ggplot(data =  map_data("world")) +
 
 ```
 
-## Use if map is not centered around the specific region of dataset
+## Use for Location instead if dataset is in Alaska
 ```{r}
 
 #country <- ggplot2::map_data('world2', 'usa')
@@ -225,23 +229,9 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- Rename header and file name to reflect dataset_name
-- Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
-- Check that the clean profile is correct given the orginal information
-- Check that the clean layer is correct given the orginal information
-- Check that maps are reasonable for the location
-- Summerize what the modifications were for this particular dataset
-- Create an issue on github with the template below
+- download and re-ingest from 10.3334/CDIAC/lue.ndp018
 - Commit and link the commit to the issue
-
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Zinke1986 for additional details and if you are using ISCN3 please cite.

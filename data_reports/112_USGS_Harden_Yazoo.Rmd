@@ -1,13 +1,19 @@
-# dataset name
+# USGS Harden Yazoo
 
-The NAME HERE data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
+The USGS Harden Yazoo data set in ISCN3 contains 234 layer-level rows and 35 profile-level information rows after cleaning for ISCN3.5.
+Half of the rows (234) of dataset_layer were removed from ISCN3 because they were repetitive entries from ISCN stock computation.
+3 columns of dataset_layer were removed from ISCN3 because they were determined using soc.
+17 rows of dataset_profile were removed from ISCN3 because they were filled using ISCN stock computation.
+5 columns of dataset_profile were removed from ISCN 3 because they were determined using soc.
+Values in column  country (country) were reassigned to "united States" in the dataset_layer and dataset_profile tables because it was the known location of the collection state.
+Values in the "hzn" column of the dataset_layer table were reassigned to an NA character from "?", a nonspecific character.
+Ggplot maps were modified to ensure datasets accurately focused on Southeastern United States.
+Cryptic site notes in dataset_profile table were resolved to contain full citations.
+
 
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "dataset Name" 
+datasetName <- "USGS Harden Yazoo" 
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -34,7 +40,14 @@ if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
   dataset_profile <- dataset_profile %>%
     group_by(dataset_name_soc) %>%
-    mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
+    mutate(`country (country)` = 'United States', #hard-coding country as United States
+           `site_note` = case_when(
+             site_note == 'Harden et al., 1999' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319.',
+             TRUE ~ site_note), #replacing cryptic site_note in two of the dataset_profile rows
+           `site_note` = case_when(
+             site_note == 'Harden et al., 1999; Huntington et al. 1998' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319; Huntington, T.G., Harden, J. W., Dabney, S. M. , Marion, D. A. , Alonso, C., Sharpe, J.M. , 1998. Soil, Environmental, and Watershed Measurements in support of carbon cycling studies in northwestern Mississippi. U.S. Geological Survey Open-File Report 98-501.',
+             TRUE ~ site_note), #replacing remaining columns with full Harden 1999 and Huntington 1998 citations.
+           `soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
                                       rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
            `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
                                     rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
@@ -79,7 +92,11 @@ if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
   dataset_layer <- dataset_layer %>%
     group_by(dataset_name_soc) %>%
-    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+    mutate(`country (country)` = 'United States', #hard-coding country name as United States
+          `hzn` = case_when(
+           `hzn` == "?" ~ NA_character_,
+           TRUE ~ as.character(hzn)), #hard-coding special character "?" to be NA
+          `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
                                     rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
            soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
                                      rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
@@ -129,8 +146,8 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 ```{r}
 
 ggplot(data =  map_data("world")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
+  geom_polygon(aes(x = long + 180, y = lat, group = group), 
+               fill = 'grey', color = 'black') +  # + 180 added to ensure datapoints appeared in Missippi as intended
   geom_point(data= dataset_profile, 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
              shape = 'x', color = 'red') +
@@ -140,12 +157,12 @@ ggplot(data =  map_data("world")) +
   #coord_map("ortho", orientation = c(90, 0, 0))
 
 ggplot(data =  map_data("world")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
+  geom_polygon(aes(x = long + 180, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
   geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
+             shape = 'x', color = 'red', size = 3) +
+  coord_cartesian(xlim=c(80,110), ylim=c(20,40)) + #coord_cartesian values changed to focus in on southeastern United States
   theme_nothing() +
   labs(title = 'Layer data')
 
@@ -224,24 +241,17 @@ ggplot(dataset_layer %>%
 ```
 
 ## TODO
+- [ ] Fix remaining SOC column in Dataset_layer table?
 
-- Rename header and file name to reflect dataset_name
-- Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
-- Check that the clean profile is correct given the orginal information
-- Check that the clean layer is correct given the orginal information
-- Check that maps are reasonable for the location
-- Summerize what the modifications were for this particular dataset
-- Create an issue on github with the template below
-- Commit and link the commit to the issue
 
 #### Github issue template
 
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
+- [x]  Evaluate dataset
+- [x]  Complete template checklist
+- [x]  Write up summary report narrative
+- [x]  Good commenting
 - [ ]  External review by someone else
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Harden1999 and @Huntington1998 for additional details and if you are using ISCN3 please cite.
