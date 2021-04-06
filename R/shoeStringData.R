@@ -13,10 +13,10 @@ shoeStringData <- function(dataTables.ls,
   #                  data_structure = read_csv('data-raw/data_structure.csv', col_types = strrep('c', 4)) %>% filter(data_product == 'ISCN3') %>% select(-data_product), 
   #                  data_thesaurus = read_csv('data-raw/data_thesaurus.csv', col_types = strrep('c', 6)) %>% filter(data_product == 'ISCN3') %>% select(-data_product))
   # 
-  # dataTables.ls <- list( dataset = read_delim('~/Documents/Datasets/ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', 19)),
-  #                        citation = read_delim('~/Documents/Datasets/ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', 12)),
-  #                        profile = read_delim('~/Documents/Datasets/ISCN/ISCN3_profile.csv', delim = ';', col_types = strrep('c', 44)),
-  #                        layer = read_delim('~/Documents/Datasets/ISCN/ISCN3_layer.csv', delim = ';', col_types = strrep('c', 95)))
+  # dataTables.ls <- list(dataset = read_delim('~/Documents/Datasets/ISCN/ISCN3_dataset.csv', delim = ';', col_types = strrep('c', 19)),
+  #                       citation = read_delim('~/Documents/Datasets/ISCN/ISCN3_citation.csv', delim = ';', col_types = strrep('c', 12)),
+  #                       profile = read_delim('~/Documents/Datasets/ISCN/ISCN3_profile.csv', delim = ';', col_types = strrep('c', 44)),
+  #                       layer = read_delim('~/Documents/Datasets/ISCN/ISCN3_layer.csv', delim = ';', col_types = strrep('c', 95)))
   # 
   
   #TODO add checks to make sure the keys and the tables match
