@@ -108,12 +108,22 @@ dataset_layer <- standardCast(dataset_layer)
 ## Running Summaries to Make Sure Only Duplicates Were Removed
 
 ```{r}
-length(summary(as.factor(as.character(dataset_profile_org$profile_name)), maxsum = 22000))
-#To guarantee that only duplicates were removed, the value of unique dataset_profile_org$profile_name should be the same amount of objects as dataset_profile
-#4357 = 4357
-length(summary(as.factor(as.character(dataset_layer_org$layer_name)), maxsum = 22000))
-#To guarantee that only duplicates were removed, the value of unique dataset_layer_org$layer_name should be the same amount of objects as dataset_layer
-#21736 != 21739
+#the numbers calculated should equal the number of objects in the both dataset_profile and dataset_layer
+
+dataset_profile %>%
+  group_by(profile_name, site_name, dataset_name_sub) %>%
+  tally() %>%
+  #filter(n > 1) #this pulls out duplicate rows
+  nrow() #this returns the number of rows in the unique table
+
+dataset_layer %>%
+  group_by(layer_name, profile_name, site_name, dataset_name_sub) %>%
+  tally() %>%
+  #filter(n > 1) #this pulls out duplicate rows
+  nrow() #this returns the number of rows in the unique table 
+
+#dataset_layer %>% #use this to pull specific layers
+#  filter(layer_name %in% c("100002.1", "100003.1", "100004.1" ))
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -235,7 +245,6 @@ ggplot(dataset_layer %>%
 ## TODO
 
 - download and re-ingest from 10.3334/CDIAC/lue.ndp018
-- Commit and link the commit to the issue
 
 ## Citations
 
