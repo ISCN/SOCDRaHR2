@@ -1,6 +1,6 @@
 # Lehmann NE US soils
 
-The Lehmann NE US soils data set in ISCN3 contains `r nrow(dataset_layer)` layer-level rows and `r nrow(dataset_layer)` profile-level information rows after cleaning for ISCN3.5.
+The Lehmann NE US soils data set in ISCN3 contains 172 layer-level rows and 245 profile-level information rows after cleaning for ISCN3.5.
 Soil carbon stock and method were previously filled in ISCN3 and were removed in ISCN3.5
 ISCN3 had country listed as Unknown; ISCN3.5 now has country as United States since data is from NE US.
 
