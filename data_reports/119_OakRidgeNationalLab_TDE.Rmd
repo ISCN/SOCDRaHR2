@@ -1,9 +1,8 @@
 #Oak Ridge National Lab_TDE
 
 The Oak Ridge National Lab_TDE data set in ISCN3 contains 1176 layer-level rows and 294 profile-level information rows after cleaning for ISCN3.5.
-Rows weren't removed from ISCN3 because of reasons.
 Rows weren't removed from ISCN3 because there were no duplicated entries within the layer-level and profile-level information.
-Columns were removed from ISCN3 where information was not available throughout the data set.
+Columns were removed from ISCN3 in places where information was marked as 'NA' throughout the entirety of the column.
 
 
 ```{r warning=FALSE, message=FALSE}
