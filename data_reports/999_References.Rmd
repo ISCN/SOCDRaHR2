@@ -18,6 +18,7 @@ data_report number | dataset_name | citation
 115 | `Bonanza LTER` | @Cleve1993; @Yarie2013
 116 | `Jorgensen_YKDE` | @Jorsenson2000
 117 | `UMBS_FASET` | unpublished
+120 | `USGS Harden` | @Harden2008a @ODonnell2011 @Manies204 @Harden2008b @Harden2006 @Neff2005
 125 | `Northern Circumpolar Soil Carbon Database` | @Hugelius2013
 126 | `USGS_S3C` | @Buell2004
 127 | `AK DSC Project SOC stock computation` | @Johnson2011
