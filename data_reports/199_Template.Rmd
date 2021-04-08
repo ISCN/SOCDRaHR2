@@ -151,6 +151,7 @@ ggplot(data =  map_data("world")) +
 
 ```
 
+
 ## Use if map is not centered around the specific region of dataset
 ```{r}
 
