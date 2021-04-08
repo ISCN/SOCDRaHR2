@@ -1,13 +1,12 @@
-# Boby_Mack
+#Jorgensen_ARCN 
 
-In this section, we will pull out `Boby_Mack` from ISCN3 and clean it up for ISCN 3.5. Repeated information on soil carbon stocks was removed from the layer and profile information of the data set. 
-There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning. 
+In this section, we will pull out `Boby_Mack` from ISCN3 and clean it up for ISCN 3.5.
+There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning.
 Finally, the site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
-Note that data recorded as "Unknown" or "?" was left as is and NOT shifted to an NA value.
-
+Note cryptic note in the Vegclass_local and textureClass column
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Boby_Mack" 
+datasetName <- "Jorgensen_ARCN" #fix this
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -126,18 +125,14 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 
 ## Location
-
 ```{r}
 country <- ggplot2::map_data('world2', 'usa')
-
 avgLat <- dataset_layer %>%
   pull('lat (dec. deg)') %>%
   mean()
-
 avgLong <- dataset_layer %>%
   pull('long (dec. deg)') %>%
   mean() + 360
-
 ggplot(data =  map_data("world2")) +
   geom_polygon( aes(x = long, y = lat, group = group),
                 fill = 'grey', color = "black") +
@@ -147,7 +142,6 @@ ggplot(data =  map_data("world2")) +
   coord_cartesian(xlim=c(avgLong - 65, avgLong + 65), ylim = c(avgLat - 25, avgLat + 25)) +
   theme_nothing() +
   labs(title = 'Profile data')
-
 ggplot(data =  map_data("world2")) +
   geom_polygon(aes(x=long, y = lat, group = group),
                fill = 'grey', color = 'black') +
@@ -158,6 +152,19 @@ ggplot(data =  map_data("world2")) +
   coord_cartesian(xlim=c(avgLong - 9.1, avgLong + 9.1), ylim = c(avgLat - 3.5, avgLat + 3.5)) +
   theme_nothing() +
   labs(title = 'Layer data')
+```
+
+```{r eval=FALSE}
+#this is useful to see for the analysis but we don't want it in the report
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
 ```
 
 ## Profile histograms
@@ -183,9 +190,6 @@ ggplot(dataset_layer %>%
   facet_wrap(~type, scales='free') +
   theme_bw()
 ```
-
 ## Citations
 
-Please see @Boby2010 for additional details and if you are using ISCN3 please cite.
-
-
+Please see @Jorgenson2009 for additional details and if you are using ISCN3 please cite.
