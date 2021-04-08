@@ -2,7 +2,8 @@
 
 The Jorgensen YKDE data set in ISCN3 contains `r nrow(dataset_layer)` layer-level rows and `r nrow(dataset_profile)` profile-level information rows after cleaning for ISCN3.5.
 Rows weren't removed from ISCN3 because there were no SOC computations that needed removing.
-Columns were removed from ISCN3 because ISCN3 filled in the soil carbon stocks where bulk density and organic carbon was provided
+Columns were removed from ISCN3 because ISCN3 filled in the soil carbon stocks where bulk density and organic carbon was provided. 
+Citation rows were merged into one citation to fill NA values.
 This data set was set in Alaska, so the Alaska Location code from the Template was used instead of the generic.
 
 ```{r warning=FALSE, message=FALSE}
@@ -15,7 +16,10 @@ dataset_study <- citation_raw %>%
   full_join(dataset_raw %>% 
               filter(dataset_name == datasetName) %>%
               select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
-  standardCast()
+  standardCast() %>%
+  fill(everything(), .direction = "downup") %>%
+  mutate(`modification_date (YYYY-MM-DD)` = "2010-04-01") %>%
+  unique()
 ```
 
 ```{r warning=FALSE, message=FALSE}
@@ -194,8 +198,7 @@ ggplot(dataset_layer %>%
 ```
 
 ## TODO
-- cannot find the data citation and I think Jorgenson is spelled wrong everywhere
-- Commit and link the commit to the issue
+- For ISCN5, Jorgenson is spelled wrong in the actual data
 
 ## Citations
 
