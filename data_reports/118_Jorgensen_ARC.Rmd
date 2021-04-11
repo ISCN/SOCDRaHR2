@@ -1,22 +1,19 @@
-# NRCS
+#Jorgensen_ARCN 
 
-The dataset `NRCS Sept/2014` (or `NRCS 2014:2011 name aliasing` in the study tables) in ISCN3 originally contained 373326  layer-level rows and 75651 profile-level information rows.
-After cleaning for ISCN3.5 this dropped to 372639 layer-level rows and 60895 profile-level rows.
-In the profile tables 14756 rows were removed from ISCN3 that match the count of the `ISCN SOC stock to 1m computation` flag in the `dataset_name_soc` column implying that when that 1m computation was calculated, the other values in that row were duplicated.
-In the layer tables no rows were removed, and the template brakes on this data set. We can't use the gap filling because the rows represent multiple organic carbon methods that we can not gap fill. 
-Columns were with soil carbon density were removed in the profile and layer datasets since they were entirely filled in by ISCN.
-
-
+In this section, we will pull out `Boby_Mack` from ISCN3 and clean it up for ISCN 3.5.
+There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning.
+Finally, the site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
+Note cryptic note in the Vegclass_local and textureClass column
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "NRCS" 
+datasetName <- "Jorgensen_ARCN" #fix this
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
-  filter(grepl(datasetName, dataset_name)) %>%
+  filter(dataset_name == datasetName) %>%
   select(where(function(xx){!all(is.na(xx))})) %>%
   full_join(dataset_raw %>% 
-              filter(grepl(datasetName, dataset_name)) %>%
+              filter(dataset_name == datasetName) %>%
               select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
 ```
@@ -26,11 +23,11 @@ dataset_study <- citation_raw %>%
 
 #comparison for pre ISCN soc stock correction
 dataset_profile_org <- profile_raw  %>%
-   filter(grepl(datasetName, dataset_name_sub)) %>%
+   filter(dataset_name_sub == datasetName) %>%
    standardCast()
 
 dataset_profile <- profile_raw  %>%
-  filter(grepl(datasetName, dataset_name_sub)) 
+  filter(dataset_name_sub == datasetName) 
 
 if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
@@ -71,11 +68,11 @@ dataset_profile <- standardCast(dataset_profile)
 
 #comparison before SOC correction
 dataset_layer_org <- layer_raw %>%
-  filter(grepl(datasetName, dataset_name_sub)) %>%
+  filter(dataset_name_sub == datasetName) %>%
   standardCast()
 
 dataset_layer <- layer_raw %>%
-  filter(grepl(datasetName, dataset_name_sub)) 
+  filter(dataset_name_sub == datasetName) 
 
 if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
@@ -98,7 +95,8 @@ if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_nam
   #if the rows are duplicated then fill in missing values by group
   dataset_layer <- dataset_layer %>%
     group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
-    tidyr::fill(-cNRCS_prep_code, -`c_tot (percent)`, -`oc (percent)`, -`loi (percent)`) %>%
+    mutate_at(vars(-group_cols()), 
+              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
     ungroup() %>%
     unique() #collapase rows that are non-unique
 }
@@ -107,6 +105,7 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```
 
+The `r datasetName` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
@@ -126,65 +125,33 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 
 ## Location
-
 ```{r}
-
-ggplot(data =  map_data("world")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_profile, 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
+country <- ggplot2::map_data('world2', 'usa')
+avgLat <- dataset_layer %>%
+  pull('lat (dec. deg)') %>%
+  mean()
+avgLong <- dataset_layer %>%
+  pull('long (dec. deg)') %>%
+  mean() + 360
+ggplot(data =  map_data("world2")) +
+  geom_polygon( aes(x = long, y = lat, group = group),
+                fill = 'grey', color = "black") +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = 'black') +
+  geom_point(data = dataset_profile, aes(x = avgLong, y = avgLat), shape = 'x', color = 'red', size = 5) +
+  coord_cartesian(xlim=c(avgLong - 65, avgLong + 65), ylim = c(avgLat - 25, avgLat + 25)) +
   theme_nothing() +
-  labs(title = 'Profile data') #+
-  #coord_map("ortho", orientation = c(90, 0, 0))
-
-ggplot(data =  map_data("world")) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
+  labs(title = 'Profile data')
+ggplot(data =  map_data("world2")) +
+  geom_polygon(aes(x=long, y = lat, group = group),
+               fill = 'grey', color = 'black') +
+  geom_polygon(data = country, aes(x = long, y = lat, group = group),
+                fill = 'lightblue', color = "black") +
+  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red', size = 2.5) +
+  coord_cartesian(xlim=c(avgLong - 9.1, avgLong + 9.1), ylim = c(avgLat - 3.5, avgLat + 3.5)) +
   theme_nothing() +
   labs(title = 'Layer data')
-
-```
-
-## Use if map is not centered around the specific region of dataset
-```{r}
-
-#country <- ggplot2::map_data('world2', 'usa')
-#avgLat <- dataset_layer %>% 
-#  pull('lat (dec. deg)') %>%
-#  mean()
-
-#avgLong <- dataset_layer %>% 
-#  pull('long (dec. deg)') %>%
-#  mean() + 360
-
-#ggplot(data =  map_data("world2")) +
-#  geom_polygon( aes(x = long, y = lat, group = group),
-#                fill = 'grey', color = "black") +
-#  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
-#  geom_point(data = dataset_profile, aes(x = avgLong, y = avgLat), shape = 'x', color = 'red', size = 5) +
-#  coord_cartesian(xlim=c(avgLong - 65, avgLong + 65), ylim = c(avgLat - 25, avgLat + 25)) +
-#  theme_nothing() +
-#  labs(title = 'Profile data')
-
-#ggplot(data =  map_data("world2")) + 
-#  geom_polygon(aes(x=long, y = lat, group = group), 
-#               fill = 'grey', color = 'black') + 
-#  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
-#  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
-#             shape = 'x', color = 'red', size = 2.5) +
-#  coord_cartesian(xlim=c(avgLong - 9.1, avgLong + 9.1), ylim = c(avgLat - 3.5, avgLat + 3.5)) +
-#  theme_nothing() +
-#  labs(title = 'Layer data')
-  
 ```
 
 ```{r eval=FALSE}
@@ -223,13 +190,6 @@ ggplot(dataset_layer %>%
   facet_wrap(~type, scales='free') +
   theme_bw()
 ```
-
-## TODO
-
-- We need to revisit datasets with rows removed and reaccess the function.
-- Max/min bounds need to be worked out for this data.
-- Should also add an evaluation of the number of georeferenced layers
-
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Jorgenson2009 for additional details and if you are using ISCN3 please cite.
