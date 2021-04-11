@@ -4,7 +4,7 @@ The USGS_S3C data set in ISCN3 contains 10434 layer-level rows and 1423 profile-
 Rows weren't removed from ISCN3 from the dataset_layer table because they were all unique values.
 Columns were removed from ISCN3 from the dataset_layer table because these were filled using the ISCN soc stock correction.
 Rows were removed from ISCN3 from the dataset_profile table because it removed duplicated entries.
-Columns were removed ffrom ISCN3 from the dataset_profile table because these were filled using ISCN soc stock correction.
+Columns were removed from ISCN3 from the dataset_profile table because these were filled using ISCN soc stock correction.
 Values in the country (country) column of both the dataset_layer and dataset_profile tables were reassigned to "United States" because this is the known location of the data points collected.
 Ggplot maps were modified to ensure datasets accurately focused on the Mississippi River Valley region of the United States.
 Bulk density values, pH values, and soil composition percentages were analyzed to determine the number of extraneous values.
@@ -167,7 +167,6 @@ sum(dataset_layer$`bd_tot (g cm-3)` >3, na.rm = TRUE) #returns number of values 
 ```{r}
 ###determining if there are extraneous values in column
 summary(dataset_layer$`bd_other (g cm-3)`) #shows max and min values for column
-
 ```
 
 ```{r}
