@@ -3,8 +3,9 @@
 
 The Kane data set in ISCN3 contains 574 layer-level rows and 144 profile-level information rows after cleaning for ISCN3.5.
 Rows weren't removed from ISCN3 because there were no duplicated entries within the layer-level and profile-level information.
-Columns were removed from ISCN3 where information was not available throughout the dataset.
+Columns were removed from ISCN3 where information was not available throughout the data set.
 Unclear information on vegetation remains in the `vegclass_local` section of the layer-level and profile-level information.
+This data set required the use of a map centered around Alaska. 
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Kane" 
