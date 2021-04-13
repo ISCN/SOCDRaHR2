@@ -1,8 +1,15 @@
 # AK DSC Project SOC stock computation
 
+The dataset Name data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
+Rows were/weren't removed from ISCN3 because of reasons.
+Columns were/weren't removed from ISCN3 because of reasons.
+Values in columns were reassigned to XX because of reasons.
+
+
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "AK DSC Project SOC stock computation"
 
+##### Extract the study information ####
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>%
   select(where(function(xx){!(is.na(xx))})) %>%
@@ -10,37 +17,94 @@ dataset_study <- citation_raw %>%
               filter(dataset_name == datasetName) %>%
               select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
-
-#comparison for pre ISCN soc stock correction
-# dataset_profile_temp <- profile_raw  %>%
-#   filter(dataset_name_sub == datasetName) %>%
-#   standardCast()
-
-dataset_profile <- profile_raw  %>%
-  filter(dataset_name_sub == datasetName) %>%
-  standardCast() %>% #comment out pipe here and take a look at the profile information to figure out how to remove ISCN soc computations
-  #in this case we don't need to do anything
-  select(where(function(xx){!all(is.na(xx))})) %>% #remove the extra soc column lingering from ISCN soc computation
-  select(-dataset_name_soc)
-
-#comparison before SOC correction
-#dataset_layer_temp <- layer_raw %>%
-#  filter(dataset_name_sub == datasetName) %>%
-#  standardCast()
-
-dataset_layer <- layer_raw %>%
-  filter(dataset_name_sub == datasetName)  %>%
-  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
-  mutate_at(vars(-group_cols(), -'dataset_name_soc'), 
-            function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the 
-  filter(dataset_name_soc == dataset_name_sub) %>% #only take the soc values provided by the submitter
-  select(-dataset_name_soc) %>%
-  standardCast() #we don't care about the flag any more
-
 ```
 
-The `AK DSC Project SOC stock computation` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
-ISCN3 had some interesting notation.
+```{r warning=FALSE, message=FALSE}
+##### Extract the profile information ####
+
+#comparison for pre ISCN soc stock correction
+dataset_profile_org <- profile_raw  %>%
+   filter(dataset_name_sub == datasetName) %>%
+   standardCast()
+
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName)
+
+if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
+  #reassign rows where the ISCN tried to fill in SOC values
+  dataset_profile <- dataset_profile %>%
+    group_by(dataset_name_soc) %>%
+    mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
+                                      rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
+           `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+           soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                      rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
+           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+                                rep(NA_character_, length(soc_method)), soc_method)) %>%
+    ungroup()
+  
+}
+
+#remove the soc dataset since we've taken care of the ISCN notation
+dataset_profile <- select(dataset_profile, -dataset_name_soc) 
+
+if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
+  #if the rows are duplicated then fill in missing values by group
+  dataset_profile <- dataset_profile %>%
+    group_by(dataset_name_sub, site_name, profile_name) %>%
+    mutate_at(vars(-group_cols()), 
+              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+    ungroup() %>%
+    unique() #collapase rows that are non-unique
+}
+
+dataset_profile <- standardCast(dataset_profile)
+```
+
+```{r warning= FALSE, message=FALSE}
+##### Extract the layer infromation ####
+
+#comparison before SOC correction
+dataset_layer_org <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast()
+
+dataset_layer <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) 
+
+if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
+  #reassign rows where the ISCN tried to fill in SOC values
+  dataset_layer <- dataset_layer %>%
+    group_by(dataset_name_soc) %>%
+    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+                                rep(NA_character_, length(soc_method)), soc_method)) %>%
+    ungroup()
+  
+}
+
+#remove the soc dataset since we've taken care of the ISCN notation
+dataset_layer <- select(dataset_layer, -dataset_name_soc) 
+
+if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_name)$n > 1)){
+  #if the rows are duplicated then fill in missing values by group
+  dataset_layer <- dataset_layer %>%
+    group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+    mutate_at(vars(-group_cols()), 
+              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+    ungroup() %>%
+    unique() #collapase rows that are non-unique
+}
+
+dataset_layer <- standardCast(dataset_layer)
+
+```
 
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
@@ -63,26 +127,27 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ```{r}
 
-ggplot(data =  map_data("world")) + 
+ggplot(data =  map_data("world2")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
   geom_point(data= dataset_profile, 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             aes(x = `long (dec. deg)`+360, y = `lat (dec. deg)`),
              shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
+  coord_cartesian(1.3) +
   theme_nothing() +
   labs(title = 'Profile data')
 
-ggplot(data =  map_data("world")) + 
+ggplot(data =  map_data("state")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
   geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
+             shape = 'x', color = 'red', size = 1) +
+  coord_cartesian(xlim=c(-105,-70), ylim=c(27,45)) + #shifting second map location to center on the Mississippi River Valley Region and show individual state borders
   theme_nothing() +
   labs(title = 'Layer data')
 
+  
 ```
 
 ```{r eval=FALSE}
