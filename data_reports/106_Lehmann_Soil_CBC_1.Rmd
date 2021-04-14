@@ -1,10 +1,9 @@
 # Lehmann Soil C&BC #1
 
-The Lehmann Soil C&BC #1 data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
-
+The Lehmann Soil C&BC #1 data set in ISCN3 contains 139 layer-level rows and 40 profile-level information rows after cleaning for ISCN3.5.
+3 columns in layer and 4 columns in profile were removed where ISCN 3 tried to fill in SOC values.
+Special character '?' was reassigned with 'NA' in hzn column in layer. 
+The country was reassigned from an unknown value to United States as all data is from the US.
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Lehmann Soil C&BC #1" 
@@ -203,12 +202,6 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-X Pull citation and add it to the bib file, check that citation matches the acknowledgement for study
-X Check that the clean profile is correct given the orginal information
-X Check that the clean layer is correct given the orginal information
-- Check that maps are reasonable for the location
-- Summarize what the modifications were for this particular dataset
-- Commit and link the commit to the issue
 
 #### Github issue template
 
