@@ -254,7 +254,6 @@ ggplot(dataset_layer %>%
 
 - Check that maps are reasonable for the location (wrong because of longitudes)
 - Check longitude that looks like it might be wrong (dropped the negative for some)
-- Commit and link the commit to the issue
 
 ## Citations
 
