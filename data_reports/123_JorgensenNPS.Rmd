@@ -3,7 +3,8 @@
 The Jorgensen_NPS data set in ISCN3 contains 2531 layer-level rows and 675 profile-level information rows after cleaning for ISCN3.5.
 Rows weren't removed from ISCN3 because there were no duplicated entries within the layer-level and profile-level information.
 Columns were removed from ISCN3 in places where information was marked as 'NA' throughout the entirety of the column.
-Ggplot maps were modified to display a map centered around the Pacific Northwest and a second map focusing on the data collection site in Alaska. 
+Ggplot maps were modified to display a map centered around the Pacific Northwest and a second map focusing on the data collection site in Alaska.
+Associated soil data still remains to be reingested from https://www.nps.gov/im/vmi-wrst.htm 
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Jorgensen_NPS"
