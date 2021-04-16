@@ -3,6 +3,7 @@
 The Norther Circumpolar Soil Carbon Database data set in ISCN3 contains 1882 layer-level rows and 510 profile-level information rows after cleaning for ISCN3.5.
 Rows were removed from ISCN3 because of duplicate data entries in both layer and profile.
 Columns were removed from ISCN3 if they were SOC calculations. 
+Special character '?' in hzn column in layer was reassigned to NA (so the column was then removed entirely.)
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Northern Circumpolar Soil Carbon Database (NCSCD)"
@@ -42,7 +43,10 @@ dataset_layer_org <- layer_raw %>%
 dataset_layer <- layer_raw %>%
   filter(dataset_name_sub == datasetName)  %>%
   group_by(dataset_name_soc) %>%
-  mutate(`soc (g cm-2)` = if_else(dataset_name_soc == 'ISCN No SOC stock computation', rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+  mutate(`hzn` = case_when(
+           `hzn` == "?" ~ NA_character_,
+           TRUE ~ as.character(hzn)),
+         `soc (g cm-2)` = if_else(dataset_name_soc == 'ISCN No SOC stock computation', rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
           soc_carbon_flag = if_else(dataset_name_soc == 'ISCN No SOC stock computation', rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
            soc_method = if_else(dataset_name_soc == 'ISCN No SOC stock computation', rep(NA_character_, length(soc_method)), soc_method)) %>%
   ungroup() %>%
