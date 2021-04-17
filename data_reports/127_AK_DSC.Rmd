@@ -1,9 +1,13 @@
 # AK DSC Project SOC stock computation
 
-The dataset Name data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
+The AK DSC Project SOC Stock computation data set in ISCN3 contains 9002 layer-level rows and 1605 profile-level information rows after cleaning for ISCN3.5.
+Rows were removed from ISCN3 from the dataset_layer table because they were generated using ISCN soc stock correction.
+Columns were removed from ISCN3 from the dataset_layer table because they were generated using ISCN soc stock correction.
+Rows were removed from ISCN3 from the dataset_profile layer table because they were generated using ISCN soc stock correction.
+Columns were removed from ISCN3 from the dataset_profile layer table because of duplicated entries and using ISCN soc stock correction.
+Ggplot maps were adjusted to focus on the location of Alaska, United States.
+Longitude and bulk density values were deemed to be appropriate.
+Dataset_layer values were checked and compared to original to ensure proper cleaning.
 
 
 ```{r warning=FALSE, message=FALSE}
@@ -122,6 +126,21 @@ And the following factors in the layers:
 knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 ```
 
+```{r}
+###determining if there are extraneous values in column
+summary(dataset_layer$`bd_tot (g cm-3)`)#shows max and min values for column
+```
+```{r}
+###determining if there are extraneous values in column
+summary(dataset_layer$`long (dec. deg)`)
+sum(dataset_layer$`bd_tot (g cm-3)` >0, na.rm = TRUE) #returns number of values greater than acceptable range
+```
+
+```{r}
+###determining if there are extraneous values in column
+summary(dataset_profile$`long (dec. deg)`)
+sum(dataset_layer$`bd_tot (g cm-3)` >0, na.rm = TRUE) #returns number of values greater than acceptable range
+```
 
 ## Location
 
@@ -131,36 +150,23 @@ ggplot(data =  map_data("world2")) +
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
   geom_point(data= dataset_profile, 
-             aes(x = `long (dec. deg)`+360, y = `lat (dec. deg)`),
+             aes(x = `long (dec. deg)` +360, y = `lat (dec. deg)`),
              shape = 'x', color = 'red') +
-  coord_cartesian(1.3) +
+  coord_cartesian(xlim=c(20,340), ylim=c(-80,80)) +
   theme_nothing() +
   labs(title = 'Profile data')
 
-ggplot(data =  map_data("state")) + 
+ggplot(data =  map_data("world2")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
   geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red', size = 1) +
-  coord_cartesian(xlim=c(-105,-70), ylim=c(27,45)) + #shifting second map location to center on the Mississippi River Valley Region and show individual state borders
+             aes(x = `long (dec. deg)` +360, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red', size = 2) +
+  coord_cartesian(xlim=c(150,250), ylim=c(50,75)) + #shifting second map location to center on Alaska
   theme_nothing() +
   labs(title = 'Layer data')
 
   
-```
-
-```{r eval=FALSE}
-#this is useful to see for the analysis but we don't want it in the report
-dataset_layer %>%
-  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
-  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
-  bind_rows(
-    dataset_layer %>%
-      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
-      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
-  arrange(n) %>%
-  knitr::kable()
 ```
 
 ## Profile histograms
@@ -190,8 +196,6 @@ ggplot(dataset_layer %>%
 ## TODO
 
 - download and re-ingest from 10.3334/CDIAC/lue.ndp018
-- Check comparisons in dataset_layers, needs to confirm cleaning is correct
-- check longitude and bulk density numbers, some layers look high
 
 ## Citations
 
