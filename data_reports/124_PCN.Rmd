@@ -1,31 +1,49 @@
 # Permafrost Carbon Network RCN (layer)
 
+The Permafrost RCN  data set in ISCN3 contains 3696 layer-level rows and 222 profile-level information rows after cleaning for ISCN3.5.
+Rows were removed from ISCN3 because of gap-filling.
+Columns were removed from ISCN3 because they were entirely NA values, and the `elevation (m)` column in the profile-level data was innacurately filled with "10000."
+
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Permafrost.RCN"
 
+##### Extract the study information ####
 dataset_study <- citation_raw %>% 
-  filter(grepl(datasetName, dataset_name)) %>%
+  filter(grepl(datasetName, dataset_name)) %>% #won't run with next line, need this one instead
+#  filter(dataset_name == datasetName) %>%
   select(where(function(xx){!all(is.na(xx))})) %>%
   full_join(dataset_raw %>% 
-              filter(grepl(datasetName, dataset_name)) %>%
+             # filter(dataset_name == datasetName) %>%
+              filter(grepl(datasetName, dataset_name)) %>% #again, needs the grepl to run; seems to work for datasets that don't need filling to fix empty values in citations
               select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
+```
+
+```{r warning=FALSE, message=FALSE}
+##### Extract the profile information ####
 
 ##No profile level data here
 # #comparison for pre ISCN soc stock correction
-dataset_profile_temp <- profile_raw  %>%
-    filter(grepl(datasetName, dataset_name_sub)) %>%
-    standardCast()
+#dataset_profile_temp <- profile_raw  %>%
+#    filter(grepl(datasetName, dataset_name_sub)) %>%
+#    standardCast()
  
+#Besides removing elevation, this code seems to work with the other datasets, might be able to replace that of the template
  dataset_profile <- profile_raw  %>%
    filter(grepl(datasetName, dataset_name_sub)) %>%
    select(-dataset_name_soc) %>%
 #   filter(dataset_name_soc != 'ISCN No SOC stock computation') %>% #information is duplicated, just remove the ISCN rows
    select(-starts_with('soc')) %>%
+   select(-(`elevation (m)`)) %>% #removed column filled with same incorrect value
    standardCast() #comment out pipe here and take a look at the profile information to figure out how to remove ISCN soc computations
-#   #in this case we don't need to do anything
-
-#comparison before SOC correction
+#in this case we don't need to do anything
+```
+ 
+```{r warning = FALSE, message = FALSE}
+##### Extract the layer infromation ####
+ 
+#comment out for Permafrost
+#comparison before SOC correction 
 #dataset_layer_temp <- layer_raw %>%
 #  filter(dataset_name_sub == datasetName) %>%
 #  standardCast()
@@ -50,8 +68,6 @@ dataset_layer <- layer_raw %>%
   unique()
 ```
 
-The `r datasetName` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
-
 ```{r message=FALSE, warning=FALSE}
 knitr::kable(t(dataset_study))
 ```
@@ -72,6 +88,7 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 ## Location
 
 ```{r}
+#Need world map
 
  ggplot(data =  map_data("world")) + 
    geom_polygon(aes(x=long, y = lat, group = group), 
@@ -134,11 +151,11 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- pull citations for profile datasets
 - fill in the lat-long and other data from the profile level information
-- link up with the profile level PCN data as a single unit
-- figure out how to deal with citations for this odd duck of a dataset
+- contact Schuur and Harden, see if they published the unpublished data they cited
+- address elevation being incorrect
 
 ## Citations
 
 Please see @Harden2012 for additional details and if you are using ISCN3 please cite.
+Cite the individual author if using their data, in addition cite Harden if using that data as part of the broader Permafrost RCN dataset.

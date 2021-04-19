@@ -11,8 +11,8 @@ dataset_study <- citation_raw %>%
               filter(dataset_name == datasetName) %>%
               select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast() %>%
-  fill(everything(), .direction = "downup") %>%
-  mutate(`modification_date (YYYY-MM-DD)` = "2009-12-05") %>%
+  fill(everything(), .direction = "downup") %>%  #fills gaps in citation
+  mutate(`modification_date (YYYY-MM-DD)` = "2009-12-05") %>% #hardcode modification date to all match, removing excess column
   unique()
 ```
 
