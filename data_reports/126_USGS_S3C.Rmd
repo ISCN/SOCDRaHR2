@@ -1,8 +1,21 @@
 # USGS_S3C
 
+The USGS_S3C data set in ISCN3 contains 10434 layer-level rows and 1423 profile-level information rows after cleaning for ISCN3.5.
+Rows weren't removed from ISCN3 from the dataset_layer table because they were all unique values.
+Columns were removed from ISCN3 from the dataset_layer table because these were filled using the ISCN soc stock correction.
+Rows were removed from ISCN3 from the dataset_profile table because it removed duplicated entries.
+Columns were removed from ISCN3 from the dataset_profile table because these were filled using ISCN soc stock correction.
+Values in the country (country) column of both the dataset_layer and dataset_profile tables were reassigned to "United States" because this is the known location of the data points collected.
+Ggplot maps were modified to ensure datasets accurately focused on the Mississippi River Valley region of the United States.
+Bulk density values, pH values, and soil composition percentages were analyzed to determine the number of extraneous values.
+3 extraneous values were found in the ph_h2o column and 1 in bd_tot column of dataset_layer that will need to be revisited in ISCN 4.0 to fix formatting errors.
+Bounds were checked for caco3 column in dataset_layer, and deemed to be appropriate for the dataset.
+
+
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "USGS_S3C"
 
+##### Extract the study information ####
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>%
   select(where(function(xx){!(is.na(xx))})) %>%
@@ -10,32 +23,97 @@ dataset_study <- citation_raw %>%
               filter(dataset_name == datasetName) %>%
               select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
+```
+
+```{r warning=FALSE, message=FALSE}
+##### Extract the profile information ####
 
 #comparison for pre ISCN soc stock correction
-#dataset_profile_temp <- profile_raw  %>%
-#   filter(dataset_name_sub == datasetName) %>%
-#   standardCast()
-
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>%
   select(-dataset_name_soc) %>%
-  standardCast() #comment out pipe here and take a look at the profile information to figure out how to remove ISCN soc computations
-  #in this case we don't need to do anything
+  standardCast()
 
-#comparison before SOC correction
-#dataset_layer_temp <- layer_raw %>%
-#  filter(dataset_name_sub == datasetName) %>%
-#  standardCast()
+dataset_profile_temp <- profile_raw  %>%
+    filter(dataset_name_sub == datasetName) %>%
+    standardCast()
 
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) 
+
+if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
+  #reassign rows where the ISCN tried to fill in SOC values
+  dataset_profile <- dataset_profile %>%
+    group_by(dataset_name_soc) %>%
+    mutate(`country (country)` = 'United States', #hard-coding country as United States
+           `soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
+                                      rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
+           `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+           soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                      rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
+           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+                                rep(NA_character_, length(soc_method)), soc_method)) %>%
+    ungroup()
+  
+}
+
+#remove the soc dataset since we've taken care of the ISCN notation
+dataset_profile <- select(dataset_profile, -dataset_name_soc) 
+
+if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
+  #if the rows are duplicated then fill in missing values by group
+  dataset_profile <- dataset_profile %>%
+    group_by(dataset_name_sub, site_name, profile_name) %>%
+    mutate_at(vars(-group_cols()), 
+              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+    ungroup() %>%
+    unique() #collapase rows that are non-unique
+}
+
+dataset_profile <- standardCast(dataset_profile)
+```
+
+```{r warning = FALSE, message = FALSE}
+##### Extract the layer infromation ####
+
+dataset_layer_org <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast()
+  
 dataset_layer <- layer_raw %>%
-  filter(dataset_name_sub == datasetName)  %>%
-  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
-  #mutate_at(vars(-group_cols(), -'dataset_name_soc'), 
-  #          function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the 
-  #filter(dataset_name_soc == dataset_name_sub) %>% #only take the soc values provided by the submitter
-  select(-starts_with('soc')) %>% # all SOC columns are ISCN calculated regardless of dataset_name_soc apparently
-  select(-dataset_name_soc) %>%
-  standardCast() #we don't care about the flag any more
+  filter(dataset_name_sub == datasetName) 
+
+if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
+  #reassign rows where the ISCN tried to fill in SOC values
+  dataset_layer <- dataset_layer %>%
+    group_by(dataset_name_soc) %>%
+    mutate(`country (country)` = 'United States', #hard-coding country as United States
+          `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+                                rep(NA_character_, length(soc_method)), soc_method)) %>%
+    ungroup()
+  
+}
+
+dataset_layer <- select(dataset_layer, -dataset_name_soc) 
+
+if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_name)$n > 1)){
+  #if the rows are duplicated then fill in missing values by group
+  dataset_layer <- dataset_layer %>%
+    group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+    mutate_at(vars(-group_cols()), 
+              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+    ungroup() %>%
+    unique() #collapse rows that are non-unique
+}
+
+dataset_layer <- standardCast(dataset_layer)
 
 ```
 
@@ -57,7 +135,55 @@ And the following factors in the layers:
 ```{r}
 knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 ```
+Generating summaries of column values to find extraneous values:
 
+```{r}
+##determining extraneous values in column
+summary(dataset_layer$ph_h2o) #returns quartiles in data to see if any are outside of desired range
+sum(dataset_layer$ph_h2o >14.0, na.rm = TRUE) #returns number of values greater than acceptable pH values
+```
+
+```{r}
+###determining if there are extraneous values in column
+summary(dataset_layer$`clay_tot_psa (percent)`) #shows max and min values for column
+```
+
+```{r}
+###determining if there are extraneous values in column
+summary(dataset_layer$`sand_tot_psa (percent)`) #shows max and min values for column
+```
+
+```{r}
+###determining if there are extraneous values in column
+summary(dataset_layer$`silt_tot_psa (percent)`) #shows max and min values for column
+```
+
+```{r}
+###determining if there are extraneous values in column
+summary(dataset_layer$`bd_tot (g cm-3)`) #shows max and min values for column
+sum(dataset_layer$`bd_tot (g cm-3)` >3, na.rm = TRUE) #returns number of values greater than acceptable bulk density range
+```
+
+```{r}
+###determining if there are extraneous values in column
+summary(dataset_layer$`bd_other (g cm-3)`) #shows max and min values for column
+```
+
+```{r}
+##determining bounds of caco3 percent
+summary(dataset_layer$`caco3 (percent)`) #shows max and minimum values for column
+```
+
+## Running Summaries to Make Sure Only Duplicates Were Removed
+
+```{r}
+length(summary(as.factor(as.character(dataset_profile_temp$profile_name)), maxsum = 22000))
+#To guarantee that only duplicates were removed, the value of unique dataset_profile_org$profile_name should be the same amount of objects as dataset_profile
+#4357 = 4357
+length(summary(as.factor(as.character(dataset_layer_org$layer_name)), maxsum = 22000))
+#To guarantee that only duplicates were removed, the value of unique dataset_layer_org$layer_name should be the same amount of objects as dataset_layer
+#21736 != 21739
+```
 
 ## Location
 
@@ -73,29 +199,16 @@ ggplot(data =  map_data("usa")) +
   theme_nothing() +
   labs(title = 'Profile data')
 
-ggplot(data =  map_data("usa")) + 
+ggplot(data =  map_data("state")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
   geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
+             shape = 'x', color = 'red', size = 1) +
+  coord_cartesian(xlim=c(-105,-70), ylim=c(27,45)) + #shifting second map location to center on the Mississippi River Valley Region and show individual state borders
   theme_nothing() +
   labs(title = 'Layer data')
 
-```
-
-```{r eval=FALSE}
-#this is useful to see for the analysis but we don't want it in the report
-dataset_layer %>%
-  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
-  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
-  bind_rows(
-    dataset_layer %>%
-      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
-      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
-  arrange(n) %>%
-  knitr::kable()
 ```
 
 ## Profile histograms
@@ -125,9 +238,7 @@ ggplot(dataset_layer %>%
 ## TODO
 
 - download and re-ingest from @Buell2004
-- Double check profile soc calculations, do we just remove all the SOC columns?
-- Fix problematic country ids
-- Clean up pH values, check clay-sand-silt percent, clean up bulk density total, check bounds for caco3 percent
+- Clean up pH values (3 extraneous), clean up bulk density total (1 extraneous)
 
 ## Citations
 
