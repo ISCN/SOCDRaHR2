@@ -17,6 +17,7 @@ data_report number | dataset_name | citation
 112 | `USGS Harden Yazoo` | @Harden1999; @Huntington1998
 114 | `Kane` |  @Kane2004; @Kane2005; @Kane2009; @Valentine2004
 115 | `Bonanza LTER` | @Cleve1993; @Yarie2013
+116 | `Jorgensen_YKDE` | @Jorsenson2000
 117 | `UMBS_FASET` | unpublished
 119 | `Oak Ridge National Lab TDE`| @Froberg2008
 120 | `USGS Harden` | @Harden2008a @ODonnell2011 @Manies204 @Harden2008b @Harden2006 @Neff2005
