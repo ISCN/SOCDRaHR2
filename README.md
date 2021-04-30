@@ -1,12 +1,12 @@
 # Purpose
 
-This is an R package with untility functions to assist in harmonizing digitial soil repositories.
-The purpose of the Soil Organic Carbon Data Rescue and Harmonization Repository (SOC-DRaHR) is to collect haromonization scripts for data sets related to soil carbon to enable scientific research.
-This project identifies soil carbon datasets that are publicly avaiable, provides data harmonization scripts to integrate those data sets, and provides output scripts for a harmonized data product.
+This is an R package with utility functions to assist in harmonizing digital soil repositories.
+The purpose of the Soil Organic Carbon Data Rescue and Harmonization Repository (SOC-DRaHR) is to collect harmonization scripts for data sets related to soil carbon to enable scientific research.
+This project identifies soil carbon datasets that are publicly available, provides data harmonization scripts to integrate those data sets, and provides output scripts for a harmonized data product.
 Data can come from field surveys, field manipulation studies, and laboratory experiments.
 
 This project is not a _data_ repository or archive but instead a code repository.
-End users are responsible for complying with ALL data use policies of the orginal data providers, please check with the orginal archives and reposities to ensure you are complying with use policies.
+End users are responsible for complying with ALL data use policies of the orginal data providers, please check with the orginal archives and repositories to ensure you are complying with use policies.
 
 # Project links
 
@@ -25,6 +25,7 @@ install_github("ISCN/SOCDRaHR2")
 library(SOCDRaH2)
 ISCN3 <- ISCN3(dataDir='YourDataDir')
 ```
+
 
 # How to contribute
 Please see the [CONTRIBUTING](CONTRIBUTING.md) document for more details on how to contribute, including how to *identify* datasets, contribute to the *code*, and *everything else* that is needed to run an open source community project.
