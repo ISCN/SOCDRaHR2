@@ -1,0 +1,373 @@
+data_table,data_column,attributeDefinition,unit
+site,site_name,Site Name,NA
+site,site_note,Site Notes,NA
+site,country,Country,NA
+site,province,Province,NA
+site,state,State,(us_states)
+site,county,County,NA
+site,lat,Latitude,dec. deg
+site,long,Longitude,dec. deg
+site,datum,Latitude/Longitude Datum,(datum)
+site,location_acc,Location Accuracy,m
+site,elevation,Elevation,m
+site,vegclass_nat,US National Vegetation Classification Standard,NA
+site,vegclass,Vegetation Classification Code,NA
+site,vegclass_local,Local Vegetation Classification Code,NA
+site,vegclass_local_type,Local Vegetation Classification Type,NA
+site,veg_note,Additional Vegetation Data Notes,NA
+site,landscape,Landscape,(landscape)
+site,landform,Landform,(landform)
+site,2d_position,2D Position,(2d_position)
+site,landform_note,Landform Notes,NA
+site,parent,Parent Material,NA
+site,aspect_deg,Site Aspect,degree
+site,aspect_cl,Site Aspect Class,(direction)
+site,slope,Slope,%
+site,stand_age,Maximum Stand Age,years
+site,stand_maturity,Stand Maturity,(stand_maturity)
+site,successional_status,Successional Status,NA
+site,drainagecl,Drainage Class,(drainage)
+site,depth_water,Depth to Water Table,cm
+site,thaw_depth_site,Thaw Depth of the Site,cm
+site,bedrock_depth,Depth to Bedrock,cm
+site,climate_station,Meterological Station,NA
+site,ffdays,Frost Free Days,days
+site,flood_freq,Flooding Frequency,(flood_freq)
+site,geo_form,Geologic Formation,NA
+site,map,Mean Annual Precipitation,mm
+site,mat,Mean Annual Temperature,°C
+site,mast,Mean Annual Soil Temperature,°C
+site,pond_freq,Ponding Frequency,(pond_freq)
+site,runoff,Local Runoff Class,(runoff)
+site,site_perm,Site Permeability,(site_perm)
+site,water_table_duration,Wet Soil Moisture Duration,days
+site,cflux_note,C Flux Notes,NA
+site,climate_note,Climate Notes,NA
+site,eco_note,Ecoregion Note,NA
+site,photo_note,Photo Notes,NA
+site,soiltemp_note,Soil Temperature Notes,NA
+site,add_note,Additional Data Note,NA
+site,soc,Site Calculated Soil Organic Carbon Stock,g cm-2
+site,soc_type,Site Calculated Soil Organic Carbon Stock Type,(ccon_type)
+site,soc_pcount,Site Calculated Soil Organic Carbon Stock Profile Count,NA
+site,soc_depth,Site Calculated Soil Organic Carbon Stock Depth,cm
+site,soc_sigma,Site Calculated Soil Organic Carbon Stock Standard Deviation,g cm-2
+site,soc_method,Site Calculated Soil Organic Carbon Stock Method,NA
+fraction,site_name,Site Name,NA
+fraction,cluster_name,Cluster Name,NA
+fraction,profile_name,Profile/Plot Name,NA
+fraction,layer_name,Layer Name,NA
+fraction,fraction_name,Fraction Sample Name,NA
+fraction,fraction_number,Laboratory Fraction Number,NA
+fraction,labeled_addition,Labeled Addition,(label_add)
+fraction,fraction_scheme,Fractionation Scheme,(fract_scheme)
+fraction,fraction_property,Fraction Property,NA
+fraction,fraction_scheme_units,Fractionation Scheme Units,NA
+fraction,fraction_type,Fraction Type,NA
+fraction,fraction_agent,Fractionation Agent,NA
+fraction,fraction_note,Fraction Notes,NA
+fraction,c_method,Fraction Carbon Analysis Method,NA
+fraction,fraction_c_perc,Fraction proportion of sample carbon,%
+fraction,fraction_mass_perc,Fraction proportion of sample mass,%
+fraction,c_tot,Fraction Total Carbon,%
+fraction,oc,Fraction Organic Carbon,%
+fraction,n_tot,Fraction Total Nitrogen,%
+fraction,c_to_n,Fraction C:N,mass %
+fraction,loi,Fraction Loss on Ignition,%
+fraction,15n,Fraction δ15N,‰
+fraction,13c,Fraction δ13C,‰
+fraction,rc_lab,Radiocarbon Laboratory ID,(rc_lab)
+fraction,rc_lab_number,Radiocarbon Laboratory Sample Number,NA
+fraction,rc_year,Radiocarbon Analysis Year,YYYY
+fraction,14c,Fraction Δ14C,‰
+fraction,14c_sigma,Fraction Δ14C Standard Deviation,‰
+fraction,14c_age,Fraction Uncalibrated Radiocarbon Age,BP
+fraction,14c_age_sigma,Fraction Uncalibrated Radiocarbon Age Standard Deviation,BP
+fraction,fraction_modern,Fraction Fraction Modern,NA
+fraction,fraction_modern_sigma,Fraction Fraction Modern Standard Deviation,NA
+cluster,site_name,Site Name,NA
+cluster,cluster_name,Cluster Name,NA
+cluster,cluster_note,Cluster Notes,NA
+cluster,soc,Cluster Calculated Soil Organic Carbon Stock,g cm-2
+cluster,soc_type,Cluster Calculated Soil Organic Carbon Stock Type,(ccon_type)
+cluster,soc_pcount,Cluster Calculated Soil Organic Carbon Stock Profile Count,NA
+cluster,soc_depth,Cluster Calculated Soil Organic Carbon Stock Depth,cm
+cluster,soc_sigma,Cluster Calculated Soil Organic Carbon Stock Standard Deviation,g cm-2
+cluster,soc_method,Cluster Calculated Soil Organic Carbon Stock Method,NA
+profile,site_name,Site Name,NA
+profile,cluster_name,Cluster Name,NA
+profile,profile_name,Profile/Plot Name,NA
+profile,profile_note,Profile Notes,NA
+profile,layer_method,Layer Sampling Method,NA
+profile,profile_method,Profile Sampling Method,NA
+profile,observation_date,Observation Date,YYYY-MM-DD or MM/DD/YYYY
+profile,observation_date_acc,Observation Date Accuracy,(date_qual)
+profile,transect_flag,Part of a Transect Flag,(yes_blank)
+profile,surface_veg,Surface Vegetation,NA
+profile,soil_taxon,Soil Taxonomy,NA
+profile,soil_series,Soil Series,NA
+profile,add_taxon_flag,Complete Taxonomy Flag,(yes_blank)
+profile,thaw_depth_profile,Thaw Depth of the Profile,cm
+profile,sampler_names,Sampler Names,NA
+profile,soc,Profile Calculated Soil Organic Carbon Stock,g cm-2
+profile,soc_type,Profile Calculated Soil Organic Carbon Stock Type,(ccon_type)
+profile,soc_lcount,Profile Calculated Soil Organic Carbon Stock Layer Count,NA
+profile,soc_depth,Profile Calculated Soil Organic Carbon Stock Depth,cm
+profile,soc_sigma,Profile Calculated Soil Organic Carbon Stock Standard Deviation,g cm-2
+profile,soc_method,Profile Calculated Soil Organic Carbon Stock Method,NA
+layer,site_name,Site Name,NA
+layer,cluster_name,Cluster Name,NA
+layer,profile_name,Profile/Plot Name,NA
+layer,layer_name,Layer Name,NA
+layer,layer_number,Laboratory Layer Number,NA
+layer,labeled_addition,Labeled Addition,(label_add)
+layer,layer_top,Layer Top,cm
+layer,layer_bot,Layer Bottom,cm
+layer,hzn_desgn,Horizon Designation,NA
+layer,hzn_desgn_other,Horizon Designation Other,NA
+layer,hzn_desgn_other_note,Horizon Designation Other Note,NA
+layer,layer_note,Soil Layer Notes,NA
+layer,c_method,Bulk Layer Carbon Analysis Method,NA
+layer,color,Moist Munsell Color,NA
+layer,burn_ev,Evidence of Burning,(burn)
+layer,bd_method,Bulk Density Method,NA
+layer,bd_samp,"Bulk Density, Coarse Fragments Removed",g cm-3
+layer,bd_tot,Bulk Density With Coarse Fragments,g cm-3
+layer,bd_whole,Bulk Density Minus Estimated Coarse Fragments,g cm-3
+layer,bd_other,Bulk Density Other,g cm-3
+layer,ph_method,pH Method,NA
+layer,ph_cacl,Soil pH CaCl2,NA
+layer,ph_h2o,Soil pH 1:1,NA
+layer,ph_other,Soil pH Other,NA
+layer,caco3,CaCO3,%
+layer,sand_tot_psa,Percent Sand,%
+layer,silt_tot_psa,Percent Silt,%
+layer,clay_tot_psa,Percent Clay,%
+layer,wpg2_method,Coarse Fragments Method,NA
+layer,wpg2,Coarse Fragments,%
+layer,cat_exch,Cation Exchange Capacity,cmol H+ kg-1
+layer,gwc,Gravimentric % Moisture,%
+layer,vwc,Volumetric % Moisture,%
+layer,soc,Bulk Layer Calculated Soil Organic Carbon Stock,g cm-2
+layer,soc_type,Bulk Layer Calculated Soil Organic Carbon Stock Type,(ccon_type)
+layer,soc_sigma,Bulk Layer Calculated Soil Organic Carbon Stock Standard Deviation,g cm-2
+layer,soc_method,Bulk Layer Calculated Soil Organic Carbon Stock Method,NA
+layer,c_tot,Bulk Layer Total Carbon,%
+layer,oc,Bulk Layer Organic Carbon,%
+layer,n_tot,Bulk Layer Total Nitrogen,%
+layer,c_to_n,Bulk Layer C:N,mass %
+layer,loi,Bulk Layer Loss on Ignition,%
+layer,root_quant_size,Root Quantity and Size,NA
+layer,root_weight,<2mm Root Mass,g
+layer,15n,Bulk Layer δ15N,‰
+layer,13c,Bulk Layer δ13C,‰
+layer,rc_lab,Radiocarbon Laboratory ID,(rc_lab)
+layer,rc_lab_number,Radiocarbon Laboratory Sample Number,NA
+layer,rc_year,Radiocarbon Analysis Year,YYYY
+layer,14c,Bulk Layer Δ14C,‰
+layer,14c_sigma,Bulk Layer Δ14C Standard Deviation,‰
+layer,14c_age,Bulk Layer Uncalibrated Radiocarbon Age,BP
+layer,14c_age_sigma,Bulk Layer Uncalibrated Radiocarbon Age Standard Deviation,BP
+layer,fraction_modern,Bulk Layer Fraction Modern,NA
+layer,fraction_modern_sigma,Bulk Layer Fraction Modern Standard Deviation,NA
+layer,textureClass,Texture Class,NA
+gas,site_name,Site Name,NA
+gas,cluster_name,Cluster Name,NA
+gas,profile_name,Profile/Plot Name,NA
+gas,layer_name,Layer Name,NA
+gas,gas_name,Gas Sample Name,NA
+gas,gas_number,Laboratory Gas Sample Number,NA
+gas,labeled_addition,Labeled Addition,(label_add)
+gas,gas_type,Gas Type,(gas_type)
+gas,gas_note,Gas Sample Notes,NA
+gas,gas_time_series,Gas Time Series Name,NA
+gas,c_method,Gas Carbon Analysis Method,NA
+gas,collection_method,Gas Sample Collection Method,(core_pit)
+gas,collection_loc,Field Vs. Incubation,NA
+gas,15n,Gas δ15N,‰
+gas,rc_lab,Radiocarbon Laboratory ID,(rc_lab)
+gas,rc_lab_number,Radiocarbon Laboratory Sample Number,NA
+gas,rc_year,Radiocarbon Analysis Year,YYYY
+gas,c_conc_CO2,CO2 Concentration,ppm
+gas,13c_CO2,Gas δ13C (C02),‰
+gas,14c_CO2,Gas Δ14C (C02),‰
+gas,14c_CO2_sigma,Gas Δ14C Standard Deviation (CO2),‰
+gas,14c_age_CO2,Gas Uncalibrated Radiocarbon Age (CO2),NA
+gas,14c_age_CO2_sigma,Gas Uncalibrated Radiocarbon Age Standard Deviation (CO2),NA
+gas,fraction_modern_CO2,Gas Fraction Modern (CO2),NA
+gas,fraction_modern_CO2_sigma,Gas Fraction Modern Standard Deviation (CO2),NA
+gas,c_conc_CH4,CH4 Concentration,ppm
+gas,13c_CH4,Gas δ13C (CH4),‰
+gas,14c_CH4,Gas Δ14C (CH4),‰
+gas,14c_CH4_sigma,Gas Δ14C Standard Deviation (CH4),‰
+gas,14c_age_CH4,Gas Uncalibrated Radiocarbon Age (CH4),NA
+gas,14c_age_CH4_sigma,Gas Uncalibrated Radiocarbon Age Standard Deviation (CH4),NA
+gas,fraction_modern_CH4,Gas Fraction Modern (CH4),NA
+gas,fraction_modern_CH4_sigma,Gas Fraction Modern Standard Deviation (CH4),NA
+other,site_name,Site Name,NA
+other,cluster_name,Cluster Name,NA
+other,profile_name,Profile/Plot Name,NA
+other,layer_name,Layer Name,NA
+other,other_name,Other Sample Name,NA
+other,other_number,Laboratory Other Sample Number,NA
+other,labeled_addition,Labeled Addition,(label_add)
+other,other_type,Other Sample Type,(other_type)
+other,other_note,Other Sample Type Notes,NA
+other,c_method,Other Sample Carbon Analysis Method,NA
+other,collection_method,Other Sample Collection Method,(core_pit)
+other,processing_method,Other Sample Processing Method,NA
+other,c_tot,Other Sample Total Carbon,%
+other,oc,Other Sample Organic Carbon,%
+other,n_tot,Other Sample Total Nitrogen,%
+other,c_to_n,Other Sample C:N,mass %
+other,plant_species,Plant Species,NA
+other,root_live_flag,Roots Live/Dead,NA
+other,root_quant_size,Root Quantity and Size,NA
+other,compound_formula,Compound Chemical Formula,NA
+other,compound,Compound Name,NA
+other,15n,Other Sample δ15N,‰
+other,13c,Other Sample δ13C,‰
+other,rc_lab,Radiocarbon Laboratory ID,(rc_lab)
+other,rc_lab_number,Radiocarbon Laboratory Sample Number,NA
+other,rc_year,Radiocarbon Analysis Year,YYYY
+other,14c,Other Sample Δ14C,‰
+other,14c_sigma,Other Sample Δ14C Standard Deviation,‰
+other,14c_age,Other Sample Uncalibrated Radiocarbon Age,BP
+other,14c_age_sigma,Other Sample Uncalibrated Radiocarbon Age Standard Deviation,BP
+other,fraction_modern,Other Sample Fraction Modern,NA
+other,fraction_modern_sigma,Other Sample Fraction Modern Standard Deviation,NA
+disturbance,site_name,Site Name,NA
+disturbance,dist_clearcut_date,Forest clearcutting date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_clearcut_removal_type,Clearcut residue removal type,(dist_residue)
+disturbance,dist_clearcut_removal_perc,Clearcut residue percent removed,%
+disturbance,dist_clearcut_date_qual,Forest clearcutting date qualifier,(date_qual)
+disturbance,dist_clearcut_date_note,Forest clearcutting date comments,NA
+disturbance,dist_crop_residue_date,Crop residue management other than at harvest date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_crop_residue_type,Crop residue removal type,(dist_residue)
+disturbance,dist_crop_residue_perc,Crop residue percent remaining on the field,%
+disturbance,dist_crop_residue_date_qual,Crop residue management other than at harvest date qualifier,(date_qual)
+disturbance,dist_crop_residue_date_note,Crop residue management other than at harvest date comments,NA
+disturbance,dist_fire_date,Fire other than wildfire date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,F,Fire severity,(dist_fire)
+disturbance,dist_fire_date_qual,Fire other than wildfire date qualifier,(date_qual)
+disturbance,dist_fire_date_note,Fire other than wildfire date comments,NA
+disturbance,dist_fwd_removal_date,Fallen wood removal other than by underburning date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_fwd_removal_perc,Fallen wood removal percent removed,%
+disturbance,dist_fwd_removal_date_qual,Fallen wood removal other than by underburning date qualifier,(date_qual)
+disturbance,dist_fwd_removal_date_note,Fallen wood removal other than by underburning date comments,NA
+disturbance,dist_general_date,General disturbance date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_general_date_qual,General disturbance date qualifier,(date_qual)
+disturbance,dist_general_date_note,General disturbance date comments,NA
+disturbance,dist_grazed_date,Monthly grazing date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_grazed_spp,Grazing animal type,NA
+disturbance,dist_grazed_stocking,Stocking rate of grazing animals,NA
+disturbance,dist_grazed_live_weight,Estimated live weight of grazing animals,NA
+disturbance,dist_grazed_onplot,Days per month grazing animals on the plot,NA
+disturbance,dist_grazed_daynight,Day/night grazing animal management,NA
+disturbance,dist_grazed_date_qual,Monthly grazing date qualifier,(date_qual)
+disturbance,dist_grazed_date_note,Monthly grazing date comments,NA
+disturbance,dist_harvest_date,Crop harvest date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_harvest_residue_type,Harvest residue removal type,(dist_residue)
+disturbance,dist_harvest_residue_perc,Harvest residue percent remaining on the field,%
+disturbance,dist_harvest_spp,Harvested species,NA
+disturbance,dist_harvest_date_qual,Crop harvest date qualifier,(date_qual)
+disturbance,dist_harvest_date_note,Crop harvest date comments,NA
+disturbance,dist_herbicide_date,Application of herbicide date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_herbicide_type,Herbicide type,NA
+disturbance,dist_herbicide_kgha,Applied herbicide amount,Kg ha-1
+disturbance,dist_herbicide_date_qual,Application of herbicide date qualifier,(date_qual)
+disturbance,dist_herbicide_date_note,Application of herbicide date comments,NA
+disturbance,dist_insect_and_pathogen_date,Insects and pathogens date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_insect_and_pathogen_date_qual,Insects and pathogens date qualifier,(date_qual)
+disturbance,dist_insect_and_pathogen_date_note,Insects and pathogens date comments,NA
+disturbance,dist_irrigation_date,Irrigation date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_irrigation_water,Amount of irrigation water applied during irrigation,mm
+disturbance,dist_irrigation_drain_depth,Irrigation drainage depth,m
+disturbance,dist_irrigation_date_qual,Irrigation date qualifier,(date_qual)
+disturbance,dist_irrigation_date_note,Irrigation date comments,NA
+disturbance,dist_liming_date,Application of lime date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_liming_kgha,Applied lime amount,Kg ha-1
+disturbance,dist_liming_date_qual,Application of lime date qualifier,(date_qual)
+disturbance,dist_liming_date_note,Application of lime date comments,NA
+disturbance,dist_m_fertilization_date,Mineral fertilization date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_m_fertilization_type,Type of mineral fertilizer,(dist_m_fert_type)
+disturbance,dist_m_fertilization_kgha,Amount of mineral fertilizer applied,Kg ha-1
+disturbance,dist_m_fertilization_form,"Chemical form of mineral N, P and K applied",(dist_m_fert_form)
+disturbance,dist_m_fertilization_method,Application methods for mineral fertilizer,(dist_m_fert_app)
+disturbance,dist_m_fertilization_date_qual,Mineral fertilization date qualifier,(date_qual)
+disturbance,dist_m_fertilization_date_note,Mineral fertilization date comments,NA
+disturbance,dist_natural_regeneration_date,Natural regeneration date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_natural_regeneration_type,Regeneration by planting or natural vegetation,(dist_regen)
+disturbance,dist_natural_regeneration_date_qual,Natural regeneration date qualifier,(date_qual)
+disturbance,dist_natural_regeneration_date_note,Natural regeneration date comments,NA
+disturbance,dist_o_fertilization_date,Organic fertilization date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_o_fertilization_type,Organic fertilizer type,NA
+disturbance,dist_o_fertilization_kgha,Applied organic fertilizer amount,Kg ha-1
+disturbance,dist_o_fertilization_c,Estimated total C content of the organic fertilizer,%
+disturbance,dist_o_fertilization_n,Estimated total N content of the organic fertilizer,%
+disturbance,dist_o_fertilization_method,Application methods for organic fertilizer,NA
+disturbance,dist_o_fertilization_date_qual,Organic fertilization date qualifier,(date_qual)
+disturbance,dist_o_fertilization_date_note,Organic fertilization date comments,NA
+disturbance,dist_pesticide_date,Application of pesticide or insecticide date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_pesticide_kgha,Applied pesticide amount,Kg ha-1
+disturbance,dist_pesticide_type,Pesticide type,NA
+disturbance,dist_pesticide_date_qual,Application of pesticide or insecticide date qualifier,(date_qual)
+disturbance,dist_pesticide_date_note,Application of pesticide or insecticide date comments,NA
+disturbance,dist_planting_date,Sowing or planting date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_planting_seed,Seeds per hectare planted or sowed,N ha-1
+disturbance,dist_planting_spp,Planted species,NA
+disturbance,dist_planting_date_qual,Sowing or planting date qualifier,(date_qual)
+disturbance,dist_planting_date_note,Sowing or planting date comments,NA
+disturbance,dist_storm_date,Severe storm date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_storm_date_qual,Severe storm date qualifier,(date_qual)
+disturbance,dist_storm_date_note,Severe storm date comments,NA
+disturbance,dist_thinning_date,Thinning other than clear cutting date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_thinning_removal_type,Thinning residue removal type,(dist_residue)
+disturbance,dist_thinning_perc,Thinning percent of thinning,%
+disturbance,dist_thinning_basal_area,Percent of basal area after thinning,NA
+disturbance,dist_thinning_date_qual,Thinning other than clear cutting date qualifier,(date_qual)
+disturbance,dist_thinning_date_note,Thinning other than clear cutting date comments,NA
+disturbance,dist_tillage_date,Tillage or site preparation date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_tillage_type,Tillage type,(dist_tillage)
+disturbance,dist_tillage_depth,Tillage depth,m
+disturbance,dist_tillage_date_qual,Tillage or site preparation date qualifier,(date_qual)
+disturbance,dist_tillage_date_note,Tillage or site preparation date comments,NA
+disturbance,dist_ungrazed_date,Site was not grazed date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_ungrazed_duration,Number of months after the disturbance date that no grazing occurred,NA
+disturbance,dist_ungrazed_date_qual,Site was not grazed date qualifier,(date_qual)
+disturbance,dist_ungrazed_date_note,Site was not grazed date comments,NA
+disturbance,dist_wildfire_date,Wildfire date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_wildfire_severity,Fire severity,(dist_fire)
+disturbance,dist_wildfire_date_qual,Wildfire date qualifier,(date_qual)
+disturbance,dist_wildfire_date_note,Wildfire date comments,NA
+disturbance,dist_underburn_date,Fallen wood removal by underburning date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_underburn_perc,Underburnning percent removed,%
+disturbance,dist_underburn_date_qual,Fallen wood removal by underburning date qualifier,(date_qual)
+disturbance,dist_underburn_date_note,Fallen wood removal by underburning date comments,NA
+disturbance,dist_windthrow_date,Wind throw date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_windthrow_perc,Wind throw percent removed,%
+disturbance,dist_windthrow_date_qual,Wind throw date qualifier,(date_qual)
+disturbance,dist_windthrow_date_note,Wind throw date comments,NA
+disturbance,dist_woody_encroachment_date,Woody encroachment date,YYYY-MM-DD or MM/DD/YYYY
+disturbance,dist_woody_encroachment_date_qual,Woody encroachment date qualifier,(date_qual)
+disturbance,dist_woody_encroachment_date_note,Woody encroachment date comments,NA
+metadata,curator_name,Curator Name,NA
+metadata,curator_organization,Curator Organization,NA
+metadata,curator_email,Curator Email,NA
+metadata,modification_date,Template Modification Date,YYYY-MM-DD or MM/DD/YYYY
+metadata,contact_name,Additional Contact Name,NA
+metadata,contact_email,Additional Contact Email,NA
+metadata,dataset_name,Dataset Name,NA
+metadata,dataset_description,Dataset Description,NA
+metadata,reference,Reference,NA
+metadata,citation,Citation text,NA
+metadata,citation_usage,Citation usage,NA
+metadata,acknowledgement,Acknowlegement text,NA
+metadata,acknowledgement_usage,Acknowlegement usage,NA
+metadata,c_est_method,Carbon Estimation Method,NA
+metadata,c_est_note,Carbon Estimation Note,NA
+metadata,lab_method,Lab Analysis Method,NA
+metadata,metadata_general,General Metadata,NA
+metadata,missdata_param,Parameters for Missing Data Equations,NA
+metadata,resample,Resample Metadata,NA
+metadata,funding_organization,Funding Organization(s),NA
