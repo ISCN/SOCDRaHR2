@@ -50,8 +50,8 @@ header | description
  `table_id` | the name of the data table
  `column_id`| the name of the column header OR `NA` if the information is in the `entry` column
  `variable` | a valid ISCN measurement name that the column is associated with (see more on variables below)
-`data_type` | what kind of is is either in the column OR encoded in the data_entry
-    `entry` | `NA` if this describes the values of a column OR the value of the data_type
+ `data_type` | what kind of is is either in the column OR encoded in the data_entry
+ `entry` | `NA` if this describes the values of a column OR the value of the data_type
 
 For example, in ISC3:
 
