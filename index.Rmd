@@ -30,7 +30,7 @@ library(mapdata)
 library(knitr)
 library(tidyr)
 
-data_dir <- 'ISCN3' #comment out and set to your directory to run this code
+data_dir <- '~/Documents/Datasets/ISCN' #comment out and set to your directory to run this code
 
 #data_dir <- 'ISCN3' #set to your directory to run this code
 
@@ -225,6 +225,3 @@ standardCast <- function(data, column_types = type_cols){
            select(-any_of(column_types$discard_cols)))
 }
 ```
-
-
-
