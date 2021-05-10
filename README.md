@@ -59,7 +59,7 @@ data_id  |  table_id | column_id | variable | data_type | entry
 ---------|---------|-----------|----------|-----------|------
   ISCN3  |   `NA`  | `NA`      |    `NA`  | download_url | `ftp:[...]xlsx`
   ISCN3  |  layer  | 13c (‰)   |  13c     | value_number | `NA`
-  ISCN3  |  layer  |   `NA`    |  13c      | unit      | permille
+  ISCN3  |  layer  |   `NA`    |  13c     | unit      | permille
 
 Note that this format is easy to derive from a wide table format
 
@@ -94,7 +94,8 @@ site|long|Longitude|dec. deg
 Data columns that are comparable with trivial conversions (generally unit conversion) share a `variable`.
 In some cases this requires unit conversions (eg grams to kilograms) but conversion factors should be coded as separate variables (eg loss on ignition times a conversion factor equals organic carbon fraction).
 
-We are currently developing a structure to add and revise the variable list.
+A current draft of the variable table is here `data/vocabularyList.csv`, it is under active development.
+
 
 # How to contribute
 
