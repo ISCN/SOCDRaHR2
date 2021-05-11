@@ -1,8 +1,8 @@
-ISCN3_1 <- function(){
+#ISCN3_1 <- function(){
   #ans <- data.frame()
   
   # TODO: specify package when calling function (example: select should be dplyr::select)
-  
+  # TODO: change modification dates
   
   #load in library
   library(data.table)
@@ -18,7 +18,7 @@ ISCN3_1 <- function(){
 
 
 
-  data_dir <- '~/Documents/Todd-Brown Lab/ISCN3/' #change to location of ISCN3
+  data_dir <- '../ISCN3' #change to location of ISCN3
   #ISCN3 <- SOCDRaH2::ISCN3(orginalFormat=TRUE)
   #citation_raw <- data.frame(ISCN3$citation)
   #dataset_raw <- data.frame(ISCN3$dataset)
@@ -162,15 +162,56 @@ ISCN3_1 <- function(){
     #            filter(dataset_name == datasetName) %>%
                 select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'),
                 by = c("dataset_name", "dataset_type (dataset_type)", "curator_name", "curator_organization", "curator_email", "modification_date (YYYY-MM-DD)"))%>%
+    standardCast()%>%
+    group_by(dataset_name) %>%
+    fill(-dataset_name, .direction = "updown") #replace missing values with known values based on dataset_name grouping
+ 
+  #taking profile and layer info
+  ##### Extract the profile information ####
+  
+  #comparison for pre ISCN soc stock correction
+  dataset_profile_org <- profile_raw  %>%
+    #filter(dataset_name_sub == datasetName) %>%
+    filter(!grepl("NRCS", dataset_name_sub)) %>%
     standardCast()
   
-  #filter appropriate columns for that dataset
-  #only include columns that aren't entirely NA
-  #compiling citation and dataset columns
-  #running standardCast()
-  #taking profile and layer info
-  #if rows contain "ISCN" in dataset_name_soc, filling set columns (`soc_depth (cm)`, `soc (g cm-2)`, soc_carbon_flag, soc_spatial_flag, soc_method) with NA, otherwise leaving value as is
-  
+#   dataset_profile <- profile_raw  %>%
+#     filter(dataset_name_sub == datasetName) 
+#   
+#   if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
+#     #reassign rows where the ISCN tried to fill in SOC values
+#     dataset_profile <- dataset_profile %>%
+#       group_by(dataset_name_soc) %>%
+#       mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
+#                                         rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
+#              `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+#                                       rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+#              soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+#                                        rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+#              soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
+#                                         rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
+#              soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+#                                   rep(NA_character_, length(soc_method)), soc_method)) %>%
+#       ungroup()
+#     
+#   }
+#   
+#   #remove the soc dataset since we've taken care of the ISCN notation
+#   dataset_profile <- select(dataset_profile, -dataset_name_soc)  
+#   
+#   if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
+#     #if the rows are duplicated then fill in missing values by group
+#     dataset_profile <- dataset_profile %>%
+#       group_by(dataset_name_sub, site_name, profile_name) %>%
+#       mutate_at(vars(-group_cols()), 
+#                 function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+#       ungroup() %>%
+#       unique() #collapase rows that are non-unique
+#   }
+#   
+#   dataset_profile <- standardCast(dataset_profile)
+#   #if rows contain "ISCN" in dataset_name_soc, filling set columns (`soc_depth (cm)`, `soc (g cm-2)`, soc_carbon_flag, soc_spatial_flag, soc_method) with NA, otherwise leaving value as is
+#   
   
   #put if statements to catch if it's a particular dataset/frame which will perform special functions to do what we need to
   
@@ -178,5 +219,5 @@ ISCN3_1 <- function(){
   
   
   
-  return(ans)
-}
+#  return(ans)
+#}
