@@ -3,6 +3,7 @@
   
   # TODO: specify package when calling function (example: select should be dplyr::select)
   # TODO: change modification dates
+  # TODO: Clean up thaw-depth profile to remove coercion NA
   
   #load in library
   library(data.table)
@@ -170,32 +171,30 @@
   ##### Extract the profile information ####
   
   #comparison for pre ISCN soc stock correction
-  dataset_profile_org <- profile_raw  %>%
+  dataset_profile <- profile_raw  #%>%
     #filter(dataset_name_sub == datasetName) %>%
-    filter(!grepl("NRCS", dataset_name_sub)) %>%
-    standardCast()
+    #filter(!grepl("NRCS", dataset_name_sub)) %>%
+    #standardCast()
+  dataset_profile[grepl('ISCN', profile_raw$dataset_name_soc), 
+              c("soc_depth (cm)", "soc (g cm-2)", "soc_carbon_flag", "soc_spatial_flag", "soc_method")] <- NA_character_
   
-#   dataset_profile <- profile_raw  %>%
-#     filter(dataset_name_sub == datasetName) 
-#   
-#   if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
-#     #reassign rows where the ISCN tried to fill in SOC values
-#     dataset_profile <- dataset_profile %>%
-#       group_by(dataset_name_soc) %>%
-#       mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
-#                                         rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
-#              `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
-#                                       rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
-#              soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
-#                                        rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
-#              soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
-#                                         rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
-#              soc_method = if_else(grepl('ISCN', dataset_name_soc), 
-#                                   rep(NA_character_, length(soc_method)), soc_method)) %>%
-#       ungroup()
-#     
-#   }
-#   
+  
+  
+  
+   dataset_profile <- profile_raw %>%
+       group_by(dataset_name_soc) %>%
+       mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
+                                         rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
+              `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                       rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+              soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                        rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+              soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                         rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
+              soc_method = if_else(grepl('ISCN', dataset_name_soc),                                    rep(NA_character_, length(soc_method)), soc_method)) %>%
+      ungroup()
+   
+# #   
 #   #remove the soc dataset since we've taken care of the ISCN notation
 #   dataset_profile <- select(dataset_profile, -dataset_name_soc)  
 #   
