@@ -19,7 +19,7 @@
 
 
 
-  data_dir <- '~/ISCN3' #change to location of ISCN3
+  data_dir <- 'ISCN3' #change to location of ISCN3
   #ISCN3 <- SOCDRaH2::ISCN3(orginalFormat=TRUE)
   #citation_raw <- data.frame(ISCN3$citation)
   #dataset_raw <- data.frame(ISCN3$dataset)
@@ -173,44 +173,57 @@
   #comparison for pre ISCN soc stock correction
   dataset_profile <- profile_raw  %>%
     #filter(dataset_name_sub == datasetName) %>%
-    #filter(!grepl("NRCS", dataset_name_sub)) %>%
+    filter(!grepl("NRCS", dataset_name_sub)) %>%
     standardCast()
-  dataset_profile[grepl('ISCN', profile_raw$dataset_name_soc), 
-              c("soc_depth (cm)", "soc (g cm-2)", "soc_carbon_flag", "soc_spatial_flag", "soc_method")] <- NA
+  dataset_profile[grepl('ISCN', dataset_profile$dataset_name_soc), 
+              c("soc_depth (cm)", "soc (g cm-2)", "soc_carbon_flag", "soc_spatial_flag", "soc_method")] <- NA   #if rows contain "ISCN" in dataset_name_soc, filling set columns (`soc_depth (cm)`, `soc (g cm-2)`, soc_carbon_flag, soc_spatial_flag, soc_method) with NA, otherwise leaving value as is
+  
+  #remove the soc dataset since we've taken care of the ISCN notation
+  dataset_profile <- select(dataset_profile, -dataset_name_soc)
+
+  if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
+    #if the rows are duplicated then fill in missing values by group
+    dataset_profile <- dataset_profile %>%
+      filter(!grepl("NRCS", dataset_name_sub)) %>%
+      group_by(dataset_name_sub, site_name, profile_name) %>%
+      mutate_at(vars(-group_cols()),
+                function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+      ungroup() %>%
+      unique() %>% #collapase rows that are non-unique
+      standardCast()
+  }
+
   
   
   
   
-   # dataset_profile <- profile_raw %>%
-   #     group_by(dataset_name_soc) %>%
-   #     mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
-   #                                       rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
-   #            `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
-   #                                     rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
-   #            soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
-   #                                      rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
-   #            soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
-   #                                       rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
-   #            soc_method = if_else(grepl('ISCN', dataset_name_soc),                                    rep(NA_character_, length(soc_method)), soc_method)) %>%
-   #    ungroup()
-   
-#    
-#   #remove the soc dataset since we've taken care of the ISCN notation
-#   dataset_profile <- select(dataset_profile, -dataset_name_soc)  
-#   
-#   if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
-#     #if the rows are duplicated then fill in missing values by group
-#     dataset_profile <- dataset_profile %>%
-#       group_by(dataset_name_sub, site_name, profile_name) %>%
-#       mutate_at(vars(-group_cols()), 
-#                 function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
-#       ungroup() %>%
-#       unique() #collapase rows that are non-unique
-#   }
-#   
-#   dataset_profile <- standardCast(dataset_profile)
-#   #if rows contain "ISCN" in dataset_name_soc, filling set columns (`soc_depth (cm)`, `soc (g cm-2)`, soc_carbon_flag, soc_spatial_flag, soc_method) with NA, otherwise leaving value as is
-#   
+  
+  ##### Extract the layer information ####
+  
+  #comparison for pre ISCN soc stock correction
+  dataset_layer <- layer_raw  %>%
+    #filter(dataset_name_sub == datasetName) %>%
+    filter(!grepl("NRCS", dataset_name_sub)) %>%
+    standardCast()
+  dataset_layer[grepl('ISCN', dataset_layer$dataset_name_soc), 
+                  c("soc (g cm-2)", "soc_carbon_flag", "soc_method")] <- NA   #if rows contain "ISCN" in dataset_name_soc, filling set columns (`soc (g cm-2)`, soc_carbon_flag, soc_method) with NA, otherwise leaving value as is
+  
+  #remove the soc dataset since we've taken care of the ISCN notation
+  dataset_layer <- select(dataset_layer, -dataset_name_soc)
+  
+  if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_name)$n > 1)){
+    #if the rows are duplicated then fill in missing values by group
+    dataset_layer <- dataset_layer %>%
+      group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+      mutate_at(vars(-group_cols()), 
+                function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+      ungroup() %>%
+      unique() %>% #collapase rows that are non-unique
+      standardCast()
+  }
+  
+
+  
   
   #put if statements to catch if it's a particular dataset/frame which will perform special functions to do what we need to
   
