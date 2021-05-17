@@ -20,6 +20,9 @@
 
 
   data_dir <- 'ISCN3' #change to location of ISCN3
+  #data_dir <- '~/Documents/Datasets/ISCN' #change to location of ISCN3
+  datasets_exclude <- c() #c('NRCS Sept/2014', 'NRCS 2014:2011 name aliasing')
+  verbose <- TRUE
   #ISCN3 <- SOCDRaH2::ISCN3(orginalFormat=TRUE)
   #citation_raw <- data.frame(ISCN3$citation)
   #dataset_raw <- data.frame(ISCN3$dataset)
@@ -49,7 +52,7 @@
                                   "p_other (specified by p_units)", 
                                   "base_sum (specified by cec_h_units)", "bs (percent)", "bs_sum (percent)",
                                   "h_ext (specified by metal_ext_units)", "zn_ext (specified by metal_ext_units)",
-                                  "cec_sum (specified by cec_h_units)", "ecec (specified by cec_h_units)", "cec_h_units (extract_units)", 
+                                  "cec_sum (specified by cec_h_units)", "ecec (specified by cec_h_units)",  
                                   "13c (‰)", "14c (‰)", '15n (‰)',
                                   "root_weight (g)", "14c_sigma (‰)", "14c_age (BP)", "14c_age_sigma (BP)", 
                                   "fraction_modern", "fraction_modern_sigma",
@@ -71,7 +74,7 @@
                                     'drainagecl (drainage)',
                                     'root_quant_size',
                                     "al_fe_units (extract_units)", "metal_ext_units (extract_units)", "p_units (extract_units)",
-                                    "bc_units (extract_units)", 
+                                    "bc_units (extract_units)", "cec_h_units (extract_units)",
                                     "bdNRCS_prep_code", "cNRCS_prep_code", 
                                     'dataset_type (dataset_type)'), 
                     date_cols = c("observation_date (YYYY-MM-DD)", 
@@ -172,26 +175,42 @@
   
   #comparison for pre ISCN soc stock correction
   dataset_profile <- profile_raw  %>%
-    #filter(dataset_name_sub == datasetName) %>%
-    filter(!grepl("NRCS", dataset_name_sub)) %>%
-    standardCast()
+    filter(!(dataset_name_sub %in% datasets_exclude)) #make smaller
+  
+  if(verbose){message('Removing ISCN gap-filled profile-level SOC...')}
   dataset_profile[grepl('ISCN', dataset_profile$dataset_name_soc), 
               c("soc_depth (cm)", "soc (g cm-2)", "soc_carbon_flag", "soc_spatial_flag", "soc_method")] <- NA   #if rows contain "ISCN" in dataset_name_soc, filling set columns (`soc_depth (cm)`, `soc (g cm-2)`, soc_carbon_flag, soc_spatial_flag, soc_method) with NA, otherwise leaving value as is
   
   #remove the soc dataset since we've taken care of the ISCN notation
-  dataset_profile <- select(dataset_profile, -dataset_name_soc)
+  dataset_profile <- dataset_profile %>%
+    select(-dataset_name_soc) 
+  if(verbose){message('done')}
+  
+  if(verbose){message('Make sure profiles fill in duplicate groups...')}
+  
+  dataset_profile <- dataset_profile %>%
+    group_by(dataset_name_sub, site_name, profile_name) %>%
+    fill(-group_vars(.), .direction = 'updown')
+  if(verbose){message('done')}
+  
+  if(verbose){message('Cast datatypes in profile-level...')}
+  dataset_profile <- dataset_profile %>%
+    ungroup() %>% #groups are not needed in casting and it runs faster ungrouped
+    standardCast()
+  if(verbose){message('done')}
 
-  if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
-    #if the rows are duplicated then fill in missing values by group
-    dataset_profile <- dataset_profile %>%
-      filter(!grepl("NRCS", dataset_name_sub)) %>%
-      group_by(dataset_name_sub, site_name, profile_name) %>%
-      mutate_at(vars(-group_cols()),
-                function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
-      ungroup() %>%
-      unique() %>% #collapase rows that are non-unique
-      standardCast()
-  }
+   #kept for legacy incase the above code doesn't work for one of the testcases
+  # if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
+  #   #if the rows are duplicated then fill in missing values by group
+  #   dataset_profile <- dataset_profile %>%
+  #     filter(!grepl("NRCS", dataset_name_sub)) %>%
+  #     group_by(dataset_name_sub, site_name, profile_name) %>%
+  #     mutate_at(vars(-group_cols()),
+  #               function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+  #     ungroup() %>%
+  #     unique() %>% #collapase rows that are non-unique
+  #     standardCast()
+  # }
 
   
   
@@ -201,35 +220,38 @@
   ##### Extract the layer information ####
   
   #comparison for pre ISCN soc stock correction
-  dataset_layer <- layer_raw  %>%
-    #filter(dataset_name_sub == datasetName) %>%
-    filter(!grepl("NRCS", dataset_name_sub)) %>%
-    standardCast()
+  dataset_layer <- layer_raw  
+  
+  if(verbose){message('Removing ISCN gap-filled layer-level SOC...')}
+  #Deal with ISCN gap-filled values
   dataset_layer[grepl('ISCN', dataset_layer$dataset_name_soc), 
                   c("soc (g cm-2)", "soc_carbon_flag", "soc_method")] <- NA   #if rows contain "ISCN" in dataset_name_soc, filling set columns (`soc (g cm-2)`, soc_carbon_flag, soc_method) with NA, otherwise leaving value as is
-  
-  #remove the soc dataset since we've taken care of the ISCN notation
-  dataset_layer <- select(dataset_layer, -dataset_name_soc)
-  
-  if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_name)$n > 1)){
-    #if the rows are duplicated then fill in missing values by group
-    dataset_layer <- dataset_layer %>%
-      group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
-      mutate_at(vars(-group_cols()), 
-                function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
-      ungroup() %>%
-      unique() %>% #collapase rows that are non-unique
-      standardCast()
-  }
-  
 
+  #remove the soc dataset since we've taken care of the ISCN notation
+  dataset_layer <- dataset_layer %>%
+    filter(!(dataset_name_sub %in% datasets_exclude)) %>% #make smaller
+    select(-dataset_name_soc) %>%
+    group_by(dataset_name_sub, site_name, profile_name, layer_name)
+  if(verbose){message('done.')}
   
+  if(verbose){message('Fill in missing values in repeat layer-level rows then remove duplicates...')}
+  temp <- dataset_layer %>%
+    filter(length(layer_name) > 1) %>%
+    tidyr::fill(-group_vars(.), .direction = 'updown') %>%
+    unique()
+  
+  dataset_layer <- dataset_layer %>%
+    filter(length(layer_name) == 1) %>%
+    bind_rows(temp)
+  if(verbose){message('done.')}
+  
+  if(verbose){message('Cast data types in layer-level...')}
+  dataset_layer <- dataset_layer %>%
+    ungroup() %>% #groups are not needed in casting and it runs faster ungrouped
+    standardCast()
+  if(verbose){message('done.')}
   
   #put if statements to catch if it's a particular dataset/frame which will perform special functions to do what we need to
-  
-  
-  
-  
   
 #  return(ans)
 #}
