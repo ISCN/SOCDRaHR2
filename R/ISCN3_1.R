@@ -1,36 +1,45 @@
-ISCN3_1 <- function(){
-  ans <- data.frame()
+#' Title
+#'
+#' @param data_dir 
+#' @param datasets_exclude 
+#' @param verbose 
+#'
+#' @return
+#' @export
+#' @importFrom dplyr select mutate group_by
+#' @import magrittr
+#' 
+ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
-  # TODO: specify package when calling function (example: select should be dplyr::select)
-          #don't forget mutate_at w/ dplyr
-          #read_delim
   # TODO: change modification dates
   # TODO: Clean up thaw-depth profile to remove coercion NA
+  # TODO: dummy checks of inputs after inputs
+  # TODO: call each functions in importFrom, with each library getting its own @ (line 9 format)
   
-  #load in library
-  library(data.table)
-  #library(SOCDRaH2)
-  library(tidyverse)
-  library(lubridate)
-  library(tibble)
-  library(ggmap)
-  library(maps)
-  library(mapdata)
-  library(knitr)
-  library(tidyr)
-  library(dplyr)
+  # #load in library
+  # library(data.table)
+  # #library(SOCDRaH2)
+  # library(tidyverse)
+  # library(lubridate)
+  # library(tibble)
+  # library(ggmap)
+  # library(maps)
+  # library(mapdata)
+  # library(knitr)
+  # library(tidyr)
+  # library(dplyr)
 
 
-  data_dir <- 'ISCN3' #change to location of ISCN3
-  #data_dir <- '~/Documents/Datasets/ISCN' #change to location of ISCN3
-  datasets_exclude <- c() #c('NRCS Sept/2014', 'NRCS 2014:2011 name aliasing')
-  verbose <- TRUE
-  #ISCN3 <- SOCDRaH2::ISCN3(orginalFormat=TRUE)
-  #citation_raw <- data.frame(ISCN3$citation)
-  #dataset_raw <- data.frame(ISCN3$dataset)
-  #profile_raw <- data.frame(ISCN3$profile)
-  #layer_raw <- data.frame(ISCN3$layer)
-  #rm(ISCN3)
+  # data_dir <- 'ISCN3' #change to location of ISCN3
+  # #data_dir <- '~/Documents/Datasets/ISCN' #change to location of ISCN3
+  # datasets_exclude <- c() #c('NRCS Sept/2014', 'NRCS 2014:2011 name aliasing')
+  # verbose <- TRUE
+  # #ISCN3 <- SOCDRaH2::ISCN3(orginalFormat=TRUE)
+  # #citation_raw <- data.frame(ISCN3$citation)
+  # #dataset_raw <- data.frame(ISCN3$dataset)
+  # #profile_raw <- data.frame(ISCN3$profile)
+  # #layer_raw <- data.frame(ISCN3$layer)
+  # #rm(ISCN3)
   
   
   type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
@@ -108,11 +117,11 @@ ISCN3_1 <- function(){
   
   
   #### Read in the data ####
-  citation_raw <- read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>% 
+  citation_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>% 
     #round all modification dates to their nearest day (ie whole number)
     dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
   
-  dataset_raw <- read_delim(file.path(data_dir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19)) %>% 
+  dataset_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19)) %>% 
     #round all modification dates to their nearest day (ie whole number)
     dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
   
@@ -138,10 +147,10 @@ ISCN3_1 <- function(){
   standardCast <- function(data, column_types = type_cols){
     return(data %>%
              dplyr::select(where(function(xx){!all(is.na(xx))})) %>%
-             mutate_at(dplyr::intersect(c(column_types$num_cols, column_types$date_cols),
+             dplyr::mutate_at(dplyr::intersect(c(column_types$num_cols, column_types$date_cols),
                                  names(.)), as.numeric) %>%
-             mutate_at(dplyr::intersect(column_types$factor_cols, names(.)), as.factor) %>%
-             mutate_at(dplyr::intersect(column_types$date_cols, names(.)), function(xx){
+             dplyr::mutate_at(dplyr::intersect(column_types$factor_cols, names(.)), as.factor) %>%
+             dplyr::mutate_at(dplyr::intersect(column_types$date_cols, names(.)), function(xx){
                ##Both conditions will be run but things throw warnings for the wrong conditional... supressing this function
                suppressWarnings(
                  ans <- case_when(is.na(xx) ~ NA_Date_,
@@ -170,7 +179,7 @@ ISCN3_1 <- function(){
                 by = c("dataset_name", "dataset_type (dataset_type)", "curator_name", "curator_organization", "curator_email", "modification_date (YYYY-MM-DD)"))%>%
     standardCast()%>%
     dplyr::group_by(dataset_name) %>%
-    fill(-dataset_name, .direction = "updown") #replace missing values with known values based on dataset_name grouping
+    tidyr::fill(-dataset_name, .direction = "updown") #replace missing values with known values based on dataset_name grouping
  
   #taking profile and layer info
   ##### Extract the profile information ####
@@ -241,7 +250,7 @@ ISCN3_1 <- function(){
   temp <- dataset_layer %>%
     dplyr::filter(length(layer_name) > 1) %>%
     tidyr::fill(-dplyr::group_vars(.), .direction = 'updown') %>%
-    unique()
+    data.table::unique()
   
   dataset_layer <- dataset_layer %>%
     dplyr::filter(length(layer_name) == 1) %>%
@@ -256,5 +265,8 @@ ISCN3_1 <- function(){
   
   #put if statements to catch if it's a particular dataset/frame which will perform special functions to do what we need to
   
-  return(ans)
+  
+  return(list(study = dataset_study, 
+              profile = dataset_profile,
+              layer = dataset_layer))
 }
