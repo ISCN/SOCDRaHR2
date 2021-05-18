@@ -15,7 +15,7 @@
   library(mapdata)
   library(knitr)
   library(tidyr)
-
+  library(dplyr)
 
 
   data_dir <- '../ISCN3' #change to location of ISCN3
@@ -104,11 +104,11 @@
   #### Read in the data ####
   citation_raw <- read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>% 
     #round all modification dates to their nearest day (ie whole number)
-    mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
+    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
   
   dataset_raw <- read_delim(file.path(data_dir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19)) %>% 
     #round all modification dates to their nearest day (ie whole number)
-    mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
+    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
   
   profile_raw <-  vroom::vroom(file.path(data_dir, 'ISCN3_profile.csv'), col_types = strrep('c', times = 44))
   
@@ -131,11 +131,11 @@
   #' @return a data frame that matches the `data` argument with the column types modified or dropped if specified as discarded or discarded because they started as being NA columns.
   standardCast <- function(data, column_types = type_cols){
     return(data %>%
-             select(where(function(xx){!all(is.na(xx))})) %>%
-             mutate_at(intersect(c(column_types$num_cols, column_types$date_cols),
+             dplyr::select(where(function(xx){!all(is.na(xx))})) %>%
+             mutate_at(dplyr::intersect(c(column_types$num_cols, column_types$date_cols),
                                  names(.)), as.numeric) %>%
-             mutate_at(intersect(column_types$factor_cols, names(.)), as.factor) %>%
-             mutate_at(intersect(column_types$date_cols, names(.)), function(xx){
+             mutate_at(dplyr::intersect(column_types$factor_cols, names(.)), as.factor) %>%
+             mutate_at(dplyr::intersect(column_types$date_cols, names(.)), function(xx){
                ##Both conditions will be run but things throw warnings for the wrong conditional... supressing this function
                suppressWarnings(
                  ans <- case_when(is.na(xx) ~ NA_Date_,
@@ -146,7 +146,7 @@
                )
                return(ans)
              }) %>%
-             select(-any_of(column_types$discard_cols)))
+             dplyr::select(-any_of(column_types$discard_cols)))
   }
   
   
@@ -157,13 +157,13 @@
   ##### Extract the study information ####
   dataset_study <- citation_raw %>% 
    # filter(dataset_name == datasetName) %>%
-    select(where(function(xx){!all(is.na(xx))})) %>%
-    full_join(dataset_raw %>% 
+    dplyr::select(where(function(xx){!all(is.na(xx))})) %>%
+    dplyr::full_join(dataset_raw %>% 
     #            filter(dataset_name == datasetName) %>%
-                select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'),
+                dplyr::select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'),
                 by = c("dataset_name", "dataset_type (dataset_type)", "curator_name", "curator_organization", "curator_email", "modification_date (YYYY-MM-DD)"))%>%
     standardCast()%>%
-    group_by(dataset_name) %>%
+    dplyr::group_by(dataset_name) %>%
     fill(-dataset_name, .direction = "updown") #replace missing values with known values based on dataset_name grouping
  
   #taking profile and layer info
@@ -172,7 +172,7 @@
   #comparison for pre ISCN soc stock correction
   dataset_profile_org <- profile_raw  %>%
     #filter(dataset_name_sub == datasetName) %>%
-    filter(!grepl("NRCS", dataset_name_sub)) %>%
+    dplyr::filter(!grepl("NRCS", dataset_name_sub)) %>%
     standardCast()
   
 #   dataset_profile <- profile_raw  %>%
