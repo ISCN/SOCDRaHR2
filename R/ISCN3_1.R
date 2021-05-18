@@ -1,7 +1,9 @@
-#ISCN3_1 <- function(){
-  #ans <- data.frame()
+ISCN3_1 <- function(){
+  ans <- data.frame()
   
   # TODO: specify package when calling function (example: select should be dplyr::select)
+          #don't forget mutate_at w/ dplyr
+          #read_delim
   # TODO: change modification dates
   
   #load in library
@@ -219,5 +221,5 @@
   
   
   
-#  return(ans)
-#}
+  return(ans)
+}
