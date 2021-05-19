@@ -1,4 +1,11 @@
-#' Title
+#' International Soil Carbon Network 3_1
+#' 
+#'This function first loads in the layer, profile, citation, and dataset tables from a pre-downloaded ISCN3 folder. It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values, and removing columns of all NA values with a function titled "standardCast()". For each dataset, it generates tables, maps, and histograms using this cleaned data. It then returns the reformatted data.
+#'
+#'
+#'##Need to determine where data comes from; probably these websites: (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* 
+#'
+#'
 #'
 #' @param data_dir 
 #' @param datasets_exclude 
@@ -12,6 +19,7 @@
 ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   # TODO: change modification dates
+  # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
   # TODO: dummy checks of inputs after inputs
   # TODO: call each functions in importFrom, with each library getting its own @ (line 9 format)
@@ -218,7 +226,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   #     filter(!grepl("NRCS", dataset_name_sub)) %>%
   #     group_by(dataset_name_sub, site_name, profile_name) %>%
   #     mutate_at(vars(-group_cols()),
-  #               function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+  #               function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't NA then populate the rest of the entry, this fills in the
   #     ungroup() %>%
   #     unique() %>% #collapse rows that are non-unique
   #     standardCast()
