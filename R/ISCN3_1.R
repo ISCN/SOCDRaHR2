@@ -21,8 +21,17 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: change modification dates
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
-  # TODO: dummy checks of inputs after inputs
+  # TODO: check the dummy checks of inputs after inputs
   # TODO: call each functions in importFrom, with each library getting its own @ (line 9 format)
+  
+  if(!is.character(data_dir))
+    stop("`data_dir` not set to character value")
+  if(!is.vector(datasets_exclude))
+      stop(("`dataset_exclude` is not set to vector data structure"))
+  if(!is.logical(verbose))
+      stop("`verbose` is not set to logical value")
+  
+  
   
   # #load in library
   # library(data.table)
