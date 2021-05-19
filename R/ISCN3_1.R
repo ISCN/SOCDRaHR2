@@ -13,7 +13,12 @@
 #'
 #' @return
 #' @export
-#' @importFrom dplyr select mutate group_by
+#' @importFrom data.table unique
+#' @importFrom dplyr bind_rows filter full_join group_by intersect mutate mutate_at select ungroup
+#' @importFrom lubridate as_date ymd
+#' @importFrom readr read_delim
+#' @importFrom tidyr fill
+#' @importFrom vroom vroom
 #' @import magrittr
 #' 
 ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
@@ -22,7 +27,6 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
   # TODO: dummy checks of inputs after inputs
-  # TODO: call each functions in importFrom, with each library getting its own @ (line 9 format)
   
   # #load in library
   # library(data.table)
