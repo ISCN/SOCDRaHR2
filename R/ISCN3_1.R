@@ -30,7 +30,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
       stop(("`dataset_exclude` is not set to vector data structure"))
   if(!is.logical(verbose))
       stop("`verbose` is not set to logical value")
-  
+      # verbose = FALSE
   
   
   # #load in library
