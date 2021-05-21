@@ -13,7 +13,6 @@
 #'
 #' @return
 #' @export
-#' @importFrom data.table unique
 #' @importFrom dplyr bind_rows filter full_join group_by intersect mutate mutate_at select ungroup
 #' @importFrom lubridate as_date ymd
 #' @importFrom readr read_delim
@@ -30,7 +29,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
 
   if(!is.character(data_dir))
     stop("`data_dir` not set to character value")
-  if(!is.vector(datasets_exclude))
+  if(!is.character(datasets_exclude) && !is.null(datasets_exclude))
       stop(("`dataset_exclude` is not set to vector data structure"))
   if(!is.logical(verbose))
       stop("`verbose` is not set to logical value")
@@ -271,7 +270,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   temp <- dataset_layer %>%
     dplyr::filter(length(layer_name) > 1) %>%
     tidyr::fill(-dplyr::group_vars(.), .direction = 'updown') %>%
-    data.table::unique()
+    unique()
   
   dataset_layer <- dataset_layer %>%
     dplyr::filter(length(layer_name) == 1) %>%
@@ -291,3 +290,5 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
               profile = dataset_profile,
               layer = dataset_layer))
 }
+
+
