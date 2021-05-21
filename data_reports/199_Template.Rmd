@@ -7,8 +7,22 @@ Values in columns were reassigned to XX because of reasons.
 
 
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "dataset Name" 
+library(data.table)
+#library(SOCDRaH2)
+library(tidyverse)
+library(lubridate)
+library(tibble)
+library(ggmap)
+library(maps)
+library(mapdata)
+library(knitr)
+library(tidyr)
 
+data_dir <- '~/Documents/Todd-Brown Lab/ISCN3'
+
+ISCN3 <- ISCN3_1(data_dir)
+
+```
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>%
