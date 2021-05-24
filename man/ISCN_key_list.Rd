@@ -4,12 +4,14 @@
 \name{ISCN_key_list}
 \alias{ISCN_key_list}
 \title{List of data model dictionaries}
-\format{list of data tables:
+\format{
+list of data tables:
 \describe{
   \item{afsda}{adfa}
   \item{adfas}{fdasasd}
   ...
-}}
+}
+}
 \usage{
 ISCN_key_list
 }
