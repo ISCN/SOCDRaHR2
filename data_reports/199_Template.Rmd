@@ -8,7 +8,7 @@ Values in columns were reassigned to XX because of reasons.
 
 ```{r warning=FALSE, message=FALSE}
 library(data.table)
-#library(SOCDRaH2)
+library(SOCDRaH2)
 library(tidyverse)
 library(lubridate)
 library(tibble)
@@ -18,9 +18,9 @@ library(mapdata)
 library(knitr)
 library(tidyr)
 
-data_dir <- '~/Documents/Todd-Brown Lab/ISCN3'
+data_dir <- '../ISCN3'
 
-ISCN3 <- ISCN3_1(data_dir)
+ISCN3 <- ISCN3_1(data_dir, datasets_exclude = c("128_WorldwideSCND.Rmd", "129_NRSC_Sept2014.Rmd"))
 
 ```
 
@@ -253,7 +253,7 @@ knitr::kable(t(dataset_study %>%
         filter(dataset_name == datasetName)), col.names = "" )
 
 ## Profile Table
-knitr::kable(summary(dataset_profile %>%
+knitr::kable(summary(ISCN3$profile %>%
         filter(dataset_name == datasetName) %>% 
         select_if(is.factor)))
 

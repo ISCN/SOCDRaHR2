@@ -1,11 +1,10 @@
 #' International Soil Carbon Network 3_1
 #' 
-#'First, download ISCN3 data and export files to csv format. This function first loads in the layer, profile, citation, and dataset tables from this pre-downloaded ISCN3 folder. It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values, and removing columns of all NA values with a function titled "standardCast()". For each dataset, it generates tables, maps, and histograms using this cleaned data. It then returns the reformatted data.
-#'
-#'
-#'##Need to determine where data comes from; probably these websites: (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* 
-#'
-#'
+#' First, download ISCN3 data and export files to csv format.
+#' This function first loads in the layer, profile, citation, and dataset tables from this pre-downloaded ISCN3 folder.
+#' It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values, and removing columns of all NA values.
+#' For each dataset, it generates tables, maps, and histograms using this cleaned data.
+#' It then returns the reformatted data.
 #'
 #' @param data_dir 
 #' @param datasets_exclude 
@@ -23,7 +22,7 @@
 ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   # TODO: change modification dates
-  # TODO: Specify in function description where ISCN data comes from
+  # TODO: Specify in function description where ISCN data comes from. Probably these websites: (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* 
   # TODO: Clean up thaw-depth profile to remove coercion NA
 
 
