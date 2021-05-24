@@ -1,6 +1,6 @@
 #' International Soil Carbon Network 3_1
 #' 
-#'This function first loads in the layer, profile, citation, and dataset tables from a pre-downloaded ISCN3 folder. It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values, and removing columns of all NA values with a function titled "standardCast()". For each dataset, it generates tables, maps, and histograms using this cleaned data. It then returns the reformatted data.
+#'First, download ISCN3 data and export files to csv format. This function first loads in the layer, profile, citation, and dataset tables from this pre-downloaded ISCN3 folder. It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values, and removing columns of all NA values with a function titled "standardCast()". For each dataset, it generates tables, maps, and histograms using this cleaned data. It then returns the reformatted data.
 #'
 #'
 #'##Need to determine where data comes from; probably these websites: (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* 
@@ -196,8 +196,8 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
     dplyr::full_join(dataset_raw %>% 
     #            filter(dataset_name == datasetName) %>%
                 dplyr::select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'),
-                by = c("dataset_name", "dataset_type (dataset_type)", "curator_name", "curator_organization", "curator_email", "modification_date (YYYY-MM-DD)"))%>%
-    standardCast()%>%
+                by = c("dataset_name", "dataset_type (dataset_type)", "curator_name", "curator_organization", "curator_email", "modification_date (YYYY-MM-DD)")) %>%
+    standardCast() %>%
     dplyr::group_by(dataset_name) %>%
     tidyr::fill(-dataset_name, .direction = "updown") #replace missing values with known values based on dataset_name grouping
  
