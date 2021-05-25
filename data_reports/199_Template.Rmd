@@ -20,7 +20,7 @@ library(tidyr)
 
 data_dir <- '../ISCN3'
 
-ISCN3 <- ISCN3_1(data_dir, datasets_exclude = c("128_WorldwideSCND.Rmd", "129_NRSC_Sept2014.Rmd"))
+ISCN3 <- ISCN3_1(data_dir)
 
 ```
 
@@ -249,7 +249,7 @@ ggplot(dataset_layer %>%
 datasetName <- 'Heckman/Swanston Biscuit Burn'
 
 ## Study Table
-knitr::kable(t(dataset_study %>%
+knitr::kable(t(ISCN3$study %>%
         filter(dataset_name == datasetName)), col.names = "" )
 
 ## Profile Table
@@ -258,7 +258,7 @@ knitr::kable(summary(ISCN3$profile %>%
         select_if(is.factor)))
 
 ## Layer Table
-knitr::kable(summary(dataset_layer %>%
+knitr::kable(summary(ISCN3$layer %>%
         filter(dataset_name == datasetName) %>% 
         select_if(is.factor)))
 
