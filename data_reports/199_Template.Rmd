@@ -1,9 +1,17 @@
-# dataset Name
+---
+title: "ISCN 3_1"
+author: "Dr. Katherine Todd-Brown, Julie Bielecki, Anne Davin, Rita Hippe, Urmi Thorat"
+date: "5/25/2021"
+output: html_document
+---
 
-The dataset Name data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
+# Introduction
+
+International Soil Carbon Network 3 (ISCN3) consists of serveral data sets. This R Markdown cleans and reorganizes ISCN3 datasets into a study level table, a profile level table, and a layer level table using the ISCN3_1 function. Additionally, maps for each dataset are produced within this R Markdown.
+
+The `study` tables describe information about each data contribution including any citations practices and contact information for the contributor.
+The `profile` table describes core summary information that is 2D resolved.
+The `layer` table, in contrasts, holds 3D resolved information.
 
 
 ```{r warning=FALSE, message=FALSE}
@@ -23,6 +31,9 @@ data_dir <- '~/Documents/Todd-Brown Lab/ISCN3'
 ISCN3 <- ISCN3_1(data_dir)
 
 ```
+
+#Old version of template 
+```{}
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
   filter(dataset_name == datasetName) %>%
@@ -31,9 +42,9 @@ dataset_study <- citation_raw %>%
               filter(dataset_name == datasetName) %>%
               select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
   standardCast()
-```
 
-```{r warning=FALSE, message=FALSE}
+
+{r warning=FALSE, message=FALSE}
 ##### Extract the profile information ####
 
 #comparison for pre ISCN soc stock correction
@@ -76,9 +87,7 @@ if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1))
 }
 
 dataset_profile <- standardCast(dataset_profile)
-```
 
-```{r warning = FALSE, message = FALSE}
 ##### Extract the layer infromation ####
 
 #comparison before SOC correction
