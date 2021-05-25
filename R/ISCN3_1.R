@@ -27,13 +27,15 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: Clean up thaw-depth profile to remove coercion NA
 
 
-  if(!is.character(data_dir))
+  if(!is.character(data_dir)){
     stop("`data_dir` not set to character value")
-  if(!is.character(datasets_exclude) && !is.null(datasets_exclude))
-      stop(("`dataset_exclude` is not set to vector data structure"))
-  if(!is.logical(verbose))
-      stop("`verbose` is not set to logical value")
-      # verbose = FALSE
+    }
+  if(!is.character(datasets_exclude) && !is.null(datasets_exclude)){
+    stop(("`dataset_exclude` is not set to vector data structure"))
+    }
+  if(!is.logical(verbose)){
+    stop("`verbose` is not set to logical value")
+    }
   
   
   # #load in library
