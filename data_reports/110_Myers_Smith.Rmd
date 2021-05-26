@@ -16,6 +16,8 @@ dataset_study <- citation_raw %>%
   full_join(dataset_raw %>% 
               filter(dataset_name == datasetName) %>%
               select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
+  mutate (`citation`= case_when(`citation`== "Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data_detail.cfm?datafile_pkey=192." ~ "Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data/data-detail/id/192",
+            TRUE~ as.character(citation))) %>%
   standardCast() %>%
   fill(curator_name, curator_organization, curator_email, dataset_description, .direction = "downup" )
 
