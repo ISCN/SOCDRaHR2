@@ -7,11 +7,9 @@ output: html_document
 
 # Introduction
 
-International Soil Carbon Network 3 (ISCN3) consists of serveral data sets. This R Markdown cleans and reorganizes ISCN3 datasets into a study level table, a profile level table, and a layer level table using the ISCN3_1 function. Additionally, maps for each dataset are produced within this R Markdown.
+International Soil Carbon Network 3 (ISCN3) consists of serveral data sets. This R Markdown cleans and reorganizes ISCN3 datasets into a study level table, a profile level table, and a layer level table using the ISCN3_1 function. Additionally, maps for each data set are produced within this R Markdown.
 
-The `study` tables describe information about each data contribution including any citations practices and contact information for the contributor.
-The `profile` table describes core summary information that is 2D resolved.
-The `layer` table, in contrasts, holds 3D resolved information.
+The `study` table produced by the ISCN3_1 function describe information about each data contribution including any citations practices and contact information for the contributor. The `profile` table produced by the ISCN3_1 function describes core summary information that is 2D resolved.In contrast, the `layer` table produced the ISCN3_1 function holds 3D resolved information.
 
 
 ```{r warning=FALSE, message=FALSE}
