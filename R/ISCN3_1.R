@@ -289,7 +289,8 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   return(list(study = dataset_study, 
               profile = dataset_profile,
-              layer = dataset_layer))
+              layer = dataset_layer,
+              type_columns = type_cols))
 }
 
 
