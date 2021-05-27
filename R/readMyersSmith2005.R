@@ -24,7 +24,9 @@ readMyersSmith <- function(dataDir, download=TRUE, verbose=FALSE){
   
   #### Read into table ####
   
-  ans <- readr::read_tsv(file = MyersSmithDownload_target)
+  ans <- list(MyersSmithData = readr::read_tsv(file = MyersSmithDownload_target),
+              dataAcknowledgement = "Data are provided by the Bonanza Creek LTER, a partnership between the University of Alaska Fairbanks, and the U.S. Forest Service. Significant funding for collection of these data was provided by the National Science Foundation Long-Term Ecological Research program (NSF Grant numbers DEB-1636476, DEB-1026415, DEB-0620579, DEB-0423442, DEB-0080609, DEB-9810217, DEB-9211769, DEB-8702629) and by the USDA Forest Service, Pacific Northwest Research Station (Agreement # RJVA-PNW-01-JV-11261952-231).",
+              dataCitation= "Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data/data-detail/id/192. doi:10.6073/pasta/b0e9120983438c27bf1a30f37f0e5200")
   
   return(ans)
 }
