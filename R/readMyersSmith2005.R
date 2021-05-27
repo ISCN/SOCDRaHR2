@@ -10,7 +10,7 @@
 #' @return a data frame containing newly ingested data from the Myers-Smith dataset
 #' 
 #' @export
-#' 
+#' @importFrom readr read_delim
 #'
 readMyersSmith <- function(dataDir, download=TRUE, verbose=FALSE){
   
@@ -24,7 +24,7 @@ readMyersSmith <- function(dataDir, download=TRUE, verbose=FALSE){
   
   #### Read into table ####
   
-  ans <- read.table(file = MyersSmithDownload_target, sep = '\t', header = TRUE)
+  ans <- readr::read_tsv(file = MyersSmithDownload_target)
   
   return(ans)
 }
