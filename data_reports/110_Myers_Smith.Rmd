@@ -205,4 +205,4 @@ ggplot(dataset_layer %>%
 
 ## Citations
 
-Please see @MyersSmith2007 for additional details and if you are using ISCN3 please cite.
+Please see @MyersSmithHarden2007 @MyersSmithMcGuire2007 for additional details and if you are using ISCN3 please cite.
