@@ -26,7 +26,6 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
 
-
   if(!is.character(data_dir)) {
     stop("`data_dir` not set to character value")
   }
@@ -203,6 +202,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
     dplyr::group_by(dataset_name) %>%
     tidyr::fill(-dataset_name, .direction = "updown") #replace missing values with known values based on dataset_name grouping
  
+  
   #taking profile and layer info
   ##### Extract the profile information ####
   
@@ -219,14 +219,42 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   dataset_profile <- dataset_profile %>%
     dplyr::select(-dataset_name_soc) 
   if(verbose){message('done')}
-  
+ 
+  #reduces run time by removing single rows from processing 
   if(verbose){message('Make sure profiles fill in duplicate groups...')}
+  temp <- dataset_profile %>%
+    dplyr::group_by(dataset_name_sub, site_name, profile_name) %>%
+    dplyr::filter(length(profile_name) > 1) %>%
+    tidyr::fill(-dplyr::group_vars(.), .direction = 'updown') %>%
+    base::unique()
   
   dataset_profile <- dataset_profile %>%
-    dplyr::group_by(dataset_name_sub, site_name, profile_name) %>%
-    tidyr::fill(-dplyr::group_vars(.), .direction = 'updown')
+    dplyr::filter(length(profile_name) == 1) %>%
+    dplyr::bind_rows(temp)
+    #dplyr::group_by(dataset_name_sub, site_name, profile_name) %>%
+    #tidyr::fill(-dplyr::group_vars(.), .direction = 'updown')
   if(verbose){message('done')}
   
+  #hardcoding country name
+  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Oak Ridge National Lab_Lolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C")
+  dataset_profile[dataset_profile$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
+  
+  #filling citations
+ 
+  # fillciteHardenYazoo <- c("USGS Harden Yazoo")
+  # dataset_profile[dataset_profile$dataset_name_sub %in% fillciteHardenYazoo, 'site_note'] <- 
+  
+    dataset_profile <- dataset_profile %>%
+    ungroup() %>%
+    mutate(`site_note` = case_when(
+              site_note == 'see Parr and Hughes 2006' ~ 'Parr, P., & Hughes, J.F. (2006). OAK RIDGE RESERVATION PHYSICAL CHARACTERISTICS AND NATURAL RESOURCES.', #from Oak Ridge National Lab_Loblolly_DWJ
+              site_note == 'see Muhs et al., 2003, Stratigraphy and palaeoclimatic signficance …' ~ 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.', #from USGS Muhs
+             site_note == 'Harden et al., 1999' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319.', #from USGS Harden Yazoo
+             site_note == 'Harden et al., 1999; Huntington et al. 1998' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319; Huntington, T.G., Harden, J. W., Dabney, S. M. , Marion, D. A. , Alonso, C., Sharpe, J.M. , 1998. Soil, Environmental, and Watershed Measurements in support of carbon cycling studies in northwestern Mississippi. U.S. Geological Survey Open-File Report 98-501.', #from USGS Harden Yazoo
+              TRUE ~ site_note))
+  
+  #  test2 <- list("a" = 1, "b" = 2, "d" = 3)
+      
   if(verbose){message('Cast datatypes in profile-level...')}
   dataset_profile <- dataset_profile %>%
     dplyr::ungroup() %>% #groups are not needed in casting and it runs faster ungrouped
@@ -270,14 +298,21 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   if(verbose){message('Fill in missing values in repeat layer-level rows then remove duplicates...')}
   temp <- dataset_layer %>%
+    dplyr::group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
     dplyr::filter(length(layer_name) > 1) %>%
     tidyr::fill(-dplyr::group_vars(.), .direction = 'updown') %>%
-    unique()
+    base::unique()
   
   dataset_layer <- dataset_layer %>%
     dplyr::filter(length(layer_name) == 1) %>%
     dplyr::bind_rows(temp)
   if(verbose){message('done.')}
+  
+  #replacing special characters with NA
+  replacequestion <- c("Oak Ridge National Lab_Loblolly_DWJ", "Lehmann Soil C&BC #1", "schuur", "USGS Harden Yazoo", "Bonanza LTER", "UMBS_FASET", "Oak Ridge NationalLab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "Northern Circumpolar Soil Carbon Database (NCSCD)")
+  dataset_layer[dataset_layer$dataset_name_sub %in% replacequestion, 'hzn'] <- NA_character_
+  replaceunknown <- c("Bonanza LTER", "USDA-FS NRS Landscape Carbon Inventory")
+  dataset_layer[dataset_layer$dataset_name_sub %in% replaceunknown, 'hzn_desgn'] <- NA_character_
   
   if(verbose){message('Cast data types in layer-level...')}
   dataset_layer <- dataset_layer %>%

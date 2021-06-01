@@ -73,14 +73,19 @@ if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
   #reassign rows where the ISCN tried to fill in SOC values
   dataset_layer <- dataset_layer %>%
     group_by(dataset_name_soc) %>%
-    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+    mutate( `hzn` = case_when(
+           `hzn` == "?" ~ NA_character_,
+           TRUE ~ as.character(hzn)), #hard-coding special character "?" to be NA
+           `hzn_desgn` = case_when(
+            `hzn_desgn` == "unknown" ~ NA_character_ ,
+            TRUE ~ as.character(hzn_desgn)), #hardcoding "unknown" to be NA
+      `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
                                     rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
            soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
                                      rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
            soc_method = if_else(grepl('ISCN', dataset_name_soc), 
                                 rep(NA_character_, length(soc_method)), soc_method)) %>%
     ungroup()
-  
 }
 
 #remove the soc dataset since we've taken care of the ISCN notation
