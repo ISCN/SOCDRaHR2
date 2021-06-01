@@ -10,10 +10,10 @@
 #' @return a data frame containing newly ingested data from the Myers-Smith dataset
 #' 
 #' @export
+
 #' @importFrom readr read_delim
 #'
 readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
-  
   #### Download ####
   
   MyersSmithDownload_url <- 'https://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/bog_soil_data.txt'
@@ -21,6 +21,7 @@ readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   download.file(MyersSmithDownload_url,  MyersSmithDownload_target, quiet=FALSE)
   
+
   MyersSmithXML <- file.path(dataDir, 'MyersSmith.xml')
   
   if(!all(file.exists(dataDir,'MyersSmith.xml'))) {
