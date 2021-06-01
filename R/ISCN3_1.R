@@ -221,12 +221,20 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   dataset_profile <- dataset_profile %>%
     dplyr::select(-dataset_name_soc) 
   if(verbose){message('done')}
-  
+ 
+  #reduces run time by removing single rows from processing 
   if(verbose){message('Make sure profiles fill in duplicate groups...')}
+  temp <- dataset_profile %>%
+    dplyr::group_by(dataset_name_sub, site_name, profile_name) %>%
+    dplyr::filter(length(profile_name) > 1) %>%
+    tidyr::fill(-dplyr::group_vars(.), .direction = 'updown') %>%
+    base::unique()
   
   dataset_profile <- dataset_profile %>%
-    dplyr::group_by(dataset_name_sub, site_name, profile_name) %>%
-    tidyr::fill(-dplyr::group_vars(.), .direction = 'updown')
+    dplyr::filter(length(profile_name) == 1) %>%
+    dplyr::bind_rows(temp)
+    #dplyr::group_by(dataset_name_sub, site_name, profile_name) %>%
+    #tidyr::fill(-dplyr::group_vars(.), .direction = 'updown')
   if(verbose){message('done')}
   
   #hardcoding country name
@@ -239,12 +247,12 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # dataset_profile[dataset_profile$dataset_name_sub %in% fillciteHardenYazoo, 'site_note'] <- 
   
     dataset_profile <- dataset_profile %>%
-    group_by(dataset_name_soc) %>%
+    ungroup() %>%
     mutate(`site_note` = case_when(
-              site_note == 'see Parr and Hughes 2006' ~ 'Parr, P., & Hughes, J.F. (2006). OAK RIDGE RESERVATION PHYSICAL CHARACTERISTICS AND NATURAL RESOURCES.', #Oak Ridge National Lab_Loblolly_DWJ
-              site_note == 'see Muhs et al., 2003, Stratigraphy and palaeoclimatic signficance …' ~ 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.', #USGS Muhs
-             site_note == 'Harden et al., 1999' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319.', #USGS Harden Yazoo
-             site_note == 'Harden et al., 1999; Huntington et al. 1998' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319; Huntington, T.G., Harden, J. W., Dabney, S. M. , Marion, D. A. , Alonso, C., Sharpe, J.M. , 1998. Soil, Environmental, and Watershed Measurements in support of carbon cycling studies in northwestern Mississippi. U.S. Geological Survey Open-File Report 98-501.', #USGS Harden Yazoo
+              site_note == 'see Parr and Hughes 2006' ~ 'Parr, P., & Hughes, J.F. (2006). OAK RIDGE RESERVATION PHYSICAL CHARACTERISTICS AND NATURAL RESOURCES.', #from Oak Ridge National Lab_Loblolly_DWJ
+              site_note == 'see Muhs et al., 2003, Stratigraphy and palaeoclimatic signficance …' ~ 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.', #from USGS Muhs
+             site_note == 'Harden et al., 1999' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319.', #from USGS Harden Yazoo
+             site_note == 'Harden et al., 1999; Huntington et al. 1998' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319; Huntington, T.G., Harden, J. W., Dabney, S. M. , Marion, D. A. , Alonso, C., Sharpe, J.M. , 1998. Soil, Environmental, and Watershed Measurements in support of carbon cycling studies in northwestern Mississippi. U.S. Geological Survey Open-File Report 98-501.', #from USGS Harden Yazoo
               TRUE ~ site_note))
   
   #  test2 <- list("a" = 1, "b" = 2, "d" = 3)
@@ -292,9 +300,10 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   if(verbose){message('Fill in missing values in repeat layer-level rows then remove duplicates...')}
   temp <- dataset_layer %>%
+    dplyr::group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
     dplyr::filter(length(layer_name) > 1) %>%
     tidyr::fill(-dplyr::group_vars(.), .direction = 'updown') %>%
-    data.table::unique()
+    base::unique()
   
   dataset_layer <- dataset_layer %>%
     dplyr::filter(length(layer_name) == 1) %>%
