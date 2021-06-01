@@ -1,108 +1,32 @@
-# dataset Name
+---
+title: "ISCN 3_1"
+author: "Dr. Katherine Todd-Brown, Julie Bielecki, Anne Davin, Rita Hippe, Urmi Thorat"
+date: "5/25/2021"
+output: html_document
+---
 
-The dataset Name data set in ISCN3 contains XX layer-level rows and YY profile-level information rows after cleaning for ISCN3.5.
-Rows were/weren't removed from ISCN3 because of reasons.
-Columns were/weren't removed from ISCN3 because of reasons.
-Values in columns were reassigned to XX because of reasons.
+# Introduction
 
+International Soil Carbon Network 3 (ISCN3) consists of serveral data sets. This R Markdown cleans and reorganizes ISCN3 datasets into a study level table, a profile level table, and a layer level table using the ISCN3_1 function. Additionally, maps for each data set are produced within this R Markdown.
 
-```{r warning=FALSE, message=FALSE}
-datasetName <- "dataset Name" 
+The `study` table produced by the ISCN3_1 function describe information about each data contribution including any citations practices and contact information for the contributor. The `profile` table produced by the ISCN3_1 function describes core summary information that is 2D resolved.In contrast, the `layer` table produced the ISCN3_1 function holds 3D resolved information.
 
-##### Extract the study information ####
-dataset_study <- citation_raw %>% 
-  filter(dataset_name == datasetName) %>%
-  select(where(function(xx){!all(is.na(xx))})) %>%
-  full_join(dataset_raw %>% 
-              filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
-  standardCast()
-```
 
 ```{r warning=FALSE, message=FALSE}
-##### Extract the profile information ####
+library(data.table)
+#library(SOCDRaH2)
+library(tidyverse)
+library(lubridate)
+library(tibble)
+library(ggmap)
+library(maps)
+library(mapdata)
+library(knitr)
+library(tidyr)
 
-#comparison for pre ISCN soc stock correction
-dataset_profile_org <- profile_raw  %>%
-   filter(dataset_name_sub == datasetName) %>%
-   standardCast()
+data_dir <- '~/Documents/Todd-Brown Lab/ISCN3'
 
-dataset_profile <- profile_raw  %>%
-  filter(dataset_name_sub == datasetName) 
-
-if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
-  #reassign rows where the ISCN tried to fill in SOC values
-  dataset_profile <- dataset_profile %>%
-    group_by(dataset_name_soc) %>%
-    mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
-                                      rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
-           `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
-                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
-           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
-                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
-           soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
-                                      rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
-           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
-                                rep(NA_character_, length(soc_method)), soc_method)) %>%
-    ungroup()
-  
-}
-
-#remove the soc dataset since we've taken care of the ISCN notation
-dataset_profile <- select(dataset_profile, -dataset_name_soc)  
-
-if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
-  #if the rows are duplicated then fill in missing values by group
-  dataset_profile <- dataset_profile %>%
-    group_by(dataset_name_sub, site_name, profile_name) %>%
-    mutate_at(vars(-group_cols()), 
-              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
-    ungroup() %>%
-    unique() #collapase rows that are non-unique
-}
-
-dataset_profile <- standardCast(dataset_profile)
-```
-
-```{r warning = FALSE, message = FALSE}
-##### Extract the layer infromation ####
-
-#comparison before SOC correction
-dataset_layer_org <- layer_raw %>%
-  filter(dataset_name_sub == datasetName) %>%
-  standardCast()
-
-dataset_layer <- layer_raw %>%
-  filter(dataset_name_sub == datasetName) 
-
-if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
-  #reassign rows where the ISCN tried to fill in SOC values
-  dataset_layer <- dataset_layer %>%
-    group_by(dataset_name_soc) %>%
-    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
-                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
-           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
-                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
-           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
-                                rep(NA_character_, length(soc_method)), soc_method)) %>%
-    ungroup()
-  
-}
-
-#remove the soc dataset since we've taken care of the ISCN notation
-dataset_layer <- select(dataset_layer, -dataset_name_soc) 
-
-if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_name)$n > 1)){
-  #if the rows are duplicated then fill in missing values by group
-  dataset_layer <- dataset_layer %>%
-    group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
-    mutate_at(vars(-group_cols()), 
-              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
-    ungroup() %>%
-    unique() #collapase rows that are non-unique
-}
-
-dataset_layer <- standardCast(dataset_layer)
+ISCN3 <- ISCN3_1(data_dir)
 
 ```
 

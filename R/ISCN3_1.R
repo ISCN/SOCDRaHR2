@@ -13,7 +13,6 @@
 #'
 #' @return
 #' @export
-#' @importFrom data.table unique
 #' @importFrom dplyr bind_rows filter full_join group_by intersect mutate mutate_at select ungroup
 #' @importFrom lubridate as_date ymd
 #' @importFrom readr read_delim
@@ -27,14 +26,13 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
 
-  
-  if(!is.character(data_dir)){
+  if(!is.character(data_dir)) {
     stop("`data_dir` not set to character value")
   }
-  if(!(is.vector(datasets_exclude) && is.character(datasets_exclude))){
-    stop("`dataset_exclude` is not set to vector data structure")
+  if(!is.character(datasets_exclude) && !is.null(datasets_exclude)) {
+    stop(("`dataset_exclude` is not set to vector data structure"))
   }
-  if(!is.logical(verbose)){
+  if(!is.logical(verbose)) {
     stop("`verbose` is not set to logical value")
   }
   
@@ -329,3 +327,5 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
               profile = dataset_profile,
               layer = dataset_layer))
 }
+
+
