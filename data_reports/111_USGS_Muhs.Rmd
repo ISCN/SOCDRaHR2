@@ -25,7 +25,9 @@ dataset_profile_org <- profile_raw  %>%
 
 dataset_profile <- profile_raw  %>%
   filter(dataset_name_sub == datasetName) %>%
-  mutate(`site_note` = 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.')
+  mutate(`site_note` = case_when(
+    `site_note` == 'see Muhs et al., 2003, Stratigraphy and palaeoclimatic signficance …' ~ 'Muhs et al.(2003).Stratigraphy and palaeoclimatic significance of Late Quaternary loess-palaeosol sequences of the Last Interglacial-Glacial cycle in central Alaska.',
+  TRUE ~ site_note))
   
 
 if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){

@@ -7,11 +7,9 @@ output: html_document
 
 # Introduction
 
-International Soil Carbon Network 3 (ISCN3) consists of serveral data sets. This R Markdown cleans and reorganizes ISCN3 datasets into a study level table, a profile level table, and a layer level table using the ISCN3_1 function. Additionally, maps for each dataset are produced within this R Markdown.
+International Soil Carbon Network 3 (ISCN3) consists of serveral data sets. This R Markdown cleans and reorganizes ISCN3 datasets into a study level table, a profile level table, and a layer level table using the ISCN3_1 function. Additionally, maps for each data set are produced within this R Markdown.
 
-The `study` tables describe information about each data contribution including any citations practices and contact information for the contributor.
-The `profile` table describes core summary information that is 2D resolved.
-The `layer` table, in contrasts, holds 3D resolved information.
+The `study` table produced by the ISCN3_1 function describe information about each data contribution including any citations practices and contact information for the contributor. The `profile` table produced by the ISCN3_1 function describes core summary information that is 2D resolved.In contrast, the `layer` table produced the ISCN3_1 function holds 3D resolved information.
 
 
 ```{r warning=FALSE, message=FALSE}
@@ -29,105 +27,6 @@ library(tidyr)
 data_dir <- '../ISCN3'
 
 ISCN3 <- ISCN3_1(data_dir)
-
-```
-
-
-# Old version of template 
-```{}
-
-##### Extract the study information ####
-dataset_study <- citation_raw %>% 
-  filter(dataset_name == datasetName) %>%
-  select(where(function(xx){!all(is.na(xx))})) %>%
-  full_join(dataset_raw %>% 
-              filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
-  standardCast()
-
-
-{r warning=FALSE, message=FALSE}
-##### Extract the profile information ####
-
-#comparison for pre ISCN soc stock correction
-dataset_profile_org <- profile_raw  %>%
-   filter(dataset_name_sub == datasetName) %>%
-   standardCast()
-
-dataset_profile <- profile_raw  %>%
-  filter(dataset_name_sub == datasetName) 
-
-if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
-  #reassign rows where the ISCN tried to fill in SOC values
-  dataset_profile <- dataset_profile %>%
-    group_by(dataset_name_soc) %>%
-    mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
-                                      rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
-           `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
-                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
-           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
-                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
-           soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
-                                      rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
-           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
-                                rep(NA_character_, length(soc_method)), soc_method)) %>%
-    ungroup()
-  
-}
-
-#remove the soc dataset since we've taken care of the ISCN notation
-dataset_profile <- select(dataset_profile, -dataset_name_soc)  
-
-if(any(count(dataset_profile, dataset_name_sub, site_name, profile_name)$n > 1)){
-  #if the rows are duplicated then fill in missing values by group
-  dataset_profile <- dataset_profile %>%
-    group_by(dataset_name_sub, site_name, profile_name) %>%
-    mutate_at(vars(-group_cols()), 
-              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
-    ungroup() %>%
-    unique() #collapase rows that are non-unique
-}
-
-dataset_profile <- standardCast(dataset_profile)
-
-##### Extract the layer infromation ####
-
-#comparison before SOC correction
-dataset_layer_org <- layer_raw %>%
-  filter(dataset_name_sub == datasetName) %>%
-  standardCast()
-
-dataset_layer <- layer_raw %>%
-  filter(dataset_name_sub == datasetName) 
-
-if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
-  #reassign rows where the ISCN tried to fill in SOC values
-  dataset_layer <- dataset_layer %>%
-    group_by(dataset_name_soc) %>%
-    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
-                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
-           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
-                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
-           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
-                                rep(NA_character_, length(soc_method)), soc_method)) %>%
-    ungroup()
-  
-}
-
-#remove the soc dataset since we've taken care of the ISCN notation
-dataset_layer <- select(dataset_layer, -dataset_name_soc) 
-
-if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_name)$n > 1)){
-  #if the rows are duplicated then fill in missing values by group
-  dataset_layer <- dataset_layer %>%
-    group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
-    mutate_at(vars(-group_cols()), 
-              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
-    ungroup() %>%
-    unique() #collapase rows that are non-unique
-}
-
-dataset_layer <- standardCast(dataset_layer)
 
 ```
 
@@ -259,31 +158,8 @@ ggplot(dataset_layer %>%
 # TODO Implement special case code
 # TODO Average coordinates for base map code
 # TODO if/else call for US
-# TODO Figure out why no titles for maps in markdown document
 
 plotGenerate <- function(ISCN3, datasetName){
-
-  country <- ggplot2::map_data('world2', 'usa')
-  
-
-  baseLat <- ISCN3$profile %>%
-                  filter(dataset_name_sub == datasetName) %>%
-                  dplyr::pull('lat (dec. deg)')
-  
-  baseLong <- ISCN3$profile %>%
-                  filter(dataset_name_sub == datasetName) %>%
-                  dplyr::pull('long (dec. deg)')
-   
-  rangeLat <- if (diff(range(baseLong, na.rm = TRUE)) <= 5.0){
-                  diff(range(baseLong, na.rm = TRUE)) * 25
-              } else {
-                  diff(range(baseLong, na.rm = TRUE)) * 30
-              }
-                    
-  calcLat <- rangeLat * 2.6
-
-  
-  
 
 #### TABLES ####  
    studyTable <- knitr::kable(t(ISCN3$study %>%
@@ -310,6 +186,25 @@ plotGenerate <- function(ISCN3, datasetName){
                         caption = paste("A summary of [", datasetName,
                                         "] layer data,  \ncontaining 3D resolved information.", sep = ""))  
  #### MAP CODE ####  
+  country <- ggplot2::map_data('world2', 'usa')
+  
+
+  baseLat <- ISCN3$profile %>%
+                  filter(dataset_name_sub == datasetName) %>%
+                  dplyr::pull('lat (dec. deg)')
+  
+  baseLong <- ISCN3$profile %>%
+                  filter(dataset_name_sub == datasetName) %>%
+                  dplyr::pull('long (dec. deg)')
+   
+  rangeLat <- if (diff(range(baseLong, na.rm = TRUE)) <= 5.0){
+                  diff(range(baseLong, na.rm = TRUE)) * 25
+              } else {
+                  diff(range(baseLong, na.rm = TRUE)) * 30
+              }
+                    
+  calcLat <- rangeLat * 2.6
+  
    profileMap <- ggplot(data =  map_data("world2")) + 
                             geom_polygon(aes(x=long, y = lat, group = group), 
                                          fill = 'grey', color = 'black') + 
@@ -330,8 +225,6 @@ plotGenerate <- function(ISCN3, datasetName){
                                caption = paste("A map of [", datasetName,
                                         "] sampling sites,  \nusing coordinates found within the profile data.", sep = ""))
                             #coord_map("ortho", orientation = c(90, 0, 0))
-   
-   
    
   baseLat <- ISCN3$layer %>%
                   filter(dataset_name_sub == datasetName) %>%
@@ -381,7 +274,7 @@ plotGenerate <- function(ISCN3, datasetName){
                                   values_to = 'measurement', names_to = 'type')) +
                               geom_histogram(aes(x=measurement)) +
                               facet_wrap(~type, scales='free') +
-                          theme_bw() +
+                          theme_grey() +
                           labs(title = 'Profile Value Histograms',
                                caption = paste("Histograms detailing measurements in [", datasetName,
                                         "] profile data.", sep = ""))
@@ -395,7 +288,7 @@ plotGenerate <- function(ISCN3, datasetName){
                                       values_to = 'measurement', names_to = 'type')) +
                               geom_line(aes(x=depth, y= measurement, group = profile_name), alpha = 0.5) +
                           facet_wrap(~type, scales='free') +
-                          theme_bw() +
+                          theme_grey() +
                           labs(title = 'Layer Data Depth Plots',
                                caption = paste("Plots of [", datasetName,
                                         "] layer data by depth.", sep = ""))
@@ -410,64 +303,17 @@ return(list(summaryStudyTable = studyTable,
             depthValuePlots = depthPlots))  
 }
 
-HeckmanVisuals <- plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn')
-
-print(HeckmanVisuals)
+# HeckmanVisuals <- plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn')
+# 
+# print(HeckmanVisuals)
 
 ```
 
 ## Heckman/Swanston Biscuit Burn
 ```{r}
 
-# print(plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn'))
+print(plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn'))
 
-datasetName <- 'Bonanza LTER'
-
-  baseLat <- ISCN3$layer %>%
-                  filter(dataset_name_sub == datasetName) %>%
-                  dplyr::pull('lat (dec. deg)')
-  
-  baseLong <- ISCN3$layer %>%
-                  filter(dataset_name_sub == datasetName) %>%
-                  dplyr::pull('long (dec. deg)')
-
-
-
-
-   
-  rangeLat <- if (diff(range(baseLong)) <= 5.0){
-                  diff(range(baseLong)) * 13.5
-              } else {
-                  diff(range(baseLong)) * 20
-              }
-                    
-  
-  calcLat <- (rangeLat * 2.6)
-
-ggplot(data =  map_data('world2')) + 
-                           geom_polygon(aes(x=long, y = lat, group = group), 
-                                        color = 'black', fill = 'grey') +
-                           geom_polygon(data = ggplot2::map_data('world2', 'usa'),
-                                        aes(x = long, y = lat, group = group),
-                                        fill = 'lightblue', alpha = 0.5,  color = 'black') +
-                           geom_point(data= ISCN3$layer %>%
-                                          filter(dataset_name_sub == datasetName) %>%
-                                          dplyr::select(where(function(xx){!all(is.na(xx))})) %>% 
-                                          select(`long (dec. deg)`, `lat (dec. deg)`) %>%
-                                          unique(), 
-                                        aes(x = `long (dec. deg)` + 360, #shift y-coordinate 360 degrees into the correct orientation
-                                            y = `lat (dec. deg)`),
-                                        shape = 'x', color = 'red') +
-                          coord_cartesian(xlim = c(mean(baseLong, na.rm = TRUE) + 360 - calcLat,
-                                                   mean(baseLong, na.rm = TRUE) + 360 + calcLat),
-                                          ylim = c(mean(baseLat, na.rm = TRUE) - rangeLat,
-                                                   mean(baseLat, na.rm = TRUE) + rangeLat)) +
-                          theme_grey() +
-                          xlab("Longitude") + ylab("Latitude") +
-                          labs(title = 'Layer Data Map',
-                               caption = paste("A map of [", datasetName,
-                                        "] sampling sites,  \nusing coordinates found within the layer data.", sep = ""))
-  
 ```
 
 ## Lu_PIMA
