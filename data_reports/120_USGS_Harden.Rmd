@@ -7,7 +7,6 @@ As it is such a large data set, the lack of duplicates was verified using a leng
 10 rows were removed from the dataset_profile table from ISCN3 because of ISCN soc gap-filling.
 5 columns were removed from the dataset_profile table from ISCN3 because these columns contained values from ISCN soc stock correction.
 Ggplot maps were adjusted to be centered upon Alaska and narrowed in on location of specific data points.
-This data set contains two data citations that need to be addressed in ISCN 4 review.
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "USGS Harden" 
@@ -214,17 +213,14 @@ ggplot(dataset_layer %>%
 
 ## TODO
 
-- Commit and link the commit to the issue
 - Contains data citations (@Harden2008a @Harden2008b) that need to be revisited in ISCN 4
-
-#### Github issue template
-
-- [X]  Evaluate dataset
-- [X]  Complete template checklist
-- [X]  Write up summary report narrative
-- [X]  Good commenting
-- [ ]  External review by someone else
+    Both of the URL's provided lead to 404 error pages.
+      [2] URL for dataone of Harden2008a: https://search.dataone.org/view/knb-lter-bnz.336.19
+            actual download URL leads to an error: http://www.lter.uaf.edu/404.php
+              Contacting of researchers is necessary.
+      [4] URL for dataone of Harden2008b: https://search.dataone.org/view/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fmetadata%2Feml%2Fknb-lter-bnz%2F334%2F18
+            actual download URL: https://pasta.lternet.edu/package/data/eml/knb-lter-bnz/334/18/ae919a8ce160674a01f8394e6a15fc5d
 
 ## Citations
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
+Please see @Harden2008a, @ODonnell2011, @Manies204, @Harden2008b, @Harden2006 and @Neff2005 for additional details and if you are using ISCN3 please cite.
