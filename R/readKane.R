@@ -13,8 +13,6 @@
 #' @importFrom readr read_csv
 
 
-dataDir <- '~/Desktop/Research/Kane'
-  
 #data read in for citation [2] not included
   #url confirmation is needed, see ##TODO from 114_Kane.Rmd
 #KaneBiophysicalData is missing header information that could not be found online, contacting of researchers is necessary
