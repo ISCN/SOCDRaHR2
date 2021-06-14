@@ -5,7 +5,7 @@
 #' 
 #' This is not post-processed or QA/QCed by this package.
 #'
-#' @param dataDir filename for download directory
+#' @param data_dir filename for download directory
 #' @param download boolean that will download the files from repository
 #'
 #' @return a data frame containing newly ingested data from the Myers-Smith dataset
@@ -14,20 +14,20 @@
 
 #' @importFrom readr read_delim
 #'
-readBuell2011 <- function(dataDir, download=TRUE, verbose=FALSE){
+readBuell2011 <- function(data_dir, download=TRUE, verbose=FALSE){
   #### Download ####
   
   BuellDownload_url <- 'https://pubs.usgs.gov/of/2004/1227/s3c_ascii.zip'
-  BuellDownload_target <- file.path(dataDir, 's3c_ascii.zip') 
+  BuellDownload_target <- file.path(data_dir, 's3c_ascii.zip') 
   
-  BuellDataFiles <- file.path(dataDir, 's3c_ascii',
+  BuellDataFiles <- file.path(data_dir, 's3c_ascii',
                              c("horiz01.txt","pedon01.txt", "taxon01.txt"))
   
-  if(!all(file.exists(BuellDataFiles))){
+  if(!(file.exists(BuellDownload_target))){
     download.file(BuellDownload_url, BuellDownload_target, quiet=FALSE)
   }
   
-  unzip(BuellDownload_target, exdir=file.path(dataDir, 's3c_ascii'))
+  unzip(BuellDownload_target, exdir=file.path(data_dir, 's3c_ascii'))
   
   #### Read into table ####
   
