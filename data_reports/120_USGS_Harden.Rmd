@@ -219,7 +219,7 @@ ggplot(dataset_layer %>%
             actual download URL leads to an error: http://www.lter.uaf.edu/404.php
               Contacting of researchers is necessary.
       [4] URL for dataone of Harden2008b: https://search.dataone.org/view/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fmetadata%2Feml%2Fknb-lter-bnz%2F334%2F18
-            actual download URL: https://pasta.lternet.edu/package/data/eml/knb-lter-bnz/334/18/ae919a8ce160674a01f8394e6a15fc5d
+            actual download URL: http://www.lter.uaf.edu/data/data-detail/id/334
 
 ## Citations
 
