@@ -27,7 +27,6 @@ library(tidyr)
 data_dir <- '../ISCN3'
 
 ISCN3 <- ISCN3_1(data_dir)
-
 ```
 
 
@@ -50,7 +49,6 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ## Location
 ```{r}
-
 ggplot(data =  map_data("world")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
@@ -61,7 +59,6 @@ ggplot(data =  map_data("world")) +
   theme_nothing() +
   labs(title = 'Profile data') #+
   #coord_map("ortho", orientation = c(90, 0, 0))
-
 ggplot(data =  map_data("world")) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
@@ -71,22 +68,18 @@ ggplot(data =  map_data("world")) +
   coord_fixed(1.3) +
   theme_nothing() +
   labs(title = 'Layer data')
-
 ```
 
 
 ## Use if map is not centered around the specific region of dataset
 ```{r}
-
 #country <- ggplot2::map_data('world2', 'usa')
 #avgLat <- dataset_layer %>% 
 #  pull('lat (dec. deg)') %>%
 #  mean()
-
 #avgLong <- dataset_layer %>% 
 #  pull('long (dec. deg)') %>%
 #  mean() + 360
-
 #ggplot(data =  map_data("world2")) +
 #  geom_polygon( aes(x = long, y = lat, group = group),
 #                fill = 'grey', color = "black") +
@@ -96,7 +89,6 @@ ggplot(data =  map_data("world")) +
 #  coord_cartesian(xlim=c(avgLong - 65, avgLong + 65), ylim = c(avgLat - 25, avgLat + 25)) +
 #  theme_nothing() +
 #  labs(title = 'Profile data')
-
 #ggplot(data =  map_data("world2")) + 
 #  geom_polygon(aes(x=long, y = lat, group = group), 
 #               fill = 'grey', color = 'black') + 
@@ -154,13 +146,27 @@ ggplot(dataset_layer %>%
 
 ## Plot-generating function 
 ```{r}
-
 # TODO Implement special case code
 # TODO Average coordinates for base map code
-# TODO if/else call for US
+# TODO Verify that all "single country" datasets are in US
 
 plotGenerate <- function(ISCN3, datasetName){
-
+  
+### VARIABLE SETTING ####
+  datasetLayer <- ISCN3$layer %>%
+             filter(dataset_name_sub == datasetName)
+  
+  
+  fixedCountryLayerData <- 
+    if(is.na(datasetLayer$`country (country)`[1])) {
+                                datasetLayer %>%
+                                mutate(`country (country)` = as.factor(c("United States")))
+    } else if(datasetLayer$`country (country)`[1] == "Unknown") {
+                                datasetLayer %>%
+                                mutate(`country (country)` = as.factor(c("United States")))
+    } else{datasetLayer}
+  
+  
 #### TABLES ####  
    studyTable <- knitr::kable(t(ISCN3$study %>%
                         filter(dataset_name == datasetName) %>%
@@ -169,118 +175,219 @@ plotGenerate <- function(ISCN3, datasetName){
                               caption = paste("A summary of [", datasetName,
                                         "] study and contact information.", sep = ""))
    
-   profileTable <- knitr::kable(summary(ISCN3$profile %>%
+   profileTable <- 
+          if(datasetName %in% ISCN3$profile$dataset_name_sub){
+            
+                  knitr::kable(summary(ISCN3$profile %>%
                         filter(dataset_name_sub == datasetName) %>%
                         dplyr::select(where(function(xx){!all(is.na(xx))})) %>%
                         select_if(is.factor) %>%
                         mutate_all(droplevels)),
                         caption = paste("A summary of [", datasetName,
                                         "] profile data,  \nwhich is 2D resolved information.", sep = ""))
+            
+          } else {NA}
    
       
-   layerTable <- knitr::kable(summary(ISCN3$layer %>%
-                        filter(dataset_name_sub == datasetName) %>%
+   layerTable <- knitr::kable(summary(fixedCountryLayerData %>%
                         dplyr::select(where(function(xx){!all(is.na(xx))})) %>%
                         select_if(is.factor) %>%
                         mutate_all(droplevels)),
                         caption = paste("A summary of [", datasetName,
                                         "] layer data,  \ncontaining 3D resolved information.", sep = ""))  
  #### MAP CODE ####  
-  country <- ggplot2::map_data('world2', 'usa')
+   
+   profileMap <-  if(datasetName %in% ISCN3$profile$dataset_name_sub) #checking if dataset has profile data
+   {
+     
+     if (length(unique(ISCN3$profile %>%
+                       filter(dataset_name_sub == datasetName) %>%
+                       select(`country (country)`))) > 1 ) #checking if world map needed
+     {
+       ggplot(data =  map_data("world")) + 
+         geom_polygon(aes(x=long, y = lat, group = group), 
+                      fill = 'grey', color = 'black') + 
+         geom_point(data= ISCN3$profile %>%
+                      filter(dataset_name_sub == datasetName), 
+                    aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+                    shape = 'x', color = 'red') +
+         coord_fixed(1.3) +
+         theme_grey() +
+         labs(title = 'Profile Data Map',
+              caption = paste("A map of [", datasetName,
+                              "] sampling sites,  \nusing coordinates found within the profile data.", sep = ""))
+       
+     } else { #use auto-scaling map code to see site locations better
+       
+       baseLat <- ISCN3$profile %>%
+         filter(dataset_name_sub == datasetName) %>%
+         dplyr::pull('lat (dec. deg)')
+       
+       baseLong <- ISCN3$profile %>%
+         filter(dataset_name_sub == datasetName) %>%
+         dplyr::pull('long (dec. deg)')
+       
+       rangeLat <- if (diff(range(baseLong, na.rm = TRUE)) <= 5.0){
+         diff(range(baseLong, na.rm = TRUE)) * 18
+       } else {
+         diff(range(baseLong, na.rm = TRUE)) * 22
+       }
+       
+       calcLat <- rangeLat * 2.6
+       
+       
+       ggplot(data =  map_data("world2")) + 
+         geom_polygon(aes(x=long, y = lat, group = group), 
+                      fill = 'grey', color = 'black') + 
+         geom_polygon(data = ggplot2::map_data('world2', 'usa'),
+                      aes(x = long, y = lat, group = group),
+                      fill = 'lightblue', color = 'black') +
+         geom_point(data= ISCN3$profile %>%
+                      filter(dataset_name_sub == datasetName),
+                    aes(x = `long (dec. deg)` + 360,
+                        y = `lat (dec. deg)`),
+                    shape = 'x', color = 'red') +
+         coord_cartesian(xlim = c(mean(baseLong, na.rm = TRUE) + 360 - calcLat,
+                                  mean(baseLong, na.rm = TRUE) + 360 + calcLat),
+                         ylim = c(mean(baseLat, na.rm = TRUE) - rangeLat,
+                                  mean(baseLat, na.rm = TRUE) + rangeLat)) +
+         theme_grey() +
+         xlab("Longitude") + ylab("Latitude") +
+         labs(title = 'Profile Data Map',
+              caption = paste("A map of [", datasetName,
+                              "] sampling sites,  \nusing coordinates found within the profile data.", sep = ""))
+       #coord_map("ortho", orientation = c(90, 0, 0))
+     }
+   # } else if (fixedCountryLayerData$`country (country)`[1] == "United States") {   
+   #   
+   #   ###use layer info to set state, and highlight state of interest on US map
+   #   ggplot(data =  map_data('state')) +
+   #     geom_polygon(aes(x=long, y = lat, group = group), 
+   #             fill = 'grey', color = 'black') +
+   #     geom_polygon(data = datasetLayer %>%
+   #                    select(`state (state_province)`) %>%
+   #                    map_data(),
+   #             aes(x=long, y = lat, group = group),
+   #             fill = 'blue', color = 'black') +
+   #     coord_fixed(1.3) + 
+   #     theme_nothing() + 
+   #     theme_grey() +
+   #     xlab("Longitude") + ylab("Latitude") +
+   #     labs(title = 'Highlighted Layer Data Map',
+   #          caption = paste("A U.S. map of where [", datasetName,
+   #                          "] sampling occured,  \nusing layer information since this dataset does not have profile information.", sep = ""))
+     
+   # ^STILL DEBUGGING
+     
+     
+     
+   } else {NA} 
+   
+   
+ 
   
+   layerMap <- if (length(unique(ISCN3$profile %>%
+                        filter(dataset_name_sub == datasetName) %>%
+                        select(`country (country)`))) > 1 ) #using world map if sites span multiple countries
+                    {
 
-  baseLat <- ISCN3$profile %>%
-                  filter(dataset_name_sub == datasetName) %>%
-                  dplyr::pull('lat (dec. deg)')
-  
-  baseLong <- ISCN3$profile %>%
-                  filter(dataset_name_sub == datasetName) %>%
-                  dplyr::pull('long (dec. deg)')
+                     ggplot(data =  map_data("world")) + 
+                       geom_polygon(aes(x=long, y = lat, group = group), 
+                                    fill = 'grey', color = 'black') + 
+                       geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
+                                  aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+                                  shape = 'x', color = 'red') +
+                       coord_fixed(1.3) +
+                       theme_grey() +
+                       xlab("Longitude") + ylab("Latitude") +
+                       labs(title = 'Layer Data Map',
+                            caption = paste("A map of [", datasetName,
+                                            "] sampling sites,  \nusing coordinates found within the layer data.",
+                                            sep = ""))
+     
+     
+                     } else {
+                       baseLat <- ISCN3$layer %>%
+                         filter(dataset_name_sub == datasetName) %>%
+                         dplyr::pull('lat (dec. deg)')
+                       
+                       baseLong <- ISCN3$layer %>%
+                         filter(dataset_name_sub == datasetName) %>%
+                         dplyr::pull('long (dec. deg)')
+                       
+                       rangeLat <- if (diff(range(baseLong, na.rm = TRUE)) <= 10.0){
+                         diff(range(baseLong, na.rm = TRUE)) * 6
+                       } else {
+                         diff(range(baseLong, na.rm = TRUE)) * 12
+                       }
+                       calcLat <- (rangeLat * 2.6)
+                       
+                       ggplot(data =  map_data('world2')) + 
+                         geom_polygon(aes(x=long, y = lat, group = group), 
+                                      color = 'black', fill = 'grey') +
+                         geom_polygon(data = ggplot2::map_data('world2', 'usa'), #Need to verify that all "single country" datasets are in US
+                                      aes(x = long, y = lat, group = group),
+                                      fill = 'lightblue', color = 'black') +
+                         geom_point(data= fixedCountryLayerData %>%
+                                      dplyr::select(where(function(xx){!all(is.na(xx))})) %>% 
+                                      select(`long (dec. deg)`, `lat (dec. deg)`) %>%
+                                      unique(), 
+                                    aes(x = `long (dec. deg)` + 360, #shift y-coordinate 360 degrees into the correct orientation
+                                        y = `lat (dec. deg)`),
+                                    shape = 'x', color = 'red') +
+                         coord_cartesian(xlim = c(mean(baseLong, na.rm = TRUE) + 360 - calcLat,
+                                                  mean(baseLong, na.rm = TRUE) + 360 + calcLat),
+                                         ylim = c(mean(baseLat, na.rm = TRUE) - rangeLat,
+                                                  mean(baseLat, na.rm = TRUE) + rangeLat)) +
+                         theme_grey() +
+                         xlab("Longitude") + ylab("Latitude") +
+                         labs(title = 'Layer Data Map',
+                              caption = paste("A map of [", datasetName,
+                                              "] sampling sites,  \nusing coordinates found within the layer data.",
+                                              sep = ""))
+                       
+                     }
+   # ## maybe if/else within rangeLat check where if small enough, 
+   # ggplot(data =  map_data('state') %>% 
+   #          filter(region %in% c("oregon", "washington"))) +    #use layer data to pull state info, to make more generalized
+   #   geom_polygon(aes(x=long, y = lat, group = group), 
+   #                fill = 'grey', color = 'black') +  
+   #   geom_point(data=dataset_profile, 
+   #              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`), 
+   #              shape = 'x', color = 'red') + 
+   #   coord_fixed(1.3) + 
+   #   theme_grey() +
+   #   xlab("Longitude") + ylab("Latitude") +
+   #   labs(title = 'Layer Data Map',
+   #        caption = paste("A map of [", datasetName,
+   #                        "] sampling sites,  \nusing coordinates found within the layer data.",
+   #                        sep = ""))
    
-  rangeLat <- if (diff(range(baseLong, na.rm = TRUE)) <= 5.0){
-                  diff(range(baseLong, na.rm = TRUE)) * 25
-              } else {
-                  diff(range(baseLong, na.rm = TRUE)) * 30
-              }
-                    
-  calcLat <- rangeLat * 2.6
-  
-   profileMap <- ggplot(data =  map_data("world2")) + 
-                            geom_polygon(aes(x=long, y = lat, group = group), 
-                                         fill = 'grey', color = 'black') + 
-                            geom_polygon(data = country, aes(x = long, y = lat, group = group),
-                                         fill = 'lightblue', color = 'black') +
-                            geom_point(data= ISCN3$profile %>%
-                                filter(dataset_name_sub == datasetName),
-                                        aes(x = `long (dec. deg)` + 360,
-                                            y = `lat (dec. deg)`),
-                                        shape = 'x', color = 'red') +
-                          coord_cartesian(xlim = c(mean(baseLong, na.rm = TRUE) + 360 - calcLat,
-                                                   mean(baseLong, na.rm = TRUE) + 360 + calcLat),
-                                          ylim = c(mean(baseLat, na.rm = TRUE) - rangeLat,
-                                                   mean(baseLat, na.rm = TRUE) + rangeLat)) +
-                          theme_grey() +
-                          xlab("Longitude") + ylab("Latitude") +
-                          labs(title = 'Profile Data Map',
-                               caption = paste("A map of [", datasetName,
-                                        "] sampling sites,  \nusing coordinates found within the profile data.", sep = ""))
-                            #coord_map("ortho", orientation = c(90, 0, 0))
    
-  baseLat <- ISCN3$layer %>%
-                  filter(dataset_name_sub == datasetName) %>%
-                  dplyr::pull('lat (dec. deg)')
-  
-  baseLong <- ISCN3$layer %>%
-                  filter(dataset_name_sub == datasetName) %>%
-                  dplyr::pull('long (dec. deg)')
    
-  rangeLat <- if (diff(range(baseLong, na.rm = TRUE)) <= 5.0){
-                  diff(range(baseLong, na.rm = TRUE)) * 13.5
-              } else {
-                  diff(range(baseLong, na.rm = TRUE)) * 16
-              }
-  
-  calcLat <- (rangeLat * 2.6)
-  
-   layerMap <- ggplot(data =  map_data('world2')) + 
-                           geom_polygon(aes(x=long, y = lat, group = group), 
-                                        color = 'black', fill = 'grey') +
-                           geom_polygon(data = ggplot2::map_data('world2', 'usa'),
-                                        aes(x = long, y = lat, group = group),
-                                        fill = 'lightblue', color = 'black') +
-                           geom_point(data= ISCN3$layer %>%
-                                          filter(dataset_name_sub == datasetName) %>%
-                                          dplyr::select(where(function(xx){!all(is.na(xx))})) %>% 
-                                          select(`long (dec. deg)`, `lat (dec. deg)`) %>%
-                                          unique(), 
-                                        aes(x = `long (dec. deg)` + 360, #shift y-coordinate 360 degrees into the correct orientation
-                                            y = `lat (dec. deg)`),
-                                        shape = 'x', color = 'red') +
-                          coord_cartesian(xlim = c(mean(baseLong, na.rm = TRUE) + 360 - calcLat,
-                                                   mean(baseLong, na.rm = TRUE) + 360 + calcLat),
-                                          ylim = c(mean(baseLat, na.rm = TRUE) - rangeLat,
-                                                   mean(baseLat, na.rm = TRUE) + rangeLat)) +
-                          theme_grey() +
-                          xlab("Longitude") + ylab("Latitude") +
-                          labs(title = 'Layer Data Map',
-                               caption = paste("A map of [", datasetName,
-                                        "] sampling sites,  \nusing coordinates found within the layer data.",
-                                         sep = ""))
-#### PLOTS ####   
-   histograms <- ggplot(ISCN3$profile %>%
-                        filter(dataset_name_sub == datasetName) %>%
-                        dplyr::select(where(function(xx){!all(is.na(xx))})) %>%
-                              pivot_longer(cols = intersect(names(.), ISCN3$type_columns$num_cols), 
-                                  values_to = 'measurement', names_to = 'type')) +
-                              geom_histogram(aes(x=measurement)) +
-                              facet_wrap(~type, scales='free') +
-                          theme_grey() +
-                          labs(title = 'Profile Value Histograms',
-                               caption = paste("Histograms detailing measurements in [", datasetName,
-                                        "] profile data.", sep = ""))
    
-   depthPlots <- ggplot(ISCN3$layer %>%
-                        filter(dataset_name_sub == datasetName) %>%
+   
+   
+     
+   #### PLOTS ####   
+   histograms <- 
+     if(datasetName %in% ISCN3$profile$dataset_name_sub){
+     
+                          ggplot(ISCN3$profile %>%
+                          filter(dataset_name_sub == datasetName) %>%
+                          dplyr::select(where(function(xx){!all(is.na(xx))})) %>%
+                                pivot_longer(cols =  intersect(names(.), ISCN3$type_columns$num_cols), 
+                                    values_to = 'measurement', names_to = 'type')) +
+                                geom_histogram(aes(x=measurement)) +
+                                facet_wrap(~type, scales='free') +
+                            theme_grey() +
+                            labs(title = 'Profile Value Histograms',
+                                caption = paste("Histograms detailing measurements in [", datasetName,
+                                          "] profile data.", sep = ""))
+     
+     } else {NA}
+     
+   depthPlots <- ggplot(fixedCountryLayerData %>%
                         dplyr::select(where(function(xx){!all(is.na(xx))})) %>% 
                               pivot_longer(cols=c('layer_top (cm)', 'layer_bot (cm)'),
                                       values_to='depth') %>%
@@ -292,6 +399,10 @@ plotGenerate <- function(ISCN3, datasetName){
                           labs(title = 'Layer Data Depth Plots',
                                caption = paste("Plots of [", datasetName,
                                         "] layer data by depth.", sep = ""))
+   
+   if(is.na(profileTable)){
+     profileTable <- paste("[", datasetName, "] does not contain profile data.", sep = "")
+     }
   
 #### RETURN ####   
 return(list(summaryStudyTable = studyTable,
@@ -303,17 +414,26 @@ return(list(summaryStudyTable = studyTable,
             depthValuePlots = depthPlots))  
 }
 
-# HeckmanVisuals <- plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn')
-# 
-# print(HeckmanVisuals)
+#Visuals <- plotGenerate(ISCN3, datasetName = 'Lu_PIMA')
+Visuals <- plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn')
+#Visuals <- plotGenerate(ISCN3, datasetName = 'Jorgensen_NPS')
+
+print(Visuals #, na.print = ""
+      )
 
 ```
 
 ## Heckman/Swanston Biscuit Burn
 ```{r}
 
-print(plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn'))
 
+#  datasetName <- "Heckman/Swanston Biscuit Burn"
+   datasetName <- "Lu_PIMA"
+
+                 
+
+
+print(profileMap)
 ```
 
 ## Lu_PIMA
@@ -323,137 +443,110 @@ print(plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn'))
 
 ## Heckman lithosequence
 ```{r}
-
 ```
 
 ## Oak Ridge National Lab_Loblolly_DWJ
 ```{r}
-
 ```
 
 ## Lu_LTER
 ```{r}
-
 ```
 
 ## Lehmann Soil C&BC #1
 ```{r}
-
 ```
 
 ## Schuur
 ```{r}
-
 ```
 
 ## Lehmann NE US soils
 ```{r}
-
 ```
 
 ## Vogel
 ```{r}
-
 ```
 
 ## Myers-Smith
 ```{r}
-
 ```
 
 ## USGS Muhs
 ```{r}
-
 ```
 
 ## USGS Harden Yazoo
 ```{r}
-
 ```
 
 ## Boby_Mack
 ```{r}
-
 ```
 
 ## Kane
 ```{r}
-
 ```
 
 ## Bonanza LTER
 ```{r}
-
 ```
 
 ## Jorgensen_YKDE
 ```{r}
-
 ```
 
 ## UMBS_FASET
 ```{r}
-
 ```
 
 ## Jorgensen_ARCN
 ```{r}
-
 ```
 
 ## Oak Ridge National Lab_TDE
 ```{r}
-
 ```
 
 ## USGS Harden
 ```{r}
-
 ```
 
 ## USDA-FS NRS Landscape Carbon Inventory
 ```{r}
-
 ```
 
 ## Bockheim
 ```{r}
-
 ```
 
 ## Jorgensen_NPS
 ```{r}
-
 ```
 
 ## Permafrost_RCN
 ```{r}
-
 ```
 
 ## Northern Circumpolar Soil Carbon Database (NCSCD)
 ```{r}
-
 ```
 
 ## USGS_S3C
 ```{r}
-
 ```
 
 ## AK DSC Project SOC stock computation
 ```{r}
-
 ```
 
 ## Worldwide soil carbon and nitrogen data
 ```{r}
-
 ```
 
 ## NRCS Sept/2014
 ```{r}
-
 ```
 
 
