@@ -13,10 +13,9 @@
 #' @importFrom readr read_csv
 
 
-dataDir <- '~/Desktop/Research/Kane'
   
 #data read in for citation [2] not included
-  #url confirmation is needed, see ##TODO from 114_Kane.Rmd
+  #url confirmation is needed, see ##TODO from data_reports/114_Kane.Rmd
 #KaneBiophysicalData is missing header information that could not be found online, contacting of researchers is necessary
 #licensing information was not found, contacting of EDI is necessary
 
@@ -24,11 +23,11 @@ dataDir <- '~/Desktop/Research/Kane'
 readKane2004 <- function(dataDir, download = TRUE, verbose = FALSE){
  
   
-  urlTable <- data.frame(fileBase = c('KaneSoilData.txt', 'KaneBiophysicalData.txt', 'KaneMetaData.xml'),
+  urlTable <- data.frame(fileBase = c('x190_2031_all_soil_profile_depths_carbon_BD.txt', 'x190_1608_sitesummarydata.txt', 'BNZeml132.xml'),
                           downloadURL = c('http://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/190_2031_all_soil_profile_depths_carbon_BD.txt', 'http://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/190_1608_sitesummarydata.txt', 'http://www.lter.uaf.edu/eml/BNZeml132.xml'))
   
   
-  #for loop to read in data from url_table if it does not exist in local repository
+  #for loop to read in data from urlTable if it does not exist in local repository
   for(ii in 1:nrow(urlTable)){
     dataFile <- file.path(dataDir, urlTable$fileBase[ii])
     if(!(file.exists(dataFile))){
@@ -49,27 +48,21 @@ readKane2004 <- function(dataDir, download = TRUE, verbose = FALSE){
   #   )
   
   #assigning filenames to a variable
-  kanePitdata <- file.path(dataDir, 'KaneSoilData.txt')
-  kaneBiophysicaldata <- file.path(dataDir, 'KaneBiophysicalData.txt')
-  kaneMetadata <- file.path(dataDir, 'KaneMetaData.xml')
-  kaneDatafiles <- file.path(c(kanePitdata, kaneBiophysicaldata, kaneMetadata))
+  kaneLayerdata <- file.path(dataDir, 'x190_2031_all_soil_profile_depths_carbon_BD.txt')
+  kaneSitedata <- file.path(dataDir, 'x190_1608_sitesummarydata.txt') 
+  kaneMetadata <- file.path(dataDir, 'BNZeml132.xml')
   
   #reading in data
-  readKanePitData <- readr::read_csv(kanePitdata)
-  readKaneBiophysicalData <- readr::read_csv(kaneBiophysicaldata, col_names = c("Site Description", "Site ID", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14")) #note that most headers are missing
+  readKanelayerData <- readr::read_csv(kaneLayerdata)
+  readKanesiteData <- readr::read_csv(kaneSitedata, col_names = c("Site Description", "Site ID", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14")) #note that most headers are missing
 
   #ans and its return
-  ans <- list(downloadFiles = c(kanePitdata, kaneBiophysicaldata, kaneMetadata),
+  ans <- list(downloadFiles = c(kaneLayerdata, kaneSitedata, kaneMetadata),
               licenseShort = "",
               licenseFull = "",
               citation = c("Kane, Evan S.; Ping, Chien-Lu L. 2004. Soil carbon stabilization along productivity gradients in interior Alaska: Summer 2003, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:132, http://www.lter.uaf.edu/data/data-detail/id/132."),
               abstract = c("Boreal forests in a warmer future climate are likely to exhibit altered productivity levels, tightened fire return intervals, and increased decomposition rates to varying degrees across the landscape. This research focuses on mechanisms of soil C stabilization in P. mariana systems along gradients in stand productivity. Charred material in the soil will be quantified to understand the lasting effect of fire on the stabilization of soil C. The interaction between temperature and productivity in relation to the stabilization of soil C will be investigated by monitoring climate and soil temperatures along the productivity gradients and through laboratory incubations of soil. Research questions are addressed in three main areas of inquiry: 1) how the interaction between stand production and landscape position effect the stabilization of C throughout the soil profile, 2) how the contribution of burn residues to total C accumulation varies across the landscape, and 3) the relationship between aboveground productivity and burn residues across the landscape. The overall goal is to apply an understanding of the biophysical controls on C storage in the boreal forest to the landscape level."))
-  
-  for(readFile in kaneDatafiles){
-    ans[[gsub('.csv', '', basename(readFile))]] <- data.table::as.data.table(
-      read.csv(readFile, colClasses="character", na.strings = c('NA', ''))
-    )
-  }
+
   
   return(ans)
   
