@@ -21,12 +21,18 @@
 #Download and read in the raw data tables for Harden2008 data citations
 readUSGSHarden2008 <- function(dataDir, download = TRUE, verbose = FALSE){
   
-  urlTable <- data.frame(fileBase = c('', '',  'x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt', 'BNZeml334.xml'),
-                         downloadURL = c('', '', 'http://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt', 'http://www.lter.uaf.edu/eml/BNZeml334.xml'))
+  urlTable <- data.frame(fileName = c('',
+                                      '',
+                                      file.path(dataDir, 'x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt'),
+                                      file.path(dataDir, 'BNZeml334.xml')),
+                         downloadURL = c('',
+                                         '',
+                                         'http://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt',
+                                         'http://www.lter.uaf.edu/eml/BNZeml334.xml'))
   
   #for loop to read in data from url_table if it does not exist in local repository
   for(ii in 1:nrow(urlTable)){
-    dataFile <- file.path(dataDir, urlTable$fileBase[ii])
+    dataFile <- urlTable$fileName[ii]
     if(!(file.exists(dataFile))){
       download.file(urlTable$downloadURL[ii], destfile= dataFile, quiet=FALSE)
     }
@@ -44,25 +50,28 @@ readUSGSHarden2008 <- function(dataDir, download = TRUE, verbose = FALSE){
   #     }
   #   )
   
-  #assigning filenames to a variable
-  # harden2008aData <- file.path(dataDir, '')
-  # harden2008aMetadata <- file.path(dataDir, '')
-  harden2008bData <- file.path(dataDir, 'x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt')
-  harden2008bMetadata <- file.path(dataDir, 'BNZeml334.xml')
   
   #reading in data
-  # readHarden2008aData <- readr::read_csv(harden2008aData)
-  # readHarden2008aMetadata <- readr::read_csv(harden2008aMetadata)
-  readHarden2008bData <- readr::read_csv(harden2008bData)
-  readHarden2008bMetadata <- readr::read_csv(harden2008bMetadata)
+  # readHarden2008aData <- readr::read_csv(urlTable$fileName[1])
+  # readHarden2008aMetadata <- readr::read_csv(urlTable$fileName[2])
+  readHarden2008bData <- readr::read_csv(urlTable$fileName[3])
+  readHarden2008bMetadata <- readr::read_csv(urlTable$fileName[4])
   
   
   #ans and its return
-  ans <- list(downloadFiles = c(harden2008aData, harden2008aMetadata, harden2008bData, harden2008bMetadata),
+  ans <- list(downloadFiles = c(urlTable$fileName[1],
+                                urlTable$fileName[2],
+                                urlTable$fileName[3],
+                                urlTable$fileName[4]),
+              Harden2008afileName.txt = readHarden2008aData,
+              Harden2008afileName.xml = readHarden2008aMetadata,
+              x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt = readHarden2008bData,
+              BNZeml334.xml = readHarden2008bMetadata,
               licenseShort = "",
               licenseFull = "",
               citation = c("", "", "Jennifer W. Harden, Merritt R Turetsky, Kristen L Manies, Mark P. Waldrop, and Bonanza Creek LTER. 2008. Bonanza Creek moisture gradient soil core data: 2004. LTER Network Member Node. https://pasta.lternet.edu/package/metadata/eml/knb-lter-bnz/334/18.", ""),
-              abstract = c(""))
+              abstract = c(""),
+              publications = "Currently no publications.")
   
   return(ans)
   

@@ -19,13 +19,15 @@
 readSchuur2009 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   
-  urlTable <- data.frame(fileBase = c('SchuurData.txt', 'SchuurMetaData.xml'),
-                         downloadURL = c('', ''))
+  urlTable <- data.frame(fileName = c(file.path(dataDir, 'SchuurData.txt'),
+                                      file.path(dataDir, 'SchuurMetaData.xml')),
+                         downloadURL = c('',
+                                         ''))
   
   
   #for loop to read in data from url_table if it does not exist in local repository
   for(ii in 1:nrow(urlTable)){
-    dataFile <- file.path(dataDir, urlTable$fileBase[ii])
+    dataFile <- urlTable$fileName[ii]
     if(!(file.exists(dataFile))){
       download.file(urlTable$downloadURL[ii], destfile= dataFile, quiet=FALSE)
     }
@@ -43,16 +45,16 @@ readSchuur2009 <- function(dataDir, download=TRUE, verbose=FALSE){
   #     }
   #   )
   
-  #assigning filenames to a variable
-  schuurData <- file.path(dataDir, 'SchuurData.txt')
-  schuurMetadata <- file.path(dataDir, 'SchuurMetaData.xml')
   
   #reading in data
-  readSchuurdata <- readr::read_csv(schuurData)
-  readSchuurMetadata <- readr::read_csv(schuurMetadata)
+  readSchuurdata <- readr::read_csv(urlTable$fileName[1])
+  readSchuurMetadata <- readr::read_csv(urlTable$fileName[2])
   
   #ans and its return
-  ans <- list(downloadFiles = c(schuurData, schuurMetadata),
+  ans <- list(downloadFiles = c(urlTable$fileName[1],
+                                urlTable$fileName[2]),
+              file.txt = readSchuurdata,
+              file.xml = readSchuurMetadata,
               licenseShort = "",
               licenseFull = "",
               citation = c("Caitlin Elizabeth Hicks-Pries and Bonanza Creek LTER. 2009. The impact of permafrost thaw on ecosystem carbon balance: Eight Mile Lake soil carbon and nitrogen. LTER Network Member Node. knb-lter-bnz.366.16."),
