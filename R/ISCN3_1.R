@@ -235,7 +235,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   if(verbose){message('done')}
   
   #hardcoding country name
-  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Oak Ridge National Lab_Lolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C")
+  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Heckman lithosequence", "Oak Ridge National Lab_Lolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C")
   dataset_profile[dataset_profile$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
   
   #filling citations
@@ -319,32 +319,15 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
     standardCast()
   if(verbose){message('done.')}
   
-  #correcting missing country info in layer data, for when in USA
-  # dataset_layer <- dataset_layer %>%
-  #   dplyr::filter(`country (country)` == "Unknown") %>%
-  #   dplyr::filter(!is.na(`state (state_province)`)) %>%
-  #   mutate(`country (country)` = as.factor(c("United States")))
-  # 
-  # #doing the same but with profile data
-  # dataset_profile <- dataset_profile %>%
-  #   dplyr::filter(`country (country)` == "Unknown") %>%
-  #   dplyr::filter(!is.na(`state (state_province)`)) %>%
-  #   mutate(`country (country)` = as.factor(c("United States")))
+
+  # dataset_layer %>%
+  #   mutate(`country (country)` = if_else(`country (country)`== "Unkown", "United States", `country (country)`))
   
-  dplyr::if_else(dataset_layer$`country (country)`== "Unkown",
-                 dataset_layer <- dataset_layer %>%
-                   mutate(`country (country)` = as.factor(c("United States"))),
-                 dataset_layer <- dataset_layer)
+  #hardcoding country in layer data
+  dataset_layer[dataset_layer$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
 
-  # fixedCountryLayerData <- 
-  #   if(is.na(datasetLayer$`country (country)`[1])) {
-  #     datasetLayer %>%
-  #       mutate(`country (country)` = as.factor(c("United States")))
-  #   } else if(datasetLayer$`country (country)`[1] == "Unknown") {
-  #     datasetLayer %>%
-  #       mutate(`country (country)` = as.factor(c("United States")))
-  #   } else{datasetLayer}
 
+  
   
   
   #put if statements to catch if it's a particular dataset/frame which will perform special functions to do what we need to
