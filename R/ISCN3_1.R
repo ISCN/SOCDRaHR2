@@ -319,6 +319,34 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
     standardCast()
   if(verbose){message('done.')}
   
+  #correcting missing country info in layer data, for when in USA
+  # dataset_layer <- dataset_layer %>%
+  #   dplyr::filter(`country (country)` == "Unknown") %>%
+  #   dplyr::filter(!is.na(`state (state_province)`)) %>%
+  #   mutate(`country (country)` = as.factor(c("United States")))
+  # 
+  # #doing the same but with profile data
+  # dataset_profile <- dataset_profile %>%
+  #   dplyr::filter(`country (country)` == "Unknown") %>%
+  #   dplyr::filter(!is.na(`state (state_province)`)) %>%
+  #   mutate(`country (country)` = as.factor(c("United States")))
+  
+  dplyr::if_else(dataset_layer$`country (country)`== "Unkown",
+                 dataset_layer <- dataset_layer %>%
+                   mutate(`country (country)` = as.factor(c("United States"))),
+                 dataset_layer <- dataset_layer)
+
+  # fixedCountryLayerData <- 
+  #   if(is.na(datasetLayer$`country (country)`[1])) {
+  #     datasetLayer %>%
+  #       mutate(`country (country)` = as.factor(c("United States")))
+  #   } else if(datasetLayer$`country (country)`[1] == "Unknown") {
+  #     datasetLayer %>%
+  #       mutate(`country (country)` = as.factor(c("United States")))
+  #   } else{datasetLayer}
+
+  
+  
   #put if statements to catch if it's a particular dataset/frame which will perform special functions to do what we need to
   
   
