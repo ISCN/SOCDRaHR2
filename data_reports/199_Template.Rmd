@@ -153,7 +153,7 @@ ggplot(dataset_layer %>%
 plotGenerate <- function(ISCN3, datasetName){
   
 ### VARIABLE SETTING ####
-  datasetLayer <- datasetLayer %>%
+  datasetLayer <- ISCN3$layer %>%
              filter(dataset_name_sub == datasetName)
   
   
@@ -269,7 +269,7 @@ if(datasetName %in% ISCN3$profile$dataset_name_sub) #checking if dataset has pro
                    
                    # ^STILL DEBUGGING
      }
-   } else {profileMap <- profileMap}
+   } else {profileMap <- NA}
    
    
  
