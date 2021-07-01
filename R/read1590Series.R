@@ -1,4 +1,4 @@
-read1590Series <- function(dataDir, verbose=FALSE){
+#read1590Series <- function(dataDir, verbose=FALSE){
   
   dataDir <- '~/Documents/Datasets/USGS1590'
   
@@ -143,7 +143,8 @@ read1590Series <- function(dataDir, verbose=FALSE){
                                                       rep('Modesto Formation, lower member, 40 Ka', 1 +29-23), rep(NA, 1+32-30),
                                                       rep('Riverbank Formation, upper member, 130 Ka',1+39-33), rep(NA, 1+40-40),
                                                       rep('Riverbank Formation, upper member, 130 Ka',1+50-41), rep(NA, 1+53-51),
-                                                      rep('Riverbank Formation, middle member. 250 Ka', 1+75-54), rep(NA, 1+77-76), #oh hey, don't need to skip empty lines
+                                                      rep('Riverbank Formation, middle member. 250 Ka', 1+75-54), rep(NA, 1+77-76), 
+                                                      #oh hey, don't need to skip empty lines
                                                       rep('Riverbank Formation, lower member, 330 Ka',1 + 83-78), rep(NA, 1+89-84))),
                            part3 = list(page = 47,
                                         columnCuts = c(7, 15, 27, 37, 49, 59, 71, 83, 95, 107, 117, 125, 135, 145),
@@ -186,10 +187,11 @@ read1590Series <- function(dataDir, verbose=FALSE){
                            
   ))
   
+  ###Dev work#####
   table_info.ls <- tableInfo.ls$reportA$chem_extractive2
   part_info.ls <- table_info.ls$part3
   
-  write_file(reportA[50], file =  'temp/text.txt')
+  write_file(reportA[52], file =  'temp/text.txt')
   write_file(reportA[part_info.ls$page], file =  'temp/text.txt')
   
   temp1 <- str_split(reportA[part_info.ls$page], '\n') %>%
@@ -210,12 +212,11 @@ read1590Series <- function(dataDir, verbose=FALSE){
     mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
     mutate(across(id_cols, ~na_if(., ''))) %>%
     tidyr::fill(all_of(id_cols), .direction = 'down') %>%
-    group_by(No, Sample, Horizon, Subtable) %>% #TODO figure out how to reference id_cols instead
+    group_by(No, Sample, Horizon, Subtable) %>% #TODO figure out how to reference id_cols instead??
     summarize(across(everything(), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
-    mutate(across(everything(), ~gsub('\\s+$', '', .))) #%>%
-    #mutate(No = if_else(grepl('^\\d$', No), paste0('0', No), No )) %>%
-    #arrange(No)
+    mutate(across(everything(), ~gsub('\\s+$', '', .)))
   
+  #####example to pull together a table from the parts######
   table_info.ls <- tableInfo.ls$reportA$phys_prop
   sup_data_tables <- plyr::ldply(table_info.ls[grepl('part', names(table_info.ls))], 
                                  function(part_info.ls, colNames = table_info.ls$columeNames){
@@ -235,4 +236,4 @@ read1590Series <- function(dataDir, verbose=FALSE){
                                    return(ans)
                                  }, .id = table_info.ls$title)
   
-}
+#}
