@@ -34,53 +34,174 @@ read1590Series <- function(dataDir, verbose=FALSE){
   #Total Chem analysis - fraction 2 pg 57-61 = 5
   # 27 pages per report for 7 reports at 0.5 hours per page is 95 hours of work
   
+  tableInfo.ls <- list(reportA = list(
+    ################################
+    #### Field description #########
+    ################################
+    field_desc = list(title = 'Field descriptions',
+                      analysts = 'J. W. Harden U. S. Geological Survey',
+                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Lower boundary', 
+                                      'Moist color', 'Dry color', 'Texture', 'Structure',   
+                                      'Consistence:Dry', 'Consistence:Moisture', 'Consitence:Wet',
+                                      'Roots', 'Pores', 'Clay films', 'pH', 
+                                      'Assumed Parent Material:Texture', 'Assumed Parent Material:Wet consistence'),
+                      part1 = list(page = 38,
+                                   columnCuts = c(10, 19, 30, 41, 51, 64, 75, 89, 105, 113, 124, 133, 143, 150, 156, 166, 176),
+                                   subtables = c(rep(NA, 13), rep('Modern River Alluvium', 4), rep(NA, 4), 
+                                                 rep('Post-Modesto Deposits, 0.2 Ka', 7), rep(NA, 2), rep('Post-Modesto Deposits, 0.2 Ka', 10), rep(NA, 4), 
+                                                 rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), 
+                                                 rep('Post-Modesto Deposits, 3 Ka', 11), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 9), rep(NA, 2), 
+                                                 rep('Post-Modesto Deposits, 3 Ka', 10), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), 
+                                                 rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 6))),
+                      part2 = list(page = 39,
+                                   columnCuts = c(7, 16, 26, 38, 48, 62, 75, 86, 102, 113, 124, 133, 143, 155, 165, 173, 184), #define column number splits
+                                   subtables = c(rep(NA, 11), 
+                                                 rep('Modesto Formation, upper member, 10 Ka', 19), rep(NA, 5), #define data rows by subtables
+                                                 rep('Modesto Formation, lower member, 40 Ka', 1+46-36), rep(NA, 4),
+                                                 rep('Riverbank Formation, upper member, 130 Ka', 12), rep(NA, 2),
+                                                 rep('Riverbank Formation, upper member, 130 Ka', 20), rep(NA, 4),
+                                                 rep('Riverbank Formation, middle member. 250 Ka', 8), rep(NA, 6))),
+                      part3 = list(page = 40,
+                                   columnCuts = c(6, 16, 26, 38, 48, 62, 75, 86, 102, 110, 121, 130, 138, 149, 159, 167, 174),
+                                   subtables = c(rep(NA, 1+14-1), #inclusive rows between line 14 and 1 => 1 + 14 - 1
+                                                 rep('Riverbank Formation, middle member, 250 Ka', 13), rep(NA, 3),
+                                                 rep('Riverbank Formation, middle member, 250 Ka', 1+46-31), rep(NA, 1+52-47),
+                                                 rep('Riverbank Formation, lower member, 330 Ka', 1+63-53), rep(NA, 1+69-64),
+                                                 rep('Turlock Lake Formation, 600 Ka', 1+75-70), rep(NA, 1+78-76),
+                                                 rep('Turlock Lake Formation, 600 Ka', 1+91-79), rep(NA, 1+94-92),
+                                                 rep('Turlock Lake Formation, 600 Ka', 1+111-95), rep(NA, 1+117-112))),
+                      part4 = list(page = 41,
+                                   columnCuts = c(6, 16, 26, 38, 48, 60, 74, 84, 96, 105, 115, 125, 133, 144, 156, 165, 176),
+                                   subtables = c(rep(NA, 1+14-1), #inclusive rows between line 14 and 1 => 1 + 14 - 1
+                                                 rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+37-15), rep(NA, 1+40-38),
+                                                 rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+61-41), rep(NA, 1+64-62),
+                                                 rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+81-65), rep(NA, 1+87-82)))
+    ),
+    ##############################
+    ##### Physical properties#####
+    ##############################
+    phys_prop = list(title = 'Physical properties',
+                     analysts ='A.J. Busacca, Peter Janitsky, and R. Meixner, University of California, Davis', 
+                     columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', '>2-mm', 
+                                     'Total sand', 'vco sand', 'co sand', 'm sand', 'fi+vfi sand', 'silt', '<2-\\mu clay', '< 1-\\mu clay', 
+                                     'Bulk density (g/cm^3)'),
+                     part1 = list(page = 42,
+                                  columnCuts = c(13, 21, 35, 42, 51, 60, 68, 76, 84, 92, 101, 109, 118),
+                                  subtables = c(rep(NA, 1+9-1), 
+                                                rep('Modern River Alluvium', 1 + 13 - 10), rep(NA, 1+15-14), 
+                                                rep('Post-Modesto Deposits, 0.2 Ka',1 + 29 - 16), rep(NA, 1+31-30),
+                                                rep('Post-Modesto Deposits, 0.2 Ka',1 + 40-32 ), rep(NA, 1+41-41), 
+                                                rep('Post-Modesto Deposits, 3 Ka', 1+51-42), rep(NA, 1+52-52), 
+                                                rep('Post-Modesto Deposits, 3 Ka', 1+57-53), rep(NA, 1+58-58), 
+                                                rep('Post-Modesto Deposits, 3 Ka', 1+69-59), rep(NA, 1+73-70))),
+                     part2 = list(page = 43,
+                                  columnCuts = c(7, 15, 25, 35, 44, 52, 60, 68, 76, 83, 91, 99, 107),
+                                  #NA, 1+1-8; MFU, 1+18-9; NA, 1+20-19; MFL, 1 + 27-21; NA, 1+30-28; RFU, 1+47-31; NA, 1+49-48; RFM, 1+69-50; NA, 73-70
+                                  subtables = c(rep(NA, 1+8-1), 
+                                                rep('Modesto Formation, upper member, 10 Ka', 1+18-9), rep(NA, 1+20-19),
+                                                rep('Modesto Formation, lower member, 40 Ka', 1 + 27-21), rep(NA, 1+30-28),
+                                                rep('Riverbank Formation, upper member, 130 Ka',1+47-31), rep(NA, 1+49-48),
+                                                rep('Riverbank Formation, middle member. 250 Ka', 1+69-50), rep(NA, 1+73-70))),
+                     part3 = list(page = 44,
+                                  columnCuts = c(14, 21, 31, 43, 49, 57, 65, 75, 81, 89, 99, 105, 112),
+                                  subtables = c(rep(NA, 1+9-1), 
+                                                rep('Riverbank Formation, lower member, 330 Ka', 1+15-10), rep(NA, 1+18-16),
+                                                rep('Turlock Lake Formation, 600 Ka', 1+27-19), rep(NA, 1+28-28),
+                                                rep('Turlock Lake Formation, 600 Ka', 1+38-29), rep(NA, 1+41-39),
+                                                rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+56-42), rep(NA, 1+57-57),
+                                                rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+68-58), rep(NA, 1+74-69)))
+    ),
+    #########################################
+    ##### Extractive chemical analyses ######
+    ########################################
+    chem_extractive = list(title = 'Extractive chemical analyses',
+                           analysts ='A. L. Walker (U.S. Geological Survey) with A.J. Busacca, Peter Janitsky, and R. Meixner (University of California, Davis)', 
+                           note = 'CEC, cation-exchange capacity; m, with magnetic minerals; w, without magnetic minerals.',
+                           columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 
+                                           'Percentage of <2-mm: Total N', 'Percentage of <2-mm: Organic C', 
+                                           'mg/100 g soil: Exchange Na', 'mg/100 g soil: Exchange K', 
+                                           'mg/100 g soil: Exchange Ca', 'mg/100 g soil: Exchange Mg', 
+                                           'mg/100 g soil: Exchange N', 'mg/100 g soil: CEC', 
+                                           'mg/100 g soil: pH 1:1H_2O', 'mg/100 g soil: pH 1:1KCl', 'mg/100 g soil: pH Saturated'),
+                           part1 = list(page = 45,
+                                        columnCuts = c(7, 15, 24, 31, 43, 51, 65, 79, 93, 105, 117, 127, 137, 147),
+                                        subtables = c(rep(NA, 1+11-1), 
+                                                      rep(c('Modern River Alluvium', NA), 4), rep(NA, 1+21-20), 
+                                                      rep('Post-Modesto Deposits, 0.2 Ka',1 + 27-22), rep(NA, 1+28-28),
+                                                      rep('Post-Modesto Deposits, 0.2 Ka',1 + 36-29), rep(NA, 1+39-37), 
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+43-40), rep(NA, 1+44-44), 
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+51-45), rep(NA, 1+52-52), 
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+59-53), rep(NA, 1+60-60),
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+67-61), rep(NA, 1+68-68),
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+73-69), rep(NA, 1+74-74),
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+79-75), rep(NA, 1+85-80))),
+                           part2 = list(page = 46,
+                                        columnCuts = c(7, 15, 25, 33, 45, 55, 67, 77, 89, 101, 111, 121, 129, 138),
+                                        subtables = c(rep(NA, 1+8-1), 
+                                                      rep('Modesto Formation, upper member, 10 Ka', 1+13-9), rep(NA, 1+14-14),
+                                                      rep('Modesto Formation, upper member, 10 Ka', 1+19-15), rep(NA, 1+22-20),
+                                                      rep('Modesto Formation, lower member, 40 Ka', 1 +29-23), rep(NA, 1+32-30),
+                                                      rep('Riverbank Formation, upper member, 130 Ka',1+39-33), rep(NA, 1+40-40),
+                                                      rep('Riverbank Formation, upper member, 130 Ka',1+50-41), rep(NA, 1+53-51),
+                                                      rep('Riverbank Formation, middle member. 250 Ka', 1+75-54), rep(NA, 1+77-76), #oh hey, don't need to skip empty lines
+                                                      rep('Riverbank Formation, lower member, 330 Ka',1 + 83-78), rep(NA, 1+89-84))),
+                           part3 = list(page = 47,
+                                        columnCuts = c(7, 15, 27, 37, 49, 59, 71, 83, 95, 107, 117, 125, 135, 145),
+                                        subtables = c(rep(NA, 1+8-1), 
+                                                      rep('Turlock Lake Formation, 600 Ka', 1+29-9), rep(NA, 1+32-30),
+                                                      rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+61-33), rep(NA, 1+67-62)))
+      
+    )
+  ))
   
-  #
+  table_info.ls <- tableInfo.ls$reportA$chem_extractive
+  part_info.ls <- table_info.ls$part3
   
-  tableInfo.ls <- list(reportA_STable1_pg1 = list( page = 38,
-                                               columnCuts = c(10, 19, 30, 41, 51, 64, 75, 89, 105, 113, 124, 133, 143, 150, 156, 166, 176),
-                                               columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Lower boundary', 
-                                                               'Moist color', 'Dry color', 'Texture', 'Structure',   
-                                                               'Consistence:Dry', 'Consistence:Moisture', 'Consitence:Wet',
-                                                               'Roots', 'Pores', 'Clay films', 'pH', 
-                                                               'Assumed Parent Material:Texture', 'Assumed Parent Material:Wet consistence'),
-                                               subtables = c(rep(NA, 13), rep('Modern River Alluvium', 4), rep(NA, 4), 
-                                                             rep('Post-Modesto Deposits, 0.2 Ka', 7), rep(NA, 2), rep('Post-Modesto Deposits, 0.2 Ka', 10), rep(NA, 4), 
-                                                             rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), 
-                                                             rep('Post-Modesto Deposits, 3 Ka', 11), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 9), rep(NA, 2), 
-                                                             rep('Post-Modesto Deposits, 3 Ka', 10), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), 
-                                                             rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 6))),
-                       reportA_STable1_pg2 = list(page = 39,
-                                                  columnCuts = c(7, 16, 26, 38, 48, 62, 75, 86, 102, 113, 124, 133, 143, 155, 165, 173, 184),
-                                                  columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Lower boundary', 
-                                                                  'Moist color', 'Dry color', 'Texture', 'Structure',   
-                                                                  'Consistence:Dry', 'Consistence:Moisture', 'Consitence:Wet',
-                                                                  'Roots', 'Pores', 'Clay films', 'pH', 
-                                                                  'Assumed Parent Material:Texture', 'Assumed Parent Material:Wet consistence'),
-                                                  subtables = c(rep(NA, 11), rep('Modesto Formation, upper member, 10 Ka', 19), rep(NA, 5),
-                                                                rep('Modesto Formation, upper member, 10 Ka', 11), rep(NA, 4),
-                                                                rep('Riverbank Formation, upper member, 130 Ka', 12), rep(NA, 2),
-                                                                rep('Riverbank Formation, upper member, 130 Ka', 20), rep(NA, 4),
-                                                                rep('Riverbank Formation, middle member. 250 Ka', 8), rep(NA, 6))))
+  write_file(reportA[47], file =  'temp/text.txt')
+  write_file(reportA[part_info.ls$page], file =  'temp/text.txt')
   
-  page_info.ls <- tableInfo.ls$reportA_STable1_pg2
-  
-  write_file(reportA[page_info.ls$page], file =  'temp/text.txt')
-  
-  temp <- str_split(reportA[page_info.ls$page], '\n') %>%
+  temp1 <- str_split(reportA[part_info.ls$page], '\n') %>%
     as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
-    mutate(Subtable = page_info.ls$subtables) %>%
+    mutate(Subtable = part_info.ls$subtables) %>%
     select(Subtable, X) %>%
-    separate(col = X, sep = page_info.ls$columnCuts, into = page_info.ls$columeNames) %>%
+    separate(col = X, sep = part_info.ls$columnCuts, into = table_info.ls$columeNames)
+  
+  id_cols <- c('No', 'Sample', 'Horizon')
+  
+  temp2 <- str_split(reportA[part_info.ls$page], '\n') %>%
+    as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
+    mutate(Subtable = part_info.ls$subtables) %>%
+    select(Subtable, X) %>%
+    separate(col = X, sep = part_info.ls$columnCuts, into = table_info.ls$columeNames) %>% #run only to here first, check cells, then clean
     filter(!is.na(Subtable)) %>%
     mutate(across(-Subtable, ~gsub('^\\s+', '', .))) %>%
     mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
-    mutate(across(c('No', 'Sample'), ~na_if(., ''))) %>%
-    tidyr::fill(No, Sample, .direction = 'down') %>%
-    group_by(Subtable, No, Sample) %>%
+    mutate(across(id_cols, ~na_if(., ''))) %>%
+    tidyr::fill(all_of(id_cols), .direction = 'down') %>%
+    group_by(No, Sample, Horizon, Subtable) %>% #TODO figure out how to reference id_cols instead
     summarize(across(everything(), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
-    mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
-    mutate(across(No, as.numeric) ) %>%
-    arrange(No)
+    mutate(across(everything(), ~gsub('\\s+$', '', .))) #%>%
+    #mutate(No = if_else(grepl('^\\d$', No), paste0('0', No), No )) %>%
+    #arrange(No)
+  
+  sup_data_tables <- plyr::ldply(table_info.ls[grepl('part', names(table_info.ls))], 
+                                 function(part_info.ls, colNames = table_info.ls$columeNames){
+                                   ans <- str_split(reportA[part_info.ls$page], '\n') %>%
+                                     as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
+                                     mutate(Subtable = part_info.ls$subtables) %>%
+                                     select(Subtable, X) %>%
+                                     separate(col = X, sep = part_info.ls$columnCuts, into = colNames) %>%
+                                     filter(!is.na(Subtable)) %>%
+                                     mutate(across(-Subtable, ~gsub('^\\s+', '', .))) %>%
+                                     mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
+                                     mutate(across(c('No', 'Sample', 'Horizon'), ~na_if(., ''))) %>%
+                                     tidyr::fill(No, Sample, Horizon, .direction = 'down') %>%
+                                     group_by(Subtable, No, Sample, Horizon) %>%
+                                     summarize(across(everything(), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
+                                     mutate(across(everything(), ~gsub('\\s+$', '', .))) %>%
+                                     #mutate(across(No, as.numeric) ) %>%
+                                     #arrange(No)
+                                   return(ans)
+                                 }, .id = table_info.ls$title)
   
 }
