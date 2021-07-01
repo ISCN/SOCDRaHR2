@@ -25,34 +25,53 @@ read1590Series <- function(dataDir, verbose=FALSE){
   
   reportA <- pdftools::pdf_text(download_info$download_filename[1])
   
-  #Field Tables pgs 38-41
-  #Physical Properties pgs 42-44
-  #Extractive chemical analyses pg 45-47
-  #Extractive chemical analyses 2 pg 48-50
-  #Mineralogy pg 50-53
-  #Total Chem analysis pg 53-57
-  #Total Chem analysis - fraction 2 pg 57-61
+  #Field Tables pgs 38-41 = 4
+  #Physical Properties pgs 42-44 = 3
+  #Extractive chemical analyses pg 45-47 = 3
+  #Extractive chemical analyses 2 pg 48-50 = 3
+  #Mineralogy pg 50-53= 4
+  #Total Chem analysis pg 53-57 = 5
+  #Total Chem analysis - fraction 2 pg 57-61 = 5
+  # 27 pages per report for 7 reports at 0.5 hours per page is 95 hours of work
   
   
-  #write_file(reportA[38], file =  'temp/text.txt')
+  #
   
-  columnCuts <- c(10, 19, 30, 41, 51, 64, 75, 89, 105, 113, 124, 133, 143, 150, 156, 166, 176)
-  columeNames <- c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Lower boundary', 
-                   'Moist color', 'Dry color', 'Texture', 'Structure',   
-                   'Consistence:Dry', 'Consistence:Moisture', 'Consitence:Wet',
-                   'Roots', 'Pores', 'Clay films', 'pH', 
-                   'Assumed Parent Material:Texture', 'Assumed Parent Material:Wet consistence')
-  subtables <- c(rep(NA, 13), rep('Modern River Alluvium', 4), rep(NA, 4), 
-                 rep('Post-Modesto Deposits, 0.2 Ka', 7), rep(NA, 2), rep('Post-Modesto Deposits, 0.2 Ka', 10), rep(NA, 4), 
-                 rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 11), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 9), rep(NA, 2), 
-                 rep('Post-Modesto Deposits, 3 Ka', 10), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 6))
+  tableInfo.ls <- list(reportA_STable1_pg1 = list( page = 38,
+                                               columnCuts = c(10, 19, 30, 41, 51, 64, 75, 89, 105, 113, 124, 133, 143, 150, 156, 166, 176),
+                                               columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Lower boundary', 
+                                                               'Moist color', 'Dry color', 'Texture', 'Structure',   
+                                                               'Consistence:Dry', 'Consistence:Moisture', 'Consitence:Wet',
+                                                               'Roots', 'Pores', 'Clay films', 'pH', 
+                                                               'Assumed Parent Material:Texture', 'Assumed Parent Material:Wet consistence'),
+                                               subtables = c(rep(NA, 13), rep('Modern River Alluvium', 4), rep(NA, 4), 
+                                                             rep('Post-Modesto Deposits, 0.2 Ka', 7), rep(NA, 2), rep('Post-Modesto Deposits, 0.2 Ka', 10), rep(NA, 4), 
+                                                             rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), 
+                                                             rep('Post-Modesto Deposits, 3 Ka', 11), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 9), rep(NA, 2), 
+                                                             rep('Post-Modesto Deposits, 3 Ka', 10), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), 
+                                                             rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 6))),
+                       reportA_STable1_pg2 = list(page = 39,
+                                                  columnCuts = c(7, 16, 26, 38, 48, 62, 75, 86, 102, 113, 124, 133, 143, 155, 165, 173, 184),
+                                                  columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Lower boundary', 
+                                                                  'Moist color', 'Dry color', 'Texture', 'Structure',   
+                                                                  'Consistence:Dry', 'Consistence:Moisture', 'Consitence:Wet',
+                                                                  'Roots', 'Pores', 'Clay films', 'pH', 
+                                                                  'Assumed Parent Material:Texture', 'Assumed Parent Material:Wet consistence'),
+                                                  subtables = c(rep(NA, 11), rep('Modesto Formation, upper member, 10 Ka', 19), rep(NA, 5),
+                                                                rep('Modesto Formation, upper member, 10 Ka', 11), rep(NA, 4),
+                                                                rep('Riverbank Formation, upper member, 130 Ka', 12), rep(NA, 2),
+                                                                rep('Riverbank Formation, upper member, 130 Ka', 20), rep(NA, 4),
+                                                                rep('Riverbank Formation, middle member. 250 Ka', 8), rep(NA, 6))))
   
-  ReportA_SupTable1 <- str_split(reportA[38], '\n') %>%
-    # convert to tibble and assign unique column names
-    as_tibble(.name_repair = make.names) %>%
-    mutate(Subtable = subtables) %>%
+  page_info.ls <- tableInfo.ls$reportA_STable1_pg2
+  
+  write_file(reportA[page_info.ls$page], file =  'temp/text.txt')
+  
+  temp <- str_split(reportA[page_info.ls$page], '\n') %>%
+    as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
+    mutate(Subtable = page_info.ls$subtables) %>%
     select(Subtable, X) %>%
-    separate(col = X, sep = columnCuts, into = columeNames) %>%
+    separate(col = X, sep = page_info.ls$columnCuts, into = page_info.ls$columeNames) %>%
     filter(!is.na(Subtable)) %>%
     mutate(across(-Subtable, ~gsub('^\\s+', '', .))) %>%
     mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
