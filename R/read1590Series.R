@@ -151,13 +151,45 @@ read1590Series <- function(dataDir, verbose=FALSE){
                                                       rep('Turlock Lake Formation, 600 Ka', 1+29-9), rep(NA, 1+32-30),
                                                       rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+61-33), rep(NA, 1+67-62)))
       
+    ),
+    ###########################################
+    ##### Extractive chemical analyses 2 ######
+    ###########################################
+    chem_extractive2 = list(title = 'Extractive chemical analyses [2]',
+                           analysts ='A. L. Walker (U.S. Geological Survey) with A.J. Busacca, Peter Janitsky, and R. Meixner (University of California, Davis)', 
+                           note = 'CEC, cation-exchange capacity; m, with magnetic minerals; w, without magnetic minerals.',
+                           columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 
+                                           'Percentage of <2-mm: Fe_d(m)', 'Percentage of <2-mm: Fe_d(w)',
+                                           'Percentage of <2-mm: Al_d(w)', 'Percentage of <2-mm: mags',
+                                           'Percentage of <2-mm: Fe_0', 'Percentage of <2-mm: Al_0'
+                                           ),
+                           part1 = list(page = 48,
+                                        columnCuts = c(33, 41, 51, 61, 71, 83, 93, 101, 111),
+                                        subtables = c(rep(NA, 1+14-1), 
+                                                      rep('Modern River Alluvium', 1+18-15), rep(NA, 1+20-19), 
+                                                      rep('Post-Modesto Deposits, 0.2 Ka',1 + 34-21), rep(NA, 1+36-35),
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+72-37), rep(NA, 1+74-73), 
+                                                      rep('Modesto Formation, upper member, 10 Ka', 1+84-75), rep(NA, 1+90-85))),
+                           part2 = list(page = 49,
+                                        columnCuts = c(5, 15, 25, 35, 45, 57, 68, 77, 87),
+                                        subtables = c(rep(NA, 1+8-1), 
+                                                      rep('Modesto Formation, lower member, 40 Ka', 1+15-9), rep(NA, 1+18-16),
+                                                      rep('Riverbank Formation, upper member, 130 Ka',1+36-19), rep(NA, 1+38-37),
+                                                      rep('Riverbank Formation, middle member. 250 Ka', 1+59-39), rep(NA, 1+61-60),
+                                                      rep('Riverbank Formation, upper member, 330 Ka',1 + 67-62), rep(NA, 1+69-68),
+                                                      rep('Turlock Lake Formation, 600 Ka', 1+88-70), rep(NA, 1+94-89))),
+                           part3 = list(page = 50,
+                                        columnCuts = c(51, 61, 73, 81, 91, 101, 111, 123, 133),
+                                        subtables = c(rep(NA, 1+9-1), 
+                                                      rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+38-10), rep(NA, 1+80-39)))
     )
+                           
   ))
   
-  table_info.ls <- tableInfo.ls$reportA$chem_extractive
+  table_info.ls <- tableInfo.ls$reportA$chem_extractive2
   part_info.ls <- table_info.ls$part3
   
-  write_file(reportA[47], file =  'temp/text.txt')
+  write_file(reportA[50], file =  'temp/text.txt')
   write_file(reportA[part_info.ls$page], file =  'temp/text.txt')
   
   temp1 <- str_split(reportA[part_info.ls$page], '\n') %>%
@@ -184,6 +216,7 @@ read1590Series <- function(dataDir, verbose=FALSE){
     #mutate(No = if_else(grepl('^\\d$', No), paste0('0', No), No )) %>%
     #arrange(No)
   
+  table_info.ls <- tableInfo.ls$reportA$phys_prop
   sup_data_tables <- plyr::ldply(table_info.ls[grepl('part', names(table_info.ls))], 
                                  function(part_info.ls, colNames = table_info.ls$columeNames){
                                    ans <- str_split(reportA[part_info.ls$page], '\n') %>%
@@ -198,9 +231,7 @@ read1590Series <- function(dataDir, verbose=FALSE){
                                      tidyr::fill(No, Sample, Horizon, .direction = 'down') %>%
                                      group_by(Subtable, No, Sample, Horizon) %>%
                                      summarize(across(everything(), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
-                                     mutate(across(everything(), ~gsub('\\s+$', '', .))) %>%
-                                     #mutate(across(No, as.numeric) ) %>%
-                                     #arrange(No)
+                                     mutate(across(everything(), ~gsub('\\s+$', '', .)))
                                    return(ans)
                                  }, .id = table_info.ls$title)
   
