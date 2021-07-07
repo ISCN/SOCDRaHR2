@@ -1,5 +1,5 @@
 #read1590Series <- function(dataDir, verbose=FALSE){
-  
+  library(tidyverse)
   dataDir <- '~/Documents/Datasets/USGS1590'
   
   download_info <- data.frame(names = sprintf('Part_%s_USGS_1590Series', c('a', 'b', 'c', 'd', 'e', 'f', 'g')),
@@ -23,7 +23,7 @@
   #need to mannually code key on pg36
   #need to manually code pg37
   
-  reportA <- pdftools::pdf_text(download_info$download_filename[1])
+  reportA_txt <- pdftools::pdf_text(download_info$download_filename[1])
   
   #Field Tables pgs 38-41 = 4
   #Physical Properties pgs 42-44 = 3
@@ -33,6 +33,15 @@
   #Total Chem analysis pg 53-57 = 5
   #Total Chem analysis - fraction 2 pg 57-61 = 5
   # 27 pages per report for 7 reports at 0.5 hours per page is 95 hours of work
+  
+  #report A - pg 38-73 => 36
+  #report B - pg 29-41 => 13
+  #report C - pg 32-47 => 16
+  #report D - pg 42-79 => 38
+  #report E - pg 24-29 =>  6
+  #report F - pg 37-55 => 19
+  #report G - pg 69-131 => 63
+  #191 pages at 0.5 hours per page is 95.5 hours of work
   
   tableInfo.ls <- list(reportA = list(
     ################################
@@ -188,52 +197,76 @@
   ))
   
   ###Dev work#####
-  table_info.ls <- tableInfo.ls$reportA$chem_extractive2
-  part_info.ls <- table_info.ls$part3
+  table_info.ls <- tableInfo.ls$reportA$field_desc
+  part_info.ls <- table_info.ls$part1
   
-  write_file(reportA[52], file =  'temp/text.txt')
-  write_file(reportA[part_info.ls$page], file =  'temp/text.txt')
+  write_file(reportA_txt[38], file =  'temp/text.txt')
+  write_file(reportA_txt[part_info.ls$page], file =  'temp/text.txt')
   
-  temp1 <- str_split(reportA[part_info.ls$page], '\n') %>%
+  temp1 <- str_split(reportA_txt[part_info.ls$page], '\n') %>%
     as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
-    mutate(Subtable = part_info.ls$subtables) %>%
-    select(Subtable, X) %>%
+    mutate(subtable = part_info.ls$subtables,
+           line_number = sprintf('%.3d', 1:nrow(.)),
+           pdf_page = part_info.ls$page,
+           report = 'USGS Bulletin 1590-A') %>%
+    select(report, pdf_page, line_number, subtable, X) %>%
     separate(col = X, sep = part_info.ls$columnCuts, into = table_info.ls$columeNames)
   
-  id_cols <- c('No', 'Sample', 'Horizon')
+  id_cols <- c('No', 'Sample', 'Horizon', 'subtable', 'report', 'pdf_page')
   
-  temp2 <- str_split(reportA[part_info.ls$page], '\n') %>%
-    as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
-    mutate(Subtable = part_info.ls$subtables) %>%
-    select(Subtable, X) %>%
-    separate(col = X, sep = part_info.ls$columnCuts, into = table_info.ls$columeNames) %>% #run only to here first, check cells, then clean
-    filter(!is.na(Subtable)) %>%
-    mutate(across(-Subtable, ~gsub('^\\s+', '', .))) %>%
-    mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
-    mutate(across(id_cols, ~na_if(., ''))) %>%
-    tidyr::fill(all_of(id_cols), .direction = 'down') %>%
-    group_by(No, Sample, Horizon, Subtable) %>% #TODO figure out how to reference id_cols instead??
-    summarize(across(everything(), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
-    mutate(across(everything(), ~gsub('\\s+$', '', .)))
+  temp2 <- temp1 %>%
+    filter(!is.na(subtable)) %>%
+    mutate(across(everything(), str_trim)) %>%
+    mutate(across(any_of(id_cols), ~na_if(., ''))) %>%
+    tidyr::fill(any_of(id_cols), .direction = 'down') %>%
+    group_by(across(any_of(id_cols))) %>%
+    dplyr::summarise(across(!any_of(id_cols), ~paste0(., collapse = ' ')))
   
   #####example to pull together a table from the parts######
-  table_info.ls <- tableInfo.ls$reportA$phys_prop
-  sup_data_tables <- plyr::ldply(table_info.ls[grepl('part', names(table_info.ls))], 
-                                 function(part_info.ls, colNames = table_info.ls$columeNames){
-                                   ans <- str_split(reportA[part_info.ls$page], '\n') %>%
-                                     as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
-                                     mutate(Subtable = part_info.ls$subtables) %>%
-                                     select(Subtable, X) %>%
-                                     separate(col = X, sep = part_info.ls$columnCuts, into = colNames) %>%
-                                     filter(!is.na(Subtable)) %>%
-                                     mutate(across(-Subtable, ~gsub('^\\s+', '', .))) %>%
-                                     mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
-                                     mutate(across(c('No', 'Sample', 'Horizon'), ~na_if(., ''))) %>%
-                                     tidyr::fill(No, Sample, Horizon, .direction = 'down') %>%
-                                     group_by(Subtable, No, Sample, Horizon) %>%
-                                     summarize(across(everything(), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
-                                     mutate(across(everything(), ~gsub('\\s+$', '', .)))
-                                   return(ans)
-                                 }, .id = table_info.ls$title)
+  reportA_tables <- plyr::llply(tableInfo.ls$reportA, function(dataTableMeta.ls){
+    #dataTableMeta.ls <- tableInfo.ls$reportA$phys_prop
+    sup_data_tables <- plyr::ldply(dataTableMeta.ls[grepl('part', names(dataTableMeta.ls))], 
+                                   function(part_info.ls, colNames = dataTableMeta.ls$columeNames){
+                                     
+                                     id_cols <- c('No', 'Sample', 'Horizon', 'subtable', 'report', 'pdf_page')
+                                     
+                                     ans <- str_split(reportA_txt[part_info.ls$page], '\n') %>%
+                                       as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
+                                     mutate(subtable = part_info.ls$subtables,
+                                              line_number = sprintf('%.3d', 1:nrow(.)),
+                                              pdf_page = part_info.ls$page,
+                                              report = 'USGS Bulletin 1590-A') %>%
+                                       select(report, pdf_page, line_number, subtable, X) %>%
+                                       separate(col = X, sep = part_info.ls$columnCuts, into = dataTableMeta.ls$columeNames) %>%
+                                       filter(!is.na(subtable)) %>%
+                                       mutate(across(everything(), str_trim)) %>%
+                                       mutate(across(any_of(id_cols), ~na_if(., ''))) %>%
+                                       tidyr::fill(any_of(id_cols), .direction = 'down') %>%
+                                       group_by(across(any_of(id_cols))) %>%
+                                       dplyr::summarise(across(!any_of(id_cols), ~paste0(., collapse = ' ')), .groups = 'drop')
+                                     return(ans)
+                                   }, .id = dataTableMeta.ls$title)
+    
+    #sup_data_tables <- sup_data_tables %>%
+    #  arrange(pdf_page, line_number)
+    return(sup_data_tables)
+  })
+  
+  read_errors <- list(reportA = list(field_desc =
+                                      list( column_recode = list(Sample = c('PHI 5' = 'PM15',
+                                                      'RIO' = 'R10',
+                                                      'Til' = 'T11'),
+                                           `Basal depth (cm)` = c('2DO-230+' = '20O-230+')))))
+  
+  stage01_data <- reportA_tables$field_desc %>%
+    mutate(Sample = recode(Sample, !!!read_errors$reportA$field_desc$Sample))
+  
+  checkSampleNames <- plyr::ldply(reportA, function(xx){
+    xx %>% group_by(Sample) %>%
+      tally()
+  }) %>%
+    pivot_wider(names_from = '.id', values_from='n') %>%
+    filter(is.na(field_desc + phys_prop + chem_extractive + chem_extractive2))
+  
   
 #}
