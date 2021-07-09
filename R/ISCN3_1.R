@@ -25,6 +25,10 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: Specify in function description where ISCN data comes from. Probably these websites: (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* 
   # TODO: Clean up thaw-depth profile to remove coercion NA
 
+  ######################
+  ######Type checks#####
+  ######################
+  
   if(!is.character(data_dir)) {
     stop("`data_dir` not set to character value")
   }
@@ -35,32 +39,9 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
     stop("`verbose` is not set to logical value")
   }
   
-  
-  # #load in library
-  # library(data.table)
-  # #library(SOCDRaH2)
-  # library(tidyverse)
-  # library(lubridate)
-  # library(tibble)
-  # library(ggmap)
-  # library(maps)
-  # library(mapdata)
-  # library(knitr)
-  # library(tidyr)
-  # library(dplyr)
-
-
-  # data_dir <- 'ISCN3' #change to location of ISCN3
-  # #data_dir <- '~/Documents/Datasets/ISCN' #change to location of ISCN3
-  # datasets_exclude <- c() #c('NRCS Sept/2014', 'NRCS 2014:2011 name aliasing')
-  # verbose <- TRUE
-  # #ISCN3 <- SOCDRaH2::ISCN3(orginalFormat=TRUE)
-  # #citation_raw <- data.frame(ISCN3$citation)
-  # #dataset_raw <- data.frame(ISCN3$dataset)
-  # #profile_raw <- data.frame(ISCN3$profile)
-  # #layer_raw <- data.frame(ISCN3$layer)
-  # #rm(ISCN3)
-  
+  ################################
+  ####define meta data########
+  ################################
   
   type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
                                   "layer_top (cm)", "layer_bot (cm)",
@@ -130,7 +111,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
                                 'dataset_name_sub'),
                     noAction_cols = c("ISCN 1-1 (2015-12-10)", "locator_alias", "locator_parent_alias", "dataset_name_soc"))
   
-  #missingCols <- setdiff(unique(c(names(citation_raw), names(dataset_raw), names(profile_raw), names(layer_raw))), unlist(type_cols))
+  #missingCols <- setdiff(unique(c(names(citation_raw), names(dataset_raw), names(profile_raw), names(dataset_layer))), unlist(type_cols))
   #if(length(missingCols) > 0){
   #  cat(paste('Column names unspecified:', paste(missingCols, collapse = '", "')))
  # }
@@ -139,19 +120,21 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   #### Read in the data ####
   citation_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>% 
     #round all modification dates to their nearest day (ie whole number)
-    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
+    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`)))) 
   
   dataset_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19)) %>% 
     #round all modification dates to their nearest day (ie whole number)
-    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
+    dplyr::mutate(`modification_date (YYYY-MM-DD)` = 
+                    dplyr::case_when(dataset_name == 'Jorgensen_NPS' ~ '40268',
+                     TRUE ~ `modification_date (YYYY-MM-DD)`))
   
   profile_raw <-  vroom::vroom(file.path(data_dir, 'ISCN3_profile.csv'), col_types = strrep('c', times = 44))
   
-  layer_raw <- vroom::vroom(file.path(data_dir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
+  dataset_layer <- vroom::vroom(file.path(data_dir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
   
   #initialize list
   
- # ISCN3_1_List <-list(citation_raw, dataset_raw, profile_raw, layer_raw) 
+ # ISCN3_1_List <-list(citation_raw, dataset_raw, profile_raw, dataset_layer) 
   
 
   
@@ -281,7 +264,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   ##### Extract the layer information ####
   
   #comparison for pre ISCN soc stock correction
-  dataset_layer <- layer_raw  
+  #dataset_layer <- dataset_layer  
   
   if(verbose){message('Removing ISCN gap-filled layer-level SOC...')}
   #Deal with ISCN gap-filled values
