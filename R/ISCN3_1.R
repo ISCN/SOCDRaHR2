@@ -26,6 +26,12 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
   
+  
+  ######################
+  ######Type checks#####
+  ######################
+  
+  
   if(!is.character(data_dir)) {
     stop("`data_dir` not set to character value")
   }
@@ -35,6 +41,11 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   if(!is.logical(verbose)) {
     stop("`verbose` is not set to logical value")
   }
+  
+  
+  ################################
+  ####define meta data########
+  ################################
   
   
   # #load in library
@@ -131,7 +142,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
                                 'dataset_name_sub'),
                     noAction_cols = c("ISCN 1-1 (2015-12-10)", "locator_alias", "locator_parent_alias", "dataset_name_soc"))
   
-  #missingCols <- setdiff(unique(c(names(citation_raw), names(dataset_raw), names(profile_raw), names(layer_raw))), unlist(type_cols))
+  #missingCols <- setdiff(unique(c(names(citation_raw), names(dataset_raw), names(profile_raw), names(dataset_layer))), unlist(type_cols))
   #if(length(missingCols) > 0){
   #  cat(paste('Column names unspecified:', paste(missingCols, collapse = '", "')))
   # }
@@ -140,19 +151,21 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   #### Read in the data ####
   citation_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>% 
     #round all modification dates to their nearest day (ie whole number)
-    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
+    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`)))) 
   
   dataset_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19)) %>% 
     #round all modification dates to their nearest day (ie whole number)
-    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
+    dplyr::mutate(`modification_date (YYYY-MM-DD)` = 
+                    dplyr::case_when(dataset_name == 'Jorgensen_NPS' ~ '40268',
+                                     TRUE ~ `modification_date (YYYY-MM-DD)`))
   
   profile_raw <-  vroom::vroom(file.path(data_dir, 'ISCN3_profile.csv'), col_types = strrep('c', times = 44))
   
-  layer_raw <- vroom::vroom(file.path(data_dir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
+  dataset_layer <- vroom::vroom(file.path(data_dir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
   
   #initialize list
   
-  # ISCN3_1_List <-list(citation_raw, dataset_raw, profile_raw, layer_raw) 
+  # ISCN3_1_List <-list(citation_raw, dataset_raw, profile_raw, dataset_layer) 
   
   
   
@@ -236,7 +249,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   if(verbose){message('done')}
   
   #hardcoding country name
-  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Oak Ridge National Lab_Lolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C")
+  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Heckman lithosequence", "Oak Ridge National Lab_Lolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C")
   dataset_profile[dataset_profile$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
   
   #filling citations
@@ -282,7 +295,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   ##### Extract the layer information ####
   
   #comparison for pre ISCN soc stock correction
-  dataset_layer <- layer_raw  
+  #dataset_layer <- dataset_layer  
   
   if(verbose){message('Removing ISCN gap-filled layer-level SOC...')}
   #Deal with ISCN gap-filled values
@@ -323,8 +336,8 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   #hardcoding country in layer data
   dataset_layer[dataset_layer$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
-
-
+  
+  
   
   #put if statements to catch if it's a particular dataset/frame which will perform special functions to do what we need to
   
@@ -334,5 +347,4 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
               layer = dataset_layer,
               type_columns = type_cols))
 }
-
 
