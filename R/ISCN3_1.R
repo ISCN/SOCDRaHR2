@@ -25,12 +25,10 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: change modification dates
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
-  
-  
+ 
   ######################
   ######Type checks#####
   ######################
-  
   
   if(!is.character(data_dir)) {
     stop("`data_dir` not set to character value")
@@ -42,11 +40,9 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
     stop("`verbose` is not set to logical value")
   }
   
-  
   ################################
   ####define meta data########
   ################################
-  
   
   # #load in library
   # library(data.table)
@@ -72,7 +68,6 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # #profile_raw <- data.frame(ISCN3$profile)
   # #layer_raw <- data.frame(ISCN3$layer)
   # #rm(ISCN3)
-  
   
   type_cols <- list(num_cols  = c("lat (dec. deg)", "long (dec. deg)",
                                   "layer_top (cm)", "layer_bot (cm)",
@@ -158,15 +153,15 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
     dplyr::mutate(`modification_date (YYYY-MM-DD)` = 
                     dplyr::case_when(dataset_name == 'Jorgensen_NPS' ~ '40268',
                                      TRUE ~ `modification_date (YYYY-MM-DD)`))
+
   
   profile_raw <-  vroom::vroom(file.path(data_dir, 'ISCN3_profile.csv'), col_types = strrep('c', times = 44))
   
   dataset_layer <- vroom::vroom(file.path(data_dir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
   
   #initialize list
-  
+
   # ISCN3_1_List <-list(citation_raw, dataset_raw, profile_raw, dataset_layer) 
-  
   
   
   #### Defining standardCast() ####
