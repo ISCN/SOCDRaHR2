@@ -1,0 +1,84 @@
+#USGS_Harden Compare
+
+Comparing the data from ISCN with the data from the data re-ingest.
+
+
+```{r warning=FALSE, message=FALSE}
+
+datasetName <- "USGS Harden" 
+
+##### Extract the profile information ####
+dataset_profile <- profile_raw  %>%
+  filter(dataset_name_sub == datasetName) 
+
+if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
+  #reassign rows where the ISCN tried to fill in SOC values
+  dataset_profile <- dataset_profile %>%
+    group_by(dataset_name_soc) %>%
+    mutate(`soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),
+                                      rep(NA_character_, length(`soc_depth (cm)`)), `soc_depth (cm)`),
+           `soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+           soc_spatial_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                      rep(NA_character_, length(soc_spatial_flag)), soc_spatial_flag),
+           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+                                rep(NA_character_, length(soc_method)), soc_method)) %>%
+    ungroup()
+  
+}
+
+dataset_profile <- standardCast(dataset_profile)
+```
+
+```{r warning = FALSE, message = FALSE}
+##### Extract the layer infromation ####
+
+dataset_layer <- layer_raw %>%
+  filter(dataset_name_sub == datasetName) 
+
+if(any(grepl('ISCN', dataset_layer$dataset_name_soc))){
+  #reassign rows where the ISCN tried to fill in SOC values
+  dataset_layer <- dataset_layer %>%
+    group_by(dataset_name_soc) %>%
+    mutate(`soc (g cm-2)` = if_else(grepl('ISCN', dataset_name_soc),
+                                    rep(NA_character_, length(`soc (g cm-2)`)), `soc (g cm-2)`),
+           soc_carbon_flag = if_else(grepl('ISCN', dataset_name_soc),
+                                     rep(NA_character_, length(soc_carbon_flag)), soc_carbon_flag),
+           soc_method = if_else(grepl('ISCN', dataset_name_soc), 
+                                rep(NA_character_, length(soc_method)), soc_method)) %>%
+    ungroup()
+  
+}
+
+#remove the soc dataset since we've taken care of the ISCN notation
+dataset_layer <- select(dataset_layer, -dataset_name_soc) 
+
+if(any(count(dataset_layer, dataset_name_sub, site_name, profile_name, layer_name)$n > 1)){
+  #if the rows are duplicated then fill in missing values by group
+  dataset_layer <- dataset_layer %>%
+    group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+    mutate_at(vars(-group_cols()), 
+              function(xx){ifelse(sum(!is.na(xx)) == 1, rep(xx[!is.na(xx)], length(xx)),xx)}) %>% #if there is one value that isn't na then populate the rest of the entry, this fills in the
+    ungroup() %>%
+    unique() #collapase rows that are non-unique
+}
+
+dataset_layer <- standardCast(dataset_layer)
+
+```
+
+
+```{r reingest}
+
+readUSGSHarden2008('~/Desktop/Research/Data_Reingests/USGS_Harden')
+
+```
+
+```{r constructing from profile and data layers}
+
+profile_and_layer <- as.data.frame(dataset_layer) %>%
+  full_join(dataset_profile)
+  
+```

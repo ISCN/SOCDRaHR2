@@ -15,6 +15,7 @@
 
 readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
   
+  
   urlTable <- data.frame(fileName = c(file.path(dataDir, 'bog_soil_data.txt'),
                                       file.path(dataDir, 'BNZeml192.xml')),
                          downloadURL = c('https://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/bog_soil_data.txt',
@@ -22,7 +23,7 @@ readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   #for loop to read in data from urlTable if it does not exist in local repository
   for(ii in 1:nrow(urlTable)){
-    dataFile <- file.path(dataDir, urlTable$fileName[ii])
+    dataFile <- urlTable$fileName[ii]
     if(!(file.exists(dataFile))){
       download.file(urlTable$downloadURL[ii], destfile= dataFile, quiet=FALSE)
     }
@@ -42,7 +43,7 @@ readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   
   #reading in data
-  readSchuurlayerData <- readr::read_csv(urlTable$fileName[1])
+  readSchuurlayerData <- readr::read_tsv(urlTable$fileName[1])
   
   #ans and its return
   ans <- list(downloadFiles = c(urlTable$fileName[1],

@@ -21,13 +21,11 @@
 #Download and read in the raw data tables for Harden2008 data citations
 readUSGSHarden2008 <- function(dataDir, download = TRUE, verbose = FALSE){
   
-  urlTable <- data.frame(fileName = c('',
-                                      '',
+  urlTable <- data.frame(fileName = c(#'',
+                                      #'',
                                       file.path(dataDir, 'x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt'),
                                       file.path(dataDir, 'BNZeml334.xml')),
-                         downloadURL = c('',
-                                         '',
-                                         'http://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt',
+                         downloadURL = c('http://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt',
                                          'http://www.lter.uaf.edu/eml/BNZeml334.xml'))
   
   #for loop to read in data from url_table if it does not exist in local repository
@@ -59,12 +57,12 @@ readUSGSHarden2008 <- function(dataDir, download = TRUE, verbose = FALSE){
   
   
   #ans and its return
-  ans <- list(downloadFiles = c(urlTable$fileName[1],
-                                urlTable$fileName[2],
+  ans <- list(downloadFiles = c(#urlTable$fileName[1],
+                                #urlTable$fileName[2],
                                 urlTable$fileName[3],
                                 urlTable$fileName[4]),
-              Harden2008afileName.txt = readHarden2008aData,
-              Harden2008afileName.xml = readHarden2008aMetadata,
+              #Harden2008afileName.txt = readHarden2008aData,
+              #Harden2008afileName.xml = readHarden2008aMetadata,
               x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt = readHarden2008bData,
               BNZeml334.xml = readHarden2008bMetadata,
               licenseShort = "",
