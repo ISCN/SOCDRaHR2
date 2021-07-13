@@ -72,7 +72,7 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```{r reingest}
 
-readUSGSHarden2008('~/Desktop/Research/Data_Reingests/USGS_Harden')
+data_reingest <- readUSGSHarden2008('~/Desktop/Research/data_reingests/USGS_Harden')
 
 ```
 

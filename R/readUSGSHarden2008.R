@@ -52,15 +52,15 @@ readUSGSHarden2008 <- function(dataDir, download = TRUE, verbose = FALSE){
   #reading in data
   # readHarden2008aData <- readr::read_csv(urlTable$fileName[1])
   # readHarden2008aMetadata <- readr::read_csv(urlTable$fileName[2])
-  readHarden2008bData <- readr::read_csv(urlTable$fileName[3])
-  readHarden2008bMetadata <- readr::read_csv(urlTable$fileName[4])
+  readHarden2008bData <- readr::read_csv(urlTable$fileName[1]) #change to 3 when 2008a is found
+  readHarden2008bMetadata <- readr::read_csv(urlTable$fileName[2]) #change to 4
   
   
   #ans and its return
-  ans <- list(downloadFiles = c(#urlTable$fileName[1],
-                                #urlTable$fileName[2],
-                                urlTable$fileName[3],
-                                urlTable$fileName[4]),
+  ans <- list(downloadFiles = c(#urlTable$fileName[1], #change to 3 when 2008a is found
+                                #urlTable$fileName[2], #change to 4 when 2008a is found
+                                urlTable$fileName[1],
+                                urlTable$fileName[2]),
               #Harden2008afileName.txt = readHarden2008aData,
               #Harden2008afileName.xml = readHarden2008aMetadata,
               x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt = readHarden2008bData,

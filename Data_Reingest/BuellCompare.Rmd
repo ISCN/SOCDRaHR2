@@ -1,6 +1,8 @@
-#USGS_S3C Compare
+#Buell Compare
 
 Comparing the data from ISCN with the data from the data re-ingest.
+
+Note the name of the author for the data reingest is Buell, but this comparison follows the data listed under USGS_S3C. 
 
 ```{r warning=FALSE, message=FALSE}
 
@@ -71,7 +73,7 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```{r reingest}
 
-data_reingest <- readBuell2011('~/Desktop/Research/Data_Reingests/USGS_S3C')
+data_reingest <- readBuell2011('~/Desktop/Research/data_reingests/Buell')
 
 ```
 

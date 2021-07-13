@@ -2,6 +2,8 @@
 
 Comparing the data from ISCN with the data from the data re-ingest.
 
+The data reingest function for the Schuur dataset is not yet possible due to a stale URL. Use this template to compare data once the data reingest is possible. 
+
 ```{r warning=FALSE, message=FALSE}
 
 datasetName <- "Schuur" 
@@ -70,7 +72,7 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```{r reingest}
 
-data_reingest <- readSchuur2009('~/Desktop/Research/Data_Reingests/Schuur')
+data_reingest <- readSchuur2009('~/Desktop/Research/data_reingests/Schuur')
       #this will not run due to missing information in the function
 
 ```

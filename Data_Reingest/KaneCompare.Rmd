@@ -71,7 +71,7 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```{r reingest}
 
-data_reingest <- readKane2004('~/Desktop/Research/Data_Reingests/Kane')
+data_reingest <- readKane2004('~/Desktop/Research/data_reingests/Kane')
 
 
 ```
