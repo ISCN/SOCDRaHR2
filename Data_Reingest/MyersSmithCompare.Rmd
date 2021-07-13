@@ -83,12 +83,6 @@ data_reingest <- readMyersSmith2005('~/Desktop/Research/Data_Reingests/MyersSmit
 dataset_profile$`lat (dec. deg)` <- as.numeric(dataset_profile$`lat (dec. deg)`)
 dataset_profile$`long (dec. deg)` <- as.numeric(dataset_profile$`long (dec. deg)`)
 
-
-#why did this not work?
-# dataset_profile %>%
-#   `lat (dec. deg)` <- as.double(`lat (dec. deg)`) %>%
-#   `long (dec. deg)` <- as.double(`long (dec. deg)`)
-
 profile_and_layer <- as.data.frame(dataset_layer) %>%
   full_join(dataset_profile)
   
