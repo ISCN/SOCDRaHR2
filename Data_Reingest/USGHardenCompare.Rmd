@@ -76,9 +76,10 @@ data_reingest <- readUSGSHarden2008('~/Desktop/Research/data_reingests/USGS_Hard
 
 ```
 
-```{r constructing from profile and data layers}
-
-profile_and_layer <- as.data.frame(dataset_layer) %>%
-  full_join(dataset_profile)
-  
-```
+#The full join is not as useful
+# ```{r constructing from profile and data layers}
+# 
+# profile_and_layer <- as.data.frame(dataset_layer) %>%
+#   full_join(dataset_profile)
+#   
+# ```

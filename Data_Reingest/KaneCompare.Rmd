@@ -76,9 +76,10 @@ data_reingest <- readKane2004('~/Desktop/Research/data_reingests/Kane')
 
 ```
 
-```{r constructing from profile and data layers}
-
-profile_and_layer <- as.data.frame(dataset_layer) %>%
-  full_join(dataset_profile)
-  
-```
+#The full join is not as useful
+# ```{r constructing from profile and data layers}
+# 
+# profile_and_layer <- as.data.frame(dataset_layer) %>%
+#   full_join(dataset_profile)
+#   
+# ```

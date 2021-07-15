@@ -78,13 +78,14 @@ data_reingest <- readMyersSmith2005('~/Desktop/Research/data_reingests/MyersSmit
 
 ```
 
-```{r constructing from profile and data layers}
-
-dataset_profile$`lat (dec. deg)` <- as.numeric(dataset_profile$`lat (dec. deg)`)
-dataset_profile$`long (dec. deg)` <- as.numeric(dataset_profile$`long (dec. deg)`)
-
-profile_and_layer <- as.data.frame(dataset_layer) %>%
-  full_join(dataset_profile)
-  
-
-```
+#The full join is not as useful
+# ```{r constructing from profile and data layers}
+# 
+# dataset_profile$`lat (dec. deg)` <- as.numeric(dataset_profile$`lat (dec. deg)`)
+# dataset_profile$`long (dec. deg)` <- as.numeric(dataset_profile$`long (dec. deg)`)
+# 
+# profile_and_layer <- as.data.frame(dataset_layer) %>%
+#   full_join(dataset_profile)
+#   
+# 
+# ```
