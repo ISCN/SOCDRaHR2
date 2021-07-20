@@ -177,6 +177,8 @@ plotGenerate <- function(ISCN3, datasetName){
                                              mean(baseLat, na.rm = TRUE) + rangeLat))
 # general mapping variables
 shift360 <- 0 #can shift y-coordinate 360 degrees into the correct orientation if needed
+alaskaCoords <- list(coord_cartesian(xlim = c(184.6,231.4),
+                           ylim = c(53,71)))
 datasestState <- tolower(unique(datasetLayer$`state (state_province)`))   #use layer info to set state, and highlight state of interest on US map
 mapStateData <- map_data('state') %>% #pull out relevant info, found in state column
                       filter(region %in% datasestState)
@@ -195,9 +197,6 @@ mapTitleProfile <- labs(title = 'Profile Data Map',
                    caption = paste("A map of [", datasetName, "] sampling sites,  \nusing coordinates found within the profile data.", sep = ""))
 mapTitleLayer <- labs(title = 'Layer Data Map',
                  caption = paste("A map of [", datasetName, "] sampling sites,  \nusing coordinates found within the layer data.", sep = ""))
-ggRedX <- list(geom_point(data= datasetInfo, 
-             aes(x = `long (dec. deg)` + shift360, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red', size = 3))
 
 #### TABLES ####  
    studyTable <- knitr::kable(t(datasetStudy %>%
@@ -224,6 +223,9 @@ ggRedX <- list(geom_point(data= datasetInfo,
    
 #### PROFILE MAP ####
    datasetInfo <- datasetProfile
+   ggRedX <- list(geom_point(data= datasetInfo, 
+             aes(x = `long (dec. deg)` + shift360, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red', size = 3))
    if(datasetName %in% ISCN3$profile$dataset_name_sub){    #checking if dataset has profile data
      if(nrow(unique(datasetProfile %>%  select(`country (country)`))) > 1 ){    #checking if dataset has data in more than one country
        profileMap <- ggplot(data =  map_data("world")) +   #using world map
@@ -232,9 +234,7 @@ ggRedX <- list(geom_point(data= datasetInfo,
        if(unique(datasetLayer %>% select(`state (state_province)`)) == "Alaska"){
          shift360 <- 360
          profileMap <- ggplot(data =  map_data("world2")) +  # Alaska-specific mapping
-           ggMapBase + ggUSAFillBlue + ggRedX +
-           coord_cartesian(xlim = c(184.6,231.4),
-                           ylim = c(53,71)) +
+           ggMapBase + ggUSAFillBlue + ggRedX + alaskaCoords +
            mapTitleProfile
        } else { profileMap <- ggplot(data =  map_data('state')) + #any other US state mapping 
          ggMapBase + ggStateFillBlue + ggRedX + mapTitleProfile  
@@ -243,9 +243,8 @@ ggRedX <- list(geom_point(data= datasetInfo,
      profileMap <- ggplot(data =  map_data("world2")) + 
        ggMapBase + ggRedX + adjustedCoords + mapTitleProfile   #coord_map("ortho", orientation = c(90, 0, 0))
      }
-   } else if(datasetLayer$`country (country)`[1] == "United States" &
-             nrow(unique(datasetLayer %>% select(`state (state_province)`))) == 1 &
-             datasetLayer$`state (state_province)`[1] != "Alaska"){  
+   } else if(unique(datasetLayer %>% select(`country (country)`)) ==  "United States" &
+             unique(datasetLayer %>% select(`state (state_province)`)) != "Alaska"){  
      profileMap <- ggplot(data =  map_data('state')) +
        ggMapBase + ggStateFillBlue +
        labs(title = 'Highlighted Layer Data Map',
@@ -258,20 +257,19 @@ ggRedX <- list(geom_point(data= datasetInfo,
                     dplyr::select(where(function(xx){!all(is.na(xx))})) %>% 
                     select(`long (dec. deg)`, `lat (dec. deg)`) %>%
                     unique()
+   ggRedX <- list(geom_point(data= datasetInfo, 
+             aes(x = `long (dec. deg)` + shift360, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red', size = 3))
    if(nrow(unique(datasetLayer %>% select(`country (country)`))) > 1 ){
      layerMap <-ggplot(data =  map_data('world')) +   #using world map if sites span multiple countries
        ggMapBase + ggRedX + mapTitleLayer
    } else if(unique(datasetLayer %>% select(`country (country)`)) ==  "United States" &
              unique(datasetLayer %>% select(`state (state_province)`)) != "Alaska"){   #US state mapping
-     layerMap <- ggplot(data =  map_data('state') %>%
-                          filter(region %in% datasestState)) +
+     layerMap <- ggplot(data =  map_data('state') %>% filter(region %in% datasestState)) +
        ggMapBase + ggStateFillBlue + ggRedX + mapTitleLayer
-   } else { #datasets in Alaska
+   } else { shift360 <- 360 #datasets in Alaska
      layerMap <- ggplot(data =  map_data('world2')) +
-       ggMapBase + ggUSAFillBlue + ggRedX +
-       coord_cartesian(xlim = c(184.6,231.4),
-                       ylim = c(53,71)) +
-       mapTitleLayer
+       ggMapBase + ggUSAFillBlue + ggRedX + alaskaCoords + mapTitleLayer
      }
    
 #### PLOTS ####   
@@ -314,7 +312,7 @@ return(list(summaryStudyTable = studyTable,
 #Visuals <- plotGenerate(ISCN3, datasetName = 'Heckman lithosequence')
 #Visuals <- plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn')
 #Visuals <- plotGenerate(ISCN3, datasetName = 'Jorgensen_NPS')
-Visuals <- plotGenerate(ISCN3, datasetName = 'Lu_PIMA')
+Visuals <- plotGenerate(ISCN3, datasetName = "Worldwide soil carbon and nitrogen data")
 
 
 print(Visuals)
@@ -323,91 +321,28 @@ print(Visuals)
 
 ## Heckman/Swanston Biscuit Burn
 ```{r}
-baseLat <- datasetProfile %>%
-            dplyr::pull('lat (dec. deg)')
-baseLong <- datasetProfile %>%
-       dplyr::pull('long (dec. deg)')
-if(diff(range(baseLong, na.rm = TRUE)) <= 10){
-       rangeLat <- diff(range(baseLong, na.rm = TRUE)) * 12
-     } else {rangeLat <- diff(range(baseLong, na.rm = TRUE)) * 8
-     }
-calcLat <- rangeLat * 2.6
-adjustedCoords <- coord_cartesian(xlim = c(mean(baseLong, na.rm = TRUE) + 360 - calcLat,
-                                mean(baseLong, na.rm = TRUE) + 360 + calcLat),
-                       ylim = c(mean(baseLat, na.rm = TRUE) - rangeLat,
-                                mean(baseLat, na.rm = TRUE) + rangeLat))
+#### dataset variables for debugging ####
+# datasetName = 'Lu_PIMA'
+# datasetName = 'Jorgensen_NPS'
+# datasetName = 'Heckman/Swanston Biscuit Burn'
+# datasetName = 'Heckman lithosequence'
+datasetName = "Vogel"
 
+datasetStudy <- ISCN3$study %>%
+    filter(dataset_name == datasetName)
+  datasetProfile <- ISCN3$profile %>%
+    filter(dataset_name_sub == datasetName)
+  datasetLayer <- ISCN3$layer %>%
+    filter(dataset_name_sub == datasetName)
 
-
-
-shift360 <- 0 #can shift y-coordinate 360 degrees into the correct orientation if needed
-
-datasestState <- tolower(unique(datasetLayer$`state (state_province)`))   #use layer info to set state, and highlight state of interest on US map
-mapStateData <- map_data('state') %>% #pull out relevant info, found in state column
-                      filter(region %in% datasestState)
-
-ggMapBase <- list(geom_polygon(aes(x=long, y = lat, group = group), 
-                  fill = 'grey', color = 'black'),
-                  coord_fixed(1.3),
-                  xlab("Longitude"), ylab("Latitude"))
-ggUSAFillBlue <- list(geom_polygon(data = ggplot2::map_data('world2', 'usa'),
-               aes(x = long, y = lat, group = group),
-               fill = 'lightblue', color = 'black'))
-ggStateFillBlue <- geom_polygon(data = map_data('state') %>% #pull out relevant info, found in state column
-                      filter(region %in% datasestState),
-                    aes(x=long, y = lat, group = group),
-                    fill = 'light blue', color = 'black')
-
-mapTitleProfile <- labs(title = 'Profile Data Map',
-            caption = paste("A map of [", datasetName,
-                            "] sampling sites,  \nusing coordinates found within the profile data.", sep = ""))
-
-ggRedX <- list(geom_point(data= datasetInfo, 
-             aes(x = `long (dec. deg)` + shift360, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red', size = 3))
-
-datasetInfo <- datasetProfile
- 
-
-#### PROFILE MAP ####
-   if(datasetName %in% ISCN3$profile$dataset_name_sub){    #checking if dataset has profile data
-     if(nrow(unique(datasetProfile %>%  select(`country (country)`))) > 1 ){    #checking if dataset has data in more than one country
-       profileMap <- ggplot(data =  map_data("world")) +          #using world map
-         ggMapBase + ggRedX +
-         mapTitleProfile
-     } else if(unique(datasetLayer %>% select(`country (country)`)) ==  "United States"){   #checking if in USA, then in Alaska or not
-       if(unique(datasetLayer %>% select(`state (state_province)`)) == "Alaska"){
-         shift360 <- 360
-         profileMap <- ggplot(data =  map_data("world2")) +  # Alaska-specific mapping
-           ggMapBase + ggUSAFillBlue + ggRedX +
-           coord_cartesian(xlim = c(184.6,231.4),
-                           ylim = c(53,71)) +
-           mapTitleProfile
-       } else { profileMap <- ggplot(data =  map_data('state')) + #any other US state 
-       ggMapBase + ggStateFillBlue + ggRedX +
-         mapTitleProfile
-       }
-     } else { shift360 <-  360 #use auto-scaling map code (for datasets in one country that is not the US)  
-     profileMap <- ggplot(data =  map_data("world2")) + 
-       ggMapBase + ggRedX + adjustedCoords +
-       mapTitleProfile   #coord_map("ortho", orientation = c(90, 0, 0))
-     }
-   } else if(datasetLayer$`country (country)`[1] == "United States" &
-             nrow(unique(datasetLayer %>% select(`state (state_province)`))) == 1 &
-             datasetLayer$`state (state_province)`[1] != "Alaska"){
-     profileMap <- ggplot(data =  map_data('state')) +
-       ggMapBase + ggStateFillBlue +
-       labs(title = 'Highlighted Layer Data Map',
-            caption = paste("A U.S. map of where [", datasetName,
-                            "] sampling occured,  \nusing layer information since this dataset does not have profile information.", sep = ""))
-   } else {}
- 
-print(profileMap)
-     
 ```
 
 ## Lu_PIMA
 ```{r}
+
+
+
+
 ```
 
 ## Heckman lithosequence
@@ -436,6 +371,8 @@ print(profileMap)
 
 ## Vogel
 ```{r}
+# FIX MOD DATE IN ISCN3_1
+
 ```
 
 ## Myers-Smith
