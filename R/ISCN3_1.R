@@ -144,7 +144,11 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   
   #### Read in the data ####
-  citation_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>% 
+  citation_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>%
+    dplyr::mutate(`modification_date (YYYY-MM-DD)` = 
+                    dplyr::case_when(dataset_name == 'Jorgensen_NPS' ~ '40268',
+                                     dataset_name == 'Vogel' ~ '40150',
+                                     TRUE ~ `modification_date (YYYY-MM-DD)`)) %>%
     #round all modification dates to their nearest day (ie whole number)
     dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`)))) 
   
@@ -152,6 +156,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
     #round all modification dates to their nearest day (ie whole number)
     dplyr::mutate(`modification_date (YYYY-MM-DD)` = 
                     dplyr::case_when(dataset_name == 'Jorgensen_NPS' ~ '40268',
+                                     dataset_name == 'Vogel' ~ '40150',
                                      TRUE ~ `modification_date (YYYY-MM-DD)`))
 
   
