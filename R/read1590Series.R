@@ -253,13 +253,11 @@
   })
   
   read_errors <- list(reportA = list(field_desc =
-                                      list( column_recode = list(Sample = c('PHI 5' = 'PM15',
-                                                      'RIO' = 'R10',
-                                                      'Til' = 'T11'),
-                                           `Basal depth (cm)` = c('2DO-230+' = '20O-230+')))))
+                                       list( column_recode = list(Sample = c('PHI 5' = 'PM15', 'RIO' = 'R10', 'Til' = 'T11'),
+                                                                  `Basal depth (cm)` = c('2DO-230+' = '200-230+')))))
   
   stage01_data <- reportA_tables$field_desc %>%
-    mutate(Sample = recode(Sample, !!!read_errors$reportA$field_desc$Sample))
+    mutate(Sample = recode(Sample, !!!read_errors$reportA$field_desc$column_recode$Sample))
   
   checkSampleNames <- plyr::ldply(reportA, function(xx){
     xx %>% group_by(Sample) %>%
