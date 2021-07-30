@@ -1,7 +1,7 @@
 ---
-title: "ISCN 3_1"
-author: "Dr. Katherine Todd-Brown, Julie Bielecki, Anne Davin, Rita Hippe, Urmi Thorat"
-date: "5/25/2021"
+title: 'ISCN 3_1'
+author: 'Dr. Katherine Todd-Brown, Julie Bielecki, Anne Davin, Rita Hippe, Urmi Thorat'
+date: '5/25/2021'
 output: html_document
 ---
 
@@ -49,7 +49,7 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ## Location
 ```{r}
-ggplot(data =  map_data("world")) + 
+ggplot(data =  map_data('world')) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
   geom_point(data= dataset_profile, 
@@ -58,8 +58,8 @@ ggplot(data =  map_data("world")) +
   coord_fixed(1.3) +
   theme_nothing() +
   labs(title = 'Profile data') #+
-#coord_map("ortho", orientation = c(90, 0, 0))
-ggplot(data =  map_data("world")) + 
+#coord_map('ortho', orientation = c(90, 0, 0))
+ggplot(data =  map_data('world')) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
   geom_point(data= dataset_layer %>% select(`long (dec. deg)`, `lat (dec. deg)`) %>% unique(), 
@@ -80,20 +80,20 @@ ggplot(data =  map_data("world")) +
 #avgLong <- dataset_layer %>% 
 #  pull('long (dec. deg)') %>%
 #  mean() + 360
-#ggplot(data =  map_data("world2")) +
+#ggplot(data =  map_data('world2')) +
 #  geom_polygon( aes(x = long, y = lat, group = group),
-#                fill = 'grey', color = "black") +
+#                fill = 'grey', color = 'black') +
 #  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
+#                fill = 'lightblue', color = 'black') +
 #  geom_point(data = dataset_profile, aes(x = avgLong, y = avgLat), shape = 'x', color = 'red', size = 5) +
 #  coord_cartesian(xlim=c(avgLong - 65, avgLong + 65), ylim = c(avgLat - 25, avgLat + 25)) +
 #  theme_nothing() +
 #  labs(title = 'Profile data')
-#ggplot(data =  map_data("world2")) + 
+#ggplot(data =  map_data('world2')) + 
 #  geom_polygon(aes(x=long, y = lat, group = group), 
 #               fill = 'grey', color = 'black') + 
 #  geom_polygon(data = country, aes(x = long, y = lat, group = group),
-#                fill = 'lightblue', color = "black") +
+#                fill = 'lightblue', color = 'black') +
 #  geom_point(data = dataset_layer, aes(x = `long (dec. deg)` + 360, y = `lat (dec. deg)`),
 #             shape = 'x', color = 'red', size = 2.5) +
 #  coord_cartesian(xlim=c(avgLong - 9.1, avgLong + 9.1), ylim = c(avgLat - 3.5, avgLat + 3.5)) +
@@ -146,144 +146,270 @@ ggplot(dataset_layer %>%
 
 ## Plot-generating function 
 ```{r}
-# TODO See why layer map is printing the same as profile map (probably need to clear environment and run again)
 
-plotGenerate <- function(ISCN3, datasetName){
+plotGenerate <- function(ISCN3, datasetName) {
   #### VARIABLE INITIALIZATION ####
-  # dataset tables and visualizations
+  
+  # filtering ISCN3 for the specific dataset's information
   datasetStudy <- ISCN3$study %>%
                   filter(dataset_name == datasetName)
   datasetProfile <- ISCN3$profile %>%
                     filter(dataset_name_sub == datasetName)
   datasetLayer <- ISCN3$layer %>%
                   filter(dataset_name_sub == datasetName)
-  options(knitr.kable.NA = '')
-  profileTable <- paste("[", datasetName, "] does not contain profile data.", sep = "")
+  
+  # setting extra blanks in knitr tables to print as a space
+  options(knitr.kable.NA = '')   
+  
+  # if no profile data, printing this message in place of profile table
+  profileTable <- paste('[',
+                        datasetName,  # printing specific dataset's name
+                        '] does not contain profile data.', sep = '')
+  # setting as NA in case the dataset does not have profile data
   profileMap <- NA
   histograms <- NA
-  # auto-scaling variables 
-  baseLat <- datasetProfile %>%
-              dplyr::pull('lat (dec. deg)')
-  baseLong <- datasetProfile %>%
-              dplyr::pull('long (dec. deg)')
-  if(diff(range(baseLong, na.rm = TRUE)) <= 10){
-    rangeLat <- diff(range(baseLong, na.rm = TRUE)) * 12
-  } else {rangeLat <- diff(range(baseLong, na.rm = TRUE)) * 8
-  }
-  calcLat <- rangeLat * 2.6
-  adjustedCoords <- coord_cartesian(xlim = c(mean(baseLong, na.rm = TRUE) + 360 - calcLat,
-                                             mean(baseLong, na.rm = TRUE) + 360 + calcLat),
-                                    ylim = c(mean(baseLat, na.rm = TRUE) - rangeLat,
-                                             mean(baseLat, na.rm = TRUE) + rangeLat))
-  # general mapping variables
-  shift360 <- 0 #can shift y-coordinate 360 degrees into the correct orientation if needed
+  
+  # removing NA values for later plotting
+  datasetProfileRemNA <- datasetProfile %>%
+                          dplyr::select(where(function(xx) {!all(is.na(xx))}))
+  datasetLayerRemNA <- datasetLayer %>%
+                          dplyr::select(where(function(xx) {!all(is.na(xx))}))
+  
+  
+  
+  #### SUMMARY TABLES ####  
+  
+  studyTable <- knitr::kable(t(datasetStudy %>%
+                         dplyr::select(where(function(xx) {!all(is.na(xx))}))),
+                         col.names = '',
+                         caption = paste('A summary of [', datasetName,
+                                   '] study and contact information.',
+                                   sep = ''))
+  
+  # checking for existence of profile data before creating table
+  if(datasetName %in% ISCN3$profile$dataset_name_sub) {
+    profileTable <- knitr::kable(summary(datasetProfileRemNA %>%
+                       select_if(is.factor) %>%
+                       mutate_all(droplevels)),
+             caption = paste('A summary of [', datasetName,
+                       '] profile data,  \nwhich is 2D resolved information.',
+                       sep = ''))
+  } else {} # keeping profileTable as NA
+  
+  layerTable <- knitr::kable(summary(datasetLayerRemNA %>%
+                       select_if(is.factor) %>%
+                       mutate_all(droplevels)),
+             caption = paste('A summary of [', datasetName,
+                       '] layer data,  \ncontaining 3D resolved information.',
+                       sep = ''))
+
+  
+  
+  #### MAPPING VARIABLES ####
+  
+  # can shift y-coordinate 360 degrees into the correct orientation if needed
+  shift360 <- 0   # usually only needed for ggplot's 'world2' map
+  # hard-coding borders to Alaska maps
   alaskaCoords <- list(coord_cartesian(xlim = c(184.6,231.4),
                                        ylim = c(53,71)))
+  
+  # dataset's country(s) to later see if a world map is needed
   datasetCountry <- unique(datasetLayer %>% select(`country (country)`))
-  datasetState <- unique(datasetLayer$`state (state_province)`)   #use layer info to set state, and highlight state of interest on US map
-  mapStateData <- map_data('state') %>% #pull out relevant info, found in state column
-                  filter(region %in% datasetState)
+  # dataset's state (to use in state-specific mapping)
+  datasetState <- unique(datasetLayer$`state (state_province)`)
+  # formatting dataset's state to match that in ggplot map data
+  mapStateData <- map_data('state') %>% 
+                  filter(region %in% tolower(datasetState))
+  
+  
+  # generic mapping code to build off of or modify with other ggplot arguments
   ggMapBase <- list(geom_polygon(aes(x=long, y = lat, group = group), 
                                  fill = 'grey', color = 'black'),
-                    coord_fixed(1.3),
-                    xlab("Longitude"), ylab("Latitude"))
-  ggUSAFillBlue <- list(geom_polygon(data = ggplot2::map_data('world2', 'usa'),
+                    coord_fixed(1.3),   # scaling map proportionally
+                    xlab('Longitude'), ylab('Latitude'))
+  
+  # coloring all of the US light blue
+  ggUSAFillBlue <- geom_polygon(data = ggplot2::map_data('world2', 'usa'),
                                      aes(x = long, y = lat, group = group),
-                                     fill = 'lightblue', color = 'black'))
-  ggStateFillBlue <- geom_polygon(data = map_data('state') %>% #pull out relevant info, found in state column
-                                    filter(region %in% tolower(datasetState)),
-                                  aes(x=long, y = lat, group = group),
-                                  fill = 'light blue', color = 'black')
+                                     fill = 'lightblue', color = 'black')
+  
+  # only coloring the dataset's state blue
+  ggStateFillBlue <- geom_polygon(data = mapStateData,
+                      aes(x=long, y = lat, group = group),
+                      fill = 'light blue', color = 'black')
+  
+  # creating variables to easily call the correct title and captions for maps
   mapTitleProfile <- labs(title = 'Profile Data Map',
-                          caption = paste("A map of [", datasetName, "] sampling sites,  \nusing coordinates found within the profile data.", sep = ""))
+       caption = paste('A map of [', datasetName,
+       '] sampling sites,  \nusing coordinates found within the profile data.',
+       sep = ''))
   mapTitleLayer <- labs(title = 'Layer Data Map',
-                        caption = paste("A map of [", datasetName, "] sampling sites,  \nusing coordinates found within the layer data.", sep = ""))
-  datasetProfileRemNA <- datasetProfile %>%
-                          dplyr::select(where(function(xx){!all(is.na(xx))}))
-  datasetLayerRemNA <- datasetLayer %>%
-                          dplyr::select(where(function(xx){!all(is.na(xx))}))
+         caption = paste('A map of [', datasetName,
+         '] sampling sites,  \nusing coordinates found within the layer data.',
+         sep = ''))
   
+  # Variables for auto-scaling map
+    # creating easier reference for latitudes
+  baseLat <- datasetProfile %>%
+              dplyr::pull('lat (dec. deg)')
+    # doing same for longitudes - will be used in creating map boundaries
+  baseLong <- datasetProfile %>%
+              dplyr::pull('long (dec. deg)') 
   
-  #### TABLES ####  
-  studyTable <- knitr::kable(t(datasetStudy %>%
-                                 dplyr::select(where(function(xx){!all(is.na(xx))}))),
-                             col.names = "",
-                             caption = paste("A summary of [", datasetName,
-                                             "] study and contact information.", sep = ""))
-  if(datasetName %in% ISCN3$profile$dataset_name_sub){
-    profileTable <- knitr::kable(summary(datasetProfileRemNA %>%
-                                           select_if(is.factor) %>%
-                                           mutate_all(droplevels)),
-                                 caption = paste("A summary of [", datasetName,
-                                                 "] profile data,  \nwhich is 2D resolved information.", sep = ""))
-  } else {}
-  layerTable <- knitr::kable(summary(datasetLayerRemNA %>%
-                                       select_if(is.factor) %>%
-                                       mutate_all(droplevels)),
-                             caption = paste("A summary of [", datasetName,
-                                             "] layer data,  \ncontaining 3D resolved information.", sep = ""))
-  
-  #### PROFILE MAP ####
-  datasetInfo <- datasetProfile
-  ggRedX <- list(geom_point(data= datasetInfo, 
-                            aes(x = `long (dec. deg)` + shift360, y = `lat (dec. deg)`),
-                            shape = 'x', color = 'red', size = 3))
-  if(datasetName %in% ISCN3$profile$dataset_name_sub){    #checking if dataset has profile data
-    if(nrow(unique(datasetProfile %>%  select(`country (country)`))) > 1 ){    #checking if dataset has data in more than one country
-      profileMap <- ggplot(data =  map_data("world")) + ggMapBase + ggRedX + mapTitleProfile     # using world map
-    } else if(datasetCountry ==  "United States"){   #checking if in USA to use USA map
-      if(datasetState == "Alaska"){ shift360 <- 360     #shifting coordinates 360 degrees to correct orientation
-      profileMap <- ggplot(data =  map_data("world2")) + ggMapBase + ggUSAFillBlue + ggRedX + alaskaCoords + mapTitleProfile
-      } else { profileMap <- ggplot(data =  map_data('state')) + ggMapBase + ggStateFillBlue + ggRedX + mapTitleProfile # mapping for any other US state 
-      }
-    } else { shift360 <-  360 #use auto-scaling map code (for datasets in one country that is not the US)  
-    profileMap <- ggplot(data =  map_data("world2")) + ggMapBase + ggRedX + adjustedCoords + mapTitleProfile 
-    }
-  } else if(datasetCountry ==  "United States" & datasetState != "Alaska"){  
-    profileMap <- ggplot(data =  map_data('state')) + ggMapBase + ggStateFillBlue +
-      labs(title = 'Highlighted Layer Data Map',
-           caption = paste("A U.S. map of where [", datasetName,
-                           "] sampling occured,  \nusing layer information since this dataset does not have profile information.", sep = ""))
-  } else {}
-  
-  #### LAYER MAP ####
-  datasetInfo <- datasetLayerRemNA %>% 
-                  select(`long (dec. deg)`, `lat (dec. deg)`) %>%
-                  unique()
-  ggRedX <- list(geom_point(data= datasetInfo, 
-                            aes(x = `long (dec. deg)` + shift360, y = `lat (dec. deg)`),
-                            shape = 'x', color = 'red', size = 3))
-  if(nrow(datasetCountry) > 1 ){
-    layerMap <-ggplot(data =  map_data('world')) + ggMapBase + ggRedX + mapTitleLayer    # using world map if sites span multiple countries
-  } else if(datasetCountry ==  'United States' & na.omit(datasetState) != 'Alaska'){   # US state mapping 
-    layerMap <- ggplot(data =  map_data('state') %>% filter(region %in% tolower(datasetState))) +  # reformatted state info to get corresponding map in ggplot data
-      ggMapBase + ggStateFillBlue + ggRedX + mapTitleLayer
-  } else { shift360 <- 360     # shifting coordinate system for Alaskan datasets
-  layerMap <- ggplot(data =  map_data('world2')) + ggMapBase + ggUSAFillBlue + ggRedX + alaskaCoords + mapTitleLayer
+  # checking if range of longitudes is <= 10 (as they showed more variation), 
+  if(diff(range(baseLong, na.rm = TRUE)) <= 10) {
+    # multiplying by a larger number to make map more zoomed in
+    rangeLat <- diff(range(baseLong, na.rm = TRUE)) * 12
+  } else {
+    # since range of coordinates is larger, does not to be as zoomed in
+    rangeLat <- diff(range(baseLong, na.rm = TRUE)) * 8
   }
   
-  #### PLOTS ####   
-  if(datasetName %in% ISCN3$profile$dataset_name_sub){
-    histograms <-  ggplot(datasetProfileRemNA %>%
-                            pivot_longer(cols =  intersect(names(.), ISCN3$type_columns$num_cols), 
-                                         values_to = 'measurement', names_to = 'type')) +
-      geom_histogram(aes(x=measurement)) +
-      facet_wrap(~type, scales='free') +
-      labs(title = 'Profile Value Histograms',
-           caption = paste('Histograms detailing measurements in [', datasetName,
-                           '] profile data.', sep = ''))
-  } else {}
+ # scaling the map so that longitude:latitude ratio creates a proportional map
+  calcLat <- rangeLat * 2.6
   
+  # creating new map limits based on the range of coordinates
+  adjustedCoords <- coord_cartesian(  # shifting 360 degrees for 'world2' map
+                        xlim = c(mean(baseLong, na.rm = TRUE) + 360 - calcLat,
+                                 mean(baseLong, na.rm = TRUE) + 360 + calcLat),
+                        ylim = c(mean(baseLat, na.rm = TRUE) - rangeLat,
+                                 mean(baseLat, na.rm = TRUE) + rangeLat))
+  
+  
+  
+  
+  #### PROFILE MAP ####
+  
+  # initializing profile-specific map variables
+  datasetInfo <- datasetProfile   # setting profile data to be used for mapping
+  
+  # variable that will put a red X for each site on profile map
+  ggRedX <- geom_point(data= datasetInfo, 
+                       aes(x = `long (dec. deg)` +
+                             shift360,   # shifting 0 unless specified to 360
+                           y = `lat (dec. deg)`),
+                       shape = 'x', color = 'red', size = 3)
+  
+  # PROFILE MAP GENERATION
+  # checking for existence of profile data
+  if(datasetName %in% ISCN3$profile$dataset_name_sub) {
+    # checking if dataset has data in more than one country
+    if(nrow(unique(datasetProfile %>%  select(`country (country)`))) > 1 ) {
+      # using world map to show multiple countries
+      profileMap <- ggplot(data =  map_data('world')) +
+        ggMapBase + ggRedX + 
+        mapTitleProfile
+    } else if(datasetCountry ==  'United States') {
+      # checking if in Alaska, since is at least in US
+      if(datasetState == 'Alaska') {
+        # shifting coordinates 360 degrees to correct orientation for 'world2'
+        shift360 <- 360
+        
+        profileMap <- ggplot(data =  map_data('world2')) +
+          ggMapBase + ggUSAFillBlue +  # highlights US in light blue 
+          ggRedX + alaskaCoords +  # using hard-coded Alaska map boundaries
+          mapTitleProfile
+      } else {
+        # mapping for any other US state
+        profileMap <- ggplot(data =  map_data('state')) + # continental US map
+          ggMapBase + ggStateFillBlue +  # colors state of interest with blue
+          ggRedX + mapTitleProfile  
+      }
+    } else { # use auto-scaling map code (if not in US)
+      shift360 <-  360   # shifting longitude variables 360 degrees
+      
+      profileMap <- ggplot(data =  map_data('world2')) +
+        ggMapBase + ggRedX +
+        adjustedCoords + # map coordinate limits based on longitude range
+        mapTitleProfile 
+    }
+  } else if(datasetCountry ==  'United States' & datasetState != 'Alaska') {
+    # highlighting state that layer data is located when no profile data
+    profileMap <- ggplot(data =  map_data('state')) +
+      ggMapBase + ggStateFillBlue +
+      labs(title = 'Highlighted Layer Data Map',
+           caption = paste('A U.S. map of where [', datasetName,
+                      '] sampling occured,  \nusing layer information
+                      since this dataset does not have profile information.',
+                      sep = ''))
+  } else {}   # keeping profileMap as NA
+  
+  
+  
+  #### LAYER MAP ####
+  
+  # initializing profile-specific map variables
+  datasetInfo <- datasetLayerRemNA %>%    # now setting layer data for mapping
+                  select(`long (dec. deg)`, `lat (dec. deg)`) %>%
+                  unique() # removing duplicate sites
+  
+  # updating red X code with layer data
+  ggRedX <- list(geom_point(data= datasetInfo, 
+                            aes(x = `long (dec. deg)` + shift360,
+                                y = `lat (dec. deg)`),
+                            shape = 'x', color = 'red', size = 3))
+  
+  # LAYER MAP GENERATION
+  # checking if layer data is in more than one country
+  if(nrow(datasetCountry) > 1 ) {
+    # using world map to show multiple countries
+    layerMap <-ggplot(data =  map_data('world')) +
+      ggMapBase + ggRedX +
+      mapTitleLayer    
+  } else if(datasetCountry ==  'United States' &  # testing for continental US
+            na.omit(datasetState) != 'Alaska') {
+    # continental US mapping 
+    layerMap <- ggplot(data =  mapStateData) +  # mapping with dataset's state
+      ggMapBase + ggStateFillBlue +
+      ggRedX + mapTitleLayer
+  } else {
+    # shifting coordinate system because of shift in 'world2' map
+    shift360 <- 360     
+    
+  layerMap <- ggplot(data =  map_data('world2')) +
+    ggMapBase + ggUSAFillBlue + ggRedX +  # highlighting US
+    alaskaCoords +   # Alaska-specific map boundaries
+    mapTitleLayer
+  }
+  
+  
+  
+  #### PLOTS ####   
+  
+  # checking if dataset has profile data
+  if(datasetName %in% ISCN3$profile$dataset_name_sub) {
+    histograms <-  ggplot(datasetProfileRemNA %>%
+              # plotting columns shared by num_cols and dataset's profile data
+                pivot_longer(cols =  intersect(names(.),
+                                               ISCN3$type_columns$num_cols),
+                             # setting axes
+                             values_to = 'measurement', 
+                             names_to = 'type')) +
+              geom_histogram(aes(x=measurement)) + # creating histogram
+              facet_wrap(~type, scales='free') + # automatically scaling
+              labs(title = 'Profile Value Histograms',
+                   caption = paste('Histograms detailing measurements in [',
+                                   datasetName, '] profile data.',
+                                   sep = ''))
+  } else {}
+  # creating a line graph to show different measurements by depth
   depthPlots <- ggplot(datasetLayerRemNA %>% 
-                         pivot_longer(cols=c('layer_top (cm)', 'layer_bot (cm)'),
-                                      values_to='depth') %>%
-                         pivot_longer(cols = intersect(names(.), ISCN3$type_columns$num_cols), 
-                                      values_to = 'measurement', names_to = 'type')) +
-    geom_line(aes(x=depth, y= measurement, group = profile_name), alpha = 0.5) +
-    facet_wrap(~type, scales='free') +
-    labs(title = 'Layer Data Depth Plots',
-         caption = paste('Plots of [', datasetName,
-                         '] layer data by depth.', sep = ''))
+                 # setting which columns to make x-axis
+                 pivot_longer(cols=c('layer_top (cm)',
+                                     'layer_bot (cm)'),
+                              values_to='depth') %>%
+                 # setting which measurements to include for each chart/y-axis
+                 pivot_longer(cols = intersect(names(.),
+                                     ISCN3$type_columns$num_cols), 
+                              values_to = 'measurement',
+                              names_to = 'type')) +
+                # adding line to connect data points
+                geom_line(aes(x=depth, y= measurement, group = profile_name),
+                          alpha = 0.5) +
+                facet_wrap(~type, scales='free') + # automatic scaling
+                labs(title = 'Layer Data Depth Plots',
+                     caption = paste('Plots of [', datasetName,
+                                     '] layer data by depth.', sep = ''))
   
   theme_set(theme_grey())  #setting ggplot theme
   
@@ -298,9 +424,9 @@ plotGenerate <- function(ISCN3, datasetName){
 }
 
 #$Visuals <- plotGenerate(ISCN3, datasetName = 'Heckman lithosequence')
-#Visuals <- plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn')
+Visuals <- plotGenerate(ISCN3, datasetName = 'Bockheim')
 #Visuals <- plotGenerate(ISCN3, datasetName = 'Jorgensen_NPS')
-Visuals <- plotGenerate(ISCN3, datasetName = 'Worldwide soil carbon and nitrogen data')
+#Visuals <- plotGenerate(ISCN3, datasetName = 'Worldwide soil carbon and nitrogen data')
 #Visuals <- plotGenerate(ISCN3, datasetName = 'UMBS_FASET')
 
 #Visuals <- plotGenerate(ISCN3, datasetName = 'Oak Ridge National Lab_TDE')  #all have same lat and lon ??
@@ -316,7 +442,7 @@ print(Visuals)
 # datasetName = 'Jorgensen_NPS'
 # datasetName = 'Heckman/Swanston Biscuit Burn'
 # datasetName = 'Heckman lithosequence'
-#datasetName = "Vogel"
+#datasetName = 'Vogel'
 
 datasetStudy <- ISCN3$study %>%
   filter(dataset_name == datasetName)
