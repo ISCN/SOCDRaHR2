@@ -22,7 +22,6 @@
 #' 
 ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
-  # TODO: change modification dates
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
  
@@ -146,7 +145,13 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   #### Read in the data ####
   citation_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>%
     dplyr::mutate(`modification_date (YYYY-MM-DD)` = 
-                    dplyr::case_when(dataset_name == 'Jorgensen_NPS' ~ '40268',
+                    dplyr::case_when(dataset_name == 'Bockheim' ~ '40267',
+                                     dataset_name == 'Bonanza LTER' ~ '41983',
+                                     dataset_name == 'Jorgensen_ARCN' ~ '40267',
+                                     dataset_name == 'Jorgensen_NPS' ~ '40267',
+                                     dataset_name == 'Jorgensen_YKDE' ~ '40267',
+                                     dataset_name == 'Kane' ~ '40150',
+                                     dataset_name == 'Schuur' ~ '40150',
                                      dataset_name == 'Vogel' ~ '40150',
                                      TRUE ~ `modification_date (YYYY-MM-DD)`)) %>%
     #round all modification dates to their nearest day (ie whole number)
@@ -155,10 +160,16 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   dataset_raw <- readr::read_delim(file.path(data_dir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19)) %>% 
     #round all modification dates to their nearest day (ie whole number)
     dplyr::mutate(`modification_date (YYYY-MM-DD)` = 
-                    dplyr::case_when(dataset_name == 'Jorgensen_NPS' ~ '40268',
+                    dplyr::case_when(dataset_name == 'Bockheim' ~ '40267',
+                                     dataset_name == 'Bonanza LTER' ~ '41983',
+                                     dataset_name == 'Jorgensen_ARCN' ~ '40267',
+                                     dataset_name == 'Jorgensen_NPS' ~ '40267',
+                                     dataset_name == 'Jorgensen_YKDE' ~ '40267',
+                                     dataset_name == 'Kane' ~ '40150',
+                                     dataset_name == 'Schuur' ~ '40150',
                                      dataset_name == 'Vogel' ~ '40150',
                                      TRUE ~ `modification_date (YYYY-MM-DD)`))
-
+  
   
   profile_raw <-  vroom::vroom(file.path(data_dir, 'ISCN3_profile.csv'), col_types = strrep('c', times = 44))
   
@@ -213,9 +224,30 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
                      by = c("dataset_name", "dataset_type (dataset_type)", "curator_name", "curator_organization", "curator_email", "modification_date (YYYY-MM-DD)"))%>%
     standardCast()%>%
     dplyr::group_by(dataset_name) %>%
-    tidyr::fill(-dataset_name, .direction = "updown") #replace missing values with known values based on dataset_name grouping
+     tidyr::fill(-dataset_name, .direction = "updown") #replace missing values with known values based on dataset_name grouping
   
+  #combining mulitple citations into one cell
+  fillCitation <- c("Bockheim", "Bonanza LTER", "Jorgensen_ARCN", "Jorgensen_YKDE", "Kane", "Lu_LTER", "Myers-Smith", "Schuur", "USGS Harden", "Vogel")
+  condensedCitation <- dataset_study[dataset_study$dataset_name %in% fillCitation, ] %>%
+            group_by(dataset_name) %>%
+    summarise(citation = paste(citation, collapse = "; "))
   
+  dataset_study <- dataset_study %>% #putting in the condensed citations for the appropriate datasets
+    mutate(`citation` = case_when(dataset_name == "Bockheim" ~ condensedCitation[[1,2]],
+                                  dataset_name == "Bonanza LTER" ~ condensedCitation[[2,2]],
+                                  dataset_name == "Jorgensen_ARCN" ~ condensedCitation[[3,2]],
+                                  dataset_name == "Jorgensen_YKDE" ~ condensedCitation[[4,2]],
+                                  dataset_name == "Kane" ~ condensedCitation[[5,2]],
+                                  dataset_name == "Lu_LTER" ~ condensedCitation[[6,2]],
+                                  dataset_name == "Myers-Smith" ~ condensedCitation[[7,2]],
+                                  dataset_name == "Schuur" ~ condensedCitation[[8,2]],
+                                  dataset_name == "USGS Harden" ~ condensedCitation[[9,2]],
+                                  dataset_name == "Vogel" ~ condensedCitation[[10,2]],
+                                  TRUE ~ `citation`)) %>% #leaving single citations as is
+    group_by(dataset_name) %>%
+    distinct() #removing duplicate rows due to citation-filling
+  
+
   #taking profile and layer info
   ##### Extract the profile information ####
   
