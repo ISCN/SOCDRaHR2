@@ -494,31 +494,31 @@ tableInfo.ls <- list(reportA = list(
 
 
 
-###Dev work#####
-table_info.ls <- tableInfo.ls$reportA$field_desc
-part_info.ls <- table_info.ls$part3
-
-write_file(reportA_txt[40], file =  'temp/text.txt')
-write_file(reportA_txt[part_info.ls$page], file =  'temp/text.txt')
-
-temp1 <- str_split(reportA_txt[part_info.ls$page], '\n') %>%
-  as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
-  mutate(subtable = part_info.ls$subtables,
-         line_number = sprintf('%.3d', 1:nrow(.)),
-         pdf_page = part_info.ls$page,
-         report = 'USGS Bulletin 1590-A') %>%
-  select(report, pdf_page, line_number, subtable, X) %>%
-  separate(col = X, sep = part_info.ls$columnCuts, into = table_info.ls$columeNames)
-
-id_cols <- c('No', 'Sample', 'Horizon', 'subtable', 'report', 'pdf_page')
-
-temp2 <- temp1 %>%
-  filter(!is.na(subtable)) %>%
-  mutate(across(everything(), str_trim)) %>%
-  mutate(across(any_of(id_cols), ~na_if(., ''))) %>%
-  tidyr::fill(any_of(id_cols), .direction = 'down') %>%
-  group_by(across(any_of(id_cols))) %>%
-  dplyr::summarise(across(!any_of(id_cols), ~paste0(., collapse = ' ')))
+# ###Dev work#####
+# table_info.ls <- tableInfo.ls$reportA$field_desc
+# part_info.ls <- table_info.ls$part3
+# 
+# write_file(reportA_txt[40], file =  'temp/text.txt')
+# write_file(reportA_txt[part_info.ls$page], file =  'temp/text.txt')
+# 
+# temp1 <- str_split(reportA_txt[part_info.ls$page], '\n') %>%
+#   as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
+#   mutate(subtable = part_info.ls$subtables,
+#          line_number = sprintf('%.3d', 1:nrow(.)),
+#          pdf_page = part_info.ls$page,
+#          report = 'USGS Bulletin 1590-A') %>%
+#   select(report, pdf_page, line_number, subtable, X) %>%
+#   separate(col = X, sep = part_info.ls$columnCuts, into = table_info.ls$columeNames)
+# 
+# id_cols <- c('No', 'Sample', 'Horizon', 'subtable', 'report', 'pdf_page')
+# 
+# temp2 <- temp1 %>%
+#   filter(!is.na(subtable)) %>%
+#   mutate(across(everything(), str_trim)) %>%
+#   mutate(across(any_of(id_cols), ~na_if(., ''))) %>%
+#   tidyr::fill(any_of(id_cols), .direction = 'down') %>%
+#   group_by(across(any_of(id_cols))) %>%
+#   dplyr::summarise(across(!any_of(id_cols), ~paste0(., collapse = ' ')))
 
 #####example to pull together a table from the parts######
 reportA_tables <- plyr::llply(tableInfo.ls$reportA, function(dataTableMeta.ls){
@@ -557,31 +557,7 @@ for(tableName in names(reportA_tables)){
   write_csv(reportA_tables[[tableName]], file = file.path('rescue', 'data01', paste0(tableName, '.csv')))
 }
 
-#####Correct optical character recognition######
-# # 
-# # read_errors <- list(reportA = list(field_desc =
-# #                                      list( column_recode = list(Sample = c('PHI 5' = 'PM15', 'RIO' = 'R10', 'Til' = 'T11'),
-# #                                                                 `Basal depth (cm)` = c('2DO-230+' = '200-230+')))))
-# # 
-# # stage01_data <- reportA_tables$field_desc %>%
-# #   mutate(Sample = recode(Sample, !!!read_errors$reportA$field_desc$column_recode$Sample))
-# # 
-# # checkSampleNames <- plyr::ldply(reportA, function(xx){
-# #   xx %>% group_by(Sample) %>%
-# #     tally()
-# # }) %>%
-# #   pivot_wider(names_from = '.id', values_from='n') %>%
-# #   filter(is.na(field_desc + phys_prop + chem_extractive + chem_extractive2))
-# 
-# corrections <- read_tsv('rescue/0_reportA_master - Sheet1.tsv')
-# 
-# reportA_lvl2 <- reportA_tables$field_desc
-# 
-# for(ii in 1:nrow(corrections)){
-#   if(!is.na(corrections$bad_characters[ii])){
-#     reportA_lvl2[[corrections$colume[ii]]] <- gsub(corrections$bad_characters[ii], corrections$good_characters[ii], reportA_lvl2[[corrections$colume[ii]]])
-#   }
-# }
+#####Log changes between orc reads and manual checks #######
 
 orc_reads <- read_csv(file.path('rescue', 'data01', 'field_desc.csv'), col_types = cols(.default = "c")) %>%
   mutate(across(everything(), str_trim)) %>%
@@ -600,5 +576,18 @@ changed <- read_tsv(file.path('rescue', 'data02', 'field_desc.tsv'), col_types =
   arrange(value_orc)
 
 write_tsv(changed, file.path('rescue', 'data02', 'change_log_field_desc.tsv'))
+
+
+######## make reports ######
+
+field_desc <- read_tsv(file.path('rescue', 'data02', 'field_desc.tsv'), col_types = cols(.default = "c")) %>%
+           select(!all_of(c('report', 'pdf_page', 'line_number'))) %>%
+  select(where(is.character)) %>%
+  pivot_longer(cols = everything()) %>%
+  group_by(name, value) %>%
+  tally()
+
+field_desc <- read_tsv(file.path('rescue', 'data02', 'field_desc.tsv')) %>%
+  select(!all_of(c('report', 'pdf_page', 'line_number')))
 
 #}
