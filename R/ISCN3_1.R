@@ -14,7 +14,7 @@
 #' @return
 #' @export
 #' @importFrom dplyr bind_rows filter full_join group_by intersect mutate mutate_at select ungroup
-#' @importFrom lubridate as_date ymd
+#' @importFrom lubridate as_date ymd NA_Date_
 #' @importFrom readr read_delim
 #' @importFrom tidyr fill
 #' @importFrom vroom vroom
@@ -198,11 +198,11 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
              dplyr::mutate_at(dplyr::intersect(column_types$date_cols, names(.)), function(xx){
                ##Both conditions will be run but things throw warnings for the wrong conditional... supressing this function
                suppressWarnings(
-                 ans <- case_when(is.na(xx) ~ NA_Date_,
+                 ans <- case_when(is.na(xx) ~ lubridate::NA_Date_,
                                   as.numeric(xx) < 2020 ~ lubridate::ymd(paste0(xx, '-01-01')),
                                   as.numeric(xx) >= 2020 ~ lubridate::as_date(as.numeric(xx), 
                                                                               origin = lubridate::ymd('1899-12-31')),
-                                  TRUE ~ NA_Date_)
+                                  TRUE ~ lubridate::NA_Date_)
                )
                return(ans)
              }) %>%
