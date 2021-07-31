@@ -80,7 +80,7 @@ tableInfo.ls <- list(reportA = list(
                                                rep('Riverbank Formation, upper member, 130 Ka', 20), rep(NA, 4),
                                                rep('Riverbank Formation, middle member. 250 Ka', 8), rep(NA, 6))),
                     part3 = list(page = 40,
-                                 columnCuts = c(6, 16, 26, 38, 48, 62, 75, 86, 102, 110, 121, 130, 138, 149, 159, 167, 174),
+                                 columnCuts = c(6, 16, 26, 38, 46, 62, 75, 86, 102, 110, 121, 130, 138, 149, 159, 167, 174),
                                  subtables = c(rep(NA, 1+14-1), #inclusive rows between line 14 and 1 => 1 + 14 - 1
                                                rep('Riverbank Formation, middle member, 250 Ka', 13), rep(NA, 3),
                                                rep('Riverbank Formation, middle member, 250 Ka', 1+46-31), rep(NA, 1+52-47),
@@ -496,9 +496,9 @@ tableInfo.ls <- list(reportA = list(
 
 ###Dev work#####
 table_info.ls <- tableInfo.ls$reportA$field_desc
-part_info.ls <- table_info.ls$part1
+part_info.ls <- table_info.ls$part3
 
-write_file(reportA_txt[38], file =  'temp/text.txt')
+write_file(reportA_txt[40], file =  'temp/text.txt')
 write_file(reportA_txt[part_info.ls$page], file =  'temp/text.txt')
 
 temp1 <- str_split(reportA_txt[part_info.ls$page], '\n') %>%
@@ -541,7 +541,8 @@ reportA_tables <- plyr::llply(tableInfo.ls$reportA, function(dataTableMeta.ls){
                                      mutate(across(any_of(id_cols), ~na_if(., ''))) %>%
                                      tidyr::fill(any_of(id_cols), .direction = 'down') %>%
                                      group_by(across(any_of(id_cols))) %>%
-                                     dplyr::summarise(across(!any_of(id_cols), ~paste0(., collapse = ' ')), .groups = 'drop')
+                                     dplyr::summarise(across(!any_of(id_cols), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
+                                     arrange(line_number)
                                    return(ans)
                                  }, .id = dataTableMeta.ls$title)
   
@@ -550,19 +551,54 @@ reportA_tables <- plyr::llply(tableInfo.ls$reportA, function(dataTableMeta.ls){
   return(sup_data_tables)
 })
 
-read_errors <- list(reportA = list(field_desc =
-                                     list( column_recode = list(Sample = c('PHI 5' = 'PM15', 'RIO' = 'R10', 'Til' = 'T11'),
-                                                                `Basal depth (cm)` = c('2DO-230+' = '200-230+')))))
+####Put up a snapshot from the direct reads####
 
-stage01_data <- reportA_tables$field_desc %>%
-  mutate(Sample = recode(Sample, !!!read_errors$reportA$field_desc$column_recode$Sample))
+for(tableName in names(reportA_tables)){
+  write_csv(reportA_tables[[tableName]], file = file.path('rescue', 'data01', paste0(tableName, '.csv')))
+}
 
-checkSampleNames <- plyr::ldply(reportA, function(xx){
-  xx %>% group_by(Sample) %>%
-    tally()
-}) %>%
-  pivot_wider(names_from = '.id', values_from='n') %>%
-  filter(is.na(field_desc + phys_prop + chem_extractive + chem_extractive2))
+#####Correct optical character recognition######
+# # 
+# # read_errors <- list(reportA = list(field_desc =
+# #                                      list( column_recode = list(Sample = c('PHI 5' = 'PM15', 'RIO' = 'R10', 'Til' = 'T11'),
+# #                                                                 `Basal depth (cm)` = c('2DO-230+' = '200-230+')))))
+# # 
+# # stage01_data <- reportA_tables$field_desc %>%
+# #   mutate(Sample = recode(Sample, !!!read_errors$reportA$field_desc$column_recode$Sample))
+# # 
+# # checkSampleNames <- plyr::ldply(reportA, function(xx){
+# #   xx %>% group_by(Sample) %>%
+# #     tally()
+# # }) %>%
+# #   pivot_wider(names_from = '.id', values_from='n') %>%
+# #   filter(is.na(field_desc + phys_prop + chem_extractive + chem_extractive2))
+# 
+# corrections <- read_tsv('rescue/0_reportA_master - Sheet1.tsv')
+# 
+# reportA_lvl2 <- reportA_tables$field_desc
+# 
+# for(ii in 1:nrow(corrections)){
+#   if(!is.na(corrections$bad_characters[ii])){
+#     reportA_lvl2[[corrections$colume[ii]]] <- gsub(corrections$bad_characters[ii], corrections$good_characters[ii], reportA_lvl2[[corrections$colume[ii]]])
+#   }
+# }
 
+orc_reads <- read_csv(file.path('rescue', 'data01', 'field_desc.csv'), col_types = cols(.default = "c")) %>%
+  mutate(across(everything(), str_trim)) %>%
+  pivot_longer(cols = !all_of(c('report', 'pdf_page', 'line_number')), names_to = 'colume_name')
+
+changed <- read_tsv(file.path('rescue', 'data02', 'field_desc.tsv'), col_types = cols(.default = "c")) %>%
+  mutate(across(everything(), str_trim)) %>%
+  mutate(line_number = case_when(nchar(line_number) == 2 ~ paste0('0', line_number),
+                                 nchar(line_number) == 1 ~ paste0('00', line_number),
+                                 TRUE ~ line_number)) %>%
+  pivot_longer(cols = !all_of(c('report', 'pdf_page', 'line_number')), names_to = 'colume_name') %>%
+  full_join(orc_reads, by = c('report', 'pdf_page', 'line_number', 'colume_name'), suffix = c('_checked', '_orc')) %>%
+  mutate(changed = !( (value_orc == value_checked) | (is.na(value_orc) & is.na(value_checked)))) %>%
+  filter(changed) %>%
+  select(-changed) %>%
+  arrange(value_orc)
+
+write_tsv(changed, file.path('rescue', 'data02', 'change_log_field_desc.tsv'))
 
 #}
