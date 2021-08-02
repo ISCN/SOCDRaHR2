@@ -1,20 +1,19 @@
-#' International Soil Carbon Network 3_1
+#' International Soil Carbon Network vs 3.2
 #' 
 #'This function first loads in the layer, profile, citation, and dataset tables from a pre-downloaded ISCN3 folder. It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values, and removing columns of all NA values with a function titled "standardCast()". For each dataset, it generates tables, maps, and histograms using this cleaned data. It then returns the reformatted data.
 #'
 #'
-#'##Need to determine where data comes from; probably these websites: (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* 
 #'
 #'
 #'
-#' @param data_dir 
+#' @param data_dir character refers to a directory where the data is located. In future version the data will be downloaded to here
 #' @param datasets_exclude 
 #' @param verbose 
 #'
 #' @return
 #' @export
 #' @importFrom dplyr bind_rows filter full_join group_by intersect mutate mutate_at select ungroup
-#' @importFrom lubridate as_date ymd
+#' @importFrom lubridate as_date ymd NA_DATE_
 #' @importFrom readr read_delim
 #' @importFrom tidyr fill
 #' @importFrom vroom vroom
@@ -198,11 +197,11 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
              dplyr::mutate_at(dplyr::intersect(column_types$date_cols, names(.)), function(xx){
                ##Both conditions will be run but things throw warnings for the wrong conditional... supressing this function
                suppressWarnings(
-                 ans <- case_when(is.na(xx) ~ NA_Date_,
+                 ans <- case_when(is.na(xx) ~ lubridate::NA_Date_,
                                   as.numeric(xx) < 2020 ~ lubridate::ymd(paste0(xx, '-01-01')),
                                   as.numeric(xx) >= 2020 ~ lubridate::as_date(as.numeric(xx), 
                                                                               origin = lubridate::ymd('1899-12-31')),
-                                  TRUE ~ NA_Date_)
+                                  TRUE ~ lubridate::NA_Date_)
                )
                return(ans)
              }) %>%
@@ -354,8 +353,17 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   if(verbose){message('done.')}
   
   #replacing special characters with NA
-  replacequestion <- c("Oak Ridge National Lab_Loblolly_DWJ", "Lehmann Soil C&BC #1", "schuur", "USGS Harden Yazoo", "Bonanza LTER", "UMBS_FASET", "Oak Ridge NationalLab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "Northern Circumpolar Soil Carbon Database (NCSCD)")
+  replacequestion <- c("Oak Ridge National Lab_Loblolly_DWJ", 
+                       "Lehmann Soil C&BC #1", 
+                       "schuur", 
+                       "USGS Harden Yazoo", 
+                       "Bonanza LTER", 
+                       "UMBS_FASET", 
+                       "Oak Ridge NationalLab_TDE", 
+                       "USDA-FS NRS Landscape Carbon Inventory", 
+                       "Northern Circumpolar Soil Carbon Database (NCSCD)")
   dataset_layer[dataset_layer$dataset_name_sub %in% replacequestion, 'hzn'] <- NA_character_
+  
   replaceunknown <- c("Bonanza LTER", "USDA-FS NRS Landscape Carbon Inventory")
   dataset_layer[dataset_layer$dataset_name_sub %in% replaceunknown, 'hzn_desgn'] <- NA_character_
   
