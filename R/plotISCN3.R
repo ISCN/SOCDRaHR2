@@ -18,6 +18,11 @@ plotGenerate <- function(ISCN3, datasetName) {
   # TODO list functions used in @importFrom
   # TODO double check EVERY dataset runs properly
   
+  #library(tidyverse)
+  #source('R/ISCN3_1.R')
+  #ISCN3 <- ISCN3_1('~/Documents/Datasets/ISCN')
+  #datasetName <- 'UMBS_FASET'
+  
   #################################
   #### Variable Initialization ####
   #################################
@@ -31,7 +36,7 @@ plotGenerate <- function(ISCN3, datasetName) {
     filter(dataset_name_sub == datasetName)
   
   # setting extra blanks in knitr tables to print as a space
-  options(knitr.kable.NA = '')   
+  options(knitr.kable.NA = '')
   
   # if no profile data, printing this message in place of profile table
   profileTable <- paste('[',
