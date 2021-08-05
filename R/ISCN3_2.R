@@ -151,6 +151,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
                                      dataset_name == 'Jorgensen_YKDE' ~ '40267',
                                      dataset_name == 'Kane' ~ '40150',
                                      dataset_name == 'Schuur' ~ '40150',
+                                     dataset_name == 'USGS Muhs' ~ '41176',
                                      dataset_name == 'Vogel' ~ '40150',
                                      TRUE ~ `modification_date (YYYY-MM-DD)`)) %>%
     #round all modification dates to their nearest day (ie whole number)
@@ -166,6 +167,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
                                      dataset_name == 'Jorgensen_YKDE' ~ '40267',
                                      dataset_name == 'Kane' ~ '40150',
                                      dataset_name == 'Schuur' ~ '40150',
+                                     dataset_name == 'USGS Muhs' ~ '41176',
                                      dataset_name == 'Vogel' ~ '40150',
                                      TRUE ~ `modification_date (YYYY-MM-DD)`))
   
