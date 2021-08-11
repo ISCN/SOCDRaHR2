@@ -13,7 +13,6 @@
 
 readBuell2011 <- function(dataDir, download=TRUE, verbose=FALSE){
   
-  dataDir <- '~/Desktop/Research/Data_Reingests/Buell'
   
   urlTable <- data.frame(fileName = c(file.path(dataDir, 'bog_soil_data.txt'),
                                       file.path(dataDir, 'BNZeml192.xml')),
@@ -43,7 +42,8 @@ readBuell2011 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   
   #reading in data
-  readBuelllayerData <- readr::read_tsv(urlTable$fileName[1])
+  readBuelllayerData <- readr::read_tsv(urlTable$fileName[1],
+                                        col_types = strrep("c", 19))
   
   #ans and its return
   ans <- list(downloadFiles = c(urlTable$fileName[1],

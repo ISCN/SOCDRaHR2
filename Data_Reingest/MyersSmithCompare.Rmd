@@ -2,7 +2,6 @@
 
 Comparing the data from ISCN with the data from the data re-ingest.
 
-
 ```{r warning=FALSE, message=FALSE}
 
 datasetName <- "Myers-Smith" 
@@ -69,8 +68,6 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```
 
-
-
 ```{r reingest}
 
 data_reingest <- readMyersSmith2005('~/Desktop/Research/data_reingests/MyersSmith')
@@ -78,8 +75,10 @@ data_reingest <- readMyersSmith2005('~/Desktop/Research/data_reingests/MyersSmit
 
 ```
 
+```{r constructing from profile and data layers}
+
 #The full join is not as useful
-# ```{r constructing from profile and data layers}
+
 # 
 # dataset_profile$`lat (dec. deg)` <- as.numeric(dataset_profile$`lat (dec. deg)`)
 # dataset_profile$`long (dec. deg)` <- as.numeric(dataset_profile$`long (dec. deg)`)
@@ -88,4 +87,24 @@ data_reingest <- readMyersSmith2005('~/Desktop/Research/data_reingests/MyersSmit
 #   full_join(dataset_profile)
 #   
 # 
-# ```
+```
+
+``` {r}
+#making the reingest look more like the dataset_layer
+
+editReingest <- data_reingest$bog_soil_data.txt %>%
+  select(c("Sample ID","Depth (cm)", "Field Description", "Date Sampled", "Bulk Density (g/cm3)", "% Nitrogen", "% Carbon", "pH")) %>%
+  rename("layer_name" = "Sample ID") %>% #renaming so that column names match dataset_layer
+  rename("layer_note" = "Field Description") %>%
+  rename("observation_date (YYYY-MM-DD)" = "Date Sampled") %>%
+  rename("bd_samp (g cm-3)" = "Bulk Density (g/cm3)") %>%
+  rename("n_tot (percent)" = "% Nitrogen") %>%
+  rename("c_tot (percent)" = "% Carbon") %>%
+  rename("ph_other" = "pH") %>%
+  na_if(-9999.000) #replacing error -9999 notation with NA to match dataset_layer
+
+#also trimming down dataset_layer, not permanently just to compare better
+datasetLayerTrimmed <- dataset_layer %>%
+  select(c("observation_date (YYYY-MM-DD)", "profile_name", "layer_name", "layer_top (cm)", "layer_bot (cm)", "layer_note", "bd_samp (g cm-3)", "c_tot (percent)", "n_tot (percent)", "ph_other"))
+
+```

@@ -19,9 +19,8 @@
 #KaneBiophysicalData is missing header information that could not be found online, contacting of researchers is necessary
 #licensing information was not found, contacting of EDI is necessary
 
-
 readKane2004 <- function(dataDir, download = TRUE, verbose = FALSE){
- 
+  
   
   urlTable <- data.frame(fileName = c(file.path(dataDir, 'x190_2031_all_soil_profile_depths_carbon_BD.txt'),
                                       file.path(dataDir,'x190_1608_sitesummarydata.txt'),
@@ -53,7 +52,8 @@ readKane2004 <- function(dataDir, download = TRUE, verbose = FALSE){
   
   
   #reading in data
-  readKanelayerData <- readr::read_csv(urlTable$fileName[1])
+  readKanelayerData <- readr::read_csv(urlTable$fileName[1],
+                                       col_types = strrep("c", 16))
   readKanesiteData <- readr::read_csv(urlTable$fileName[2], col_names = c("Site Description", "Site ID", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14")) #note that most headers are missing
 
   #ans and its return

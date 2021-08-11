@@ -68,18 +68,49 @@ dataset_layer <- standardCast(dataset_layer)
 
 ```
 
-
 ```{r reingest}
 
+#load in the data from reingest for comparing
 data_reingest <- readKane2004('~/Desktop/Research/data_reingests/Kane')
-
 
 ```
 
-#The full join is not as useful
-# ```{r constructing from profile and data layers}
-# 
-# profile_and_layer <- as.data.frame(dataset_layer) %>%
-#   full_join(dataset_profile)
+``` {r editReingest}
+
+# #the data reingest untouched
+# soilProfile <- data_reingest$x190_2031_all_soil_profile_depths_carbon_BD.txt
 #   
-# ```
+# #checking to see if as.numeric adds NA values
+# compareReingest <- data_reingest$x190_2031_all_soil_profile_depths_carbon_BD.txt %>%
+#   mutate(across(c("Oe+Oa_%C", "A_%C", "B1_%C", "A_BD"), as.numeric))
+
+editReingest <- data_reingest$x190_2031_all_soil_profile_depths_carbon_BD.txt %>%
+  pivot_longer(cols = c("Oi_depth", "Oe+Oa_depth", "A_depth", "B1_depth", "Oi_%C", "Oe+Oa_%C", "A_%C", "B1_%C", "Oi_BD", "Oe+Oa_BD", "A_BD", "B1_BD"), #pivot longer using everything that is not an identifier
+               names_to = "header") %>%
+  separate(col = header, #use the separate function to separate the horizons and variable types
+           into = c("hzn_desgn", "variable_type"),
+           sep = "_") %>%
+  pivot_wider(names_from = c("variable_type"), #pivot wider to resemble the dataset_layer
+              values_from = "value") %>%
+  rename("c_tot (percent)" = "%C") %>%
+  #rename("layer_bot (cm)" = "depth") %>%
+  na_if("nd") %>%
+  mutate(hzn = substr(hzn_desgn, 1, 1)) %>%
+  mutate(site_shortened = substr(site, 1, 1)) %>%
+  mutate(profile_name = sprintf("% s% s,%s,%s", site_shortened, productivity_level, replicate, pit)) #%>%
+  #mutate(layer_name = sprintf("% s_% s", profile_name, `layer_bot (cm)`))
+  #rename("bd_tot (g cm-3)" = "BD") #don't use this line yet, not confident on BD unit
+
+
+#code to create a top and bottom layer
+
+```
+
+```{r histograms}
+
+ggplot(editReingest) +
+  geom_histogram(mapping = aes(x = as.numeric(BD)), fill = 'orange') +
+  geom_histogram(data = dataset_layer,
+                 mapping = aes(x = `bd_tot (g cm-3)`), fill = 'blue', alpha = .5)
+
+```

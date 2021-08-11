@@ -21,6 +21,7 @@
 #Download and read in the raw data tables for Harden2008 data citations
 readUSGSHarden2008 <- function(dataDir, download = TRUE, verbose = FALSE){
   
+  
   urlTable <- data.frame(fileName = c(#'',
                                       #'',
                                       file.path(dataDir, 'x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt'),
@@ -50,9 +51,11 @@ readUSGSHarden2008 <- function(dataDir, download = TRUE, verbose = FALSE){
   
   
   #reading in data
-  # readHarden2008aData <- readr::read_csv(urlTable$fileName[1])
+  # readHarden2008aData <- readr::read_csv(urlTable$fileName[1],
+                                        #col_types = strrep("c", x))
   # readHarden2008aMetadata <- readr::read_csv(urlTable$fileName[2])
-  readHarden2008bData <- readr::read_csv(urlTable$fileName[1]) #change to 3 when 2008a is found
+  readHarden2008bData <- readr::read_csv(urlTable$fileName[1]
+                                         col_types = strrep("c", 41)) #change to 3 when 2008a is found
   readHarden2008bMetadata <- readr::read_csv(urlTable$fileName[2]) #change to 4
   
   

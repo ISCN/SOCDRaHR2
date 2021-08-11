@@ -12,7 +12,6 @@
 #' @importFrom readr read_tsv
 
 
-
 readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   
@@ -43,12 +42,13 @@ readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   
   #reading in data
-  readSchuurlayerData <- readr::read_tsv(urlTable$fileName[1])
+  readMyersSmithlayerData <- readr::read_tsv(urlTable$fileName[1],
+                                             col_types = strrep("c", 19))
   
   #ans and its return
   ans <- list(downloadFiles = c(urlTable$fileName[1],
                                 urlTable$fileName[2]),
-              bog_soil_data.txt = readSchuurlayerData,
+              bog_soil_data.txt = readMyersSmithlayerData,
               licenseShort = "",
               licenseFull = "",
               citation = "Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data/data-detail/id/192. doi:10.6073/pasta/b0e9120983438c27bf1a30f37f0e5200",

@@ -76,10 +76,10 @@ dataset_layer <- standardCast(dataset_layer)
 data_reingest <- readBuell2011('~/Desktop/Research/data_reingests/Buell')
 
 ```
-#The full join is not as useful
-# ```{r constructing from profile and data layers}
+
+```{r constructing from profile and data layers}
 # 
 # profile_and_layer <- as.data.frame(dataset_layer) %>%
 #   full_join(dataset_profile)
 #   
-# ```
+```

@@ -47,7 +47,8 @@ readSchuur2009 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   
   #reading in data
-  readSchuurdata <- readr::read_csv(urlTable$fileName[1])
+  readSchuurdata <- readr::read_csv(urlTable$fileName[1],
+                                    col_types = strrep("c", 16))
   readSchuurMetadata <- readr::read_csv(urlTable$fileName[2])
   
   #ans and its return
