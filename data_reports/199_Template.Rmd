@@ -157,6 +157,7 @@ plotGenerate <- function(ISCN3, datasetName) {
                     filter(dataset_name_sub == datasetName)
   datasetLayer <- ISCN3$layer %>%
                   filter(dataset_name_sub == datasetName)
+  profileCheck <- nrow(datasetProfile) # checking if profile table is empty
   
   # setting extra blanks in knitr tables to print as a space
   options(knitr.kable.NA = '')   
@@ -187,7 +188,7 @@ plotGenerate <- function(ISCN3, datasetName) {
                                    sep = ''))
   
   # checking for existence of profile data before creating table
-  if(datasetName %in% ISCN3$profile$dataset_name_sub) {
+  if(profileCheck != 0) {
     profileTable <- knitr::kable(summary(datasetProfileRemNA %>%
                        select_if(is.factor) %>%
                        mutate_all(droplevels)),
@@ -292,7 +293,7 @@ plotGenerate <- function(ISCN3, datasetName) {
   
   # PROFILE MAP GENERATION
   # checking for existence of profile data
-  if(datasetName %in% ISCN3$profile$dataset_name_sub) {
+  if(profileCheck != 0) {
     # checking if dataset has data in more than one country
     if(nrow(unique(datasetProfile %>%  select(`country (country)`))) > 1 ) {
       # using world map to show multiple countries
@@ -377,7 +378,7 @@ plotGenerate <- function(ISCN3, datasetName) {
   #### PLOTS ####   
   
   # checking if dataset has profile data
-  if(datasetName %in% ISCN3$profile$dataset_name_sub) {
+  if(profileCheck != 0) {
     histograms <-  ggplot(datasetProfileRemNA %>%
               # plotting columns shared by num_cols and dataset's profile data
                 pivot_longer(cols =  intersect(names(.),
@@ -424,10 +425,11 @@ plotGenerate <- function(ISCN3, datasetName) {
 }
 
 #$Visuals <- plotGenerate(ISCN3, datasetName = 'Heckman lithosequence')
-Visuals <- plotGenerate(ISCN3, datasetName = 'Bockheim')
+#Visuals <- plotGenerate(ISCN3, datasetName = 'Bockheim')
 #Visuals <- plotGenerate(ISCN3, datasetName = 'Jorgensen_NPS')
 #Visuals <- plotGenerate(ISCN3, datasetName = 'Worldwide soil carbon and nitrogen data')
 #Visuals <- plotGenerate(ISCN3, datasetName = 'UMBS_FASET')
+Visuals <- plotGenerate(ISCN3, datasetName = 'NRCS')
 
 #Visuals <- plotGenerate(ISCN3, datasetName = 'Oak Ridge National Lab_TDE')  #all have same lat and lon ??
 
@@ -437,134 +439,147 @@ print(Visuals)
 
 ## Heckman/Swanston Biscuit Burn
 ```{r}
-#### dataset variables for debugging ####
-# datasetName = 'Lu_PIMA'
-# datasetName = 'Jorgensen_NPS'
-# datasetName = 'Heckman/Swanston Biscuit Burn'
-# datasetName = 'Heckman lithosequence'
-#datasetName = 'Vogel'
-
-datasetStudy <- ISCN3$study %>%
-  filter(dataset_name == datasetName)
-datasetProfile <- ISCN3$profile %>%
-  filter(dataset_name_sub == datasetName)
-datasetLayer <- ISCN3$layer %>%
-  filter(dataset_name_sub == datasetName)
-
+plotGenerate(ISCN3, datasetName = 'Heckman/Swanston Biscuit Burn')
 ```
 
 ## Lu_PIMA
 ```{r}
+plotGenerate(ISCN3, datasetName = 'Lu_PIMA')
 ```
 
 ## Heckman lithosequence
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Heckman lithosequence')
 ```
 
 ## Oak Ridge National Lab_Loblolly_DWJ
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Oak Ridge National Lab_Loblolly_DWJ')
 ```
 
 ## Lu_LTER
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Lu_LTER')
 ```
 
 ## Lehmann Soil C&BC #1
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Lehmann Soil C&BC #1')
 ```
 
 ## Schuur
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Schuur')
 ```
 
 ## Lehmann NE US soils
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Lehmann NE US soils')
 ```
 
 ## Vogel
-```{r}
-# FIX MOD DATE IN ISCN3_1
-
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Vogel')
 ```
 
 ## Myers-Smith
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Myers-Smith')
 ```
 
 ## USGS Muhs
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'USGS Muhs')
 ```
 
 ## USGS Harden Yazoo
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'USGS Harden Yazoo')
 ```
 
 ## Boby_Mack
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Boby_Mack')
 ```
 
 ## Kane
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Kane')
 ```
 
 ## Bonanza LTER
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Bonanza LTER')
 ```
 
 ## Jorgensen_YKDE
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Jorgensen_YKDE')
 ```
 
 ## UMBS_FASET
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'UMBS_FASET')
 ```
 
 ## Jorgensen_ARCN
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Jorgensen_ARCN')
 ```
 
 ## Oak Ridge National Lab_TDE
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Oak Ridge National Lab_TDE')
 ```
 
 ## USGS Harden
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'USGS Harden')
 ```
 
 ## USDA-FS NRS Landscape Carbon Inventory
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'USDA-FS NRS Landscape Carbon Inventory')
 ```
 
 ## Bockheim
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Bockheim')
 ```
 
 ## Jorgensen_NPS
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Jorgensen_NPS')
 ```
 
 ## Permafrost_RCN
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Permafrost_RCN')
 ```
 
 ## Northern Circumpolar Soil Carbon Database (NCSCD)
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Northern Circumpolar Soil Carbon Database (NCSCD)')
 ```
 
 ## USGS_S3C
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'USGS_S3C')
 ```
 
 ## AK DSC Project SOC stock computation
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'AK DSC Project SOC stock computation')
 ```
 
 ## Worldwide soil carbon and nitrogen data
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'Worldwide soil carbon and nitrogen data')
 ```
 
 ## NRCS Sept/2014
-```{r}
+```{r} 
+plotGenerate(ISCN3, datasetName = 'NRCS Sept/2014')
 ```
 
 
