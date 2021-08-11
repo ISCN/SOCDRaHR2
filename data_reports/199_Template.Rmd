@@ -375,7 +375,7 @@ plotGenerate <- function(ISCN3, datasetName) {
   
   
   
-  #### PLOTS ####   
+  #### PLOTS ####    
   
   # checking if dataset has profile data
   if(profileCheck != 0) {
