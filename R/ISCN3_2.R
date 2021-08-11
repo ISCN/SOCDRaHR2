@@ -282,7 +282,7 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   if(verbose){message('done')}
   
   #hardcoding country name
-  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Heckman lithosequence", "Oak Ridge National Lab_Lolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C")
+  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Heckman lithosequence", "Oak Ridge National Lab_Loblolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C")
   dataset_profile[dataset_profile$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
   
   #filling citations
