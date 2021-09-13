@@ -2,7 +2,7 @@
 library(tidyverse)
 dataDir <- '~/Documents/Datasets/USGS1590'
 
-download_info <- data.frame(names = sprintf('USGS_Series_1590_Part_%s_', c('A', 'B', 'C', 'D', 'E', 'F', 'G')),
+download_info <- data.frame(names = sprintf('USGS_Series_1590_Part_%s', c('A', 'B', 'C', 'D', 'E', 'F', 'G')),
                             pdf_url = c("https://pubs.usgs.gov/bul/1590a/report.pdf",
                                         "https://pubs.usgs.gov/bul/1590b/report.pdf",
                                         "https://pubs.usgs.gov/bul/1590c/report.pdf",
