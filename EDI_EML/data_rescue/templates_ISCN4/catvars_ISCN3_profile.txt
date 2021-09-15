@@ -1,0 +1,79 @@
+attributeName	code	definition
+dataset_name_soc	AK DSC Project SOC stock computation	NA
+dataset_name_soc	AK DSC Project SOC stock to 1m computation	NA
+dataset_name_soc	Heckman lithosequence	NA
+dataset_name_soc	ISCN No SOC stock computation	NA
+dataset_name_soc	ISCN SOC stock computation	NA
+dataset_name_soc	ISCN SOC stock to 1m computation	NA
+dataset_name_soc	Northern Circumpolar Soil Carbon Database (NCSCD)	NA
+dataset_name_soc	UMBS_FASET	NA
+dataset_name_soc	Worldwide soil carbon and nitrogen data	NA
+dataset_name_soc	nan	NA
+datum_(datum)	Guam 1963	NA
+datum_(datum)	NAD27	NA
+datum_(datum)	NAD83	NA
+datum_(datum)	WGS84	NA
+datum_(datum)	nan	NA
+profile_zero_ref_(profile_zero_ref)	botO	NA
+profile_zero_ref_(profile_zero_ref)	topO	NA
+profile_zero_ref_(profile_zero_ref)	nan	NA
+soc_carbon_flag	Complete	NA
+soc_carbon_flag	Complete (gapfill)	NA
+soc_carbon_flag	Complete(5cm)	NA
+soc_carbon_flag	Complete(5cm) (gapfill)	NA
+soc_carbon_flag	Gap	NA
+soc_carbon_flag	GapOverlap	NA
+soc_carbon_flag	GapOverlap (gapfill)	NA
+soc_carbon_flag	NoLayerData	NA
+soc_carbon_flag	Short	NA
+soc_carbon_flag	Short (gapfill)	NA
+soc_carbon_flag	Short(5cm)	NA
+soc_carbon_flag	Short(5cm) (gapfill)	NA
+soc_carbon_flag	nan	NA
+landscape_(landscape)	mountain range	NA
+landscape_(landscape)	shore complex	NA
+landscape_(landscape)	alluvial plain	NA
+landscape_(landscape)	river valley	NA
+landform_(landform)	terrace	NA
+landform_(landform)	tidal flat	NA
+landform_(landform)	sea cliff	NA
+landform_(landform)	plain	NA
+landform_(landform)	mountain	NA
+landform_(landform)	hill	NA
+landform_(landform)	flood plain	NA
+landform_(landform)	escarpment	NA
+landform_(landform)	beach	NA
+landform_(landform)	alluvial fan	NA
+2d_position_(2d_position)	backslope	NA
+2d_position_(2d_position)	footslope	NA
+2d_position_(2d_position)	other	NA
+2d_position_(2d_position)	shoulder	NA
+2d_position_(2d_position)	summit	NA
+2d_position_(2d_position)	toeslope	NA
+2d_position_(2d_position)	nan	NA
+drainagecl_(drainage)	excessively	NA
+drainagecl_(drainage)	moderately well	NA
+drainagecl_(drainage)	other	NA
+drainagecl_(drainage)	poorly	NA
+drainagecl_(drainage)	somewhat excessively	NA
+drainagecl_(drainage)	somewhat poorly	NA
+drainagecl_(drainage)	very poorly	NA
+drainagecl_(drainage)	well	NA
+drainagecl_(drainage)	nan	NA
+runoff_(runoff)	high	NA
+runoff_(runoff)	low	NA
+runoff_(runoff)	medium	NA
+runoff_(runoff)	negligible	NA
+runoff_(runoff)	ponded	NA
+runoff_(runoff)	very high	NA
+runoff_(runoff)	very low	NA
+runoff_(runoff)	nan	NA
+site_perm_(site_perm)	impermeable	NA
+site_perm_(site_perm)	moderate	NA
+site_perm_(site_perm)	moderately rapid	NA
+site_perm_(site_perm)	moderately slow	NA
+site_perm_(site_perm)	rapid	NA
+site_perm_(site_perm)	slow	NA
+site_perm_(site_perm)	very rapid	NA
+site_perm_(site_perm)	very slow	NA
+site_perm_(site_perm)	nan	NA

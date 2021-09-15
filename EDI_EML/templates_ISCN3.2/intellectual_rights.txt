@@ -1,0 +1,4 @@
+Data use: Use of data assumes that the user has joined the ISCN and will act according to the mission and guidelines stated in the Charter.
+When using Phase III [ISCN 3.2] data, users are encouraged to contact original data contributors for questions or clarifications; users agree to cite and/or acknowledge the data contributors and the ISCN in presentations and publications [as specified in citations.csv].
+References of all accepted papers developed from ISCN data products must be sent to the ISCN Coordinator.
+Although these policies are intended to encourage communication between data contributors and data users, the interpretation of data and adherence to fair use guidelines are ultimately the responsibility of the user of ISCN products.

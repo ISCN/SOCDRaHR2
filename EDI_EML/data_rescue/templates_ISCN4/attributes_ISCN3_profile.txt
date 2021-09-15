@@ -1,0 +1,45 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+ISCN_1-1_(2015-12-10)	Identifier for the data product	character				
+dataset_name_sub	Identifier for the submitted data set	character				
+dataset_name_soc	Identifier for data set providing the SOC	categorical				
+lat_(dec._deg)	The latitudinal coordinate, in decimal degrees, to the appropriate level of spatial accuracy (up to five decimal degrees; WGS84 Latitude/Longitude datum preferred). Examples include: “64.67083”	numeric	degree			
+long_(dec._deg)	The longitudinal coordinate, in decimal degrees, to the appropriate level of spatial accuracy (up to five decimal degrees; WGS84 Latitude/Longitude datum preferred). Examples include: “-148.32683”	numeric	degree			
+datum_(datum)	Latitude/Longitude datum against which Latitude and Longitude are reported. If left blank, WGS84 will be assumed. Controlled vocabulary: datumLatitude/Longitude datum against which Latitude and Longitude are reported. If left blank, WGS84 will be assumed. Controlled vocabulary: datum	categorical				
+state_(state_province)	A politically defined sub-region of a country, described as either a "state" or "province". Controlled vocabulary: state_province	character				
+country_(country)	Nation of origin of the data. Controlled vocabulary: country	character				
+observation_date_(YYYY-MM-DD)	The date at which the profile was taken at the site. Examples include: “2001-08-20”	Date		YYYY-MM-DD		
+site_name	A unique name for a site that corresponds to a georeferenced point. Examples include: “101”,“DFTC”, “Site 1”, “99AK180003”	character				
+profile_name	A unique name for a single profile. This can be the same as the site name if there is only one profile at the site. For NRCS data it is the same as “Pedon ID”. Examples include: “BZBS4”, “99P0544”, “Profile 1”	character				
+profile_zero_ref_(profile_zero_ref)	Where is zero in the soil profile (top, bottom, or mineral-organic interface generally)	categorical				
+layer_top_(cm)	The top (upper) depth of the layer. The surface of the non-green (i.e. non-living) surface layer is “0”. The top of the O-horizon should be 0.	numeric	centimeter			
+layer_bot_(cm)	The bottom (lower) depth of the layer. If it is uncertain that the bottom of the designated horizon was reached, enter the depth to the bottom of the sampled layer. Note that this is the same as "hzn_bot" in the NRCS database.	numeric	centimeter			
+total_lcount	Total Layer Count	numeric	number			
+carbon_lcount	Total layer count for the SOC calculation	numeric	number			
+soc_lcount	The number of layer soil organic carbon stock values summed to produce the profile total soil organic carbon stock.	numeric	number			
+soc_depth_(cm)	The depth to which profiles were sampled to quantify the mean site, cluster, or profile calculated soil organic carbon stocks.	numeric	centimeter			
+soc_(g_cm-2)	Calculated Soil Organic Carbon Stock Standard Deviation	numeric	gramPercentimeterSquared			
+soc_method	A description of the methods used to calculate (including any gap-filling) site, cluster, profile or layer soil organic carbon stocks.	character				
+soc_spatial_flag	NA	character				
+soc_carbon_flag	SOC method calculation by ISCN. If absent, SOC values provided by data submission.	categorical				
+soil_taxon	The taxonomic classification of the soil profile following NRCS convention (http://soils.usda.gov/technical/classification/taxonomy/). Examples include: “Coarse-silty, mixed, active, subgelic Typic Dystrocryepts”, “Sandy, mixed, frigid Entic Haplorthods”	character				
+soil_series	The NRCS soil series of the profile (http://soils.usda.gov/technical/classification/taxonomy/). Examples include: "Cowboy", "Rubicon", "Tawas"	character				
+elevation_(m)	The elevation at the site as determined by topo map, GPS, altimeter, etc. Contributed value is assumed accurate within several meters regardless of method used.	numeric	meter			
+ecoregion	Special information about the site that makes it anomalous from the USDA Omernik ecoregion in which it is located.	character				
+landuse_(landsat)	Land use classification	character				
+vegclass_local	The type of vegetation at the site, described according to the classification scheme commonly used at the site. Indicate the scheme in the Local Vegetation Classification Type. Leave blank if unknown or no local classification applies. Examples include: For Alaska, level IV or V is preferred, but when this is not possible, use Level II or III. Examples include “1.C.2”, “3.A.1”, “4.C.1”.	character				
+surface_veg	Describe the dominant vegetation at the exact location of the profile. Examples include: “Forest with canopy dominanted by Pinus spp., Quercus dominant in understory, and ground layer of Pteridium aquilinum and Vaccinium spp.”, “Andropogon-Sorghastrum prairie with invading Juniperus virginiana”	character				
+landscape_(landscape)	The type of Landscape on which the site occurs, according to USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; p. 3-11) This information can be arranged in hierarchy above Landform and 2D Position to describe the geographic setting of the site. Examples include: “alluvial plain”, “river valley”, “mountain range”, “shore complex” Controlled vocabulary: landscape	categorical				
+landform_(landform)	The type of Landform on which the site is located. See USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 3-12 through 3-16). This information can be nested between Landscape and 2D Position to describe the setting of the site. Examples include: “alluvial fan”, “beach”, “escarpment”, “flood plain”, “hill”, “mountain”, “plain”, “sea cliff”, “terrace”, “tidal flat” Controlled vocabulary: landform	categorical				
+2d_position_(2d_position)	2-dimensional position of the site on the Landform on which it is located. See USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 3-38 through 3-41). This information supplements Landscape and Landform to describe the geographic setting of the site. Examples include: “summit”, “shoulder”, “backslope”, “toeslope”, “base slope”, “riser”, “mountainflank”, “dip” Controlled vocabulary: 2d_position	categorical				
+landform_note	Additional notes about the Landform (e.g. microtopography) in this site.	character				
+aspect_deg_(degree)	The numerical observation of aspect at the site. The compass bearing (corrected for declination) that a slope faces, looking downslope. If the site has no slope leave blank. Examples include: A numerical value between 0 and 360, or "no slope"	numeric	degree			
+slope_(percent)	The angle of the ground surface through the site and in the direction that overland water would flow. Make observations facing downslope to avoid errors associated with some brands of clinometers. If the site has no slope leave blank.	numeric	percent			
+drainagecl_(drainage)	The drainage class of the soil sampled at the site according to the specific terminology employed in the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; p. 1-10). Controlled vocabulary: drainage	categorical				
+map_(mm)	The arithmetic average of the total annual (liquid) precipitation , preferably taken over the standard "normal" period, 1961-1990.	numeric	millimeter			
+mat_(°C)	The arithmetic average of the daily maximum and minimum temperatures for a calendar year, preferably taken over the standard "normal" period, 1961.	numeric	celsius			
+runoff_(runoff)	Runoff potential class for the soil, assigned based on local/state/MLRA criteria. Controlled vocabulary: runoff	categorical				
+site_perm_(site_perm)	A class rating of the overall ability of air and water to move through the soil profile. The class limits are as defined in the National Soil Survey Handbook. Controlled vocabulary: site_perm	categorical				
+site_note	Various notes on and descriptions of the site other than C flux, climate, photo or vegetation. May include local names for physiographic features, which may or may not appear on USGS Topographic Quadrangles. Examples include: "Biliau Hill", "Warner Valley", "Mudsock"	character				
+thaw_depth_profile_(cm)	The depth to the frozen surface of the profile. For Alaska sites, this applies only if sampled after August 15 and should be left blank if sampled before.	numeric	centimeter			
+locator_alias	Contributor data set identifier	character				
+locator_parent_alias	Contributor data set identifier	character				

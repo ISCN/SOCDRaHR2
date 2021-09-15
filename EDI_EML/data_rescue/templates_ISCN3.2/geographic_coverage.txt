@@ -1,0 +1,3 @@
+geographicDescription	northBoundingCoordinate	southBoundingCoordinate	eastBoundingCoordinate	westBoundingCoordinate
+ISCN3_profile from ISCN 3.2 DB contains globally distributed, global terrestrial data, but coverage is strongest in the U.S.	88.60056	-78.5115	166.7662	-179.0
+ISCN3_layer from ISCN 3.2 DB contains globally distributed, global terrestrial data, but coverage is strongest in the U.S.	88.60056	-78.5115	166.7662	-179.0

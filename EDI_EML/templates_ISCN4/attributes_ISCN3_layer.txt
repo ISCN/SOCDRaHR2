@@ -1,0 +1,96 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+ISCN 1-1 (2015-12-10)	Identifier for the data product	character				
+dataset_name_sub	Identifier for the submitted data set	character				
+dataset_name_soc	Identifier for data set providing the SOC	categorical				
+lat (dec. deg)	The latitudinal coordinate, in decimal degrees, to the appropriate level of spatial accuracy (up to five decimal degrees; WGS84 Latitude/Longitude datum preferred). Examples include: “64.67083”	numeric	degree			
+long (dec. deg)	The longitudinal coordinate, in decimal degrees, to the appropriate level of spatial accuracy (up to five decimal degrees; WGS84 Latitude/Longitude datum preferred). Examples include: “-148.32683”	numeric	degree			
+datum (datum)	Latitude/Longitude datum against which Latitude and Longitude are reported. If left blank, WGS84 will be assumed. Controlled vocabulary: datum	categorical				
+state (state_province)	A politically defined sub-region of a country, described as either a "state" or "province". Controlled vocabulary: state_province	character				
+country (country)	Nation of origin of the data. Controlled vocabulary: country	character				
+site_name	A unique name for a site that corresponds to a georeferenced point. Examples include: “101”,“DFTC”, “Site 1”, “99AK180003”	character				
+observation_date (YYYY-MM-DD)	The date at which the profile was taken at the site. Examples include: “2001-08-20”	Date		YYYY-MM-DD		
+profile_name	A unique name for a single profile. This can be the same as the site name if there is only one profile at the site. For NRCS data it is the same as “Pedon ID”. Examples include: “BZBS4”, “99P0544”, “Profile 1”	character				
+layer_name	A unique name for a single sampled layer. This can be a name that denotes depth, sequence, etc. Examples include: “0-10”, “10-20”, “40A04456”, “BZBS 4.1”	character				
+layer_top (cm)	The top (upper) depth of the layer. The surface of the non-green (i.e. non-living) surface layer is “0”. The top of the O-horizon should be 0.	numeric	centimeter			
+layer_bot (cm)	The bottom (lower) depth of the layer. If it is uncertain that the bottom of the designated horizon was reached, enter the depth to the bottom of the sampled layer. Note that this is the same as "hzn_bot" in the NRCS database.	numeric	centimeter			
+hzn_desgn_other	Horizon designation following a convention other than NRCS. Please document the convention in the associated Horizon Designation Other Note. Examples include: “L”, “F”, “M”, “H”, “OF”, “OM”, “OH”	character				
+hzn	Soil horizon description	categorical				
+hzn_desgn	Follow conventions of the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 2-2 through 2-4). Note that datasets originally using another convention will be modified for this column. If a different convention was used it can be entered in Horizon Designation Other. Examples include: “Oi”, “A”, “AE”, “A/E”, “Bwf”, “Bhs”	character				
+layer_note	A description of the sampled layer. For example, a full NRCS horizon description. Examples include: “2-5 cm; brown (10YR 4/3) silt loam; moderate very fine platy structure; very friable; many roots; many fine vesicular pores; brown (10YR 5/3) on plate faces; many very thin bands of finer material similar to B't (below) throughout the horizon; abrupt wavy boundary”, “Denser, darker fabrics with white fungus and larger roots”	character				
+color	Color of moist soil based on the Munsell soil color chart. Examples include: “10YR 3/3”	character				
+vegclass_local	The type of vegetation at the site, described according to the classification scheme commonly used at the site. Indicate the scheme in the Local Vegetation Classification Type. Leave blank if unknown or no local classification applies. Examples include: For Alaska, level IV or V is preferred, but when this is not possible, use Level II or III. Examples include “1.C.2”, “3.A.1”, “4.C.1”.	character				
+soil_taxon	The taxonomic classification of the soil profile following NRCS convention (http://soils.usda.gov/technical/classification/taxonomy/). Examples include: “Coarse-silty, mixed, active, subgelic Typic Dystrocryepts”, “Sandy, mixed, frigid Entic Haplorthods”	character				
+soil_series	The NRCS soil series of the profile (http://soils.usda.gov/technical/classification/taxonomy/). Examples include: "Cowboy", "Rubicon", "Tawas"	character				
+bd_method	Please reference or describe the methods used to determine bulk density. Examples include: “Determined BD_sample from core volume and dry weight of <2mm fraction”, “Strahm et al. 2005 Soil Solution…”	character				
+bd_samp (g cm-3)	Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed.	numeric	gramPerCentimeterCubed			
+bd_tot (g cm-3)	Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter included.	numeric	gramPerCentimeterCubed			
+bd_whole (g cm-3)	Grams of oven-dried soil per cubic centimeter, with the content of soil particles >2mm and roots >1cm diameter estimated and subtracted.	numeric	gramPerCentimeterCubed			
+bd_other (g cm-3)	Grams of oven-dried soil per cubic centimeter. Please document the method used in the associated Bulk Density Method including the soil particle fraction used.	numeric	gramPerCentimeterCubed			
+bdNRCS_prep_code	NRCS bulk density method code	categorical				
+cNRCS_prep_code	NRCS soil carbon method code	categorical				
+c_method	Provide reference or describe the sample preparation and analysis methods used to determine carbon concentrations, whether Total Carbon, organic C, or Loss on Ignition. Examples include: “Determined total %C from CHN analysis of air dried <2mm fraction”	character				
+c_tot (percent)	Percent by weight of carbon in the dried, milled soil sample. This measurement will typically correspond to analytical results from an elemental analyzer.	numeric	percent			
+oc (percent)	Percent by weight of carbon in a dried soil sample after acidification with HCl, OR organic carbon as estimated by Walkley-Black Modified Acid-Dichromate (e.g. ‘Organic Carbon’ in the NRCS database). Please document the method in the associated Carbon Analysis Methods.	numeric	percent			
+loi (percent)	Percent by weight of the organic content of the <2mm fraction is the organic material lost after ignition. It is reported on a <2 mm base. Please document the method in the associated Carbon Analysis Method.	numeric	percent			
+n_tot (percent)	Percent by weight of nitrogen (organic and inorganic) in an oven-dried sample (the laboratory analytical concentration).	numeric	percent			
+c_to_n (mass ratio)	Mass ratio of total carbon to total nitrogen, as calculated from the total carbon and total nitrogen concentrations of the bulk layer, fraction, or other sample type.	numeric	mass ratio			
+soc (g cm-2)	The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer.	numeric	gramPercentimeterSquared			
+soc_carbon_flag	SOC method calculation by ISCN. If absent, SOC values provided by data submission.	character				
+soc_method	A description of the methods used to calculate (including any gap-filling) site, cluster, profile or layer soil organic carbon stocks.	character				
+ph_method	Provide reference or describe the sample preparation and analysis methods used for determinations of pH if not 1:1 soil and distilled water paste or in CaCl2.	character				
+ph_cacl	1:2 soil-CaCl2 is the pH of a sample measured in 0.01M CaCl2 at a 1:2 soil:solution ratio.	numeric	number			
+ph_h2o	1:1 distilled water and soil paste. If pH was done by a different method, then enter it into one of the other soil pH fields.	numeric	number			
+ph_other	pH measurements other than 1:1 soil and distilled water paste or in CaCl2. Please document the method in the associated pH Method.	numeric	number			
+caco3 (percent)	Inorganic carbon concentration as measured or estimated by the contributor. Please document the method in the associated Processed Site Organic Carbon Content Method.	numeric	percent			
+sand_tot_psa (percent)	Percent by weight of soil particles greater than 0.05 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986.	numeric	percent			
+silt_tot_psa (percent)	Percent by weight of soil particles in the size range from 0.002 to 0.050 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986.	numeric	percent			
+clay_tot_psa (percent)	Percent by weight of soil particles less than 0.002 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986.	numeric	percent			
+wpg2_method	Provide a reference for or describe the methods used to determine coarse fragment content.	character				
+wpg2 (percent)	The weight fraction of particles with >2 mm diameter is reported as a gravimetric percent on a whole soil base. Please include metadata in the Coarse Fragments Method column (e.g. estimate or quantitative).	numeric	percent			
+cat_exch (cmol H+ kg-1)	Document the extractant solution in the metadata worksheet, Lab Analysis Method.	numeric	cmol_H+_kg-1			
+al_dith (specified by al_fe_units)	Dithionate extractable [Al]	numeric	al_fe_units			
+al_ox (specified by al_fe_units)	Oxalate extractable [Al]	numeric	al_fe_units			
+al_other (specified by al_fe_units)	Other extractable [Al]	numeric	al_fe_units			
+fe_dith (specified by al_fe_units)	Dithionate extractable [Fe]	numeric	al_fe_units			
+fe_ox (specified by al_fe_units)	Oxalate extractable [Fe]	numeric	al_fe_units			
+fe_other (specified by al_fe_units)	Other extractable [Fe]	numeric	al_fe_units			
+mn_dith (specified by al_fe_units)	Dithionate extractable [Mn]	numeric	al_fe_units			
+mn_ox (specified by al_fe_units)	Oxalate extractable [Mn]	numeric	al_fe_units			
+mn_other (specified by al_fe_units)	Other extractable [Mn]	numeric	al_fe_units			
+al_fe_units (extract_units)	Controlled vocabulary: extract_units	character				
+al_fe_method	Al, Fe, Mn extraction methods	character				
+ca_al (specified by bc_units)	Ca:Al (molar)	numeric	bc_units			
+ca_ext (specified by bc_units)	Extractable [Ca]	numeric	bc_units			
+k_ext (specified by bc_units)	Extractable [K]	numeric	bc_units			
+mg_ext (specified by bc_units)	Extractable [Mg]	numeric	bc_units			
+na_ext (specified by bc_units)	Extractable [Na]	numeric	bc_units			
+bc_units (extract_units)	Controlled vocabulary: extract_units	character				
+bc_method	Base cation extraction methods	character				
+base_sum (specified by cec_h_units)	CEC, sum of bases	numeric	cec_h_units			
+cec_sum (specified by cec_h_units)	CEC, sum of cations	numeric	cec_h_units			
+ecec (specified by cec_h_units)	Effective CEC	numeric	cec_h_units			
+cec_h_units (extract_units)	Controlled vocabulary: extract_units	character				
+bs (percent)	Base saturation	numeric	percent			
+bs_sum (percent)	Base saturation, sum of cations	numeric	percent			
+h_ext (specified by metal_ext_units)	Extractable acidity	numeric	metal_ext_units			
+zn_ext (specified by metal_ext_units)	Extractable [Zn]	numeric	metal_ext_units			
+metal_ext_units (extract_units)	Controlled vocabulary: extract_units	character				
+metal_ext_method	Extractable metal methods	character				
+p_bray (specified by p_units)	Extractable [P] (Bray)	numeric	p_units			
+p_ox (specified by p_units)	Extractable [P] (Oxalate)	numeric	p_units			
+p_meh (specified by p_units)	Extractable [P] (NZ)	numeric	p_units			
+p_other (specified by p_units)	Extractable [P] (Other)	numeric	p_units			
+p_units (extract_units)	Controlled vocabulary: extract_units	character				
+p_method	Extractable P methods	character				
+root_quant_size	Use USDA NRCS conventions from the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; p.2-56): Record the average quantity from 3 to 5 representative unit areas. Size classes of roots being considered: very fine, < 1mm; fine, 1 – 2mm diameter. Examples include: "few very fine", "Common very fine", "fine"	character				
+root_weight (g)	Dry weight of roots ≤2 mm in diameter in the sample.	numeric	gram			
+15n (‰)	Per mille signature of δ15N relative to air (international standard).	numeric	permil			
+13c (‰)	Per mille signature of δ13C relative to Pee Dee Belemnite.	numeric	permil			
+14c (‰)	Per mille signature of Δ14C relative to NBS Oxalic Acid standard.	numeric	permil			
+14c_sigma (‰)	Error estimate for the fraction (eg. standard deviation of analytical reps).	numeric	permil			
+14c_age (BP)	Uncalibrated radiocarbon age of bulk soil in layer, as calculated from corrected fraction modern, using the Libby half-life value of 5568 years.	numeric	BP			
+14c_age_sigma (BP)	Error estimate for the fraction (eg. standard deviation of analytical reps).	numeric	BP			
+fraction_modern	Deviation of the bulk sample or fraction from modern. Modern is defined as 95% of the radiocarbon concentration (in AD 1950) of NBS Oxalic Acid standard, 13C-corrected.	character				
+fraction_modern_sigma	Error estimate for an individual layer (eg. standard deviation of analytical reps).	character				
+textureClass	Soil texture classification. If no information is provided, this will be automatically generated from %sand, %silt, %clay data (coarse = ≥50% sand; fine = <50% sand).	character				
+locator_parent_alias	Contributor data set identifier	character				
