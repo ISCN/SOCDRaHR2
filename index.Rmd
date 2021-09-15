@@ -18,7 +18,7 @@ bibliography: data_reports/ISCN3_bibliography.bib
 ISCNv3 is composed of several contributing data sets. 
 This report considers each one separately, and reports on the location of the data, as well as basic summary statistics.
 
-```{r setup, message=FALSE, echo=FALSE}
+```{r message=FALSE, echo=FALSE}
 library(data.table)
 #library(SOCDRaH2)
 library(tidyverse)
@@ -46,7 +46,7 @@ layer_raw <- ISCN3$layer
 rm(ISCN3) #memory management, ISCN3 is big
 ```
 
-```{r readISCN}
+```{r }
 #Data currently available via UF lab Dropbox
 #Run previous chunk if you need access to the data
 #csv data should be archived by summer 2021
