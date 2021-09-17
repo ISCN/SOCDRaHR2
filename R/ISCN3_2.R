@@ -13,7 +13,7 @@
 #' @return
 #' @export
 #' @importFrom dplyr bind_rows filter full_join group_by intersect mutate mutate_at select ungroup
-#' @importFrom lubridate as_date ymd NA_DATE_
+#' @importFrom lubridate as_date ymd
 #' @importFrom readr read_delim
 #' @importFrom tidyr fill
 #' @importFrom vroom vroom
@@ -156,14 +156,14 @@ ISCN3_1 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
 
   
   #### Defining standardCast() ####
-  #' Cast the columns in a standard way
-  #'
-  #' This function removes the columns that are entirely NA then goes through and uses a list of columns names to cast these to either numeric factor or date. Note that character columns are left alone since we assume all the columns were characters coming into the function.
-  #'
-  #' @param data A data frame with column names that match the columns identified in the list `type_cols`
-  #' @param column_types A list with four character vectors named `num_cols`, `factor_cols`, `date_cols`, `discard_cols` that correspond to columns in `data` that are cast as numeric, factor, lubridate::Date, or discarded from the data frame.
-  #' 
-  #' @return a data frame that matches the `data` argument with the column types modified or dropped if specified as discarded or discarded because they started as being NA columns.
+  # Cast the columns in a standard way
+  #
+  # This function removes the columns that are entirely NA then goes through and uses a list of columns names to cast these to either numeric factor or date. Note that character columns are left alone since we assume all the columns were characters coming into the function.
+  #
+  # @param data A data frame with column names that match the columns identified in the list `type_cols`
+  # @param column_types A list with four character vectors named `num_cols`, `factor_cols`, `date_cols`, `discard_cols` that correspond to columns in `data` that are cast as numeric, factor, lubridate::Date, or discarded from the data frame.
+  # 
+  # @return a data frame that matches the `data` argument with the column types modified or dropped if specified as discarded or discarded because they started as being NA columns.
   standardCast <- function(data, column_types = type_cols){
     return(data %>%
              dplyr::select(where(function(xx){!all(is.na(xx))})) %>%

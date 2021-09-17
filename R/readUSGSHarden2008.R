@@ -11,16 +11,12 @@
 #' @return a list with meta data and raw table reads. This will be ____ KB in size.
 #' @export
 #' @importFrom readr read_csv
-
-
-
-#r data read in for citation [1], Harden2008a currently not possible due to stale URL link
-#contacting of researchers is required, see ##TODO in data_reports/120_USGS_Harden.Rmd
-#licensing information was not found, contacting of EDI is necessary
-
-#Download and read in the raw data tables for Harden2008 data citations
 readUSGSHarden2008 <- function(dataDir, download = TRUE, verbose = FALSE){
+  #r data read in for citation [1], Harden2008a currently not possible due to stale URL link
+  #contacting of researchers is required, see ##TODO in data_reports/120_USGS_Harden.Rmd
+  #licensing information was not found, contacting of EDI is necessary
   
+  #Download and read in the raw data tables for Harden2008 data citations
   urlTable <- data.frame(fileName = c('',
                                       '',
                                       file.path(dataDir, 'x334_BNZ_moisturegradient_isotopestudy_2004_LTER.txt'),
