@@ -7,7 +7,7 @@
 ISCN3(dataDir = NULL, orginalFormat = FALSE, verbose = FALSE)
 }
 \arguments{
-\item{dataDir}{path to the folder contianing ISCN_ALL_DATA_LAYER_C*_1-1.xlsx, ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files. If this is left NULL then files will be downloaded to a temporary directory from the ISCN website and then deleted.}
+\item{dataDir}{path to the folder containing ISCN_ALL_DATA_LAYER_C*_1-1.xlsx, ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files. If this is left NULL then files will be downloaded to a temporary directory from the ISCN website and then deleted.}
 
 \item{verbose}{boolean flag denoting whether or not to print lots of status messages}
 }
@@ -15,5 +15,5 @@ ISCN3(dataDir = NULL, orginalFormat = FALSE, verbose = FALSE)
 list of data.table with layer, dataset and citation information
 }
 \description{
-This function first downloads the layer, profile, citaiton, and dataset tables from the ISCN website (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* It then either returns the orginal structure or reformats the data.
+This function first downloads the layer, profile, citation, and dataset tables from the ISCN website (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* It then either returns the original structure or reformats the data.
 }
