@@ -11,6 +11,8 @@
 #' @importFrom readxl read_excel
 #' @importFrom tibble tibble
 #' @importFrom utils download.file
+#' @import magrittr
+#' 
 #' @export
 #' 
 ISCN3 <- function(dataDir=NULL, orginalFormat = FALSE, verbose=FALSE){
@@ -29,7 +31,7 @@ ISCN3 <- function(dataDir=NULL, orginalFormat = FALSE, verbose=FALSE){
                          file.path(dataDir, c(
                                             'ISCN3_citation.csv', 
                                             'ISCN3_dataset.csv',
-                                            'ISCNtemplate.csv',
+                                            'ISCNtemplate_2016.csv',
                                             'ISCNTranscribed_TemplateCVs.csv',
                                             'ISCN-Database.pdf',
                                             'Gen3-DB-documentation_REV.pdf',
