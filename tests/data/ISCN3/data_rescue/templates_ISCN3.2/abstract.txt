@@ -1,6 +1,0 @@
-The ISCN is an international scientific community devoted to the advancement of soil carbon research.
-The ISCN manages an open-access, community-driven soil carbon database.
-This is version 3.2 of the ISCN Database, released in December 2015 [updated for EDI release July 2021].
-It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers.
-For more information about the ISCN, its scientific community and resources, data policies and partner networks visit: http://iscn.fluxdata.org/.
-For information about processes used to construct the DB: https://iscn.fluxdata.org/data/data-information/ [superceded by files and metadata associated with this package].

@@ -1,9 +1,0 @@
-id	unitType	parentSI	multiplierToSI	description
-mass ratio				mass ratio
-cmol_H+_kg-1				cmol_H+_kg-1
-al_fe_units				al_fe_units
-bc_units				bc_units
-cec_h_units				cec_h_units
-metal_ext_units				metal_ext_units
-p_units				p_units
-BP				BP
