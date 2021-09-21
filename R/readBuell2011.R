@@ -1,4 +1,3 @@
----
 #' Raw read for USGS_S3C (2011)
 #' 
 #' Download and read in raw data from Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data/data-detail/id/192. doi:10.6073/pasta/b0e9120983438c27bf1a30f37f0e5200
@@ -11,7 +10,6 @@
 #' @return a data frame containing newly ingested data from the Myers-Smith dataset
 #' 
 #' @export
-
 #' @importFrom readr read_delim
 #'
 readBuell2011 <- function(data_dir, download=TRUE, verbose=FALSE){

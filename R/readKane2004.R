@@ -11,17 +11,13 @@
 #' @return a list with meta data and raw table reads. This will be 49 KB in size.
 #' @export
 #' @importFrom readr read_csv
-
-
-
-#data read in for citation [2] not included
-  #url confirmation is needed, see ##TODO from data_reports/114_Kane.Rmd
-#KaneBiophysicalData is missing header information that could not be found online, contacting of researchers is necessary
-#licensing information was not found, contacting of EDI is necessary
-
-
 readKane2004 <- function(dataDir, download = TRUE, verbose = FALSE){
  
+  
+  #data read in for citation [2] not included
+  #url confirmation is needed, see ##TODO from data_reports/114_Kane.Rmd
+  #KaneBiophysicalData is missing header information that could not be found online, contacting of researchers is necessary
+  #licensing information was not found, contacting of EDI is necessary
   
   urlTable <- data.frame(fileName = c(file.path(dataDir, 'x190_2031_all_soil_profile_depths_carbon_BD.txt'),
                                       file.path(dataDir,'x190_1608_sitesummarydata.txt'),

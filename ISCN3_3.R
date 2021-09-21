@@ -1,9 +1,12 @@
 #' International Soil Carbon Network vs 3.3
 #' 
+<<<<<<< HEAD:R/ISCN3_3.R
+#'This function first loads in the layer, profile, citation, and dataset tables from EDI. It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values, and removing columns of all NA values with a function titled "standardCast()". It gaps fills missing citation information and reformats modification dates. For each dataset, it generates tables, maps, and histograms using this cleaned data. It then returns the reformatted data.
+=======
 #'This function calls the ISCN3 function to pull the ISCN 3_2 archive off of EDI. 
-#'It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values.
-#'It gaps fills missing citation information and reformats modification dates. 
+#'It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values. 
 #'It then returns the reformatted data.
+>>>>>>> 5eb6d05a3de4a012f0fdf2cec8aecf2f596398e5:ISCN3_3.R
 #'
 #'
 #' @param data_dir character refers to a directory where the data is located or downloaded to.
@@ -17,9 +20,12 @@
 #' @importFrom vroom vroom
 #' @import magrittr
 #' 
+<<<<<<< HEAD:R/ISCN3_3.R
+=======
 #' @return a list with the study table, layer table and profile table.
 #' @export
 #' 
+>>>>>>> 5eb6d05a3de4a012f0fdf2cec8aecf2f596398e5:ISCN3_3.R
 ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   # TODO: change modification dates

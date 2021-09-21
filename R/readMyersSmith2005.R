@@ -10,9 +10,6 @@
 #' @return a list with meta data and raw table reads. This will be 67 KB in size.
 #' @export
 #' @importFrom readr read_tsv
-
-
-
 readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   urlTable <- data.frame(fileName = c(file.path(dataDir, 'bog_soil_data.txt'),

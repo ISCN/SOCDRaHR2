@@ -11,14 +11,10 @@
 #' @return a list with meta data and raw table reads. This will be ____ KB in size.
 #' @export
 #' @importFrom readr read_csv
-
-
-#url provided is stale and cannot be downloaded, see ##TODO under data_reports/107_Schuur.Rmd
-#contacting of researchers is necessary
-
 readSchuur2009 <- function(dataDir, download=TRUE, verbose=FALSE){
   
-  
+  #url provided is stale and cannot be downloaded, see ##TODO under data_reports/107_Schuur.Rmd
+  #contacting of researchers is necessary
   urlTable <- data.frame(fileName = c(file.path(dataDir, 'SchuurData.txt'),
                                       file.path(dataDir, 'SchuurMetaData.xml')),
                          downloadURL = c('',

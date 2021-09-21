@@ -8,7 +8,6 @@
 #' @export
 #' @importFrom devtools install_github
 #'
-
 readISRaD <- function(dataDir, verbose=FALSE, gitRef = "master"){
 
   if(verbose) print('installing the ISRaD R package from github')

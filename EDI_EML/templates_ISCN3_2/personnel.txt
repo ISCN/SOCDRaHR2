@@ -1,0 +1,14 @@
+givenName	middleInitial	surName	organizationName	electronicMailAddress	userId	role	projectTitle	fundingAgency	fundingNumber
+Luke		Nave	University of Michigan	nscn-support@george.lbl.gov	0000-0001-8258-8335	creator			
+Kris		Johnson	USDA-Forest Service	kristoferdjohnson@fs.fed.us	9999-9999-9999-9999	creator			
+Catharine		van Ingen	Microsoft Research	nscn-support@george.lbl.gov	9999-9999-9999-9999	creator			
+Deborah		Agarwal	Lawrence Berkeley National Laboratory	nscn-support@george.lbl.gov	0000-0001-5045-2396	creator			
+Marty		Humphrey	University of Virigina	humphrey@cs.virginia.edu	9999-9999-9999-9999	creator			
+Norman		Beekwilder	University of Virigina	norm@virginia.edu	9999-9999-9999-9999	creator			
+Katherine		Todd-Brown	International Soil Carbon Network	iscncoordinator@gmail.com	0000-0002-3109-8130	contact			
+Luke		Nave	International Soil Carbon Network	lukenave@umich.edu	0000-0001-8258-8335	contact			
+Ashley		Orehek	University of Tennessee		0000-0001-5984-9138	Metadata Contributor			
+Kaley		Dodson	University of California, Santa Barbara		0000-0002-7418-9163	Metadata Contributor		
+Katherine		Todd-Brown	International Soil Carbon Network, University of Florida	ktoddbrown@ufl.edu	0000-0002-3109-8130	Metadata Contributor			
+Avni		Malhotra	International Soil Carbon Network	avni.malhotra@geo.uzh.ch	0000-0002-7850-6402	Coordinator			
+Eric		Slessarev	International Soil Carbon Network	slessarev1@llnl.gov	0000-0002-4076-1950	Coordinator			
