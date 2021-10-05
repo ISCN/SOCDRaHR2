@@ -33,6 +33,8 @@ ISCN3.ls <- ISCN3(dataDir = dataDir, orginalFormat = TRUE)
 
 # Description of the tables and columns
 
+Create a table with the table name, column name, and long description similar to what is on the EDI page.
+
 # New section for each data contribution
 
 Include both a description of the data sets including counts of layers and sites, histograms and tables of variables, and site map.
