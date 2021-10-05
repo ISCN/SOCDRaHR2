@@ -15,6 +15,8 @@ Purpose: *This vignette describes the ISCN3 data contributions.*
 library(SOCDRaH2)
 library(ggplot2)
 dataDir <- '~/Documents/Datasets/ISCN'
+
+knitr::opts_chunk$set(eval=FALSE)
 ```
 
 ```{r fakeSetUp, eval=FALSE}
@@ -25,7 +27,7 @@ dataDir <- 'Your/Data/Dir'
 
 # Accessing the data
 
-```{r load}
+```{r load, eval=FALSE}
 ISCN3.ls <- ISCN3(dataDir = dataDir, orginalFormat = TRUE)
 ```
 

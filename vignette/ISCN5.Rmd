@@ -14,6 +14,7 @@ vignette: >
 library(SOCDRaH2)
 library(ggplot2)
 dataDir <- '~/Documents/Datasets/ISCN'
+knitr::opts_chunk$set(eval=FALSE)
 ```
 
 ```{r fakeSetUp, eval=FALSE}
@@ -80,7 +81,7 @@ ggplot(OC.dt[value >= 0 & value < 25], aes(x=value)) +
 ```
 
 # Bulk Density
-```{r bulkdensity_map}
+```{r}
 bulkDensity.df <- ISCN.ls$layer[variable %in% c("bulk_density_other", "bulk_density_sample", 
                                              "bulk_density_total", "bulk_density_whole" )]
 
