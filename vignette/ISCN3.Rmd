@@ -1,5 +1,5 @@
 ---
-title: "ISCN data"
+title: "ISCN 3.X data"
 author: "K Todd-Brown (ktoddbrown@ufl.edu)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -9,8 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+Purpose: *This vignette describes the ISCN3 data contributions.*
 
-```{r setup}
+```{r setup, echo=FALSE}
 library(SOCDRaH2)
 library(ggplot2)
 dataDir <- '~/Documents/Datasets/ISCN'
@@ -18,138 +19,23 @@ dataDir <- '~/Documents/Datasets/ISCN'
 
 ```{r fakeSetUp, eval=FALSE}
 library(SOCDRaH2)
-
+library(ggplot2)
 dataDir <- 'Your/Data/Dir'
 ```
 
+# Accessing the data
 
 ```{r load}
-keys.ls <- makeKeys()
-#ISCN.ls <- ISCN3(dataDir=dataDir, orginalFormat = FALSE)
-ISCN.ls <- ISCN4(dataDir = dataDir, onlyNewData = FALSE)
+ISCN3.ls <- ISCN3(dataDir = dataDir, orginalFormat = TRUE)
 ```
 
-# General variables
-```{r}
-lapply(ISCN.ls, names)
+# Description of the tables and columns
 
-knitr::kable(keys.ls$ISCN[order(variable),][order(table),])
-```
+# New section for each data contribution
 
-
-# Bulk Density
-```{r bulkdensity_map}
-organic_carbon.dt <- ISCN.ls$layer[variable %in% c("oc", "loi", 'soc')]
-
-##duplicate entries: merge(bulkDensity.df, bulkDensity.df[,.N, by=.(dataset_name_id, profile_name_id, site_name_id, layer_name_id, variable, type)][N>1][type =='value_num'], all.y=TRUE)
-##Filter out duplicate entries
-doubleValueEntries <- organic_carbon.dt[type =='value_num', .N,
-                                by=.(dataset_name_id, profile_name_id, site_name_id, 
-                                     layer_name_id, variable, type)][N>1]
-
-singleValueEntries <- organic_carbon.dt[type =='value_num', .N,
-                                by=.(dataset_name_id, profile_name_id, site_name_id, 
-                                     layer_name_id, variable, type)][N==1]
-
-#unique(bulkDensity.df$type) 
-organicCarbon_value.dt <- merge(organic_carbon.dt, singleValueEntries,  all.y=TRUE)[, 
-                                    .(value = as.numeric(entry)),
-                                    by=.(dataset_name_id, profile_name_id, site_name_id, 
-                                         layer_name_id, variable)]
-  
-organicCarbon_method.dt <- ISCN.ls$layer[variable %in% c("oc", "loi") & type == 'method', 
-                .(entry = paste0(header, ": ", entry, collapse = ';')), 
-                 # header = paste0(header, collapse = '; '),
-                #  N = length(type)), 
-                by=.(dataset_name_id, profile_name_id, site_name_id, layer_name_id, variable)]
-
-OC.dt <- merge(organicCarbon_value.dt, organicCarbon_method.dt, 
-                        by=c('dataset_name_id', 'profile_name_id', 'site_name_id', 'layer_name_id', 'variable'), all.x=TRUE)
-
-```
-
-```{r}
-ggplot(OC.dt[value >= 0 & value < 100], aes(x=value)) +
-  geom_histogram() +
-  facet_wrap(~variable, scales='free')
-
-ggplot(OC.dt[value >= 0 & value < 25], aes(x=value)) +
-  geom_histogram() +
-  facet_wrap(~variable, scales='free')
-```
-
-# Bulk Density
-```{r bulkdensity_map}
-bulkDensity.df <- ISCN.ls$layer[variable %in% c("bulk_density_other", "bulk_density_sample", 
-                                             "bulk_density_total", "bulk_density_whole" )]
-
-##duplicate entries: merge(bulkDensity.df, bulkDensity.df[,.N, by=.(dataset_name_id, profile_name_id, site_name_id, layer_name_id, variable, type)][N>1][type =='value_num'], all.y=TRUE)
-##Filter out duplicate entries
-singleValueEntries <- bulkDensity.df[type =='value_num', .N,
-                                by=.(dataset_name_id, profile_name_id, site_name_id, 
-                                     layer_name_id, variable, type)][N==1]
-
-#unique(bulkDensity.df$type) 
-bulkDensity_value.df <- merge(bulkDensity.df, singleValueEntries,  all.y=TRUE)[, .(value = as.numeric(entry)),
-                                    by=.(dataset_name_id, profile_name_id, site_name_id, layer_name_id, variable)]
-  
-bulkDensity_method.dt <- ISCN.ls$layer[variable %in% c("bulk_density_other", "bulk_density_sample", 
-                                             "bulk_density_total", "bulk_density_whole" ) & type == 'method', 
-                .(entry = paste0(header, ": ", entry, collapse = ';')), 
-                 # header = paste0(header, collapse = '; '),
-                #  N = length(type)), 
-                by=.(dataset_name_id, profile_name_id, site_name_id, layer_name_id, variable)]
-
-bulkDensity.dt <- merge(bulkDensity_value.df, bulkDensity_method.dt, 
-                        by=c('dataset_name_id', 'profile_name_id', 'site_name_id', 'layer_name_id', 'variable'), all.x=TRUE)
-
-```
-
-```{r bulkdensity_histogram}
-
-ggplot(bulkDensity.dt[(value > 0 & value < 3)], aes(x=value)) +
-  geom_histogram() +
-  facet_wrap(~variable, scales = 'free_y')
-```
-
-## Coarse fraction
-
-```{r wpg2}
-coarseFraction.df <- ISCN.ls$layer[variable %in% c("wpg2" )]
-
-##duplicate entries: merge(coarseFraction.df, coarseFraction.df[,.N, by=.(dataset_name_id, profile_name_id, site_name_id, layer_name_id, variable, type)][N>1][type =='value_num'], all.y=TRUE)
-##Filter out duplicate entries
-singleValueEntries <- coarseFraction.df[type =='value_num', .N,
-                                by=.(dataset_name_id, profile_name_id, site_name_id, 
-                                     layer_name_id, variable, type)][N==1]
-
-#unique(coarseFraction.df$type) 
-coarseFraction_value.df <- merge(coarseFraction.df, singleValueEntries,  
-                                 all.y=TRUE)[, .(value = as.numeric(entry)),
-                                    by=.(dataset_name_id, profile_name_id, site_name_id, layer_name_id, variable)]
-  
-coarseFraction_method.dt <- ISCN.ls$layer[variable %in% c("wpg2" ) & type == 'method', 
-                .(entry = paste0(header, ": ", entry, collapse = ';')), 
-                 # header = paste0(header, collapse = '; '),
-                #  N = length(type)), 
-                by=.(dataset_name_id, profile_name_id, site_name_id, layer_name_id, variable)]
-
-coarseFraction.dt <- merge(coarseFraction_value.df, coarseFraction_method.dt, 
-                        by=c('dataset_name_id', 'profile_name_id', 'site_name_id', 'layer_name_id', 'variable'), all.x=TRUE)
-```
-
-```{r}
-
-ggplot(coarseFraction.dt[(value > 0 & value < 100)], aes(x=value)) +
-  geom_histogram() +
-  facet_wrap(~variable, scales = 'free_y')
-```
+Include both a description of the data sets including counts of layers and sites, histograms and tables of variables, and site map.
+List data contributions from largest to smallest.
 
 # Citations and bibliography
-```{r}
-ISCN.ls$study <- ISCN.ls$study[!is.na(entry)]
 
-knitr::kable(ISCN.ls$study[variable %in% c('reference', 'acknowledgement', 'citation'), 
-                           .(entry = paste0(entry, collapse='\n\t\t', entry)),
-                           by=dataset_name_id])
-```
+Create a table with each dataset and citation, repeat the dataset name as needed for each citation.
