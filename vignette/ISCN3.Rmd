@@ -28,7 +28,7 @@ dataDir <- 'Your/Data/Dir'
 # Accessing the data
 
 ```{r load, eval=FALSE}
-ISCN3.ls <- ISCN3(dataDir = dataDir, orginalFormat = TRUE)
+ISCN3.ls <- ISCN3_3(data_dir = dataDir)
 ```
 
 # Description of the tables and columns
