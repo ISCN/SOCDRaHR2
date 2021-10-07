@@ -1,0 +1,156 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup}
+library(SOCDRaH2)
+
+library(tidyverse)
+library(vroom)
+
+library(ggmap)
+library(maps)
+library(mapdata)
+
+dataDir <- '~/Documents/Datasets/ISCN'
+knitr::opts_chunk$set(eval=FALSE)
+
+```
+
+```{r loadCSV}
+layer_raw <- vroom::vroom(file.path(dataDir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
+profile_raw <-  vroom::vroom(file.path(dataDir, 'ISCN3_profile.csv'), col_types = strrep('c', times = 44))
+dataset_raw <-  vroom::vroom(file.path(dataDir, 'ISCN3_dataset.csv'), col_types = strrep('c', times = 19))
+citation_raw <-  vroom::vroom(file.path(dataDir, 'ISCN3_citation.csv'), col_types = strrep('c', times = 12))
+```
+
+# Overview
+
+```{r}
+temp <- layer_raw %>%
+  filter(dataset_name_sub != 'NRCS Sept/2014') %>%
+  select(-'ISCN 1-1 (2015-12-10)') %>%
+  group_by(dataset_name_sub) %>% 
+  tally(name = 'layer_count')
+
+temp %>% full_join(profile_raw %>%
+  filter(dataset_name_sub != 'NRCS Sept/2014') %>%
+  select(-'ISCN 1-1 (2015-12-10)') %>%
+  group_by(dataset_name_sub) %>% 
+  tally(name = 'profile_count')) %>% 
+  arrange(-layer_count)
+```
+
+# Lu_PIMA
+
+  - Lu_PIMA
+    + modification date not consistant between citation & dataset?
+    
+```{r subset_LP}
+datasetName <- 'Lu_PIMA'
+
+citation_raw %>% 
+  filter(dataset_name == 'Lu_PIMA') %>% 
+  select_if(function(xx){!is.na(xx)}) %>%
+  full_join( dataset_raw %>% 
+      filter(dataset_name == 'Lu_PIMA') %>% 
+      select_if(function(xx){!is.na(xx)}),
+    by = c("dataset_name", "dataset_type (dataset_type)", "curator_name", "curator_organization", "curator_email"),
+    suffix = c('.citation', '.dataset')) %>%
+  mutate_at(vars(contains('date')), function(xx){lubridate::as_date(as.numeric(xx), origin = '1900-01-01')}) %>%
+  mutate_at(vars(contains('count')), as.numeric) %>%
+  t()
+```
+
+```{r}
+Lu_PIMA_profile <- profile_raw %>%
+  filter(dataset_name_sub == 'Lu_PIMA') %>%
+  select_if(function(xx){any(!is.na(xx))}) %>%
+  mutate_if(function(xx){all(grepl('^-?\\d*.?\\d+E?-?\\d*$', xx) | is.na(xx))}, as.numeric) %>%
+  mutate(`thaw_depth_profile (cm)` = 
+           as.numeric(gsub('none', 'Inf', `thaw_depth_profile (cm)`))) %>%
+  mutate_at(vars(contains('date')), function(xx){lubridate::as_date(as.numeric(xx), origin = '1900-01-01')})
+
+str(Lu_PIMA_profile)
+
+```
+
+```{r}
+
+dataset_profile <- noNRCS_ISCN3_profile  %>%
+  filter(dataset_name_sub == datasetName) %>%
+  mutate(`thaw_depth_profile (cm)` = 
+           gsub('none', 'Inf', `thaw_depth_profile (cm)`)) %>%
+  standardCast() %>%
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(`dataset_name`, `site_name`, `profile_name`, 
+         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+         `state (state_province)`, `country (country)`, 
+         `observation_date (YYYY-MM-DD)`, 
+         `profile_zero_ref (profile_zero_ref)`, 
+         #`layer_top (cm)`, `layer_bot (cm)`, `soc_depth (cm)`, 
+         `elevation (m)`, 
+         `ecoregion`, `vegclass_local`, 
+         `landform (landform)`, `2d_position (2d_position)`, 
+         `aspect_deg (degree)`, `slope (percent)`, 
+         `drainagecl (drainage)`, `thaw_depth_profile (cm)`,
+         `site_note`)
+
+dataset_layer <- noNRCS_ISCN3_layer %>%
+  filter(dataset_name_sub == datasetName) %>%
+  standardCast() %>% 
+  rename(dataset_name = 'dataset_name_sub') %>%
+  select(`dataset_name`, `site_name`, `profile_name`, `layer_name`,
+         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+         #`state (state_province)`, `country (country)`,  `observation_date (YYYY-MM-DD)`,  `vegclass_local`, 
+         `layer_top (cm)`, `layer_bot (cm)`, 
+         `hzn`, `hzn_desgn`, `color`, 
+         `bd_samp (g cm-3)`, `c_tot (percent)`, `n_tot (percent)`, 
+         `ph_h2o`, `sand_tot_psa (percent)`, 
+         `silt_tot_psa (percent)`, `clay_tot_psa (percent)`, 
+         `wpg2 (percent)`, `root_quant_size`)
+  
+all_study <- bind_rows(dataset_study, all_study)
+all_profile <- bind_rows(dataset_profile, all_profile)
+all_layer <- bind_rows(dataset_layer, all_layer)
+```
+
+```{r viz_LP}
+
+ggplot(data =  map_data('world') %>%
+         filter(region %in% c('Canada', 'USA', 'Mexico'))) + 
+  geom_polygon(aes(x=long, y = lat, group = group), 
+               fill = 'grey', color = 'black') + 
+  geom_point(data=dataset_profile, 
+             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
+             shape = 'x', color = 'red') +
+  coord_fixed(1.3) +
+  xlim(-180, -50) +
+  theme_nothing() 
+
+dataset_layer %>%
+  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
+  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
+  bind_rows(
+    dataset_layer %>%
+      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
+      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
+  arrange(n) %>%
+  knitr::kable()
+
+ggplot(dataset_layer %>% 
+         pivot_longer( cols=c('layer_top (cm)', 'layer_bot (cm)'),
+                       values_to='depth') %>%
+         pivot_longer(cols = `bd_samp (g cm-3)`:`wpg2 (percent)`, 
+                      values_to = 'measurement', names_to = 'type')) +
+         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
+  facet_wrap(~type, scales='free')
+
+```

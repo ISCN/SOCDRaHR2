@@ -1,0 +1,250 @@
+---
+title: "ISCN EML generator"
+author: "Kaley Dodson"
+date: "6/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
+
+library(tidyverse)
+#library(here)
+library(vroom)
+#remotes::install_github("EDIorg/EMLassemblyline")
+library(EMLassemblyline)
+library(readxl)
+library(data.table)
+
+data_dir <- 'data'
+
+# load data
+data_layer <- vroom(file.path(data_dir, "ISCN3_layer.csv"))
+data_profile <- vroom(file.path(data_dir, "ISCN3_profile.csv"))
+data_dataset <- vroom(file.path(data_dir, "ISCN3_dataset.csv"))
+data_citation <- vroom(file.path(data_dir, "ISCN3_citation.csv"))
+
+# EML generated using EMLAssemblyLine package version 2.5.0
+```
+
+# Generate EML for ISCN 3.2
+
+## Create Metadata Templates
+
+```{r}
+
+if( ! file.exists(file.path('templates_ISCN3_2', 'attributes_ISCN3_profile.txt'))){
+  # 1. Pull Templates From Original EML File & Modify Attribute Templates
+  eml2eal(file.path("eml", "ISCN_EML_v1_FIXED_KD_3.xml"), file.path("templates_ISCN3_2")) # this function doesn't export everything perfectly so be sure to manually remove any remaining tags from the methods template
+  
+  # view attribute templates
+  template_layer <- read.delim(file.path("templates_ISCN3_2", "attributes_ISCN3_layer.txt"))
+  template_profile <- read.delim(file.path("templates_ISCN3_2", "attributes_ISCN3_profile.txt"))
+  
+  # change all classes to character & re-write attribute templates
+  template_layer %>% 
+    mutate(class = "character" ) %>% 
+    write_tsv(file=file.path('templates_ISCN3_2', 'attributes_ISCN3_layer.txt'))
+  
+  template_profile %>% 
+    mutate(class = "character" ) %>% 
+    write_tsv(file=file.path('templates_ISCN3_2', 'attributes_ISCN3_profile.txt'))
+  
+}else{
+  
+  template_layer <- read_tsv(file.path("templates_ISCN3_2", "attributes_ISCN3_layer.txt"))
+  template_profile <- read_tsv(file.path("templates_ISCN3_2", "attributes_ISCN3_profile.txt"))
+  
+}
+```
+
+```{r}
+# 2. Create Custom Citation and Dataset Templates
+
+if(!file.exists(file.path("templates_ISCN3_2", "attributes_ISCN3_dataset.txt"))){
+  #TODO pull info from new csv file instead of xlsx
+  # pull attribute descriptions from documentation
+  templateInfo <- read_csv(file.path('data', 'ISCNtemplate_2016.csv')) %>%
+    rename(data_table = 'table', data_column = 'header', 'attributeDefinition' = 'description')
+  
+  # plyr::ldply(list("site", "fraction", "cluster", "profile", "layer", "gas", "other"), function(xx){
+  # 
+  # descriptiontemplate <- readxl::read_excel(file.path('data', 'ISCNtemplate.xlsx'), # update file path file.path
+  #                                           sheet = xx, 
+  #                                           col_names = FALSE, 
+  #                                           n_max = 3) 
+  # 
+  # metadata <- tibble(data_table = xx,
+  #                    data_column = unlist(descriptiontemplate[1,]),
+  #                    attributeDefinition = unlist(descriptiontemplate[2,]),
+  #                    unit = unlist(descriptiontemplate[3,]))
+  # 
+  # return(metadata)}) %>% bind_rows(plyr::ldply(list("disturbance", "metadata"), function(xx){
+  #   descriptiontemplate <- readxl::read_excel('/Users/kaleydodson/Desktop/EDI/EDI Training Data/data/ISCNtemplate.xlsx', # update file path here
+  #                                             sheet = xx, 
+  #                                             col_names = c('data_column', 'attributeDefinition', 'unit'), 
+  #                                             col_types = 'text') %>% 
+  #     mutate(data_table = xx)
+  #   return(descriptiontemplate)
+  # })) 
+  
+  # combine definitions with citation and dataset attributes
+  columnInfo <- plyr::ldply(list('citation', 'dataset'), function(xx){
+    ans <- tibble(data_table = xx,
+                  attributeName = read_delim(paste0('data/ISCN3_', xx,'.csv'), delim = ';', n_max = 1) %>% names())
+    return(ans)}) %>% 
+    mutate(rootname = gsub('\\s.*', '', attributeName),
+           class = 'character',
+           dateTimeFormatString = NA,
+           missingValueCode = ' ',
+           missingValueCodeExplanation = ' ') %>% 
+    left_join(templateInfo, 
+              by = c('rootname' = 'data_column'))
+  
+  # write attribute template files for citation and dataset
+  columnInfo %>%
+    filter(data_table.x =='citation') %>% 
+    select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation) %>%
+    write_tsv(file=file.path('templates_ISCN3_2', 'attributes_ISCN3_citation.txt'))
+  
+  columnInfo  %>%
+    filter(data_table.x =='dataset') %>%
+    select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation) %>%
+    write_tsv(file=file.path('templates_ISCN3_2', 'attributes_ISCN3_dataset.txt'))
+} else {
+  # view metadata templates
+  template_dataset <- read.delim(file.path("templates_ISCN3_2", "attributes_ISCN3_dataset.txt"))
+  template_citation <- read.delim(file.path("templates_ISCN3_2", "attributes_ISCN3_citation.txt"))
+}
+
+```
+
+```{r}
+# 3. Create Additional Info Template w/ funding info 
+if(!file.exists(file.path('templates_ISCN3_2', 'additional_info.txt'))){
+  c("Funding and Acknowledgements
+
+The ISCN 3.1 data product was developed with financial support from the following grants:
+1. Carbon cycle research, coordination, and outreach through the National Soil Carbon Network. PIs C. Swanston, M. Kramer, M. Waldrop, J. Lehmann, R. Kolka. USDA-NIFA AFRI MICR-2009-02612.
+2. Purchase and installation of the Network Attached Storage Server for ISCN. PIs C. Swanston, D. Agarwal. USDA-FS 14-IA-11242306-136.
+3. International Soil Carbon Network. PIs C. Swanston, L. Nave. USDA-FS 16-CR11242306-071.
+The USDA Natural Resources Conservation Service, National Cooperative Soil Survey and the U.S. Geological Survey also made extensive data contributions to the International Soil Carbon Network.
+
+For the publication of ISCN 3.2, the Environmental Data Initiative Summer Fellowship Program and University of Tennessee Informatics Practicum provided additional annotation support.") %>% 
+    writeLines(file.path('templates_ISCN3_2', 'additional_info.txt'))
+}else{
+  
+  #do nothing
+}
+
+```
+
+NOTE: You will not need the catvar and custom unit templates so remove those from the templates folder before generating EML.
+
+```{r}
+# generate new EML file for ISCN 3.2
+
+make_eml(
+  path = file.path("templates_ISCN3_2"),
+  data.path = file.path("data"),
+  eml.path = file.path("eml"),
+  dataset.title = "International Soil Carbon Network version 3.2 Database (ISCN3.2)",
+  temporal.coverage = c("1918-01-01", "2014-07-26"),
+  maintenance.description = "This is provided as a historic ‘as is’ snapshot. While there are future versions of ISCN database planned we will re-release the data under CC-BY and not all data released under ISCN3 may be included.",
+  data.table = c("ISCN3_layer.csv", "ISCN3_profile.csv", "ISCN3_citation.csv", "ISCN3_dataset.csv"), # add new data files here
+  data.table.name = c("Layer Data", "Profile Data", "Citation Information", "Data Contribution Information"), # add new data files names here
+  data.table.description = c("This file contains layer-level variables for only those layers that possess computed SOC contents (~228,000). Layer_names in this database report are relational to profile_names in the profile-level reports above.", 
+                             "This file contains site- and profile-level variables for all >71,000 profiles in the database, regardless of whether these profiles have computed SOC stocks.",
+                             "This file contains citation and acknowledgement requests for contributing data",
+                             "This file contains contact information for contributors, and descriptions for and statistics about contributing datasets."), # add new data file descriptions here
+  data.table.quote.character = c('"', '"', '"', '"'),
+  other.entity = c("ISCNTranscribed_TemplateCVs.csv", "ISCNtemplate_2016.csv", "TemplateCVs.pdf", "TemplateSubmit.pdf", "Gen3-DB-documentation_REV.pdf", "ISCN-Database.pdf", "C&QA.Rmd"),
+  other.entity.name = c("Transcribed Template Controlled Vocabularies", 
+                        "ISCN Data Submission Template (2016)", 
+                        "Template Controlled Vocabularies", 
+                        "Information on ISCN Templates", 
+                        "Data Use Notes", 
+                        "ISCN Data Staging", 
+                        "Database Calculations and Quality Assessment"),
+  other.entity.description = c("This file contains the transcribed version of controlled vocabularies used by International Soil Carbon Network Templates.", 
+                               "This file contains the ISCN data submission template.", 
+                               "This file contains the controlled vocabularies used by International Soil Carbon Network Templates.", 
+                               "This file contains detailed information and examples for the variables contained in the data submission template.", 
+                               "This file contains data use notes for the 3rd generation ISCN database (12/2015 version).", 
+                               "This file contains information on the ISCN ArchiveSoilCarbon archive database and the staging processing that occurs in the ISCNStage database.",
+                               "This file contains information to help users understand how the NSCN Database performs SOC content (pool size) calculations, and is designed to assist users in their assessments of data quality."),
+  user.id = "ISCN",
+  user.domain = "EDI",
+  package.id = "edi.360.4"
+)
+
+# check for lost info
+#eml2eal_losses(file.path("eml", "ISCN_EML_v1_FIXED_KD_3.xml"), file.path("eml", "edi.360.1.xml"))
+
+
+
+```
+
+# Additional steps for generating templates needed for ISCN4 EML
+
+##### Create attribute templates for new data 
+
+```{r}
+# use EAL function to create templates from new data files
+
+#template_table_attributes(
+#  path = file.path("templates_ISCN3_2"), # update file path for template destination
+#  data.path = file.path("data"), # update file path for 
+#  data.table = c("ISCN3_citation.csv", "ISCN3_dataset.csv") # update file names
+#)
+```
+
+# Post ISCN3.2
+
+Changes for 3.2 templates:
+1. Update additional info template with funding info/acknowledgements; personnel template with metadata contributors, co-authors, etc.; abstract, IP, and methods templates with version number (& add/update info as needed)
+2. Ensure profile and layer attribute templates do not have all character classes. The adjusted templates are in the ISCN4.0 template folder but can be created again using first function in step 1 under Create Metadata Templates.
+
+Additional templates to include:
+1. Categorical variables for layer, profile, and new data
+2. Custom units 
+
+
+```{r}
+# generate EML file for ISCN4
+make_eml(
+  path = file.path("templates_ISCN4"), # update file path for templates
+  data.path = file.path("data"), # update file path for data files
+  eml.path = file.path("eml"), # update file path for eml file destination
+  dataset.title = "International Soil Carbon Network version 3.2 Database (ISCN3.2)", # update title to 4.0
+  temporal.coverage = c("1918-01-01", "2014-07-26"), # update end date
+  maintenance.description = "This is provided as a historic ‘as is’ snapshot. While there are future versions of ISCN database planned we will re-release the data under CC-BY and not all data released under ISCN3.1 may be included.",
+  data.table = c("ISCN3_layer.csv", "ISCN3_profile.csv", "ISCN3_citation.csv", "ISCN3_dataset.csv"), # add new data files here
+  data.table.name = c("Layer Data", "Profile Data", "Citation Information", "Data Contribution Information"), # add new data files names here
+  data.table.description = c("This file contains layer-level variables for only those layers that possess computed SOC contents (~228,000). Layer_names in this database report are relational to profile_names in the profile-level reports above.", 
+                             "This file contains site- and profile-level variables for all >71,000 profiles in the database, regardless of whether these profiles have computed SOC stocks.",
+                             "This file contains citation and acknowledgement requests for contributing data",
+                             "This file contains contact information for contributors, and descriptions for and statistics about contributing datasets."), # add new data file descriptions here
+  data.table.quote.character = c('"', '"', '"', '"'), # might need to indicate quote characters for new data files here
+  other.entity = c("ISCNTranscribed_TemplateCVs.csv", "ISCNtemplate_2016.csv", "TemplateCVs.pdf", "TemplateSubmit.pdf", "Gen3-DB-documentation_REV.pdf", "ISCN-Database.pdf", "C&QA.Rmd"),
+  other.entity.name = c("Transcribed Template Controlled Vocabularies", 
+                        "ISCN Data Submission Template (2016)", 
+                        "Template Controlled Vocabularies", 
+                        "Information on ISCN Templates", 
+                        "Data Use Notes", 
+                        "ISCN Data Staging", 
+                        "Database Calculations and Quality Assessment"),
+  other.entity.description = c("This file contains the transcribed version of controlled vocabularies used by International Soil Carbon Network Templates.", 
+                               "This file contains the ISCN data submission template.", 
+                               "This file contains the controlled vocabularies used by International Soil Carbon Network Templates.", 
+                               "This file contains detailed information and examples for the variables contained in the data submission template.", 
+                               "This file contains data use notes for the 3rd generation ISCN database (12/2015 version).", 
+                               "This file contains information on the ISCN ArchiveSoilCarbon archive database and the staging processing that occurs in the ISCNStage database.",
+                               "This file contains information to help users understand how the NSCN Database performs SOC content (pool size) calculations, and is designed to assist users in their assessments of data quality."),
+  user.id = "ISCN",
+  user.domain = "EDI",
+  package.id = "edi.360.4", # update first number with the Data Package Identifier number reserved in sandbox (or through portal for official publication) and update second number with each draft/iteration 
+)
+
+```
+

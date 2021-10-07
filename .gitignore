@@ -20,3 +20,5 @@ temp/*
 
 #set index.rmd to be ignored for data dir issues
 index.rmd
+docs
+docs/
