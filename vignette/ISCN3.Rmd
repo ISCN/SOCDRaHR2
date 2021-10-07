@@ -14,6 +14,8 @@ Purpose: *This vignette describes the ISCN3 data contributions.*
 ```{r setup, echo=FALSE}
 library(SOCDRaH2)
 library(ggplot2)
+library(knitr)
+library(kableExtra)
 dataDir <- '~/Documents/Datasets/ISCN'
 
 knitr::opts_chunk$set(eval=FALSE)
@@ -31,6 +33,28 @@ dataDir <- 'Your/Data/Dir'
 ISCN3.ls <- ISCN3_3(data_dir = dataDir)
 ```
 
+# Creating a table to show summary statistics of the number of unique sites each dataset has
+
+```{r sites}
+knitr::kable(profile_raw %>%
+  select(dataset_name_sub, site_name) %>%
+  unique()%>%
+  group_by(dataset_name_sub) %>% 
+  tally(name = 'site_count'), 
+  caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile data table.')%>%
+  kable_styling()
+```
+
+# Dataset description table
+
+```{r}
+study <- dataset_raw %>% 
+  select(dataset_name, `dataset_type (dataset_type)`, dataset_description) 
+knitr::kable(study,
+  caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile data table.')%>%
+  kable_styling()
+```
+
 # Description of the tables and columns
 
 Create a table with the table name, column name, and long description similar to what is on the EDI page.
@@ -43,3 +67,13 @@ List data contributions from largest to smallest.
 # Citations and bibliography
 
 Create a table with each dataset and citation, repeat the dataset name as needed for each citation.
+
+```{r}
+#need to gap fill these or find the gap filled ones
+study <- citation_raw %>% 
+  select(dataset_name, citation) 
+knitr::kable(study,
+  caption = 'Citations for each contributing dataset submision (dataname_sub).')%>%
+  kable_styling()
+```
+
