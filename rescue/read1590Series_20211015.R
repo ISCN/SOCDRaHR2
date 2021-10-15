@@ -1,0 +1,1047 @@
+#read1590Series <- function(dataDir, verbose=FALSE){
+  library(tidyverse)
+  dataDir <- file.path('~', 'Datasets','USGS1590')
+  
+  download_info <- data.frame(names = sprintf('Part_%s_USGS_1590Series', c('a', 'b', 'c', 'd', 'e', 'f', 'g')),
+                              pdf_url = c("https://pubs.usgs.gov/bul/1590a/report.pdf",
+                                          "https://pubs.usgs.gov/bul/1590b/report.pdf",
+                                          "https://pubs.usgs.gov/bul/1590c/report.pdf",
+                                          "https://pubs.usgs.gov/bul/1590d/report.pdf",
+                                          "https://pubs.usgs.gov/bul/1590e/report.pdf",
+                                          "https://pubs.usgs.gov/bul/1590f/report.pdf",
+                                          "https://pubs.usgs.gov/bul/1590g/report.pdf")) %>%
+    mutate(download_filename = file.path(dataDir, paste0(names, '.pdf')))
+  #https://pubs.usgs.gov/of/2002/0277/pdf/of02-277.pdf not part of 1590 but similar
+  
+  for(ii in 1:nrow(download_info)){
+    if(!file.exists(download_info$download_filename[ii])){
+      download.file(url=download_info$pdf_url[ii], destfile = download_info$download_filename[ii])
+    }
+  }
+  
+  ###Report A
+  #need to manually code key on pg36
+  #need to manually code pg37
+  
+  reportA <- pdftools::pdf_text(download_info$download_filename[3])     ## Update index when changing files ##
+  
+  #Field Tables pgs 38-41 = 4
+  #Physical Properties pgs 42-44 = 3
+  #Extractive chemical analyses pg 45-47 = 3
+  #Extractive chemical analyses 2 pg 48-50 = 3
+  #Mineralogy pg 50-53= 4
+  #Total Chem analysis pg 53-57 = 5
+  #Total Chem analysis - fraction 2 pg 57-61 = 5
+  # 27 pages per report for 7 reports at 0.5 hours per page is 95 hours of work
+  
+  tableInfo.ls <- list(reportA = list(
+    ################################
+    #### Field description #########
+    ################################
+    field_desc = list(title = 'Field descriptions',
+                      analysts = 'J. W. Harden U. S. Geological Survey',
+                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Lower boundary', 
+                                      'Moist color', 'Dry color', 'Texture', 'Structure',   
+                                      'Consistence:Dry', 'Consistence:Moisture', 'Consitence:Wet',
+                                      'Roots', 'Pores', 'Clay films', 'pH', 
+                                      'Assumed Parent Material:Texture', 'Assumed Parent Material:Wet consistence'),
+                      part1 = list(page = 38,
+                                   columnCuts = c(10, 19, 30, 41, 51, 64, 75, 89, 105, 113, 124, 133, 143, 150, 156, 166, 176),
+                                   subtables = c(rep(NA, 13), rep('Modern River Alluvium', 4), rep(NA, 4), 
+                                                 rep('Post-Modesto Deposits, 0.2 Ka', 7), rep(NA, 2), rep('Post-Modesto Deposits, 0.2 Ka', 10), rep(NA, 4), 
+                                                 rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), 
+                                                 rep('Post-Modesto Deposits, 3 Ka', 11), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 9), rep(NA, 2), 
+                                                 rep('Post-Modesto Deposits, 3 Ka', 10), rep(NA, 2), rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 2), 
+                                                 rep('Post-Modesto Deposits, 3 Ka', 5), rep(NA, 6))),
+                      part2 = list(page = 39,
+                                   columnCuts = c(7, 16, 26, 38, 48, 62, 75, 86, 102, 113, 124, 133, 143, 155, 165, 173, 184), #define column number splits
+                                   subtables = c(rep(NA, 11), 
+                                                 rep('Modesto Formation, upper member, 10 Ka', 19), rep(NA, 5), #define data rows by subtables
+                                                 rep('Modesto Formation, lower member, 40 Ka', 1+46-36), rep(NA, 4),
+                                                 rep('Riverbank Formation, upper member, 130 Ka', 12), rep(NA, 2),
+                                                 rep('Riverbank Formation, upper member, 130 Ka', 20), rep(NA, 4),
+                                                 rep('Riverbank Formation, middle member. 250 Ka', 8), rep(NA, 6))),
+                      part3 = list(page = 40,
+                                   columnCuts = c(6, 16, 26, 38, 48, 62, 75, 86, 102, 110, 121, 130, 138, 149, 159, 167, 174),
+                                   subtables = c(rep(NA, 1+14-1), #inclusive rows between line 14 and 1 => 1 + 14 - 1
+                                                 rep('Riverbank Formation, middle member, 250 Ka', 13), rep(NA, 3),
+                                                 rep('Riverbank Formation, middle member, 250 Ka', 1+46-31), rep(NA, 1+52-47),
+                                                 rep('Riverbank Formation, lower member, 330 Ka', 1+63-53), rep(NA, 1+69-64),
+                                                 rep('Turlock Lake Formation, 600 Ka', 1+75-70), rep(NA, 1+78-76),
+                                                 rep('Turlock Lake Formation, 600 Ka', 1+91-79), rep(NA, 1+94-92),
+                                                 rep('Turlock Lake Formation, 600 Ka', 1+111-95), rep(NA, 1+117-112))),
+                      part4 = list(page = 41,
+                                   columnCuts = c(6, 16, 26, 38, 48, 60, 74, 84, 96, 105, 115, 125, 133, 144, 156, 165, 176),
+                                   subtables = c(rep(NA, 1+14-1), #inclusive rows between line 14 and 1 => 1 + 14 - 1
+                                                 rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+37-15), rep(NA, 1+40-38),
+                                                 rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+61-41), rep(NA, 1+64-62),
+                                                 rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+81-65), rep(NA, 1+87-82)))
+    ),
+    ##############################
+    ##### Physical properties#####
+    ##############################
+    phys_prop = list(title = 'Physical properties',
+                     analysts ='A.J. Busacca, Peter Janitsky, and R. Meixner, University of California, Davis', 
+                     columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', '>2-mm', 
+                                     'Total sand', 'vco sand', 'co sand', 'm sand', 'fi+vfi sand', 'silt', '<2-\\mu clay', '< 1-\\mu clay', 
+                                     'Bulk density (g/cm^3)'),
+                     part1 = list(page = 42,
+                                  columnCuts = c(13, 21, 35, 42, 51, 60, 68, 76, 84, 92, 101, 109, 118),
+                                  subtables = c(rep(NA, 1+9-1), 
+                                                rep('Modern River Alluvium', 1 + 13 - 10), rep(NA, 1+15-14), 
+                                                rep('Post-Modesto Deposits, 0.2 Ka',1 + 29 - 16), rep(NA, 1+31-30),
+                                                rep('Post-Modesto Deposits, 0.2 Ka',1 + 40-32 ), rep(NA, 1+41-41), 
+                                                rep('Post-Modesto Deposits, 3 Ka', 1+51-42), rep(NA, 1+52-52), 
+                                                rep('Post-Modesto Deposits, 3 Ka', 1+57-53), rep(NA, 1+58-58), 
+                                                rep('Post-Modesto Deposits, 3 Ka', 1+69-59), rep(NA, 1+73-70))),
+                     part2 = list(page = 43,
+                                  columnCuts = c(7, 15, 25, 35, 44, 52, 60, 68, 76, 83, 91, 99, 107),
+                                  #NA, 1+1-8; MFU, 1+18-9; NA, 1+20-19; MFL, 1 + 27-21; NA, 1+30-28; RFU, 1+47-31; NA, 1+49-48; RFM, 1+69-50; NA, 73-70
+                                  subtables = c(rep(NA, 1+8-1), 
+                                                rep('Modesto Formation, upper member, 10 Ka', 1+18-9), rep(NA, 1+20-19),
+                                                rep('Modesto Formation, lower member, 40 Ka', 1 + 27-21), rep(NA, 1+30-28),
+                                                rep('Riverbank Formation, upper member, 130 Ka',1+47-31), rep(NA, 1+49-48),
+                                                rep('Riverbank Formation, middle member. 250 Ka', 1+69-50), rep(NA, 1+73-70))),
+                     part3 = list(page = 44,
+                                  columnCuts = c(14, 21, 31, 43, 49, 57, 65, 75, 81, 89, 99, 105, 112),
+                                  subtables = c(rep(NA, 1+9-1), 
+                                                rep('Riverbank Formation, lower member, 330 Ka', 1+15-10), rep(NA, 1+18-16),
+                                                rep('Turlock Lake Formation, 600 Ka', 1+27-19), rep(NA, 1+28-28),
+                                                rep('Turlock Lake Formation, 600 Ka', 1+38-29), rep(NA, 1+41-39),
+                                                rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+56-42), rep(NA, 1+57-57),
+                                                rep('China Hat Gravel member of Laguna Formation, 3,000 Ka', 1+68-58), rep(NA, 1+74-69)))
+    ),
+    #########################################
+    ##### Extractive chemical analyses ######
+    ########################################
+    chem_extractive = list(title = 'Extractive chemical analyses',
+                           analysts ='A. L. Walker (U.S. Geological Survey) with A.J. Busacca, Peter Janitsky, and R. Meixner (University of California, Davis)', 
+                           note = 'CEC, cation-exchange capacity; m, with magnetic minerals; w, without magnetic minerals.',
+                           columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 
+                                           'Percentage of <2-mm: Total N', 'Percentage of <2-mm: Organic C', 
+                                           'mg/100 g soil: Exchange Na', 'mg/100 g soil: Exchange K', 
+                                           'mg/100 g soil: Exchange Ca', 'mg/100 g soil: Exchange Mg', 
+                                           'mg/100 g soil: Exchange N', 'mg/100 g soil: CEC', 
+                                           'mg/100 g soil: pH 1:1H_2O', 'mg/100 g soil: pH 1:1KCl', 'mg/100 g soil: pH Saturated'),
+                           part1 = list(page = 45,
+                                        columnCuts = c(7, 15, 24, 31, 43, 51, 65, 79, 93, 105, 117, 127, 137, 147),
+                                        subtables = c(rep(NA, 1+11-1), 
+                                                      rep(c('Modern River Alluvium', NA), 4), rep(NA, 1+21-20), 
+                                                      rep('Post-Modesto Deposits, 0.2 Ka',1 + 27-22), rep(NA, 1+28-28),
+                                                      rep('Post-Modesto Deposits, 0.2 Ka',1 + 36-29), rep(NA, 1+39-37), 
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+43-40), rep(NA, 1+44-44), 
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+51-45), rep(NA, 1+52-52), 
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+59-53), rep(NA, 1+60-60),
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+67-61), rep(NA, 1+68-68),
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+73-69), rep(NA, 1+74-74),
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+79-75), rep(NA, 1+85-80))),
+                           part2 = list(page = 46,
+                                        columnCuts = c(7, 15, 25, 33, 45, 55, 67, 77, 89, 101, 111, 121, 129, 138),
+                                        subtables = c(rep(NA, 1+8-1), 
+                                                      rep('Modesto Formation, upper member, 10 Ka', 1+13-9), rep(NA, 1+14-14),
+                                                      rep('Modesto Formation, upper member, 10 Ka', 1+19-15), rep(NA, 1+22-20),
+                                                      rep('Modesto Formation, lower member, 40 Ka', 1 +29-23), rep(NA, 1+32-30),
+                                                      rep('Riverbank Formation, upper member, 130 Ka',1+39-33), rep(NA, 1+40-40),
+                                                      rep('Riverbank Formation, upper member, 130 Ka',1+50-41), rep(NA, 1+53-51),
+                                                      rep('Riverbank Formation, middle member. 250 Ka', 1+75-54), rep(NA, 1+77-76), 
+                                                      #oh hey, don't need to skip empty lines
+                                                      rep('Riverbank Formation, lower member, 330 Ka',1 + 83-78), rep(NA, 1+89-84))),
+                           part3 = list(page = 47,
+                                        columnCuts = c(7, 15, 27, 37, 49, 59, 71, 83, 95, 107, 117, 125, 135, 145),
+                                        subtables = c(rep(NA, 1+8-1), 
+                                                      rep('Turlock Lake Formation, 600 Ka', 1+29-9), rep(NA, 1+32-30),
+                                                      rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+61-33), rep(NA, 1+67-62)))
+      
+    ),
+    ###########################################
+    ##### Extractive chemical analyses 2 ######
+    ###########################################
+    chem_extractive2 = list(title = 'Extractive chemical analyses [2]',
+                           analysts ='A. L. Walker (U.S. Geological Survey) with A.J. Busacca, Peter Janitsky, and R. Meixner (University of California, Davis)', 
+                           note = 'CEC, cation-exchange capacity; m, with magnetic minerals; w, without magnetic minerals.',
+                           columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 
+                                           'Percentage of <2-mm: Fe_d(m)', 'Percentage of <2-mm: Fe_d(w)',
+                                           'Percentage of <2-mm: Al_d(w)', 'Percentage of <2-mm: mags',
+                                           'Percentage of <2-mm: Fe_0', 'Percentage of <2-mm: Al_0'
+                                           ),
+                           part1 = list(page = 48,
+                                        columnCuts = c(33, 41, 51, 61, 71, 83, 93, 101, 111),
+                                        subtables = c(rep(NA, 1+14-1), 
+                                                      rep('Modern River Alluvium', 1+18-15), rep(NA, 1+20-19), 
+                                                      rep('Post-Modesto Deposits, 0.2 Ka',1 + 34-21), rep(NA, 1+36-35),
+                                                      rep('Post-Modesto Deposits, 3 Ka', 1+72-37), rep(NA, 1+74-73), 
+                                                      rep('Modesto Formation, upper member, 10 Ka', 1+84-75), rep(NA, 1+90-85))),
+                           part2 = list(page = 49,
+                                        columnCuts = c(5, 15, 25, 35, 45, 57, 68, 77, 87),
+                                        subtables = c(rep(NA, 1+8-1), 
+                                                      rep('Modesto Formation, lower member, 40 Ka', 1+15-9), rep(NA, 1+18-16),
+                                                      rep('Riverbank Formation, upper member, 130 Ka',1+36-19), rep(NA, 1+38-37),
+                                                      rep('Riverbank Formation, middle member. 250 Ka', 1+59-39), rep(NA, 1+61-60),
+                                                      rep('Riverbank Formation, upper member, 330 Ka',1 + 67-62), rep(NA, 1+69-68),
+                                                      rep('Turlock Lake Formation, 600 Ka', 1+88-70), rep(NA, 1+94-89))),
+                           part3 = list(page = 50,
+                                        columnCuts = c(51, 61, 73, 81, 91, 101, 111, 123, 133),
+                                        #TODO: basal depth is not being read in correctly by pdf reader
+                                        subtables = c(rep(NA, 1+9-1), 
+                                                      rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+38-10), rep(NA, 1+80-39)))
+    ),
+    #######################
+    ##### Mineralogy ######
+    #######################
+    mineralogy = list(title = 'Mineralogy',
+                      analysts = 'J.W. Harden',
+                      note = 'Percentaqes of very fine sand are based on approximately 200 qrain counts per slide of each heavy (sp gr, greater than 3,08) and medium (sp gr, 2.58-3.08) mineral
+isolate. Etching scales, which range from 0 to 5, express average deqree of etching of all grains observed in grain counts (after Gillam and others, 1977).',
+                      columeNames = c('No', 'Soil age (ka)', 'Profile', 'Horizon', 
+                                      'Percentages of very fine sand for selected heavy-mineral groups: Hornblende',
+                                      'Percentages of very fine sand for selected heavy-mineral groups: Orthopyroxene',
+                                      'Percentages of very fine sand for selected heavy-mineral groups: Clinopyroxene',
+                                      'Percentages of very fine sand for selected heavy-mineral groups: Zircon',
+                                      'Percentages of very fine sand for selected heavy-mineral groups: Epidotesphene',
+                                      'Percentages of very fine sand for selected heavy-mineral groups: Apatite',
+                                      'Percentages of very fine sand for selected heavy-mineral groups: Opaque minerals',
+                                      'Percentages of very fine sand for selected heavy-mineral groups: Unknown',
+                                      'Etching scales for selected heavy-mineral groups in very fine sand fraction: Hornblende',
+                                      'Etching scales for selected heavy-mineral groups in very fine sand fraction: Orthopyroxene',
+                                      'Etching scales for selected heavy-mineral groups in very fine sand fraction: Clinopyroxene',
+                                      'Etching scales for selected heavy-mineral groups in very fine sand fraction: Zircon',
+                                      'Etching scales for selected heavy-mineral groups in very fine sand fraction: Epidote',
+                                      'Etching scales for selected heavy-mineral groups in very fine sand fraction: Sphene'
+                                      ),
+                      part1 = list(page = 50,
+                                   #TODO: this table does not have a sample id, needs one-off handling when processing
+                                   columnCuts = c(6, 17, 24, 35, 43, 57, 69, 81, 89, 101, 111, 125, 139, 147, 157, 167, 177),
+                                   subtables = c(rep(NA, 1+53-1), 
+                                                 rep('None', 1+74-54),
+                                                 rep(NA, 1+80-75))
+    )
+      
+    ),
+    mineralogy2 = list(title = 'Mineralogy2',
+                       analysts = 'A.J. Busacco, University of California, Davis, and A.L. Walker, U.S. Geological Survey',
+                       columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Kaolinite', 'Chlorite', 'Chloritized Vermiculite', 'Vermiculite', 'Mica Vermiculite',
+                                       'Mica', 'Mica chloritized', 'Smectite', 'Quartz', 'Feldspar'),
+                       note = '   + Trace\n  ++ Moderate amount present\n +++ Large amount present\n++++ Dominant',
+                       part1 = list(page = 51,
+                                    columnCuts = c(5, 14, 24, 33, 47, 61, 76, 92, 100, 111, 120, 134, 144),
+                                    subtables = c(rep(NA, 1+9-1),
+                                                  rep('Modern River Alluvium', 1+16-10),
+                                                  rep(NA, 1+19-17),
+                                                  rep('Post-Modesto Deposits, .2 Ka', 1+34-20),
+                                                  rep(NA, 1+37-35),
+                                                  rep('Post-Modesto Deposits, 3 Ka', 1+73-38),
+                                                  rep(NA, 1+74-74),
+                                                  rep('Modesto Formation, upper member, 10 Ka', 1+84-75),
+                                                  rep(NA, 1+88-85))),
+                       part2 = list(page = 52,
+                                    columnCuts = c(12, 20, 30, 39, 51, 67, 81, 97, 107, 117, 131, 139, 149),
+                                    subtables = c(rep(NA, 1+7-1),
+                                                  rep('Modesto Formation, lower member, 40 Ka', 1+14-8),
+                                                  rep(NA, 1+17-15),
+                                                  rep('Riverbank Formation, upper member, 130 Ka', 1+35-18),
+                                                  rep(NA, 1+37-36),
+                                                  rep('Riverbank Formation, middle member, 250 Ka', 1+57-38),
+                                                  rep(NA, 1+60-58),
+                                                  rep('Riverbank Formation, lower member, 330 Ka', 1+66-61),
+                                                  rep(NA, 1+69-67),
+                                                  rep('Turlock Lake Formation, 600 Ka', 1+90-70),
+                                                  rep(NA, 1+94-91))),
+                       part3 = list(page = 53,
+                                    columnCuts = c(7, 15, 25, 35, 51, 65, 83, 99, 113, 127, 135, 151, 159),
+                                    subtables = c(rep(NA, 1+8-1),
+                                                  rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+36-9),
+                                                  rep(NA, 1+68-37)))
+                           
+  ),
+  ################################
+  ##### Supplemental tables ######
+  ################################
+  supp_table5 = list(title = 'Total chemical analyses of the fine (less than 47 micrometers) fraction by X-ray flourescence',
+                       analysts = 'J. Baker, A. Bartel, J. Carr, D. Hopping, V.G. Mossotti, J. Taggart, J.S. Wahlberg',
+                       columeNames = c('No', 'Sample', 'Horizon', 'Basal Depth (cm)', 'SiO2', 'Al2O3', 'Fe2O3', 'MgO', 'CaO', 'Na2O', 'K2O', 'TiO2', 'P2O5', 'MnO', 'ZrO2'),
+                       note = 'All analyses in weight percent.',
+                       part1 = list(page = 53,
+                                    columnCuts = c(11, 25, 35, 45, 57, 71, 81, 93, 105, 115, 125, 135, 145, 152),
+                                    subtables = c(rep(NA, 1+60-1),
+                                                   rep('Modern River Alluvium', 1+64-61),
+                                                   rep(NA, 1+68-65))),
+                       
+                       ##The OCR didn't recognize the 8 sample number in part2 and so that column is just blank in that row -- DC##
+                       
+                       part2 = list(page = 54,
+                                    columnCuts = c(9, 21, 35, 43, 53, 61, 69, 77, 85, 91, 99, 105, 113, 123),
+                                    subtables = c(rep(NA, 1+7-1),
+                                                  rep('Post-Modesto Deposits, .2 Ka', 1+23-8),
+                                                  rep(NA, 1+25-24),
+                                                  rep('Post-Modesto Deposits, 3 Ka', 1+64-26),
+                                                  rep(NA, 1+70-65))),
+                       part3 = list(page = 55,
+                                    columnCuts = c(7, 15, 25, 33, 43, 55, 67, 75, 81, 89, 97, 103, 111, 121),
+                                    subtables = c(rep(NA, 1+8-1),
+                                                  rep('Modesto Formation, upper member, 10 Ka', 1+18-9),
+                                                  rep(NA, 1+20-19),
+                                                  rep('Modesto Formation, lower member, 40 Ka', 1+27-21),
+                                                  rep(NA, 1+29-28),
+                                                  rep('Riverbank Formation, upper member, 130 Ka', 1+46-30),
+                                                  rep(NA, 1+52-47))),
+                       part4 = list(page = 56,
+                                    columnCuts = c(13, 21, 29, 37, 45, 55, 65, 73, 81, 89, 95, 103, 111, 119),
+                                    subtables = c(rep(NA, 1+7-1),
+                                                  rep('Riverbank Formation, middle member, 250 Ka', 1+27-8),
+                                                  rep(NA, 1+29-28),
+                                                  rep('Riverbank Formation, lower member, 330 Ka', 1+35-30),
+                                                  rep(NA, 1+37-36),
+                                                  rep('Turlock Lake Formation, 600 Ka', 1+56-38),
+                                                  rep(NA, 1+62-57))),
+                       part5 = list(page = 57,
+                                    columnCuts = c(13, 25, 37, 49, 59, 69, 79, 87, 97, 105, 115, 123, 133, 143),
+                                    subtables = c(rep(NA, 1+9-1),
+                                                  rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+39-10),
+                                                  rep(NA, 1+63-40)))
+  ),
+    supp_table6 = list(title = 'Total chemical analyses of the less-than-2-mm fraction by X-ray flourescence',
+                       analysts = 'J. Baker, A. Bartel, J. Lindsay, V.G. Mossotti, S. Ramage, B. Scott, J. Taggart, J.S. Wahlberg, K. Wong',
+                       columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'SiO2', 'Al2O3', 'Fe2O3', 'MgO', 'CaO', 'Na2O', 'K2O', 'TiO2', 'MnO', 'P2O5', 'ZrO2'),
+                       note = 'All analyses in weight percent.',
+                       part1 = list(page = 57,
+                                    columnCuts = c(9, 21, 35, 47, 57, 69, 78, 85, 93, 103, 113, 121, 131, 141),
+                                    subtables = c(rep(NA, 1+54-1),
+                                                  rep('Modern River Alluvium', 1+58-55),
+                                                  rep(NA, 1+63-59))),
+                       part2 = list(page = 58,
+                                    columnCuts = c(11, 19, 29, 37, 45, 55, 65, 73, 79, 87, 95, 101, 109, 117),
+                                    subtables = c(rep(NA, 1+8-1),
+                                                  rep('Post-Modesto Deposits, .2 Ka', 1+22-9),
+                                                  rep(NA, 1+24-23),
+                                                  rep('Post-Modesto Deposits, 3 Ka', 1+62-25),
+                                                  rep(NA, 1+68-63))),
+                       part3 = list(page = 59,
+                                    columnCuts = c(7, 15, 27, 37, 47, 57, 65, 73, 79, 87, 95, 101, 109, 119),
+                                    subtables = c(rep(NA, 1+9-1),
+                                                  rep('Modesto Formation, upper member, 10 Ka', 1+20-10),
+                                                  rep(NA, 1+23-21),
+                                                  rep('Modesto Formation, lower member, 40 Ka', 1+33-24),
+                                                  rep(NA, 1+35-34),
+                                                  rep('Riverbank Formation, upper member, 130 Ka', 1+54-36),
+                                                  rep(NA, 1+60-55))),
+                       part4 = list(page = 60,
+                                    columnCuts = c(11, 19, 29, 37, 45, 55, 63, 71, 79, 85, 93, 99, 107, 115),
+                                    subtables = c(rep(NA, 1+7-1),
+                                                  rep('Riverbank Formation, middle member, 250 Ka', 1+27-8),
+                                                  rep(NA, 1+29-28),
+                                                  rep('Riverbank Formation, lower member, 330 Ka', 1+35-30),
+                                                  rep(NA, 1+37-36),
+                                                  rep('Turlock Lake Formation, 600 Ka', 1+56-38),
+                                                  rep(NA, 1+62-57))),
+                       part5 = list(page = 61,
+                                    columnCuts = c(9, 21, 37, 47, 55, 69, 81, 95, 107, 119, 129, 137, 145, 155),
+                                    subtables = c(rep(NA, 1+9-1),
+                                                  rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+42-10),
+                                                  rep(NA, 1+67-43)))
+  ),
+    supp_table7_1 = list(title = 'Total chemical analyses of the fine (less than 47 μm) fraction by instrumental neutron activation',
+                         analysts = 'J. Budahn, R. Knight, D. McKown',
+                         columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Ba', 'Ce', 'Co', 'Cr', 'Cs', 'Dy', 'Eu', 'Fe', 'Gd', 'Hf', 'K', 'La', 'Lu', 'Mn'),
+                         note = 'Fe and K values in weight percent; all others in parts per million.',
+                         part1 = list(page = 61,
+                                      columnCuts = c(9, 19, 29, 39, 47, 55, 63, 75, 89, 99, 109, 121, 129, 137, 145, 153, 165),
+                                      subtables = c(rep(NA, 1+58-1),
+                                                  rep('Modern River Alluvium', 1+62-59),
+                                                  rep(NA, 1+67-63))),
+                         part2 = list(page = 62,
+                                      columnCuts = c(7, 15, 25, 31, 39, 47, 53, 61, 69, 75, 83, 91, 99, 107, 113, 121, 129),
+                                      subtables = c(rep(NA, 1+9-1),
+                                                    rep('Post-Modesto Deposits, .2 Ka', 1+23-10),
+                                                    rep(NA, 1+25-24),
+                                                    rep('Post-Modesto Deposits, 3 Ka', 1+60-26),
+                                                    rep(NA, 1+62-61),
+                                                    rep('Modesto Formation, upper member, 10 Ka', 1+72-63),
+                                                    rep(NA, 1+78-73))),
+                         part3 = list(page = 63,
+                                      columnCuts = c(7, 15, 23, 29, 37, 45, 55, 63, 69, 77, 83, 91, 99, 107, 115, 121, 129),
+                                      subtables = c(rep(NA, 1+9-1),
+                                                    rep('Modesto Formation, lower member, 40 Ka', 1+16-10),
+                                                    rep(NA, 1+19-17),
+                                                    rep('Riverbank Formation, upper member, 130 Ka', 1+36-20),
+                                                    rep(NA, 1+38-37),
+                                                    rep('Riverbank Formation, middle member, 250 Ka', 1+58-39),
+                                                    rep(NA, 1+60-59),
+                                                    rep('Riverbank Formation, lower member, 330 Ka', 1+66-61),
+                                                    rep(NA, 1+72-67))),
+                         part4 = list(page = 64,
+                                      columnCuts = c(11, 21, 31, 39, 45, 57, 69, 77, 85, 93, 103, 111, 117, 125, 133, 141, 153),
+                                      subtables = c(rep(NA, 1+7-1),
+                                                    rep('Turlock Lake Formation, 600 Ka', 1+26-8),
+                                                    rep(NA, 1+29-27),
+                                                    rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+55-30),
+                                                    rep(NA, 1+61-56)))
+  ),
+    supp_table7_2 = list(title = 'Total chemical analyses of the fine (less than 47 μm) fraction by instrumental neutron activation',
+                         analysts = 'J. Budahn, R. Knight, D. McKown',
+                         columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Na', 'Nd', 'Rb', 'Sb', 'Sc', 'Sm', 'Sr', 'Ta', 'Tb', 'Th', 'Tm', 'U', 'Yb', 'Zr'),
+                         note = 'Na values in weight percent; all others in parts per million.',
+                         part1 = list(page = 65,
+                                      columnCuts = c(7, 16, 24, 31, 40, 49, 58, 64, 73, 82, 91, 100, 108, 118, 126, 136, 143),
+                                      subtables = c(rep(NA, 1+12-1),
+                                                    rep('Modern River Alluvium', 1+16-13),
+                                                    rep(NA, 1+18-17),
+                                                    rep('Post Modesto Deposits, .2 Ka', 1+32-19),
+                                                    rep(NA, 1+34-33),
+                                                    rep('Post Modesto Deposits, 3 Ka', 1+69-35),
+                                                    rep(NA, 1+75-70))),
+                         part2 = list(page = 66,
+                                      columnCuts = c(10, 19, 28, 34, 43, 51, 59, 67, 73, 82, 88, 96, 104, 111, 118, 125, 134),
+                                      subtables = c(rep(NA, 1+9-1),
+                                                    rep('Modesto Formation, upper member, 10 Ka', 1+20-10),
+                                                    rep(NA, 1+22-21),
+                                                    rep('Modesto Formation, upper member, 40 Ka', 1+29-23),
+                                                    rep(NA, 1+32-30),
+                                                    rep('Riverbank Formation, upper member, 130 Ka', 1+49-33),
+                                                    rep(NA, 1+52-50),
+                                                    rep('Riverbank Formation, middle member, 250 Ka', 1+72-53),
+                                                    rep(NA, 1+78-73))),
+                         part3 = list(page = 67,
+                                      columnCuts = c(10, 19, 25, 34, 41, 50, 58, 67, 76, 85, 95, 100, 110, 116, 126, 131, 139),
+                                      subtables = c(rep(NA, 1+9-1),
+                                                    rep('Riverbank Formation, lower member, 330 Ka', 1+15-10),
+                                                    rep(NA, 1+18-16),
+                                                    rep('Turlock Lake Formation, 600 Ka', 1+37-19),
+                                                    rep(NA, 1+40-38),
+                                                    rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+66-41),
+                                                    rep(NA, 1+72-67)))
+  ),
+    supp_table8_1 = list(title = 'Total chemical analyses of the less-than-2mm fraction by instrumental neuorn activation',
+                         analysts = 'J. Baker, A. Bartel, D. Burgi, R. Johnson, R. Knight, H.T. Millard, V.G. Mossotti, S. Ramage, B. Scott, J. Taggart, J.S. Wahlberg, K. Wong',
+                         columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Ba', 'Ce', 'Co', 'Cr', 'Cs', 'Dy', 'Eu', 'Fe', 'Gd', 'Hf', 'K', 'La', 'Lu', 'Mn'),
+                         note = 'Na values in weight percent; all others in parts per million.',
+                         part1 = list(page = 68,
+                                      columnCuts = c(7, 19, 28, 37, 43, 52, 58, 70, 76, 85, 94, 100, 106, 115, 122, 127, 137),
+                                      subtables = c(rep(NA, 1+12-1),
+                                                    rep('Modern River Alluvium', 1+16-13),
+                                                    rep(NA, 1+18-17),
+                                                    rep('Post-Modesto Deposits, .2 Ka', 1+32-19),
+                                                    rep(NA, 1+38-33),
+                                                    rep('Post-Modesto Deposits, 3 Ka', 1+73-39),
+                                                    rep(NA, 1+79-74))),
+                         part2 = list(page = 69,
+                                      columnCuts = c(7, 16, 28, 34, 43, 51, 61, 70, 77, 85, 94, 103, 112, 119, 126, 133, 141),
+                                      subtables = c(rep(NA, 1+9-1),
+                                                    rep('Modesto Formation, upper member, 10 Ka', 1+19-10),
+                                                    rep(NA, 1+21-20),
+                                                    rep('Modesto Formation, lower member, 40 Ka', 1+28-22),
+                                                    rep(NA, 1+30-29),
+                                                    rep('Riverbank Formation, upper member, 130 Ka', 1+56-31),
+                                                    rep(NA, 1+58-57),
+                                                    rep('Riverbank Formation, middle member, 250 Ka', 1+89-59),
+                                                    rep(NA, 1+91-90),
+                                                    rep('Riverbank Formation, lower member, 330 Ka', 1+101-92),
+                                                    rep(NA, 1+107-102))),
+                         part3 = list(page = 70,
+                                      columnCuts = c(8, 16, 28, 34, 43, 52, 61, 69, 76, 85, 94, 102, 112, 118, 127, 136, 145),
+                                      subtables = c(rep(NA, 1+8-1),
+                                                    rep('Turlock Lake Formation, 600 Ka', 1+27-9),
+                                                    rep(NA, 1+30-28),
+                                                    rep('China Hat gravel member of Laguna Formation, 3000 Ka', 1+56-31),
+                                                    rep(NA, 1+62-57)))
+  ),
+    supp_table8_2 = list(title = 'Total chemical analyses of the less-than-2-mm fraction by instrumental neutron activation',
+                         analysts = 'J. Baker, A. Bartel, D. Burgi, R. Johnson, R. Knight, H.T. Millard, V.G. Mossotti, S. Ramage, B. Scott, J. Taggart, J.S. Wahlberg, K. Wong',
+                         columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Na', 'Nd', 'Rb', 'Sb', 'Sc', 'Sm', 'Sr', 'Ta', 'Tb', 'Th', 'Tm', 'U', 'Yb', 'Zr'),
+                         note = 'Na values in weight percent; all others in parts per million.',
+                         part1 = list(page = 71,
+                                      columnCuts = c(7, 16, 25, 34, 41, 48, 55, 64, 74, 81, 88, 98, 106, 113, 121, 128, 135),
+                                      subtables = c(rep(NA, 1+21-1),
+                                                    rep('Post-Modesto Deposits, .2 Ka', 1+36-22),
+                                                    rep(NA, 1+38-37),
+                                                    rep('Post-Modesto Deposits, 3 Ka', 1+77-39),
+                                                    rep(NA, 1+83-78))),
+                         part2 = list(page = 72,
+                                      columnCuts = c(8, 16, 25, 34, 44, 50, 58, 70, 79, 88, 97, 107, 115, 123, 131, 138, 145),
+                                      subtables = c(rep(NA, 1+10-1),
+                                                    rep('Modesto Formation, upper member, 10 Ka', 1+21-11),
+                                                    rep(NA, 1+25-22),
+                                                    rep('Modesto Formation, lower member, 40 Ka', 1+32-26),
+                                                    rep(NA, 1+36-33),
+                                                    rep('Riverbank Formation, upper member, 130 Ka', 1+54-37),
+                                                    rep(NA, 1+58-55),
+                                                    rep('Riverbank Formation, middle member, 250 Ka', 1+80-59),
+                                                    rep(NA, 1+84-81),
+                                                    rep('Riverbank Formation, lower member, 330 Ka', 1+90-85),
+                                                    rep(NA, 1+96-91))),
+                         part3 = list(page = 73,
+                                      columnCuts = c(7, 13, 25, 34, 43, 49, 61, 69, 76, 84, 91, 100, 109, 118, 126, 133, 140),
+                                      subtables = c(rep(NA, 1+10-1),
+                                                    rep('Turlock Lake Formation, 600 Ka', 1+31-11),
+                                                    rep(NA, 1+35-32),
+                                                    rep('China Hat gravel member of Laguna Formation, 3,000 Ka', 1+64-36),
+                                                    rep(NA, 1+70-65)))
+  ),
+  #####################
+  ##### Report B ######
+  #####################
+  
+  #################################
+  ##### Supplemental table 1 ######
+  #################################
+  
+    supp_table_1 = list(title = 'Field descriptions',
+                        analysts = 'J.W. Harden, U.S. Geological Survey; and others',
+                        columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Lower Boundary', 'Moist Color', 'Dry Color', 'Texture', 'Structure',
+                                        'Consistence: Dry', 'Consistence: Moist', 'Consistence: Wet', 'Roots', 'Pores', 'Clay Films', 'pH',
+                                        'Assumed Parent Material: Texture', 'Assumed Parent Material: Wet Consistence'),
+                        note = '',
+                        part1 = list(page = 29,
+                                     columnCuts = c(9, 15, 25, 35, 45, 59, 71, 79, 93, 107, 115, 127, 137, 149, 159, 169, 181),
+                                     subtables = c(rep(NA, 1+13-1),
+                                                   rep('Alluvium, 0.7 Ka', 1+25-14),
+                                                   rep(NA, 1+30-26),
+                                                   rep('Alluvium, 2 Ka', 1+51-31),
+                                                   rep(NA, 1+56-52),
+                                                   rep('Alluvium, 40 Ka', 1+98-57),
+                                                   rep(NA, 1+104-99))),
+                        part2 = list(page = 30,
+                                     columnCuts = c(7, 13, 29, 41, 49, 61, 73, 79, 93, 107, 119, 133, 143, 155, 167, 173, 183),
+                                     subtables = c(rep(NA, 1+10-1),
+                                                   rep('Alluvium over Marine Terraace, 80 ka', 1+50-11),
+                                                   rep(NA, 1+55-51),
+                                                   rep('Alluvium, 80 ka', 1+81-56),
+                                                   rep(NA, 1+87-82)))
+  ),
+  #################################
+  ##### Supplemental table 2 ######
+  #################################
+  
+  supp_table_2 = list(title = 'Physical Properties',
+                      analysts = 'J. Baker, R. Johnson, J. Lindsay, B. McCall, H.G. Rose, G. Sellers, J. Taggert, J.S. Wahlberg',
+                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', '>2mm', 'Percentage of <2-mm fraction: Total sand',
+                                      'Percentage of <2-mm fraction: vco sand', 'Percentage of <2-mm fraction: co sand',
+                                      'Percentage of <2-mm fraction: m sand', 'Percentage of <2-mm fraction: fi+vfi sand',
+                                      'Percentage of <2-mm fraction: Silt', 'Percentage of <2-mm fraction: <2-??m clay',
+                                      'Percentage of <2-mm fraction: <1-??m clay', 'Bulk density (g/cm3)'),
+                      note = '',
+                      part1 = list(page = 31,
+                                   columnCuts = c(7, 21, 35, 43, 51, 61, 69, 79, 85, 93, 99, 107, 117),
+                                   subtables = c(rep(NA, 1+12-1),
+                                                 rep('Alluvium, 0.7 ka', 1+18-13),
+                                                 rep(NA, 1+22-19),
+                                                 rep('Alluvium, 2 ka', 1+32-23),
+                                                 rep(NA, 1+37-33),
+                                                 rep('Alluvium, 40 ka', 1+60-38),
+                                                 rep(NA, 1+66-61))),
+                      part2 = list(page = 32,
+                                   columnCuts = c(13, 23, 35, 43, 51, 59, 69, 77, 85, 91, 99, 107, 115),
+                                   subtables = c(rep(NA, 1+11-1),
+                                                 rep('Alluvium over Marine Terrace, 80 ka', 1+34-12),
+                                                 rep(NA, 1+39-35),
+                                                 rep('Alluvium, 80 ka', 1+54-40),
+                                                 rep(NA, 1+60-55)))
+  ),
+  #################################
+  ##### Supplemental table 3 ######
+  #################################
+  
+  supp_table_3 = list(title = 'Extractive chemical analyses',
+                      analysts = 'P. Janitxky, R. Meikner under M.J. Singer, University of California, Davis',
+                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Percentage of <2-mm: Total N',
+                                      'Percentage of <2-mm: Organic C', 'meg/100g soil: Exchange Na', 'meg/100g soil: Exchange K',
+                                      'meg/100g soil: Exchange Ca', 'meg/100g soil: Exchange Mg', 'meg/100g soil: Exchange H',
+                                      'meg/100g soil: CEC', 'pH 1:1 H2O', 'Percentage of <2-mm: Fe_d', 'Percentage of <2-mm: Al_d'),
+                      note = 'CEC, cation-exchange capacity.',
+                      part1 = list(page = 33,
+                                   columnCuts = c(5, 15, 29, 41, 49, 61, 73, 83, 95, 103, 111, 119, 127, 139),
+                                   subtables = c(rep(NA, 1+12-1),
+                                                 rep('Alluvium, 0.7 ka', 1+18-13),
+                                                 rep(NA, 1+22-19),
+                                                 rep('Alluvium, 2 ka', 1+32-23),
+                                                 rep(NA, 1+36-33),
+                                                 rep('Alluvium, 40 ka', 1+59-37),
+                                                 rep(NA, 1+63-60),
+                                                 rep('Alluvium over Marine Terrace, 80 ka', 1+85-64),
+                                                 rep(NA, 1+90-86))),
+                      part2 = list(page = 34,
+                                   columnCuts = c(11, 19, 31, 43, 53, 65, 81, 93, 107, 119, 129, 141, 155, 165),
+                                   subtables = c(rep(NA, 1+9-1),
+                                                 rep('Alluvium, 80 ka', 1+24-10),
+                                                 rep(NA, 1+78-25)))
+  ),
+  #################################
+  ##### Supplemental table 4 ######
+  #################################
+  
+  supp_table_4 = list(title = 'Clay mineralogy',
+                      analysts = 'A.L. Walker, U.S. Geological Survey',
+                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Kaolinite', 'Chlorite', 'Vermiculite', 'Illite', 'Montmorillonite'),
+                      note = '',
+                      part1 = list(page = 34,
+                                   columnCuts = c(29, 39, 53, 67, 81, 99, 115, 131),
+                                   subtables = c(rep(NA, 1+38-1),
+                                                 rep('Alluvium, 0.7 ka', 1+40-39),
+                                                 rep(NA, 1+45-41),
+                                                 rep('Alluvium, 2 ka', 1+51-46),
+                                                 rep(NA, 1+56-52),
+                                                 rep('Alluvium, 40 ka', 1+58-57),
+                                                 rep(NA, 1+61-59),
+                                                 rep('Alluvium over Marine Terrace, 80 ka', 1+65-62),
+                                                 rep(NA, 1+70-66),
+                                                 rep('Alluvium, 80 ka', 1+71-71),
+                                                 rep(NA, 1+78-72)))
+  ),
+  #################################
+  ##### Supplemental table 5 ######
+  #################################
+  
+  supp_table_5 = list(title = 'Total chemical analyses of the fine (less than 47 ??m) fraction by X-ray fluorescence',
+                      analysts = 'J. Baker, J. Budahn, R. Knight, J. Taggert, and J.S. Wahlberg',
+                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'SiO2', 'Al2O3', 'Fe2O3', 'MgO', 'CaO', 'Na2O', 'K2O', 'TiO2', 'P2O5', 'MnO', 'Zr'),
+                      note = 'Zr in parts per million; all others in weight percent.',
+                      part1 = list(page = 35,
+                                   columnCuts = c(7, 15, 29, 37, 45, 55, 67, 79, 89, 95, 103, 111, 119, 125),
+                                   subtables = c(rep(NA, 1+12-1),
+                                                 rep('Alluvium, 0.7 ka', 1+17-13),
+                                                 rep(NA, 1+21-18),
+                                                 rep('Alluvium, 2 ka', 1+31-22),
+                                                 rep(NA, 1+34-32),
+                                                 rep('Alluvium, 40 ka', 1+63-35),
+                                                 rep(NA, 1+69-64))),
+                      part2 = list(page = 36,
+                                   columnCuts = c(13, 21, 33, 43, 51, 61, 73, 81, 89, 97, 105, 111, 119, 125),
+                                   subtables = c(rep(NA, 1+10-1),
+                                                 rep('Alluvium over Marine Terrace, 80 ka', 1+32-11),
+                                                 rep(NA, 1+35-33),
+                                                 rep('Alluvium, 80 ka', 1+49-36),
+                                                 rep(NA, 1+55-50)))
+  ),
+  #################################
+  ##### Supplemental table 6 ######
+  #################################
+  
+  supp_table_6 = list(title = 'Total chemical analyses of the less-than-2-mm fraction by X-ray fluorescence',
+                      analysts = 'A.J. Barter, K. Dennen, R. Johnson, J.R. Lindsay, B. Scott, K. Stewart, J. Taggert',
+                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'SiO2', 'Al2O3', 'Fe2O3', 'MgO', 'CaO', 'Na2O', 'K2O', 'TiO2', 'P2O5', 'MnO', 'Zr'),
+                      note = 'Zr in parts per million; all others in weight percent.',
+                      part1 = list(page = 37,
+                                   columnCuts = c(9, 15, 29, 37, 45, 57, 67, 77, 85, 93, 101, 109, 117, 123),
+                                   subtables = c(rep(NA, 1+12-1),
+                                                 rep('Alluvium, 0.7 ka', 1+18-13),
+                                                 rep(NA, 1+21-19),
+                                                 rep('Alluvium, 2 ka', 1+30-22),
+                                                 rep(NA, 1+34-31),
+                                                 rep('Alluvium, 40 ka', 1+62-35),
+                                                 rep(NA, 1+68-63))),
+                      part2 = list(page = 38,
+                                   columnCuts = c(13, 19, 32, 41, 49, 58, 70, 79, 85, 94, 102, 109, 118, 127),
+                                   subtables = c(rep(NA, 1+9-1),
+                                                 rep('Alluvium over Marine Terrace, 80 ka', 1+31-10),
+                                                 rep(NA, 1+34-32),
+                                                 rep('Alluvium, 80 ka', 1+48-35),
+                                                 rep(NA, 1+54-49)))
+  ),
+  ########################################
+  ##### Supplemental table 7 part 1 ######
+  ########################################
+  
+  supp_table_7_1 = list(title = 'Total chemical analyses of the fine (less than 47 ??m) fraction by instrumental neutron activation',
+                        analysts = 'J. Budahn, R. Knight, and D.M. McKown',
+                        columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Ba', 'Ce', 'Co', 'Cr', 'Cs', 'Dy', 'Eu', 'Fe', 'Gd', 'Hf', 'K', 'La', 'Lu', 'Mn'),
+                        note = 'K and Fe values in weight percent; all others in part per million.',
+                        part1 = list(page = 39,
+                                     columnCuts = c(7, 16, 28, 37, 46, 55, 64, 73, 85, 94, 101, 110, 116, 124, 132, 139, 147),
+                                     subtables = c(rep(NA, 1+10-1),
+                                                   rep('Alluvium, 0.7 ka', 1+15-11),
+                                                   rep(NA, 1+18-16),
+                                                   rep('Alluvium, 2 ka', 1+27-19),
+                                                   rep(NA, 1+30-28),
+                                                   rep('Alluvium, 40 ka', 1+51-31),
+                                                   rep(NA, 1+54-52),
+                                                   rep('Alluvium over Marine Terrace, 80 ka', 1+76-55),
+                                                   rep(NA, 1+81-77))),
+                        part2 = list(page = 40,
+                                     columnCuts = c(10, 19, 34, 46, 58, 67, 82, 94, 106, 115, 122, 129, 142, 151, 160, 172, 187),
+                                     subtables = c(rep(NA, 1+9-1),
+                                                   rep('Alluvium, 80 ka', 1+28-10),
+                                                   rep(NA, 1+68-29)))
+  ),
+  ########################################
+  ##### Supplemental table 7 part 2 ######
+  ########################################
+  
+  supp_table_7_2 = list(title = 'Total chemical analyses of the fine (less than 47 ??m) fraction by instrumental neutron activation',
+                        analysts = 'J. Budahn, R. Knight, and D.M. McKown',
+                        columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Na', 'Nd', 'Rb', 'Sb', 'Sc', 'Sm', 'Sr', 'Ta', 'Tb', 'Th', 'Tm', 'U', 'Yb', 'Zr'),
+                        note = 'Na value in weight percent; all others in part per million.',
+                        part1 = list(page = 40,
+                                     columnCuts = c(7, 16, 31, 43, 55, 67, 79, 91, 106, 115, 121, 130, 142, 154, 169, 181, 193),
+                                     subtables = c(rep(NA, 1+42-1),
+                                                   rep('Alluvium, 0.7 ka', 1+48-43),
+                                                   rep(NA, 1+52-49),
+                                                   rep('Alluvium, 2 ka', 1+62-53),
+                                                   rep(NA, 1+68-63))),
+                        part2 = list(page = 41,
+                                     columnCuts = c(7, 16, 28, 34, 43, 52, 61, 73, 85, 93, 100, 108, 118, 126, 134, 141, 148),
+                                     subtables = c(rep(NA, 1+11-1),
+                                                   rep('Alluvium, 40 ka', 1+34-12),
+                                                   rep(NA, 1+39-35),
+                                                   rep('Alluvium over Marine Terrace, 80 ka', 1+62-40),
+                                                   rep(NA, 1+67-63),
+                                                   rep('Alluvium, 80 ka', 1+83-68),
+                                                   rep(NA, 1+89-84)))
+  ),
+  
+  #####################
+  ##### Report C ######
+  #####################
+  
+  #######################################
+  ##### Supplemental table 1 part 1######
+  #######################################
+  
+  supp_table_1_1c = list(title = 'Sample locations and site conditions',
+                        analysts = 'H.C. Reheis, U.S. Geological Survey',
+                        id_cols = c('Site'),
+                        columeNames = c('Site', 'Elevation', 'Modern vegetation', 'Modern land use', 'Type of excavation', 'Parent material texture', 'Location (Montana Base Meridian)'),
+                        note = 'Percent bare ground is 50 percent or greater at all sites.
+                                Textures: gr/S, gravel and sand; L, loam; Si, silt.',
+                        part1 = list(page = 32,
+                                     columnCuts = c(9, 19, 29, 51, 61, 77, 87),
+                                     subtables = c(rep(NA, 1+6-1),
+                                                   rep('Sample locations and site conditions', 1+32-7),
+                                                   rep(NA, 1+42-33)))
+  ),
+  
+  #######################################
+  ##### Supplemental table 1 part 2######
+  #######################################
+  
+  supp_table_1_2c = list(title = 'Field descriptions',
+                         analysts = 'H.C. Reheis, U.S. Geological Survey',
+                         columeNames = c('No', 'Sample', 'Horizon', 'Depth (cm)', 'Lower Boundary', 'Moist Color', 'Dry Color', 'Texture', 'Structure', 
+                                         'Wet Consistence', 'Clay Films', 'pH', 'Assumed Parent Material: Texture', 'Assumed Parent Material: Wet Consistence', 'Stage CaCO3', 'Stage Gypsum'),
+                         note = '--, not measured.',
+                         part1 = list(page = 33,
+                                      columnCuts = c(5, 13, 23, 37, 47, 61, 77, 87, 103, 113, 121, 129, 135, 145, 153),
+                                      subtables = c(rep(NA, 1+12-1),
+                                                    rep('Fan 1, 5 ka', 1+16-13),
+                                                    rep(NA, 1+21-17),
+                                                    rep('Fan 2, 65 ka', 1+34-22),
+                                                    rep(NA, 1+38-35),
+                                                    rep('Fan 3, 100 ka', 1+54-39),
+                                                    rep(NA, 1+58-55),
+                                                    rep('Fan 4, 315 ka', 1+65-59),
+                                                    rep(NA, 1+69-66),
+                                                    rep('Fan 5, 410 ka', 1+81-70),
+                                                    rep(NA, 1+85-82))),
+                         part2 = list(page = 34,
+                                      columnCuts = c(5, 15, 27, 37, 45, 59, 73, 81, 95, 109, 115, 123, 129, 139, 147),
+                                      subtables =c(rep(NA, 1+11-1),
+                                                   rep('Fan 6, 505 ka', 1+30-12),
+                                                   rep(NA, 1+35-31),
+                                                   rep('Fan 7, 585 ka', 1+48-36),
+                                                   rep(NA, 1+54-49)))
+  ),
+  
+  ################################
+  ##### Supplemental table 2######
+  ################################
+  
+  supp_table_2c = list(title = 'Physical properties',
+                       analysts = 'H.C. Reheis, U.S. Geological Survey',
+                       columeNames = c('No', 'Sample', 'Horizon', 'Basal depth >2mm: cm', 'Basal depth >2mm: %', 'Percentage of <2-mm fraction: Total sand', 'Percentage of <2-mm fraction: vco sand', 
+                                       'Percentage of <2-mm fraction: co sand', 'Percentage of <2-mm fraction: med sand', 'Percentage of <2-mm fraction: fi sand', 
+                                       'Percentage of <2-mm fraction: vfi sand', 'Percentage of <2-mm fraction: Total silt', 'Percentage of <2-mm fraction: <2u clay', 
+                                       'Percentage of <2-mm fraction: <1u clay', 'Bulk density (g/cm3)', 'Percentage of <2-mm fraction: co silt', 'Percentage of <2-mm fraction: med silt', 
+                                       'Percentage of <2-mm fraction: vfi silt', 'Percentage of <2-mm fraction: coclay (2 - .5u)', 'Percentage of <2-mm fraction: ficlay (<.5u)'),
+                       note = '--, not measured.',
+                       part1 = list(page = 36,
+                                    columnCuts = c(5, 13, 20, 31, 37, 47, 53, 61, 67, 75, 85, 93, 101, 111, 117, 125, 132, 141, 149),
+                                    subtables = c(rep(NA, 1+31-1),
+                                                  rep('Fan 1, 5 ka', 1+35-32),
+                                                  rep(NA, 1+40-36),
+                                                  rep('Fan 2, 65 ka', 1+53-41),
+                                                  rep(NA, 1+58-54),
+                                                  rep('Fan 3, 100 ka', 1+74-59),
+                                                  rep(NA, 1+79-75),
+                                                  rep('Fan 4, 315 ka', 1+86-80),
+                                                  rep(NA, 1+91-87))),
+                       part2 = list(page = 37,
+                                    columnCuts = c(7, 15, 25, 33, 39, 47, 55, 63, 69, 77, 85, 93, 101, 109, 115, 123, 130, 139, 147),
+                                    subtables = c(rep(NA, 1+12-1),
+                                                  rep('Fan 5, 410 ka', 1+25-13),
+                                                  rep(NA, 1+30-26),
+                                                  rep('Fan 6, 505 ka', 1+51-31),
+                                                  rep(NA, 1+56-52),
+                                                  rep('Fan 7, 585 ka', 1+69-57),
+                                                  rep(NA, 1+75-70)))
+  ),
+  
+  ################################
+  ##### Supplemental table 3######
+  ################################
+  
+  ## This table is split across two columns on the same page. The last column of part1 and the first column of part2 will have extraneous information. ##
+  
+  
+  supp_table_3c = list(title = 'Extractive chemical analyses',
+                       analysts = 'M.C. Reheis, U.S. Geological Survey',
+                       columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'percentage: Organic C', 'percentage: CaCO3', 'percentage: Gypsum', 'pH 1:1 H2O'),
+                       note = '--, not measured.',
+                       part1 = list(page = 38,
+                                    columnCuts = c(7, 15, 30, 51, 61, 69, 81),
+                                    subtables = c(rep(NA, 1+36-1),
+                                                  rep('Fan 1, 5 ka', 1+40-37),
+                                                  rep(NA, 1+45-41),
+                                                  rep('Fan 2, 65 ka', 1+58-46),
+                                                  rep(NA, 1+64-59),
+                                                  rep('Fan 3, 100 ka', 1+80-65),
+                                                  rep(NA, 1+91-81))),
+                       part2 = list(page = 38,
+                                    columnCuts = c(99, 109, 123, 141, 151, 157, 169),
+                                    subtables = c(rep(NA, 1+11-1),
+                                                  rep('Fan 4, 315 ka', 1+18-12),
+                                                  rep(NA, 1+23-19),
+                                                  rep('Fan 5, 410 ka', 1+36-24),
+                                                  rep(NA, 1+41-37),
+                                                  rep('Fan 6, 505 ka', 1+61-42),
+                                                  rep(NA, 1+66-62),
+                                                  rep('Fan 7, 585 ka', 1+79-67),
+                                                  rep(NA, 1+91-80)))
+  ),
+  ################################
+  ##### Supplemental table 4######
+  ################################
+  
+  ## This table is split across two columns on the same page. The last column of part1 and the first column of part2 will have extraneous information. ##
+  
+  ## The OCR mangled the first subtable, so some of the data is missing. ##
+  
+  ## Due to the chaotic notation, line 23 sample B-6A lost its last character into the next column. This was the best cut available. ##
+  
+  
+  supp_table_4c = list(title = 'Clay mineralogy by X-ray diffraction',
+                       analysts = 'M.C. Reheis, U.S. Geological Survey',
+                       columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'percentage of clay mineral: Kaolinite', 'percentage of clay mineral: Mica',
+                                       'percentage of clay mineral: Smectite', 'percentage of clay mineral: Palygorskite', 'percentage of clay mineral: Unknown mineral'),
+                       note = '--, not measured.',
+                       part1 = list(page = 39,
+                                    columnCuts = c(7, 17, 33, 47, 53, 59, 67, 81),
+                                    subtables = c(rep(NA, 1+53-1),
+                                                  rep('Fan 1, 5 ka', 1+57-54),
+                                                  rep(NA, 1+69-58),
+                                                  rep('Fan 2, 65 ka', 1+75-70),
+                                                  rep(NA, 1+80-76),
+                                                  rep('Fan 3, 100 ka', 1+96-81),
+                                                  rep(NA, 1+102-97))),
+                       part2 = list(page = 39,
+                                    columnCuts = c(95, 105, 117, 127, 135, 143, 149, 159),
+                                    subtables = c(rep(NA, 1+7-1),
+                                                  rep('Fan 4, 315 ka', 1+14-8),
+                                                  rep(NA, 1+19-15),
+                                                  rep('Fan 5, 410 ka', 1+32-20),
+                                                  rep(NA, 1+37-33),
+                                                  rep('Fan 6, 505 ka', 1+56-38),
+                                                  rep(NA, 1+61-57),
+                                                  rep('Fan 7, 585 ka', 1+74-62),
+                                                  rep(NA, 1+102-75)))
+  ),
+  
+  ################################
+  ##### Supplemental table 5######
+  ################################
+  
+  ## The OCR massively mangled this page. There is likely to be data missing. ##
+  
+  supp_table_5c = list(title = 'Total chemical analyses of the fine fraction by induction-coupled plasma spectroscopy',
+                       analysts = 'A. Bartel under J.E. Taggart, U.S. Geological Survey',
+                       columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Percentage of silt-plus-clay fraction: SiO2', 'Percentage of silt-plus-clay fraction: Al2O3', 
+                                       'Percentage of silt-plus-clay fraction: Fe2O3', 'Percentage of silt-plus-clay fraction: MgO', 'Percentage of silt-plus-clay fraction: CaO', 
+                                       'Percentage of silt-plus-clay fraction: Na2O', 'Percentage of silt-plus-clay fraction: K2O', 'Percentage of silt-plus-clay fraction: TiO2', 
+                                       'Percentage of silt-plus-clay fraction: MnO', 'Percentage of silt-plus-clay fraction: ZrO2'),
+                       note = '--, not measured.',
+                       part1 = list(page = 40,
+                                    columnCuts = c(15, 23, 35, 51, 57, 67, 75, 83, 91, 99, 109, 117, 125),
+                                    subtables = c(rep(NA, 1+34-1),
+                                                  rep('Fan 1, 5 ka', 1+38-35),
+                                                  rep(NA, 1+43-39),
+                                                  rep('Fan 2, 65 ka', 1+56-44),
+                                                  rep(NA, 1+61-57),
+                                                  rep('Fan 3, 100 ka', 1+81-62),
+                                                  rep(NA, 1+85-82))),
+                       part2 = list(page = 41,
+                                    columnCuts = c(5, 13, 23, 35, 41, 51, 56, 67, 75, 85, 93, 103, 111),
+                                    subtables = c(rep(NA, 1+11-1),
+                                                  rep('Fan 4, 315 ka', 1+18-12),
+                                                  rep(NA, 1+23-19),
+                                                  rep('Fan 5, 410 ka', 1+36-24),
+                                                  rep(NA, 1+41-37),
+                                                  rep('Fan 6, 505 ka', 1+60-42),
+                                                  rep(NA, 1+65-61),
+                                                  rep('Fan 7, 585 ka', 1+78-66),
+                                                  rep(NA, 1+82-79)))
+  ),
+  
+  ################################
+  ##### Supplemental table 6######
+  ################################
+  
+  supp_table_6c = list(title = 'Total chemical analyses of the less-than-2mm fraction by induction-coupled plasma spectroscopy.',
+                       analysts = 'P.H. Briggs under L.R. Layman, U.S. Geological Survey',
+                       columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Percentage of less-than-2mm fraction: SiO2', 'Percentage of less-than-2mm fraction: Al2O3', 
+                                       'Percentage of less-than-2mm fraction: Fe2O3', 'Percentage of less-than-2mm fraction: MgO', 'Percentage of less-than-2mm fraction: CaO', 
+                                       'Percentage of less-than-2mm fraction: Na2O', 'Percentage of less-than-2mm fraction: K2O', 'Percentage of less-than-2mm fraction: TiO2', 
+                                       'Percentage of less-than-2mm fraction: MnO', 'Percentage of less-than-2mm fraction: ZrO2'),
+                       note = '--, not measured.',
+                       part1 = list(page = 42,
+                                    columnCuts = c(14, 21, 30, 46, 52, 61, 69, 77, 86, 95, 103, 112, 121),
+                                    subtables = c(rep(NA, 1+19-1),
+                                                  rep('Fan 1, 5 ka', 1+23-20),
+                                                  rep(NA, 1+28-24),
+                                                  rep('Fan 2, 65 ka', 1+41-29),
+                                                  rep(NA, 1+46-42),
+                                                  rep('Fan 3, 100 ka', 1+62-47),
+                                                  rep(NA, 1+67-63),
+                                                  rep('Fan 5, 315 ka', 1+74-68),
+                                                  rep(NA, 1+80-75))),
+                       part2 = list(page = 43,
+                                    columnCuts = c(6, 14, 26, 36, 44, 52, 61, 69, 76, 86, 95, 104, 113),
+                                    subtables = c(rep(NA, 1+14-1),
+                                                  rep('Fan 5, 410 ka', 1+27-15),
+                                                  rep(NA, 1+32-28),
+                                                  rep('Fan 6, 505 ka', 1+51-33),
+                                                  rep(NA, 1+56-52),
+                                                  rep('Fan 7, 585 ka', 1+69-57),
+                                                  rep(NA, 1+75-70)))
+  ),
+  
+  ########################################
+  ##### Supplemental table 7, Part 1######
+  ########################################
+  
+  supp_table_7_1c = list(title = 'Horizon weights of sand, silt, clay, carbon, CaCO3, gypsum, and clay minerals',
+                         analysts = 'Marith C. Reheis, U.S. Geological Survey',
+                         columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Weight (g/cm2/horizon column): Sand', 'Weight (g/cm2/horizon column): Silt', 
+                                         'Weight (g/cm2/horizon column): Clay', 'Weight (g/cm2/horizon column): Carbon', 'Weight (g/cm2/horizon column): CaCO3', 
+                                         'Weight (g/cm2/horizon column): Gypsum', 'Weight (g/cm2/horizon column): Kaolinite', 'Weight (g/cm2/horizon column): Mica', 
+                                         'Weight (g/cm2/horizon column): Smectite', 'Weight (g/cm2/horizon column): Palygorskite', 'Weight (g/cm2/horizon column): Unknown mineral'),
+                         note = '--, not measured.',
+                         part1 = list(page = 44,
+                                      columnCuts = c(22, 29, 39, 50, 62, 70, 79, 85, 99, 110, 118, 127, 135, 143),
+                                      subtables = c(rep(NA, 1+44-1),
+                                                    rep('Fan 1, 5 ka', 1+48-45),
+                                                    rep(NA, 1+53-49),
+                                                    rep('Fan 2, 65 ka', 1+66-54),
+                                                    rep(NA, 1+71-67),
+                                                    rep('Fan 3, 100 ka', 1+87-72),
+                                                    rep(NA, 1+92-88))),
+                         part2 = list(page = 45,
+                                      columnCuts = c(10, 18, 28, 37, 44, 52, 60, 67, 74, 84, 93, 100, 109, 118),    ##There is one impossible cut--74 (could be 73 or 74)##
+                                      subtables = c(rep(NA, 1+12-1),
+                                                    rep('Fan 4, 315 ka', 1+19-13),
+                                                    rep(NA, 1+23-20),
+                                                    rep('Fan 5, 410 ka', 1+37-24),
+                                                    rep(NA, 1+41-38),
+                                                    rep('Fan 6, 505 ka', 1+65-42),
+                                                    rep(NA, 1+69-66),
+                                                    rep('Fan 7, 585 ka', 1+84-70),
+                                                    rep(NA, 1+94-85)))
+  ),
+  ########################################
+  ##### Supplemental table 7, Part 2######
+  ########################################
+  
+  supp_table_7_2c = list(title = 'Horizon weights of major oxides plus zirconium',
+                         analysts = 'M.C. Reheis, U.S. Geological Survey',
+                         columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: SiO2', 
+                                         'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: Al2O3', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: Fe2O3', 
+                                         'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: MgO', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: CaO', 
+                                         'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: Na2O', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: K2O', 
+                                         'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: TiO2', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: MnO', 
+                                         'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: ZrO2'),
+                         note = '--, not measured.',
+                         part1 = list(page = 46,
+                                      columnCuts = c(17, 23, 33, 43, 51, 59, 64, 70, 83, 91, 99, 107, 114), ##There are 2 impossible cuts--70 (could be 69 or 70) and 114 (could be 113 or 114)##
+                                      subtables = c(rep(NA, 1+17-1),
+                                                    rep('Fan 1, 5 ka', 1+21-18),
+                                                    rep(NA, 1+24-22),
+                                                    rep('Fan 2, 65 ka', 1+36-25),
+                                                    rep(NA, 1+39-37),
+                                                    rep('Fan 3, 100 ka', 1+54-40),
+                                                    rep(NA, 1+57-55),
+                                                    rep('Fan 4, 315 ka', 1+64-58),
+                                                    rep(NA, 1+70-65))),
+                         part2 = list(page = 47,
+                                      columnCuts = c(9, 15, 25, 37, 43, 51, 58, 67, 75, 85, 91, 98, 111), ##There is 1 impossible cut--98 (could be 98 or 99)##
+                                      subtables = c(rep(NA, 1+10-1),
+                                                    rep('Fan 5, 410 ka', 1+22-11),
+                                                    rep(NA, 1+25-23),
+                                                    rep('Fan 6, 505 ka', 1+42-26),
+                                                    rep(NA, 1+45-43),
+                                                    rep('Fan 7, 585 ka', 1+57-46),
+                                                    rep(NA, 1+63-58)))
+  
+  )
+  
+  ))
+  
+  ###Dev work#####
+  table_info.ls <- tableInfo.ls$reportA$supp_table_7_2c     ## Update with current table variable ##
+  part_info.ls <- table_info.ls$part2                       ## Update with current subtable ##
+  
+  write_file(reportA[47], file =  'temp/text.txt')      ## Update with current page number ##
+  write_file(reportA[part_info.ls$page], file =  'temp/text.txt')
+  
+  temp1 <- str_split(reportA[part_info.ls$page], '\n') %>%
+    as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
+    mutate(Subtable = part_info.ls$subtables) %>%
+    select(Subtable, X) %>%
+    separate(col = X, sep = part_info.ls$columnCuts, into = table_info.ls$columeNames) #%>%
+    #mutate(Sample = 'NA')
+  
+  if(is.null(table_info.ls$id_cols)){
+    id_cols <- c('No', 'Sample', 'Horizon')
+  }else{
+    id_cols <- table_info.ls$id_cols
+  }
+  
+  ##HI KATHE, FIX THE ID COLS IN YOUR CODE
+  
+  
+  
+  temp2 <- temp1 %>%
+    filter(!is.na(Subtable)) %>%
+    mutate(across(-Subtable, ~gsub('^\\s+', '', .))) %>%
+    mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
+    mutate(across(id_cols, ~na_if(., ''))) %>%
+    tidyr::fill(all_of(id_cols), .direction = 'down') %>%
+    group_by_at(id_cols) %>%
+    #group_by(No, Sample, Horizon, Subtable) %>% #TODO figure out how to reference id_cols instead??
+    summarize(across(everything(), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
+    mutate(across(everything(), ~gsub('\\s+$', '', .)))
+  
+  
+  
+  ##########Dan stops here#########
+  
+  
+  
+  #####example to pull together a table from the parts######
+  table_info.ls <- tableInfo.ls$reportA$phys_prop
+  sup_data_tables <- plyr::ldply(table_info.ls[grepl('part', names(table_info.ls))], 
+                                 function(part_info.ls, colNames = table_info.ls$columeNames){
+                                   ans <- str_split(reportA[part_info.ls$page], '\n') %>%
+                                     as_tibble(.name_repair = make.names) %>%     # convert to tibble and assign unique column names
+                                     mutate(Subtable = part_info.ls$subtables) %>%
+                                     select(Subtable, X) %>%
+                                     separate(col = X, sep = part_info.ls$columnCuts, into = colNames) %>%
+                                     filter(!is.na(Subtable)) %>%
+                                     mutate(across(-Subtable, ~gsub('^\\s+', '', .))) %>%
+                                     mutate(across(-Subtable, ~gsub('\\s+$', '', .))) %>%
+                                     mutate(across(c('No', 'Sample', 'Horizon'), ~na_if(., ''))) %>%
+                                     tidyr::fill(No, Sample, Horizon, .direction = 'down') %>%
+                                     group_by(Subtable, No, Sample, Horizon) %>%
+                                     summarize(across(everything(), ~paste0(., collapse = ' ')), .groups = 'drop') %>%
+                                     mutate(across(everything(), ~gsub('\\s+$', '', .)))
+                                   return(ans)
+                                 }, .id = table_info.ls$title)
+  
+#}
+
+  

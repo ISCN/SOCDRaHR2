@@ -677,20 +677,278 @@ tableInfo.ls <- list(
                                                                   rep('Alluvium, 80 ka', 1+83-68),
                                                                   rep(NA, 1+89-84)))
                  )
-  )
+  ),#end Report B
+  
+  #### Report C ####
+  reportC = list(name = 'USGS Bulletin 1590-C',
+                 download_filename = download_info$download_filename[3],
+                 supp_table_1_1c = list(title = 'Sample locations and site conditions',
+                                        analysts = 'H.C. Reheis, U.S. Geological Survey',
+                                        id_cols = c('Site'),
+                                        columeNames = c('Site', 'Elevation', 'Modern vegetation', 'Modern land use', 'Type of excavation', 'Parent material texture', 'Location (Montana Base Meridian)'),
+                                        note = 'Percent bare ground is 50 percent or greater at all sites.
+                                Textures: gr/S, gravel and sand; L, loam; Si, silt.',
+                                part1 = list(page = 32,
+                                             columnCuts = c(9, 19, 29, 51, 61, 77, 87),
+                                             subtables = c(rep(NA, 1+6-1),
+                                                           rep('Sample locations and site conditions', 1+32-7),
+                                                           rep(NA, 1+42-33)))
+                 ),
+                 supp_table_1_2c = list(title = 'Field descriptions',
+                                        analysts = 'H.C. Reheis, U.S. Geological Survey',
+                                        columeNames = c('No', 'Sample', 'Horizon', 'Depth (cm)', 'Lower Boundary', 'Moist Color', 'Dry Color', 'Texture', 'Structure', 
+                                                        'Wet Consistence', 'Clay Films', 'pH', 'Assumed Parent Material: Texture', 'Assumed Parent Material: Wet Consistence', 'Stage CaCO3', 'Stage Gypsum'),
+                                        note = '--, not measured.',
+                                        part1 = list(page = 33,
+                                                     columnCuts = c(5, 13, 23, 37, 47, 61, 77, 87, 103, 113, 121, 129, 135, 145, 153),
+                                                     subtables = c(rep(NA, 1+12-1),
+                                                                   rep('Fan 1, 5 ka', 1+16-13),
+                                                                   rep(NA, 1+21-17),
+                                                                   rep('Fan 2, 65 ka', 1+34-22),
+                                                                   rep(NA, 1+38-35),
+                                                                   rep('Fan 3, 100 ka', 1+54-39),
+                                                                   rep(NA, 1+58-55),
+                                                                   rep('Fan 4, 315 ka', 1+65-59),
+                                                                   rep(NA, 1+69-66),
+                                                                   rep('Fan 5, 410 ka', 1+81-70),
+                                                                   rep(NA, 1+85-82))),
+                                        part2 = list(page = 34,
+                                                     columnCuts = c(5, 15, 27, 37, 45, 59, 73, 81, 95, 109, 115, 123, 129, 139, 147),
+                                                     subtables =c(rep(NA, 1+11-1),
+                                                                  rep('Fan 6, 505 ka', 1+30-12),
+                                                                  rep(NA, 1+35-31),
+                                                                  rep('Fan 7, 585 ka', 1+48-36),
+                                                                  rep(NA, 1+54-49)))
+                 ),
+                 supp_table_2c = list(title = 'Physical properties',
+                                      analysts = 'H.C. Reheis, U.S. Geological Survey',
+                                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth >2mm: cm', 'Basal depth >2mm: %', 'Percentage of <2-mm fraction: Total sand', 'Percentage of <2-mm fraction: vco sand', 
+                                                      'Percentage of <2-mm fraction: co sand', 'Percentage of <2-mm fraction: med sand', 'Percentage of <2-mm fraction: fi sand', 
+                                                      'Percentage of <2-mm fraction: vfi sand', 'Percentage of <2-mm fraction: Total silt', 'Percentage of <2-mm fraction: <2u clay', 
+                                                      'Percentage of <2-mm fraction: <1u clay', 'Bulk density (g/cm3)', 'Percentage of <2-mm fraction: co silt', 'Percentage of <2-mm fraction: med silt', 
+                                                      'Percentage of <2-mm fraction: vfi silt', 'Percentage of <2-mm fraction: coclay (2 - .5u)', 'Percentage of <2-mm fraction: ficlay (<.5u)'),
+                                      note = '--, not measured.',
+                                      part1 = list(page = 36,
+                                                   columnCuts = c(5, 13, 20, 31, 37, 47, 53, 61, 67, 75, 85, 93, 101, 111, 117, 125, 132, 141, 149),
+                                                   subtables = c(rep(NA, 1+31-1),
+                                                                 rep('Fan 1, 5 ka', 1+35-32),
+                                                                 rep(NA, 1+40-36),
+                                                                 rep('Fan 2, 65 ka', 1+53-41),
+                                                                 rep(NA, 1+58-54),
+                                                                 rep('Fan 3, 100 ka', 1+74-59),
+                                                                 rep(NA, 1+79-75),
+                                                                 rep('Fan 4, 315 ka', 1+86-80),
+                                                                 rep(NA, 1+91-87))),
+                                      part2 = list(page = 37,
+                                                   columnCuts = c(7, 15, 25, 33, 39, 47, 55, 63, 69, 77, 85, 93, 101, 109, 115, 123, 130, 139, 147),
+                                                   subtables = c(rep(NA, 1+12-1),
+                                                                 rep('Fan 5, 410 ka', 1+25-13),
+                                                                 rep(NA, 1+30-26),
+                                                                 rep('Fan 6, 505 ka', 1+51-31),
+                                                                 rep(NA, 1+56-52),
+                                                                 rep('Fan 7, 585 ka', 1+69-57),
+                                                                 rep(NA, 1+75-70)))
+                 ),
+                 
+                 ## This table is split across two columns on the same page. The last column of part1 and the first column of part2 will have extraneous information. ##
+                 
+                 
+                 supp_table_3c = list(title = 'Extractive chemical analyses',
+                                      analysts = 'M.C. Reheis, U.S. Geological Survey',
+                                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'percentage: Organic C', 'percentage: CaCO3', 'percentage: Gypsum', 'pH 1:1 H2O'),
+                                      note = '--, not measured.',
+                                      part1 = list(page = 38,
+                                                   columnCuts = c(7, 15, 30, 51, 61, 69, 81),
+                                                   subtables = c(rep(NA, 1+36-1),
+                                                                 rep('Fan 1, 5 ka', 1+40-37),
+                                                                 rep(NA, 1+45-41),
+                                                                 rep('Fan 2, 65 ka', 1+58-46),
+                                                                 rep(NA, 1+64-59),
+                                                                 rep('Fan 3, 100 ka', 1+80-65),
+                                                                 rep(NA, 1+91-81))),
+                                      part2 = list(page = 38,
+                                                   columnCuts = c(99, 109, 123, 141, 151, 157, 169),
+                                                   subtables = c(rep(NA, 1+11-1),
+                                                                 rep('Fan 4, 315 ka', 1+18-12),
+                                                                 rep(NA, 1+23-19),
+                                                                 rep('Fan 5, 410 ka', 1+36-24),
+                                                                 rep(NA, 1+41-37),
+                                                                 rep('Fan 6, 505 ka', 1+61-42),
+                                                                 rep(NA, 1+66-62),
+                                                                 rep('Fan 7, 585 ka', 1+79-67),
+                                                                 rep(NA, 1+91-80)))
+                 ),
+                 
+                 ## This table is split across two columns on the same page. The last column of part1 and the first column of part2 will have extraneous information. ##
+                 
+                 ## The OCR mangled the first subtable, so some of the data is missing. ##
+                 
+                 ## Due to the chaotic notation, line 23 sample B-6A lost its last character into the next column. This was the best cut available. ##
+                 
+                 
+                 supp_table_4c = list(title = 'Clay mineralogy by X-ray diffraction',
+                                      analysts = 'M.C. Reheis, U.S. Geological Survey',
+                                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'percentage of clay mineral: Kaolinite', 'percentage of clay mineral: Mica',
+                                                      'percentage of clay mineral: Smectite', 'percentage of clay mineral: Palygorskite', 'percentage of clay mineral: Unknown mineral'),
+                                      note = '--, not measured.',
+                                      part1 = list(page = 39,
+                                                   columnCuts = c(7, 17, 33, 47, 53, 59, 67, 81),
+                                                   subtables = c(rep(NA, 1+53-1),
+                                                                 rep('Fan 1, 5 ka', 1+57-54),
+                                                                 rep(NA, 1+69-58),
+                                                                 rep('Fan 2, 65 ka', 1+75-70),
+                                                                 rep(NA, 1+80-76),
+                                                                 rep('Fan 3, 100 ka', 1+96-81),
+                                                                 rep(NA, 1+102-97))),
+                                      part2 = list(page = 39,
+                                                   columnCuts = c(95, 105, 117, 127, 135, 143, 149, 159),
+                                                   subtables = c(rep(NA, 1+7-1),
+                                                                 rep('Fan 4, 315 ka', 1+14-8),
+                                                                 rep(NA, 1+19-15),
+                                                                 rep('Fan 5, 410 ka', 1+32-20),
+                                                                 rep(NA, 1+37-33),
+                                                                 rep('Fan 6, 505 ka', 1+56-38),
+                                                                 rep(NA, 1+61-57),
+                                                                 rep('Fan 7, 585 ka', 1+74-62),
+                                                                 rep(NA, 1+102-75)))
+                 ),
+                 
+                 ## The OCR massively mangled this page. There is likely to be data missing. ##
+                 
+                 supp_table_5c = list(title = 'Total chemical analyses of the fine fraction by induction-coupled plasma spectroscopy',
+                                      analysts = 'A. Bartel under J.E. Taggart, U.S. Geological Survey',
+                                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Percentage of silt-plus-clay fraction: SiO2', 'Percentage of silt-plus-clay fraction: Al2O3', 
+                                                      'Percentage of silt-plus-clay fraction: Fe2O3', 'Percentage of silt-plus-clay fraction: MgO', 'Percentage of silt-plus-clay fraction: CaO', 
+                                                      'Percentage of silt-plus-clay fraction: Na2O', 'Percentage of silt-plus-clay fraction: K2O', 'Percentage of silt-plus-clay fraction: TiO2', 
+                                                      'Percentage of silt-plus-clay fraction: MnO', 'Percentage of silt-plus-clay fraction: ZrO2'),
+                                      note = '--, not measured.',
+                                      part1 = list(page = 40,
+                                                   columnCuts = c(15, 23, 35, 51, 57, 67, 75, 83, 91, 99, 109, 117, 125),
+                                                   subtables = c(rep(NA, 1+34-1),
+                                                                 rep('Fan 1, 5 ka', 1+38-35),
+                                                                 rep(NA, 1+43-39),
+                                                                 rep('Fan 2, 65 ka', 1+56-44),
+                                                                 rep(NA, 1+61-57),
+                                                                 rep('Fan 3, 100 ka', 1+81-62),
+                                                                 rep(NA, 1+85-82))),
+                                      part2 = list(page = 41,
+                                                   columnCuts = c(5, 13, 23, 35, 41, 51, 56, 67, 75, 85, 93, 103, 111),
+                                                   subtables = c(rep(NA, 1+11-1),
+                                                                 rep('Fan 4, 315 ka', 1+18-12),
+                                                                 rep(NA, 1+23-19),
+                                                                 rep('Fan 5, 410 ka', 1+36-24),
+                                                                 rep(NA, 1+41-37),
+                                                                 rep('Fan 6, 505 ka', 1+60-42),
+                                                                 rep(NA, 1+65-61),
+                                                                 rep('Fan 7, 585 ka', 1+78-66),
+                                                                 rep(NA, 1+82-79)))
+                 ),
+                 
+                 supp_table_6c = list(title = 'Total chemical analyses of the less-than-2mm fraction by induction-coupled plasma spectroscopy.',
+                                      analysts = 'P.H. Briggs under L.R. Layman, U.S. Geological Survey',
+                                      columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Percentage of less-than-2mm fraction: SiO2', 'Percentage of less-than-2mm fraction: Al2O3', 
+                                                      'Percentage of less-than-2mm fraction: Fe2O3', 'Percentage of less-than-2mm fraction: MgO', 'Percentage of less-than-2mm fraction: CaO', 
+                                                      'Percentage of less-than-2mm fraction: Na2O', 'Percentage of less-than-2mm fraction: K2O', 'Percentage of less-than-2mm fraction: TiO2', 
+                                                      'Percentage of less-than-2mm fraction: MnO', 'Percentage of less-than-2mm fraction: ZrO2'),
+                                      note = '--, not measured.',
+                                      part1 = list(page = 42,
+                                                   columnCuts = c(14, 21, 30, 46, 52, 61, 69, 77, 86, 95, 103, 112, 121),
+                                                   subtables = c(rep(NA, 1+19-1),
+                                                                 rep('Fan 1, 5 ka', 1+23-20),
+                                                                 rep(NA, 1+28-24),
+                                                                 rep('Fan 2, 65 ka', 1+41-29),
+                                                                 rep(NA, 1+46-42),
+                                                                 rep('Fan 3, 100 ka', 1+62-47),
+                                                                 rep(NA, 1+67-63),
+                                                                 rep('Fan 5, 315 ka', 1+74-68),
+                                                                 rep(NA, 1+80-75))),
+                                      part2 = list(page = 43,
+                                                   columnCuts = c(6, 14, 26, 36, 44, 52, 61, 69, 76, 86, 95, 104, 113),
+                                                   subtables = c(rep(NA, 1+14-1),
+                                                                 rep('Fan 5, 410 ka', 1+27-15),
+                                                                 rep(NA, 1+32-28),
+                                                                 rep('Fan 6, 505 ka', 1+51-33),
+                                                                 rep(NA, 1+56-52),
+                                                                 rep('Fan 7, 585 ka', 1+69-57),
+                                                                 rep(NA, 1+75-70)))
+                 ),
+                 
+                 supp_table_7_1c = list(title = 'Horizon weights of sand, silt, clay, carbon, CaCO3, gypsum, and clay minerals',
+                                        analysts = 'Marith C. Reheis, U.S. Geological Survey',
+                                        columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Weight (g/cm2/horizon column): Sand', 'Weight (g/cm2/horizon column): Silt', 
+                                                        'Weight (g/cm2/horizon column): Clay', 'Weight (g/cm2/horizon column): Carbon', 'Weight (g/cm2/horizon column): CaCO3', 
+                                                        'Weight (g/cm2/horizon column): Gypsum', 'Weight (g/cm2/horizon column): Kaolinite', 'Weight (g/cm2/horizon column): Mica', 
+                                                        'Weight (g/cm2/horizon column): Smectite', 'Weight (g/cm2/horizon column): Palygorskite', 'Weight (g/cm2/horizon column): Unknown mineral'),
+                                        note = '--, not measured.',
+                                        part1 = list(page = 44,
+                                                     columnCuts = c(22, 29, 39, 50, 62, 70, 79, 85, 99, 110, 118, 127, 135, 143),
+                                                     subtables = c(rep(NA, 1+44-1),
+                                                                   rep('Fan 1, 5 ka', 1+48-45),
+                                                                   rep(NA, 1+53-49),
+                                                                   rep('Fan 2, 65 ka', 1+66-54),
+                                                                   rep(NA, 1+71-67),
+                                                                   rep('Fan 3, 100 ka', 1+87-72),
+                                                                   rep(NA, 1+92-88))),
+                                        part2 = list(page = 45,
+                                                     columnCuts = c(10, 18, 28, 37, 44, 52, 60, 67, 74, 84, 93, 100, 109, 118),    ##There is one impossible cut--74 (could be 73 or 74)##
+                                                     subtables = c(rep(NA, 1+12-1),
+                                                                   rep('Fan 4, 315 ka', 1+19-13),
+                                                                   rep(NA, 1+23-20),
+                                                                   rep('Fan 5, 410 ka', 1+37-24),
+                                                                   rep(NA, 1+41-38),
+                                                                   rep('Fan 6, 505 ka', 1+65-42),
+                                                                   rep(NA, 1+69-66),
+                                                                   rep('Fan 7, 585 ka', 1+84-70),
+                                                                   rep(NA, 1+94-85)))
+                 ),
+                
+                 supp_table_7_2c = list(title = 'Horizon weights of major oxides plus zirconium',
+                                        analysts = 'M.C. Reheis, U.S. Geological Survey',
+                                        columeNames = c('No', 'Sample', 'Horizon', 'Basal depth (cm)', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: SiO2', 
+                                                        'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: Al2O3', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: Fe2O3', 
+                                                        'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: MgO', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: CaO', 
+                                                        'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: Na2O', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: K2O', 
+                                                        'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: TiO2', 'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: MnO', 
+                                                        'Weight (g/cm2/horizon column) of oxide in less-than-2mm fraction: ZrO2'),
+                                        note = '--, not measured.',
+                                        part1 = list(page = 46,
+                                                     columnCuts = c(17, 23, 33, 43, 51, 59, 64, 70, 83, 91, 99, 107, 114), ##There are 2 impossible cuts--70 (could be 69 or 70) and 114 (could be 113 or 114)##
+                                                     subtables = c(rep(NA, 1+17-1),
+                                                                   rep('Fan 1, 5 ka', 1+21-18),
+                                                                   rep(NA, 1+24-22),
+                                                                   rep('Fan 2, 65 ka', 1+36-25),
+                                                                   rep(NA, 1+39-37),
+                                                                   rep('Fan 3, 100 ka', 1+54-40),
+                                                                   rep(NA, 1+57-55),
+                                                                   rep('Fan 4, 315 ka', 1+64-58),
+                                                                   rep(NA, 1+70-65))),
+                                        part2 = list(page = 47,
+                                                     columnCuts = c(9, 15, 25, 37, 43, 51, 58, 67, 75, 85, 91, 98, 111), ##There is 1 impossible cut--98 (could be 98 or 99)##
+                                                     subtables = c(rep(NA, 1+10-1),
+                                                                   rep('Fan 5, 410 ka', 1+22-11),
+                                                                   rep(NA, 1+25-23),
+                                                                   rep('Fan 6, 505 ka', 1+42-26),
+                                                                   rep(NA, 1+45-43),
+                                                                   rep('Fan 7, 585 ka', 1+57-46),
+                                                                   rep(NA, 1+63-58)))
+                                        
+                 )
+  ) #end Report C
+  
+  
   #####Endlist####
 )
 
 
 ###Dev work#####
 if(FALSE){ 
-  report_index <- 2
+  report_index <- 3
   report_txt <- pdftools::pdf_text(download_info$download_filename[report_index])
   
-  suppTable.ls <- tableInfo.ls[[report_index]]$supp_table_1
-  part_info.ls <- tableInfo.ls[[report_index]]$supp_table_1$part1
+  suppTable.ls <- tableInfo.ls[[report_index]]$supp_table_1_1c
+  part_info.ls <- tableInfo.ls[[report_index]]$supp_table_1_1c$part1
   
-  write_file(report_txt[40], file =  'temp/text.txt')
+  write_file(report_txt[32], file =  'temp/text.txt')
   write_file(report_txt[part_info.ls$page], file =  'temp/text.txt')
   
   temp1 <- str_split(report_txt[part_info.ls$page], '\n') %>%
@@ -702,7 +960,15 @@ if(FALSE){
     select(report, pdf_page, line_number, subtable, X) %>%
     separate(col = X, sep = part_info.ls$columnCuts, into = suppTable.ls$columeNames)
   
-  id_cols <- c('No', 'Sample', 'Horizon', 'subtable', 'report', 'pdf_page')
+  
+  if(is.null(suppTable.ls$id_cols)){
+    id_cols <- c('No', 'Sample', 'Horizon')
+  }else{
+    id_cols <- suppTable.ls$id_cols
+  }
+  
+  
+  id_cols <- c(id_cols, 'subtable', 'report', 'pdf_page')
   
   temp2 <- temp1 %>%
     filter(!is.na(subtable)) %>%
@@ -713,16 +979,18 @@ if(FALSE){
     dplyr::summarise(across(!any_of(id_cols), ~paste0(., collapse = ' ')))
 }
 
+
+##TODO Report C doesn't read right... probalby has to do with the id colums... FIXME
 #####example to pull together a table from the parts######
 if(FALSE){
-  plyr::l_ply(tableInfo.ls, function(reportMeta.ls){ #for each report
+  plyr::l_ply(tableInfo.ls[3], function(reportMeta.ls){ #for each report
     #reportMeta.ls <- tableInfo.ls$reportA
     
     report_txt <- pdftools::pdf_text(reportMeta.ls$download_filename)
     
     report_tables <- plyr::llply(reportMeta.ls[grepl('supp_table', names(reportMeta.ls))], function(tableMeta.ls){ #go through the tables
       
-      #tableMeta.ls <- reportMeta.ls$supp_table_1
+      #tableMeta.ls <- reportMeta.ls$supp_table_1_1c
       sup_data_tables <- plyr::ldply(tableMeta.ls[grepl('part', names(tableMeta.ls))], #and the parts
                                      function(pageMeta.ls, colNames = tableMeta.ls$columeNames){
                                        
