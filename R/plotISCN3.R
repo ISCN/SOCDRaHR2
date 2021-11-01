@@ -3,19 +3,20 @@
 #'This function first takes the reformatted data output of the International Soil Carbon Network 3_1 function. It accounts for whether or not a dataset has profile-level data, as well as the locations of its sites for mapping purposes. It generates tables, maps, and histograms using this cleaned data. It then returns these visualizations.
 #'
 #'
-#' @param ISCN3
-#' @param datasetName 
+#' @param ISCN3 this is a list with three elements called `study`, `profile`, and `layer` that follow the conventions from `ISCN3_3()`. All columns are expected to be cast to their appropreate data types.
+#' @param datasetName the `dataset_name_sub` string of interest
 #' 
 #'
 #' @return
+#' 
 #' @export
+#' 
 #' @importFrom dplyr filter group_by mutate_all select pull select_if
 #' @importFrom knitr kable
 #' @importFrom ggplot2 coord_cartesian map_data geom_polygon coord_fixed xlab ylab labs aes geom_point ggplot facet_wrap geom_line theme_set
 #' @importFrom tidyr pivot_longer
 #'
-
-plotGenerate <- function(ISCN3, datasetName) {
+plotISCN3 <- function(ISCN3, datasetName, verbose = TRUE) {
   
   # TODO specify library that functions are imported from
   # TODO list functions used in @importFrom
@@ -24,6 +25,7 @@ plotGenerate <- function(ISCN3, datasetName) {
   #library(tidyverse)
   #source('R/ISCN3_1.R')
   #ISCN3 <- ISCN3_1('~/Documents/Datasets/ISCN')
+  ISCN3 <- ISCN3.ls
   #datasetName <- 'UMBS_FASET'
   
   #################################
@@ -39,7 +41,7 @@ plotGenerate <- function(ISCN3, datasetName) {
     dplyr::filter(dataset_name_sub == datasetName)
   
   # setting extra blanks in knitr tables to print as a space
-  options(knitr.kable.NA = '')
+  #options(knitr.kable.NA = '') #don't set global variabels in functions
   
   # if no profile data, printing this message in place of profile table
   profileTable <- paste('[',
@@ -60,9 +62,8 @@ plotGenerate <- function(ISCN3, datasetName) {
   #### Summary Tables ####
   ########################
 
-  studyTable <- knitr::kable(t(datasetStudy %>%
-                               dplyr::select(where(function(xx) {!all(is.na(xx))}))),
-                           col.names = '',
+  studyTable <- knitr::kable(t(datasetStudy),
+                           col.names = rep('', nrow(datasetStudy)),
                            caption = paste('A summary of [', datasetName,
                                            '] study and contact information.',
                                            sep = ''))

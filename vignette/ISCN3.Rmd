@@ -11,9 +11,12 @@ vignette: >
 
 Purpose: *This vignette describes the ISCN3 data contributions.*
 
+
+# Setup
+
 ```{r setup, echo=FALSE}
 library(SOCDRaH2)
-library(ggplot2)
+library(tidyverse)
 library(knitr)
 library(kableExtra)
 dataDir <- '~/Documents/Datasets/ISCN'
@@ -27,28 +30,40 @@ library(ggplot2)
 dataDir <- 'Your/Data/Dir'
 ```
 
-# Accessing the data
 
 ```{r load, eval=FALSE}
 ISCN3.ls <- ISCN3_3(data_dir = dataDir)
 ```
 
-# Creating a table to show summary statistics of the number of unique sites each dataset has
+Some comment on the organization of ISCN3.
+Includes a description of the tables, identifying columns and descriptions of the headers.
+Also need a citation with the EDI link
+
+Creating a table to show summary statistics of the number of unique sites each dataset in the profile table has.
 
 ```{r sites}
-knitr::kable(profile_raw %>%
+profile_summary <- ISCN3.ls$profile %>%
   select(dataset_name_sub, site_name) %>%
   unique()%>%
   group_by(dataset_name_sub) %>% 
-  tally(name = 'site_count'), 
-  caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile data table.')%>%
+  tally(name = 'profile_site_count')
+
+layer_summary <- ISCN3.ls$layer %>%
+  select(dataset_name_sub, site_name) %>%
+  unique()%>%
+  group_by(dataset_name_sub) %>% 
+  tally(name = 'layer_site_count')
+
+knitr::kable(full_join(profile_summary, layer_summary, by = c('dataset_name_sub')) %>%
+    arrange(layer_site_count), 
+  caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile and layer data table.')%>%
   kable_styling()
 ```
 
 # Dataset description table
 
 ```{r}
-study <- dataset_raw %>% 
+study <- ISCN3.ls$study %>% 
   select(dataset_name, `dataset_type (dataset_type)`, dataset_description) 
 knitr::kable(study,
   caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile data table.')%>%
@@ -75,17 +90,8 @@ This data set was set in Alaska, so the Alaska Location code from the Template w
 datasetName <- "Myers-Smith" 
 
 ##### Extract the study information ####
-dataset_study <- citation_raw %>% 
-  filter(dataset_name == datasetName) %>%
-  select(where(function(xx){!all(is.na(xx))})) %>%
-  full_join(dataset_raw %>% 
-              filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!all(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
-  mutate (`citation`= case_when(`citation`== "Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data_detail.cfm?datafile_pkey=192." ~ "Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data/data-detail/id/192",
-            TRUE~ as.character(citation))) %>%
-  standardCast() %>%
-  fill(curator_name, curator_organization, curator_email, dataset_description, .direction = "downup" )
-
+dataset_study <- ISCN3.ls$study %>% 
+  filter(dataset_name == datasetName) 
 
 ```
 
@@ -177,7 +183,7 @@ dataset_layer <- standardCast(dataset_layer)
 ```
 
 ```{r}
-plotGenerate(ISCN3(), Myers-Smith)
+plotGenerate(ISCN3 = ISCN3.ls, 'Myers-Smith')
 ```
 
 # Citations and bibliography
