@@ -315,3 +315,4 @@ return(list(summaryStudyTable = studyTable,
             profileValueHistograms = histograms,
             depthValuePlots = depthPlots))  
 }
+
