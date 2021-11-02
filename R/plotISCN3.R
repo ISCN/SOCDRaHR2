@@ -15,7 +15,7 @@
 #' @importFrom tidyr pivot_longer
 #'
 
-plotGenerate <- function(ISCN3, datasetName) {
+plotISCN3 <- function(ISCN3, datasetName) {
   
   # TODO specify library that functions are imported from
   # TODO list functions used in @importFrom
