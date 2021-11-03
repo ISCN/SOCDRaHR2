@@ -27,7 +27,7 @@ plotISCN3 <- function(ISCN3, datasetName, verbose = TRUE) {
   #library(tidyverse)
   #source('R/ISCN3_1.R')
   #ISCN3 <- ISCN3_1('~/Documents/Datasets/ISCN')
-  ISCN3 <- ISCN3.ls
+  #ISCN3 <- ISCN3.ls
   #datasetName <- 'UMBS_FASET'
   
   #################################
@@ -81,7 +81,7 @@ plotISCN3 <- function(ISCN3, datasetName, verbose = TRUE) {
   } else {} # keeping profileTable as NA
   
   layerTable <- knitr::kable(summary(datasetLayerRemNA %>%
-                                       dyplr::select_if(is.factor) %>%
+                                       dplyr::select_if(is.factor) %>%
                                        dplyr::mutate_all(droplevels)),
                            caption = paste('A summary of [', datasetName,
                                            '] layer data,  \ncontaining 3D resolved information.',
@@ -268,8 +268,9 @@ plotISCN3 <- function(ISCN3, datasetName, verbose = TRUE) {
   if(datasetName %in% ISCN3$profile$dataset_name_sub) {
     histograms <-  ggplot2::ggplot(datasetProfileRemNA %>%
                             # plotting columns shared by num_cols and dataset's profile data
-                            tidyr::pivot_longer(cols =  intersect(names(.),
-                                                           ISCN3$type_columns$num_cols),
+                            tidyr::pivot_longer(cols =  where(is.numeric),
+                                                #(names(.),
+                                                          # ISCN3$type_columns$num_cols),
                                          # setting axes
                                          values_to = 'measurement', 
                                          names_to = 'type')) +
@@ -287,13 +288,15 @@ plotISCN3 <- function(ISCN3, datasetName, verbose = TRUE) {
   
   # creating a line graph to show different measurements by depth
   depthPlots <- ggplot2::ggplot(datasetLayerRemNA %>% 
-                         # setting which columns to make x-axis
+  #TODO: FIX WARNING
+                                                         # setting which columns to make x-axis
                          tidyr::pivot_longer(cols=c('layer_top (cm)',
                                              'layer_bot (cm)'),
                                       values_to='depth') %>%
                          # setting which measurements to include for each chart/y-axis
-                         tidyr::pivot_longer(cols = intersect(names(.),
-                                                       ISCN3$type_columns$num_cols), 
+                         tidyr::pivot_longer(cols = c(where(is.numeric) & !any_of(c("depth"))),
+                                             #(names(.),
+                                                      # ISCN3$type_columns$num_cols), 
                                       values_to = 'measurement',
                                       names_to = 'type')) +
     # adding line to connect data points
