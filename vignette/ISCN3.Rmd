@@ -3,11 +3,14 @@ title: "ISCN 3.3 data"
 author: "K Todd-Brown (ktoddbrown@ufl.edu)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: ISCN3_bibliography.bib 
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+#issues
+fix map graphics
 
 Purpose: *This vignette describes the ISCN3 data contributions.*
 
@@ -27,11 +30,10 @@ knitr::opts_chunk$set(eval=FALSE)
 ```{r fakeSetUp, eval=FALSE}
 library(SOCDRaH2)
 library(ggplot2)
-dataDir <- 'Your/Data/Dir'
+#dataDir <- 'Your/Data/Dir'
 ```
 
-
-```{r load, eval=FALSE}
+```{r load}
 ISCN3.ls <- ISCN3_3(data_dir = dataDir)
 ```
 
@@ -70,25 +72,282 @@ knitr::kable(study,
   kable_styling()
 ```
 
-# Description of the tables and columns
+# Data Contributions
 
-Create a table with the table name, column name, and long description similar to what is on the EDI page.
+## University of Michigan Biological Station Forest Accelerated Succession ExperimenT (UMBS_FASET)
 
-# New section for each data contribution
+```{r}
+temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'UMBS_FASET')
+```
 
-Include both a description of the data sets including counts of layers and sites, histograms and tables of variables, and site map.
-List data contributions from largest to smallest.
+The University of Michigan Biological Station Forest Accelerated Succession Experiment (UMBS_FASET) data set is uncited and unpublished.
+
+```{r}
+#need to gap fill these or find the gap filled ones
+study <- ISCN3.ls$study %>% 
+  select(dataset_name, citation) %>%
+  filter(dataset_name == "UMBS_FASET")
+knitr::kable(study,
+  caption = 'Citations for the UMBS_FASET data set.')%>%
+  kable_styling()
+```
+
+The UMBS FASET data set contains `r nrow(filter(ISCN3.ls$layer, dataset_name_sub == "UMBS_FASET"))` layer-level rows and `r nrow(filter(ISCN3.ls$profile, dataset_name_sub == "UMBS_FASET"))` profile-level information rows after cleaning.
+
+### Figrues
+
+The soil data in this data set were sampled from Michigan (see figure below)
+
+```{r}
+print(temp.outputs$layerMap) 
+```
+
+The profile level map shows
+
+```{r}
+print(temp.outputs$profileMap) 
+```
+
+A summary of the data set and its contacts are shown below.
+
+```{r}
+temp.outputs$summaryStudyTable%>%
+  kable_styling()
+```
+
+The layer data shows 
+
+```{r}
+temp.outputs$layerTable%>%
+  kable_styling()
+```
+
+The profile data shows 
+
+```{r}
+temp.outputs$profileTable%>%
+  kable_styling()
+```
+
+The histograms for the data set show 
+
+```{r}
+print(temp.outputs$profileValueHistograms) 
+```
+
+The layer depth plots show 
+
+```{r}
+print(temp.outputs$depthValuePlots) 
+```
+
+### Changes from ISCN3 to ISCN3.3
+
+    - ISCN SOC computations were removed to elminate gapfilled values.
+    - Layer level horizon information (`hzn`) were reassigned to `NA` from `"?"`.
+    - Layer and profile level country identifiers (`country (country)`) were reassigned to `"United States"` from an empty string. 
+    - Citations were also updated.
+
+A citation was pulled regarding the unpublished dataset and placed in the bibliography but should be revisted in ISCN 4.
+
 
 ## Myers Smith
 
-The Myers Smith data set in ISCN3 contains `r nrow(dataset_layer)` layer-level rows and `r nrow(dataset_profile)` profile-level information rows after cleaning for ISCN3.5.
-ISCN3 removed repeated information in citations, so these column values were corrected and filled for ISCN3.5.
-ISCN3 filled in the soil carbon stocks where bulk density and organic carbon was provided, so these columns were removed for ISCN3.5.
-This data set was set in Alaska, so the Alaska Location code from the Template was used instead of the generic.
+```{r}
+temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Myers-Smith')
+```
+
+The Myers Smith data set is published and cited.
+See @MyersSmithHarden2007 @MyersSmithMcGuire2007 for additional details
 
 ```{r}
-plotISCN3(ISCN3 = ISCN3.ls, 'Myers-Smith')
+study <- ISCN3.ls$study %>% 
+  select(dataset_name, citation) %>%
+  filter(dataset_name == "Myers-Smith")
+knitr::kable(study,
+  caption = 'Citations for the Myers Smith data set.')%>%
+  kable_styling()
 ```
+
+The Myers Smith data set contains `r nrow(filter(ISCN3.ls$layer, dataset_name_sub == "Myers-Smith"))` layer-level rows and `r nrow(filter(ISCN3.ls$profile, dataset_name_sub == "Myers-Smith"))` profile-level information rows after cleaning.
+
+### Figrues
+
+The soil data in this data set were sampled from Alaska (see figure below)
+
+```{r}
+print(temp.outputs$layerMap) 
+```
+
+The profile level map shows
+
+```{r}
+print(temp.outputs$profileMap) 
+```
+
+A summary of the data set and its contacts are shown below.
+
+```{r}
+temp.outputs$summaryStudyTable%>%
+  kable_styling()
+```
+
+The layer data shows 
+
+```{r}
+temp.outputs$layerTable%>%
+  kable_styling()
+```
+
+The profile data shows 
+
+```{r}
+temp.outputs$profileTable%>%
+  kable_styling()
+```
+
+The histograms for the data set show 
+
+```{r}
+print(temp.outputs$profileValueHistograms) 
+```
+
+The layer depth plots show 
+
+```{r}
+print(temp.outputs$depthValuePlots) 
+```
+
+### Changes from ISCN3 to ISCN3.3
+
+    - ISCN SOC computations were removed to elminate gapfilled values.
+    - Citations were also updated.
+
+
+## Oak Ridge National Lab_Loblolly DWJ
+
+```{r}
+temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Oak Ridge National Lab_Loblolly_DWJ')
+```
+
+The Oak Ridge National Lab Loblolly DWJ data set is published and cited.
+See @Parr2006 for additional details. 
+
+```{r}
+study <- ISCN3.ls$study %>% 
+  select(dataset_name, citation) %>%
+  filter(dataset_name == "Oak Ridge National Lab_Loblolly_DWJ")
+knitr::kable(study,
+  caption = 'Citations for the Oak Ridge National Lab Loblolly DWJ data set.')%>%
+  kable_styling()
+```
+
+The Oak Ridge National Lab Loblolly DWJ data set contains `r nrow(filter(ISCN3.ls$layer, dataset_name_sub == "Oak Ridge National Lab_Loblolly_DWJ"))` layer-level rows and `r nrow(filter(ISCN3.ls$profile, dataset_name_sub == "Oak Ridge National Lab_Loblolly_DWJ"))` profile-level information rows after cleaning. 
+The data set does not contain profile level information therefore the profile information graphs are omitted.
+
+The soil data in this data set were sampled from Tennessee (see figure below)
+
+```{r}
+print(temp.outputs$layerMap) 
+```
+
+A summary of the data set and its contacts are shown below.
+
+```{r}
+temp.outputs$summaryStudyTable%>%
+  kable_styling()
+```
+
+The layer data shows 
+
+```{r}
+temp.outputs$layerTable%>%
+  kable_styling()
+```
+
+The histograms for the data set show 
+
+```{r}
+print(temp.outputs$profileValueHistograms) 
+```
+
+The layer depth plots show 
+
+```{r}
+print(temp.outputs$depthValuePlots) 
+```
+
+### Changes from ISCN3 to ISCN3.3
+
+    - ISCN SOC computations were removed to elminate gapfilled values.
+    - Layer and profile level country identifiers (`country (country)`) were reassigned to `"United States"` from an empty string. 
+    - Layer level horizon information (`hzn`) were reassigned to `NA` from `"?"`.
+    - gapfilled bd with sampling were reasigned to "NA" based on method notes.
+    - Citations were also updated.
+    
+
+## Oak Ridge National Lab TDE
+
+```{r}
+temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Oak Ridge National Lab_TDE')
+```
+
+The Oak Ridge National Lab TDE data set is published and cited.
+See @Froberg2008, https://search.dataone.org/view/doi%3A10.3334%2FCDIAC%2FVRC.002, and 
+http://cdiac.ess-dive.lbl.gov/epubs/ndp/ndp078a/ndp078a.html for additional details
+
+```{r}
+study <- ISCN3.ls$study %>% 
+  select(dataset_name, citation) %>%
+  filter(dataset_name == "Oak Ridge National Lab_TDE")
+knitr::kable(study,
+  caption = 'Citations for the Oak Ridge National Lab TDE data set.')%>%
+  kable_styling()
+```
+
+The Oak Ridge National Lab TDE data set contains `r nrow(filter(ISCN3.ls$layer, dataset_name_sub == "Oak Ridge National Lab_TDE"))` layer-level rows and `r nrow(filter(ISCN3.ls$profile, dataset_name_sub == "Oak Ridge National Lab_TDE"))` profile-level information rows after cleaning. 
+The data set does not contain profile level information therefore the profile information graphs are omitted.
+
+### Figrues
+
+The soil data in this data set were sampled from Tennessee (see figure below)
+
+```{r}
+print(temp.outputs$layerMap) 
+```
+
+A summary of the data set and its contacts are shown below.
+
+```{r}
+temp.outputs$summaryStudyTable%>%
+  kable_styling()
+```
+
+The layer data shows 
+
+```{r}
+temp.outputs$layerTable%>%
+  kable_styling()
+```
+
+The histograms for the data set show 
+
+```{r}
+print(temp.outputs$profileValueHistograms) 
+```
+
+The layer depth plots show 
+
+```{r}
+print(temp.outputs$depthValuePlots) 
+```
+
+### Changes from ISCN3 to ISCN3.3
+
+    - Empty columns were removed
+    - Cryptic `site_note` information in the profile level was also replaced with a more formal citation.
+    - Citations were also updated.
+    
 
 # Citations and bibliography
 
@@ -96,7 +355,7 @@ Create a table with each dataset and citation, repeat the dataset name as needed
 
 ```{r}
 #need to gap fill these or find the gap filled ones
-study <- citation_raw %>% 
+study <- ISCN3.ls$study %>% 
   select(dataset_name, citation) 
 knitr::kable(study,
   caption = 'Citations for each contributing dataset submision (dataname_sub).')%>%
