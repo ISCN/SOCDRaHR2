@@ -24,6 +24,7 @@ library(knitr)
 library(kableExtra)
 dataDir <- '~/Datasets/ISCN'
 
+
 knitr::opts_chunk$set(eval=FALSE)
 ```
 
@@ -323,6 +324,7 @@ temp.outputs$summaryStudyTable%>%
   kable_styling()
 ```
 
+
 The layer data shows 
 
 ```{r}
@@ -361,4 +363,5 @@ knitr::kable(study,
   caption = 'Citations for each contributing dataset submision (dataname_sub).')%>%
   kable_styling()
 ```
+
 
