@@ -26,6 +26,7 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: change modification dates
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
+  # TODO: Remove repeated information that is repeated in the layer from the profile that are not ids.
 
   ##Dev comments
   # data_dir <- 'ISCN3' #change to location of ISCN3
@@ -296,6 +297,10 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   replaceunknown <- c("Bonanza LTER", "USDA-FS NRS Landscape Carbon Inventory")
   dataset_layer[dataset_layer$dataset_name_sub %in% replaceunknown, 'hzn_desgn'] <- NA_character_
+  
+  #hardcoding country name
+  replacecountry <- c("UMBS_FASET")
+  dataset_layer[dataset_layer$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
   
   if(verbose){message('Cast data types in layer-level...')}
   dataset_layer <- dataset_layer %>%
