@@ -1,5 +1,5 @@
 ---
-title: "ISCN 3.3 data"
+title: "ISCN 3.3 database"
 author: "K Todd-Brown (ktoddbrown@ufl.edu)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -9,40 +9,38 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-#issues
-fix map graphics
 
 Purpose: *This vignette describes the ISCN3 data contributions.*
 
+The ISCN database is a compilation of research and survey layer-level soil data and observations.
+The most recent archive of ISCN3 is here [https://portal-s.edirepository.org/nis/mapbrowse?scope=edi&identifier=360&revision=4](https://portal-s.edirepository.org/nis/mapbrowse?scope=edi&identifier=360&revision=4)
 
 # Setup
+
+```{r fakeSetUp, eval=FALSE}
+library(SOCDRaH2)
+library(ggplot2)
+dataDir <- 'Your/Data/Dir'
+```
 
 ```{r setup, echo=FALSE}
 library(SOCDRaH2)
 library(tidyverse)
 library(knitr)
 library(kableExtra)
-dataDir <- '~/Datasets/ISCN'
+dataDir <- '~/Documents/Datasets/ISCN'
 
-
-knitr::opts_chunk$set(eval=FALSE)
+#knitr::opts_chunk$set(eval=FALSE)
 ```
 
-```{r fakeSetUp, eval=FALSE}
-library(SOCDRaH2)
-library(ggplot2)
-#dataDir <- 'Your/Data/Dir'
+ISCN is large and will take a minute to download and load.
+ISCNv3.3 does not add any new data to ISCN3 however it correct several known data short comings.
+
+```{r load, message=FALSE, warning=FALSE}
+ISCN3.ls <- ISCN3_3(data_dir = dataDir) #this will throw an NA coercion warning that you can ignore
 ```
 
-```{r load}
-ISCN3.ls <- ISCN3_3(data_dir = dataDir)
-```
-
-Some comment on the organization of ISCN3.
-Includes a description of the tables, identifying columns and descriptions of the headers.
-Also need a citation with the EDI link
-
-Creating a table to show summary statistics of the number of unique sites each dataset in the profile table has.
+ISCN profile (2-D) and layer (3-D) level data comes from the following contributing data sets.
 
 ```{r sites}
 profile_summary <- ISCN3.ls$profile %>%
@@ -57,44 +55,94 @@ layer_summary <- ISCN3.ls$layer %>%
   group_by(dataset_name_sub) %>% 
   tally(name = 'layer_site_count')
 
-knitr::kable(full_join(profile_summary, layer_summary, by = c('dataset_name_sub')) %>%
+table_summary <- ISCN3.ls$study %>% 
+  select(dataset_name, `dataset_type (dataset_type)`, dataset_description) %>%
+  unique() %>%
+  right_join(profile_summary %>%
+              full_join(layer_summary, by = 'dataset_name_sub'), by=c('dataset_name' = 'dataset_name_sub'))
+
+knitr::kable(table_summary %>%
     arrange(layer_site_count), 
   caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile and layer data table.')%>%
   kable_styling()
 ```
 
-# Dataset description table
-
-```{r}
-study <- ISCN3.ls$study %>% 
-  select(dataset_name, `dataset_type (dataset_type)`, dataset_description) 
-knitr::kable(study,
-  caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile data table.')%>%
-  kable_styling()
-```
 
 # Data Contributions
 
-## University of Michigan Biological Station Forest Accelerated Succession ExperimenT (UMBS_FASET)
+## University of Michigan Biological Station Forest Accelerated Succession ExperimenT (`UMBS_FASET`)
 
 ```{r}
-temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'UMBS_FASET')
+#temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'UMBS_FASET')
 ```
 
-The University of Michigan Biological Station Forest Accelerated Succession Experiment (UMBS_FASET) data set is uncited and unpublished.
+The University of Michigan Biological Station Forest Accelerated Succession Experiment (`UMBS_FASET`) data set is uncited and unpublished.
 
 ```{r}
-#need to gap fill these or find the gap filled ones
 study <- ISCN3.ls$study %>% 
-  select(dataset_name, citation) %>%
-  filter(dataset_name == "UMBS_FASET")
+  filter(dataset_name == "UMBS_FASET") %>%
+  select(where(~any(!is.na(.)))) %>%
+  t()
+
+profile <- ISCN3.ls$profile %>%
+  filter(dataset_name_sub == "UMBS_FASET")%>%
+  select(where(~any(!is.na(.))))
+
+layer <- ISCN3.ls$layer %>%
+  filter(dataset_name_sub == "UMBS_FASET") %>%
+  select(where(~any(!is.na(.))))
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+#Check to see if there is different/new information in the layer table that is not in the profile
+#profile_info_layer <- layer %>%
+#  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
+#  unique()
+#
+#series <- profile_info_layer %>% 
+#  select(profile_name, soil_taxon, soil_series) %>% 
+#  unique() %>%
+#  anti_join(profile)
+```
+
+```{r}
 knitr::kable(study,
-  caption = 'Citations for the UMBS_FASET data set.')%>%
+  caption = 'Citations for the UMBS_FASET data set.') %>%
   kable_styling()
 ```
 
-The UMBS FASET data set contains `r nrow(filter(ISCN3.ls$layer, dataset_name_sub == "UMBS_FASET"))` layer-level rows and `r nrow(filter(ISCN3.ls$profile, dataset_name_sub == "UMBS_FASET"))` profile-level information rows after cleaning.
+This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of `r nrow(locations)` unique latitude-longitude location.
 
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+
+#remove data from the layer that appears in the profile that is not the top/bottom/soc
+#select all numerical data, pivot and histogram
+#select all factor data and tally
+```
+
+
+### Fixed issues
+
+Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
+
+  + The UMBS FASET data set contains `r nrow(filter(ISCN3.ls$layer, dataset_name_sub == "UMBS_FASET"))` layer-level rows and `r nrow(filter(ISCN3.ls$profile, dataset_name_sub == "UMBS_FASET"))` profile-level information rows after cleaning.
+  + `ISCN SOC computation` soil organic carbon calculations were removed and duplicate rows deleted.
+  + Values in the `hzn` column of the `layer` table were reassigned to an NA character from "?", a nonspecific character.
+  + Values in  `country (country)` column were reassigned to "United States" in the `layer` and `profile` tables because it was the known location of the collection state.
+  
+### Future issues
+  + Citation practices were initially incompatible with CC-BY license for ISCN3; contacting data providers about modifying release for ISCN4
+  + Check and see if data is still being collected at this research site
+  
 ### Figrues
 
 The soil data in this data set were sampled from Michigan (see figure below)
