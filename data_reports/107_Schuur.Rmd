@@ -7,9 +7,8 @@ The clean layer and clean profile table were checked for accuracy of information
 A citation was added to the bibliography file.
 Four columns were removed from the original dataset that remove the soc columns from both the dataset_layer table and dataset_profile table.
 
-
 ```{r warning=FALSE, message=FALSE}
-datasetName <- "Schuur" #fix this
+datasetName <- "Schuur"
 
 ##### Extract the study information ####
 dataset_study <- citation_raw %>% 
@@ -213,17 +212,12 @@ ggplot(dataset_layer %>%
 ```
 
 ## TODO
-- [ ] Reference the site_note in the dataset_profile table
+
 - [ ] Cite a database referenced in the dataset_study table
-
-
-#### Github issue template
-
-- [ ]  Evaluate dataset
-- [ ]  Complete template checklist
-- [ ]  Write up summary report narrative
-- [ ]  Good commenting
-- [ ]  External review by someone else
+      The url links provided lead to a 404 error page.
+        The correct url for dataone: https://search.dataone.org/view/knb-lter-bnz.366.16
+        The datasite download link provided: http://www.lter.uaf.edu/404.php
+          This link leads to a 404 error, contacting the researchers is necessary.
 
 ## Citations
 

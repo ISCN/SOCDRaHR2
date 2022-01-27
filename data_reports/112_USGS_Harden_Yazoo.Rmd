@@ -43,8 +43,6 @@ if(any(grepl('ISCN', dataset_profile$dataset_name_soc))){
     mutate(`country (country)` = 'United States', #hard-coding country as United States
            `site_note` = case_when(
              site_note == 'Harden et al., 1999' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319.',
-             TRUE ~ site_note), #replacing cryptic site_note in two of the dataset_profile rows
-           `site_note` = case_when(
              site_note == 'Harden et al., 1999; Huntington et al. 1998' ~ 'Harden J, Fries T, Huntington T. 1999. MS Basin Carbon Project: Upland soil database for sites in Yazoo Basin, northern MS. USGS Open file report 99-319; Huntington, T.G., Harden, J. W., Dabney, S. M. , Marion, D. A. , Alonso, C., Sharpe, J.M. , 1998. Soil, Environmental, and Watershed Measurements in support of carbon cycling studies in northwestern Mississippi. U.S. Geological Survey Open-File Report 98-501.',
              TRUE ~ site_note), #replacing remaining columns with full Harden 1999 and Huntington 1998 citations.
            `soc_depth (cm)` = if_else(grepl('ISCN', dataset_name_soc),

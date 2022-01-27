@@ -50,7 +50,7 @@ For incorporation into this project a dataset needs to have:
  Place any dataset keys in the dataset_keys folder of this project; variables should be keyed to ISCN standard names when possible (see the `var` column in [ISCNKey](https://github.com/ktoddbrown/soils-long-tail-recovery/blob/master/dataset_keys/ISCNKey.xlsx)), new variables will be considered as standardized candidates for future ISCN data products.
  For more details on the expected input file formats and structure of the data key please see the [wiki](https://github.com/ktoddbrown/soils-long-tail-recovery/wiki).
  
- We will also accept unique data ingestions scripts.
+ We will also accept unique data ingestion scripts.
  
  ## Everything else
  
@@ -69,8 +69,8 @@ Spelling conventions should adhere to American standards (Sorry Brits! We had to
 The language must be consistant with our [Code of Conduct](CONTRIBUTING.md) and strive to be inclusive and approachable.
 
 *Tables* intended to be machine readable (keys primarily) should be stored as csv files.
-CSV files are common ',' seperate and have hard returns at the end of each row '\n'.
+CSV files are common ',' separate and have hard returns at the end of each row '\n'.
 Headers for csv files are strongly encouraged.
-CSV file headers should only contain standard alphanumerics [A-Za-z0-1] or underscores '_'.
+CSV file headers should only contain standard alphanumeric [A-Za-z0-1] or underscores '_'.
 
 *Code* contributions must be in [R](https://www.r-project.org/) and are encouraged to use the [Tidyverse](https://www.tidyverse.org/) libraries.

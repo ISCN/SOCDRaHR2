@@ -1,0 +1,13 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+ISCN 1-1 (2015-12-10)	No definition provided	character	NA	NA	 	 
+dataset_name	Dataset Name	character	NA	NA	 	 
+dataset_type (dataset_type)	No definition provided	character	NA	NA	 	 
+curator_name	Curator Name	character	NA	NA	 	 
+curator_organization	Curator Organization	character	NA	NA	 	 
+curator_email	Curator Email	character	NA	NA	 	 
+reference	Reference	character	NA	NA	 	 
+citation	Citation text	character	NA	NA	 	 
+citation_usage	Citation usage	character	NA	NA	 	 
+acknowledgement	Acknowlegement text	character	NA	NA	 	 
+acknowledgement_usage	Acknowlegement usage	character	NA	NA	 	 
+modification_date (YYYY-MM-DD)	Template Modification Date	character	YYYY-MM-DD or MM/DD/YYYY	NA	 	 

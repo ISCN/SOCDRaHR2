@@ -17,6 +17,8 @@ library(tibble)
 library(ggmap)
 library(maps)
 library(mapdata)
+knitr::opts_chunk$set(eval=FALSE)
+
 #source('../R/makeKeys.R')
 #source('../R/ISCN3.R')
 ```

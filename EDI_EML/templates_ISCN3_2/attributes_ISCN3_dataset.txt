@@ -1,0 +1,20 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+ISCN 1-1 (2015-12-10)	No definition provided	character	NA	NA	 	 
+dataset_name	Dataset Name	character	NA	NA	 	 
+dataset_type (dataset_type)	No definition provided	character	NA	NA	 	 
+curator_name	Curator Name	character	NA	NA	 	 
+curator_organization	Curator Organization	character	NA	NA	 	 
+curator_email	Curator Email	character	NA	NA	 	 
+contact_name	Additional Contact Name	character	NA	NA	 	 
+contact_email	Additional Contact Email	character	NA	NA	 	 
+dataset_description	Dataset Description	character	NA	NA	 	 
+total_scount	No definition provided	character	NA	NA	 	 
+total_pcount	No definition provided	character	NA	NA	 	 
+total_lcount	No definition provided	character	NA	NA	 	 
+soc_scount	No definition provided	character	NA	NA	 	 
+soc_pcount	Calculated Soil Organic Carbon Stock Profile Count	character	NA	NA	 	 
+soc_lcount	Profile Calculated Soil Organic Carbon Stock Layer Count	character	NA	NA	 	 
+soc_scount_ISCN	No definition provided	character	NA	NA	 	 
+soc_pcount_ISCN	No definition provided	character	NA	NA	 	 
+soc_lcount_ISCN	No definition provided	character	NA	NA	 	 
+modification_date (YYYY-MM-DD)	Template Modification Date	character	YYYY-MM-DD or MM/DD/YYYY	NA	 	 

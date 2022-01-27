@@ -3,8 +3,10 @@
 
 The Kane data set in ISCN3 contains 574 layer-level rows and 144 profile-level information rows after cleaning for ISCN3.5.
 Rows weren't removed from ISCN3 because there were no duplicated entries within the layer-level and profile-level information.
-Columns were removed from ISCN3 where information was not available throughout the dataset.
+Columns were removed from ISCN3 where information was not available throughout the data set.
 Unclear information on vegetation remains in the `vegclass_local` section of the layer-level and profile-level information.
+This data set required the use of a map centered around Alaska. 
+
 
 ```{r warning=FALSE, message=FALSE}
 datasetName <- "Kane" 
@@ -199,8 +201,17 @@ ggplot(dataset_layer %>%
 ## TODO
 
 - Inquire about cryptic vegetation information located in the `vegclass_local` columns
-
-
+- Include the two data citations
+    The two urls provided lead to 404 error pages.
+    citation [2]: https://search.dataone.org/view/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fmetadata%2Feml%2Fknb-lter-bnz%2F133%2F19
+                  or
+                  https://search.dataone.org/view/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fmetadata%2Feml%2Fknb-lter-bnz%2F133%2F18
+                    Looks like same datasets with two different DOI's - contact repository to see if they want this handled a certain way
+    citation [4]: https://search.dataone.org/view/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fmetadata%2Feml%2Fknb-lter-bnz%2F132%2F18
+          Download URL: https://pasta.lternet.edu/package/data/eml/knb-lter-bnz/132/18/e9bb75742dedc686e224c41ea6e33ad8   - the twelve pits data
+                        AND
+                        https://pasta.lternet.edu/package/data/eml/knb-lter-bnz/132/18/fc7153b558a9fa8d1f02ff61f8231fde   - biophysical data and GPS coordinates
+                        
 ## Citations
 
 Please see @Kane2004, @Kane2005, @Kane2009, and @Valentine2004 for additional details and if you are using ISCN3 please cite.
