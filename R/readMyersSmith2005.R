@@ -19,7 +19,8 @@ readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
   
   #for loop to read in data from urlTable if it does not exist in local repository
   for(ii in 1:nrow(urlTable)){
-    dataFile <- file.path(dataDir, urlTable$fileName[ii])
+    #dataFile <- file.path(dataDir, urlTable$fileName[ii])
+    dataFile <- urlTable$fileName[ii]
     if(!(file.exists(dataFile))){
       download.file(urlTable$downloadURL[ii], destfile= dataFile, quiet=FALSE)
     }
