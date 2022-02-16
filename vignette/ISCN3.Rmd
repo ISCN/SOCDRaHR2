@@ -20,7 +20,7 @@ Purpose: *This vignette describes the ISCN3 data contributions.*
 ```{r setup, echo=FALSE}
 library(SOCDRaH2)
 library(ggplot2)
-dataDir <- '~/Documents/Datasets/ISCN'
+dataDir <- '~/Desktop/datasets/ISCN'
 
 knitr::opts_chunk$set(eval=FALSE)
 ```
