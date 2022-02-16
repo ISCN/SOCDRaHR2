@@ -1,7 +1,12 @@
 #' International Soil Carbon Network vs 3.3
 #' 
 #'This function calls the ISCN3 function to pull the ISCN 3_2 archive off of EDI. 
+<<<<<<< HEAD
 #'It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values. 
+=======
+#'It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values.
+#'It gaps fills missing citation information and reformats modification dates. 
+>>>>>>> KTB_dev
 #'It then returns the reformatted data.
 #'
 #'
@@ -19,11 +24,19 @@
 #' @return a list with the study table, layer table and profile table.
 #' @export
 #' 
+<<<<<<< HEAD
+=======
+
+>>>>>>> KTB_dev
 ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   # TODO: change modification dates
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
+<<<<<<< HEAD
+=======
+  # TODO: Remove repeated information that is repeated in the layer from the profile that are not ids.
+>>>>>>> KTB_dev
 
   ##Dev comments
   # data_dir <- 'ISCN3' #change to location of ISCN3
@@ -295,6 +308,13 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   replaceunknown <- c("Bonanza LTER", "USDA-FS NRS Landscape Carbon Inventory")
   dataset_layer[dataset_layer$dataset_name_sub %in% replaceunknown, 'hzn_desgn'] <- NA_character_
   
+<<<<<<< HEAD
+=======
+  #hardcoding country name
+  replacecountry <- c("UMBS_FASET")
+  dataset_layer[dataset_layer$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
+  
+>>>>>>> KTB_dev
   if(verbose){message('Cast data types in layer-level...')}
   dataset_layer <- dataset_layer %>%
     dplyr::ungroup() %>% #groups are not needed in casting and it runs faster ungrouped
