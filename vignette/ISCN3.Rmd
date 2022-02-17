@@ -1,9 +1,5 @@
 ---
-<<<<<<< HEAD
-title: "ISCN 3.3 data"
-=======
 title: "ISCN 3.3 database"
->>>>>>> KTB_dev
 author: "K Todd-Brown (ktoddbrown@ufl.edu)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -16,7 +12,6 @@ vignette: >
 
 Purpose: *This vignette describes the ISCN3 data contributions.*
 
-<<<<<<< HEAD
 ```{r setup, echo=FALSE}
 library(SOCDRaH2)
 library(ggplot2)
@@ -24,12 +19,11 @@ dataDir <- '~/Desktop/datasets/ISCN'
 
 knitr::opts_chunk$set(eval=FALSE)
 ```
-=======
+
 The ISCN database is a compilation of research and survey layer-level soil data and observations.
 The most recent archive of ISCN3 is here [https://portal-s.edirepository.org/nis/mapbrowse?scope=edi&identifier=360&revision=4](https://portal-s.edirepository.org/nis/mapbrowse?scope=edi&identifier=360&revision=4)
 
 # Setup
->>>>>>> KTB_dev
 
 ```{r fakeSetUp, eval=FALSE}
 library(SOCDRaH2)
@@ -52,16 +46,6 @@ Create a table with the table name, column name, and long description similar to
 
 Include both a description of the data sets including counts of layers and sites, histograms and tables of variables, and site map.
 List data contributions from largest to smallest.
-=======
-```{r setup, echo=FALSE}
-library(SOCDRaH2)
-library(tidyverse)
-library(knitr)
-library(kableExtra)
-dataDir <- '~/Desktop/datasets/ISCN'
-
-#knitr::opts_chunk$set(eval=FALSE)
-```
 
 ISCN is large and will take a minute to download and load.
 ISCNv3.3 does not add any new data to ISCN3 however it correct several known data short comings.
@@ -158,7 +142,6 @@ ggplot(locations) +
 #select all numerical data, pivot and histogram
 #select all factor data and tally
 ```
->>>>>>> KTB_dev
 
 
 ### Fixed issues
@@ -433,8 +416,6 @@ print(temp.outputs$depthValuePlots)
 # Citations and bibliography
 
 Create a table with each dataset and citation, repeat the dataset name as needed for each citation.
-<<<<<<< HEAD
-=======
 
 ```{r}
 #need to gap fill these or find the gap filled ones
@@ -445,5 +426,3 @@ knitr::kable(study,
   kable_styling()
 ```
 
-
->>>>>>> KTB_dev
