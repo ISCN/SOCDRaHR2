@@ -18,11 +18,7 @@ a list with the study table, layer table and profile table.
 }
 \description{
 This function calls the ISCN3 function to pull the ISCN 3_2 archive off of EDI. 
-<<<<<<< HEAD
-It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values. 
-It then returns the reformatted data.
-=======
 It cleans these tables by recasting columns to appropriate data types, and then replacing ISCN computations with NA values.
 It gaps fills missing citation information and reformats modification dates. 
->>>>>>> KTB_dev
+It then returns the reformatted data.
 }

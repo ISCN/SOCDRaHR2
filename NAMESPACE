@@ -6,10 +6,7 @@ export(ISCN4)
 export(ISCN5)
 export(formatLongTable)
 export(makeKeys)
-<<<<<<< HEAD
-=======
 export(plotISCN3)
->>>>>>> KTB_dev
 export(readBuell2011)
 export(readCPEAT)
 export(readCanandaUplandForest2018)
@@ -33,11 +30,6 @@ importFrom(dplyr,full_join)
 importFrom(dplyr,group_by)
 importFrom(dplyr,intersect)
 importFrom(dplyr,mutate)
-<<<<<<< HEAD
-importFrom(dplyr,mutate_at)
-importFrom(dplyr,select)
-importFrom(dplyr,ungroup)
-=======
 importFrom(dplyr,mutate_all)
 importFrom(dplyr,mutate_at)
 importFrom(dplyr,pull)
@@ -58,7 +50,6 @@ importFrom(ggplot2,theme_set)
 importFrom(ggplot2,xlab)
 importFrom(ggplot2,ylab)
 importFrom(knitr,kable)
->>>>>>> KTB_dev
 importFrom(lubridate,as_date)
 importFrom(lubridate,decimal_date)
 importFrom(lubridate,mdy)

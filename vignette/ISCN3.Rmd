@@ -13,6 +13,7 @@ vignette: >
 Purpose: *This vignette describes the ISCN3 data contributions.*
 
 ```{r setup, echo=FALSE}
+library(tidyverse)
 library(SOCDRaH2)
 library(ggplot2)
 dataDir <- '~/Desktop/datasets/ISCN'
@@ -31,12 +32,8 @@ library(ggplot2)
 dataDir <- 'Desktop/datasets/ISCN'
 ```
 
-<<<<<<< HEAD
 # Accessing the data
 
-```{r load, eval=FALSE}
-ISCN3.ls <- ISCN3_3(data_dir = dataDir)
-```
 
 # Description of the tables and columns
 
