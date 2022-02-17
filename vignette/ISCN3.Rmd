@@ -34,7 +34,7 @@ The most recent archive of ISCN3 is here [https://portal-s.edirepository.org/nis
 ```{r fakeSetUp, eval=FALSE}
 library(SOCDRaH2)
 library(ggplot2)
-dataDir <- 'Your/Data/Dir'
+dataDir <- 'Desktop/datasets/ISCN'
 ```
 
 <<<<<<< HEAD
@@ -58,7 +58,7 @@ library(SOCDRaH2)
 library(tidyverse)
 library(knitr)
 library(kableExtra)
-dataDir <- '~/Documents/Datasets/ISCN'
+dataDir <- '~/Desktop/datasets/ISCN'
 
 #knitr::opts_chunk$set(eval=FALSE)
 ```
