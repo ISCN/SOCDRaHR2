@@ -80,16 +80,16 @@ The University of Michigan Biological Station Forest Accelerated Succession Expe
 
 ```{r}
 study <- ISCN3.ls$study %>% 
-  filter(dataset_name == "UMBS_FASET") %>%
-  select(where(~any(!is.na(.)))) %>%
-  t()
+  filter(dataset_name == "UMBS_FASET") %>% #pull the dataset of interest
+  select(where(~any(!is.na(.)))) %>% #take only columns with non-missing values
+  t() #flip the columns and rows
 
 profile <- ISCN3.ls$profile %>%
   filter(dataset_name_sub == "UMBS_FASET")%>%
   select(where(~any(!is.na(.))))
 
 layer <- ISCN3.ls$layer %>%
-  filter(dataset_name_sub == "UMBS_FASET") %>%
+  filter(dataset_name_sub == "UMBS_FASET") #%>%
   select(where(~any(!is.na(.))))
 
 locations <- profile %>% 
@@ -128,6 +128,7 @@ ggplot(locations) +
 #select all numerical data, pivot and histogram
 #select all factor data and tally
 ```
+
 
 
 ### Fixed issues
