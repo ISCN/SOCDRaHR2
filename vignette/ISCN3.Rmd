@@ -73,7 +73,7 @@ knitr::kable(table_summary %>%
 ## University of Michigan Biological Station Forest Accelerated Succession ExperimenT (`UMBS_FASET`)
 
 ```{r}
-#temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'UMBS_FASET')
+temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'UMBS_FASET')
 ```
 
 The University of Michigan Biological Station Forest Accelerated Succession Experiment (`UMBS_FASET`) data set is uncited and unpublished.
@@ -198,6 +198,98 @@ print(temp.outputs$depthValuePlots)
     - Citations were also updated.
 
 A citation was pulled regarding the unpublished dataset and placed in the bibliography but should be revisted in ISCN 4.
+
+## Heckman lithosequence
+
+The Heckman lithosequence ('Heckman lithosequence') data set is cited.
+
+```{r}
+temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Heckman lithosequence')
+```
+
+```{r}
+study <- ISCN3.ls$study %>% 
+  filter(dataset_name == "Heckman lithosequence") %>%
+  select(where(~any(!is.na(.)))) %>%
+  t()
+
+profile <- ISCN3.ls$profile %>%
+  filter(dataset_name_sub == "Heckman lithosequence")%>%
+  select(where(~any(!is.na(.))))
+
+layer <- ISCN3.ls$layer %>%
+  filter(dataset_name_sub == "Heckman lithosequence") %>%
+  select(where(~any(!is.na(.))))
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+```
+
+```{r}
+knitr::kable(study,
+  caption = 'Citations for the Heckman lithosequence data set.') %>%
+  kable_styling()
+```
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+```
+
+### Figures
+
+The soil data in this data set were sampled from Arizona (see figure below)
+
+```{r}
+print(temp.outputs$layerMap) 
+```
+
+The profile level map shows
+
+```{r}
+print(temp.outputs$profileMap) 
+```
+
+A summary of the data set and its contacts are shown below.
+
+```{r}
+temp.outputs$summaryStudyTable%>%
+  kable_styling()
+```
+
+The layer data shows 
+
+```{r}
+temp.outputs$layerTable%>%
+  kable_styling()
+```
+
+The profile data shows 
+
+```{r}
+temp.outputs$profileTable%>%
+  kable_styling()
+```
+
+The histograms for the data set show 
+
+```{r}
+print(temp.outputs$profileValueHistograms) 
+```
+
+The layer depth plots show 
+
+```{r}
+print(temp.outputs$depthValuePlots) 
+```
+
+### Changes from ISCN3 to ISCN3.3
 
 
 ## Myers Smith
