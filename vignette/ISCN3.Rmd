@@ -215,13 +215,10 @@ A citation was pulled regarding the unpublished dataset and placed in the biblio
 ```{r warning=FALSE, message=FALSE}
 datasetName <- 'Heckman lithosequence'
 
-dataset_study <- citation_raw %>% 
+study <- ISCN3.ls$study %>% 
   filter(dataset_name == datasetName) %>%
-  select(where(function(xx){!(is.na(xx))})) %>%
-  full_join(dataset_raw %>% 
-              filter(dataset_name == datasetName) %>%
-              select(where(function(xx){!(is.na(xx))})), suffix = c('_citation', '_dataset'))%>%
-  standardCast()
+  select(where(~any(!is.na(.)))) %>%
+  t()
 
 #comparison for pre ISCN soc stock correction
 # dataset_profile_temp <- profile_raw  %>%
@@ -229,12 +226,9 @@ dataset_study <- citation_raw %>%
 #   mutate(`country (country)` = 'United States') %>%
 #   standardCast()
 
-dataset_profile <- profile_raw  %>%
-  filter(dataset_name_sub == datasetName) %>%
-  mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
-  standardCast() %>% #comment out pipe here and take a look at the profile information to figure out how to remove ISCN soc computations
-  filter(dataset_name_soc != 'ISCN SOC stock computation') %>% #in this case just remove the whole row, no other data is lost
-  select(where(function(xx){!all(is.na(xx))})) #remove the extra soc column lingering from ISCN soc computation
+profile <- ISCN3.ls$profile %>%
+  filter(dataset_name_sub == datasetName)%>%
+  select(where(~any(!is.na(.))))
 
 #comparison before SOC correction
 # dataset_layer_temp <- layer_raw %>%
@@ -242,16 +236,16 @@ dataset_profile <- profile_raw  %>%
 #   standardCast() %>%
 #   mutate(`country (country)` = 'United States')
 
-dataset_layer <- layer_raw %>%
+layer <- ISCN3.ls$layer %>%
   filter(dataset_name_sub == datasetName) %>%
-  standardCast() %>%
-  mutate(`country (country)` = 'United States') %>% #state is identified but not country, fill this in
-  mutate(dataset_name_soc = recode(dataset_name_soc, 'ISCN SOC stock computation' = '_ISCN SOC stock computation')) %>% #recode ISCN so that when we sort it it's on top to fill in the values (see next two lines of code)
-  arrange(dataset_name_sub, site_name, profile_name, layer_name, dataset_name_soc) %>% #sort the rows for the fill on the next line
-  tidyr::fill(-starts_with('soc'), .direction='down') %>% #fill in the data that was not repeated for the rows not associated with ISCN SOC computations; be careful when reusing this code that you have the right direction set for the fill!
-  filter(dataset_name_soc != '_ISCN SOC stock computation') %>% #remove the ISCN SOC stocks
-  select(-dataset_name_soc) %>% #we don't care about the flag any more
-  select(where(function(xx){!all(is.na(xx))}))
+  select(where(~any(!is.na(.))))
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 ```
 
 The `Heckman lithosequence` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
@@ -259,19 +253,19 @@ In ISCN3 the country was not set to United states originally dispite the state b
 ISCN3 also filled in the soil carbon stocks where bulk density and organic carbon was provided, this was removed for ISCN3.5.
 
 ```{r message=FALSE, warning=FALSE}
-knitr::kable(t(dataset_study))
+knitr::kable(t(study))
 ```
 
 
 There are the following factors in the profile:
 
 ```{r}
-knitr::kable(summary(dataset_profile %>% select_if(is.factor)))
+knitr::kable(summary(profile %>% select_if(is.factor)))
 ```
 
 And the following factors in the layers:
 ```{r}
-knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
+knitr::kable(summary(layer %>% select_if(is.factor)))
 ```
 
 
@@ -279,7 +273,7 @@ knitr::kable(summary(dataset_layer %>% select_if(is.factor)))
 
 ```{r}
 ggplot(data =  map_data('state') %>%
-         full_join(dataset_profile %>% 
+         full_join(profile %>% 
                      mutate(region = 
                               tolower(`state (state_province)`), by = 'region') %>%
                      group_by(region) %>% 
@@ -293,7 +287,7 @@ ggplot(data =  map_data('state') %>%
          filter(region %in% c("arizona", "utah", "new mexico", "colorado"))) + 
   geom_polygon(aes(x=long, y = lat, group = group), 
                fill = 'grey', color = 'black') + 
-  geom_point(data=dataset_profile, 
+  geom_point(data=profile, 
              aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
              shape = 'x', color = 'red') +
   coord_fixed(1.3) +
@@ -303,11 +297,11 @@ ggplot(data =  map_data('state') %>%
 
 ```{r eval=FALSE}
 #this is useful to see for the analysis but we don't want it in the report
-dataset_layer %>%
+layer %>%
   pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
   group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
   bind_rows(
-    dataset_layer %>%
+    layer %>%
       pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
       group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
   arrange(n) %>%
@@ -319,7 +313,7 @@ dataset_layer %>%
 ## Profile histograms
 
 ```{r}
-ggplot(dataset_profile %>%
+ggplot(profile %>%
          pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
                       values_to = 'measurement', names_to = 'type')) +
   geom_histogram(aes(x=measurement)) +
@@ -330,7 +324,7 @@ ggplot(dataset_profile %>%
 ## Depth plots
 
 ```{r}
-ggplot(dataset_layer %>% 
+ggplot(layer %>% 
          pivot_longer(cols=c('layer_top (cm)', 'layer_bot (cm)'),
                        values_to='depth') %>%
          pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
