@@ -20,7 +20,6 @@
 #' @return a list with the study table, layer table and profile table.
 #' @export
 #' 
-
 ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   # TODO: change modification dates
@@ -213,7 +212,7 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   if(verbose){message('done')}
   
   #hardcoding country name
-  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Oak Ridge National Lab_Lolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C")
+  replacecountry <- c("Heckman/Swanston Biscuit Burn", "Oak Ridge National Lab_Lolly_DWJ", "Lehmann Soil C&BC #1", "Schuur", "Lehmann NE US soils", "USGS Harden Yazoo", "UMBS_FASET", "Oak Ridge National Lab_TDE", "USDA-FS NRS Landscape Carbon Inventory", "USGS_S3C", "Heckman lithosequence")
   dataset_profile[dataset_profile$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
   
   #filling citations
@@ -299,9 +298,9 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   
   replaceunknown <- c("Bonanza LTER", "USDA-FS NRS Landscape Carbon Inventory")
   dataset_layer[dataset_layer$dataset_name_sub %in% replaceunknown, 'hzn_desgn'] <- NA_character_
-  
+
   #hardcoding country name
-  replacecountry <- c("UMBS_FASET")
+  replacecountry <- c("UMBS_FASET", "Heckman lithosequence")
   dataset_layer[dataset_layer$dataset_name_sub %in% replacecountry, 'country (country)'] <- 'United States'
   
   if(verbose){message('Cast data types in layer-level...')}

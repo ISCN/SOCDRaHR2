@@ -12,6 +12,15 @@ vignette: >
 
 Purpose: *This vignette describes the ISCN3 data contributions.*
 
+```{r setup, echo=FALSE}
+library(tidyverse)
+library(SOCDRaH2)
+library(ggplot2)
+dataDir <- '~/Desktop/datasets/ISCN'
+
+knitr::opts_chunk$set(eval=FALSE)
+```
+
 The ISCN database is a compilation of research and survey layer-level soil data and observations.
 The most recent archive of ISCN3 is here [https://portal-s.edirepository.org/nis/mapbrowse?scope=edi&identifier=360&revision=4](https://portal-s.edirepository.org/nis/mapbrowse?scope=edi&identifier=360&revision=4)
 
@@ -20,18 +29,20 @@ The most recent archive of ISCN3 is here [https://portal-s.edirepository.org/nis
 ```{r fakeSetUp, eval=FALSE}
 library(SOCDRaH2)
 library(ggplot2)
-dataDir <- 'Your/Data/Dir'
+dataDir <- 'Desktop/datasets/ISCN'
 ```
 
-```{r setup, echo=FALSE}
-library(SOCDRaH2)
-library(tidyverse)
-library(knitr)
-library(kableExtra)
-dataDir <- '~/Documents/Datasets/ISCN'
+# Accessing the data
 
-#knitr::opts_chunk$set(eval=FALSE)
-```
+
+# Description of the tables and columns
+
+Create a table with the table name, column name, and long description similar to what is on the EDI page.
+
+# New section for each data contribution
+
+Include both a description of the data sets including counts of layers and sites, histograms and tables of variables, and site map.
+List data contributions from largest to smallest.
 
 ISCN is large and will take a minute to download and load.
 ISCNv3.3 does not add any new data to ISCN3 however it correct several known data short comings.
@@ -412,5 +423,4 @@ knitr::kable(study,
   caption = 'Citations for each contributing dataset submision (dataname_sub).')%>%
   kable_styling()
 ```
-
 
