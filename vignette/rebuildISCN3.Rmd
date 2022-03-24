@@ -89,7 +89,7 @@ knitr::kable(study,
 ```
 
 
-This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of `r nrow(locations)` unique latitude-longitude location.
+This data set is located in the United States and has 405 layer-level observations and 137 profile-level observations of 1 unique latitude-longitude location.
 
 ```{r}
 ggplot(locations) +
@@ -100,6 +100,31 @@ ggplot(locations) +
 #remove data from the layer that appears in the profile that is not the top/bottom/soc
 #select all numerical data, pivot and histogram
 #select all factor data and tally
+```
+
+```{r}
+
+ggplot(data = layer %>%
+         pivot_longer(cols = where(is.numeric) & 
+                        !starts_with('layer') &
+                        !ends_with('(dec. deg)'),
+                      values_to = 'measurements' , names_to = 'variable') %>%
+         pivot_longer(cols=c('layer_top (cm)',
+                             'layer_bot (cm)'),
+                      values_to='depth', names_to = 'layer_variable')) +
+  geom_line(aes(x = depth, y = measurements,
+                 group = paste(dataset_name_sub, site_name, profile_name))) +
+  #coord_flip() +
+  facet_wrap(~variable,scales = 'free')
+
+ggplot(data = layer %>%
+         pivot_longer(cols = where(is.numeric) &
+                        !ends_with('(dec. deg)'),
+                      values_to = 'measurements' , names_to = 'variable')) +
+  geom_histogram(aes(x = measurements)) +
+  #coord_flip() +
+  facet_wrap(~variable, scales = 'free')
+
 ```
 
 
