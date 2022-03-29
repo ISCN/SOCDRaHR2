@@ -16,9 +16,11 @@ Purpose: *This vignette describes the ISCN3 data contributions.*
 library(tidyverse)
 library(SOCDRaH2)
 library(ggplot2)
-dataDir <- '~/Desktop/datasets/ISCN'
+library(ggmap)
+library(kableExtra)
+dataDir <- '~/Documents/Datasets/ISCN'
 
-knitr::opts_chunk$set(eval=FALSE)
+knitr::opts_chunk$set(eval=TRUE)
 ```
 
 The ISCN database is a compilation of research and survey layer-level soil data and observations.
@@ -212,7 +214,7 @@ A citation was pulled regarding the unpublished dataset and placed in the biblio
 
 ## Heckman lithosequence
 
-The Heckman lithosequence ('Heckman lithosequence') data set is cited.
+The Heckman lithosequence references @Heckman2009.
 
 ```{r}
 temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Heckman lithosequence')
@@ -355,7 +357,7 @@ The profile data shows
 
 ```{r}
 temp.outputs$profileTable%>%
-  kable_styling()
+  kableExtra::kable_styling()
 ```
 
 The histograms for the data set show 
