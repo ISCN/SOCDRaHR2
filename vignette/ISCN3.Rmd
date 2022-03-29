@@ -16,9 +16,10 @@ Purpose: *This vignette describes the ISCN3 data contributions.*
 library(tidyverse)
 library(SOCDRaH2)
 library(ggplot2)
+library(kableExtra)
 dataDir <- '~/Desktop/datasets/ISCN'
 
-knitr::opts_chunk$set(eval=FALSE)
+knitr::opts_chunk$set(eval=TRUE)
 ```
 
 The ISCN database is a compilation of research and survey layer-level soil data and observations.
@@ -47,7 +48,7 @@ List data contributions from largest to smallest.
 ISCN is large and will take a minute to download and load.
 ISCNv3.3 does not add any new data to ISCN3 however it correct several known data short comings.
 
-```{r load, message=FALSE, warning=FALSE}
+```{r load}
 ISCN3.ls <- ISCN3_3(data_dir = dataDir) #this will throw an NA coercion warning that you can ignore
 ```
 
@@ -84,7 +85,7 @@ knitr::kable(table_summary %>%
 ## University of Michigan Biological Station Forest Accelerated Succession ExperimenT (`UMBS_FASET`)
 
 ```{r}
-#temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'UMBS_FASET')
+temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'UMBS_FASET')
 ```
 
 The University of Michigan Biological Station Forest Accelerated Succession Experiment (`UMBS_FASET`) data set is uncited and unpublished.
@@ -127,7 +128,7 @@ knitr::kable(study,
   kable_styling()
 ```
 
-This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of `r nrow(locations)` unique latitude-longitude location.
+This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of r nrow(locations)` unique latitude-longitude location.
 
 ```{r}
 ggplot(locations) +
@@ -139,7 +140,6 @@ ggplot(locations) +
 #select all numerical data, pivot and histogram
 #select all factor data and tally
 ```
-
 
 ### Fixed issues
 
@@ -211,10 +211,124 @@ print(temp.outputs$depthValuePlots)
 A citation was pulled regarding the unpublished dataset and placed in the bibliography but should be revisted in ISCN 4.
 
 
+## Heckman Lithosequence
+
+```{r}
+temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Heckman lithosequence')
+```
+
+The Heckman lithosequence references @Heckman2009.
+
+```{r}
+study <- ISCN3.ls$study %>% 
+  filter(dataset_name == "Heckman lithosequence") %>%
+  select(where(~any(!is.na(.)))) %>%
+  t()
+
+profile <- ISCN3.ls$profile %>%
+  filter(dataset_name_sub == "Heckman lithosequence")%>%
+  select(where(~any(!is.na(.))))
+
+layer <- ISCN3.ls$layer %>%
+  filter(dataset_name_sub == "Heckman lithosequence") %>%
+  select(where(~any(!is.na(.))))
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+```
+
+```{r}
+knitr::kable(study,
+  caption = 'Citations for the Heckman lithosequence data set.') %>%
+  kable_styling()
+```
+
+This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of `r nrow(locations)` unique latitude-longitude location.
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+
+#remove data from the layer that appears in the profile that is not the top/bottom/soc
+#select all numerical data, pivot and histogram
+#select all factor data and tally
+```
+
+### Fixed issues
+
+Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
+
+  + The `Heckman lithosequence` data set in ISCN3 contains `r nrow(layer)` layer-level information and `r nrow(profile)` profile-level information after cleaning for ISCN3.5.
+  + In ISCN3 the country was not set to United states originally despite the state being identified as Arizona, ISCN3.5 now identifies this as `'United States'`.
+  + ISCN3 also filled in the soil carbon stocks where bulk density and organic carbon was provided, this was removed for ISCN3.5.
+  
+### Future issues
+
+  + 
+  
+### Figrues
+
+The soil data in this data set were sampled from Arizona (see figure below)
+
+```{r}
+print(temp.outputs$layerMap) 
+```
+
+The profile level map shows
+
+```{r}
+print(temp.outputs$profileMap) 
+```
+
+A summary of the data set and its contacts are shown below.
+
+```{r}
+temp.outputs$summaryStudyTable%>%
+  kable_styling()
+```
+
+The layer data shows 
+
+```{r}
+temp.outputs$layerTable%>%
+  kable_styling()
+```
+
+The profile data shows 
+
+```{r}
+temp.outputs$profileTable%>%
+  kable_styling()
+```
+
+The histograms for the data set show 
+
+```{r}
+print(temp.outputs$profileValueHistograms) 
+```
+
+The layer depth plots show 
+
+```{r}
+print(temp.outputs$depthValuePlots) 
+```
+
+### Changes from ISCN3 to ISCN3.3
+
+    - 
+
+
 ## Myers Smith
 
 ```{r}
-temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Myers-Smith')
+#temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Myers-Smith')
 ```
 
 The Myers Smith data set is published and cited.
