@@ -1,4 +1,3 @@
----
 title: "ISCN3 Rebuild"
 author: "Kathe Todd-Brown"
 date: "3/17/2022"
@@ -18,8 +17,10 @@ dataDir <- '~/Desktop/datasets/ISCN'
 ```{r load}
 ISCN3.ls <- ISCN3_3(data_dir = dataDir) #this will throw an NA coercion warning that you can ignore
 ```
+<<<<<<< HEAD
 
 ```{r sites}
+
 profile_summary <- ISCN3.ls$profile %>%
   select(dataset_name_sub, site_name) %>%
   unique()%>%
@@ -104,6 +105,7 @@ ggplot(locations) +
 #select all numerical data, pivot and histogram
 #select all factor data and tally
 ```
+
 ```{r}
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) &
@@ -117,7 +119,6 @@ ggplot(data = layer %>%
                  group = paste(dataset_name_sub, site_name, profile_name))) +
   #coord_flip() +
   facet_wrap(~variable,scales = 'free')
-
 
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) &
@@ -144,7 +145,7 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 
 ## Lu_LTER (`Lu_LTER`)
 
-The Lu_LTER data set is references @Ping2000.
+The Lu_LTER data set references @Ping2000, @Ping2002, @Ping2004, @Ping2005, and @Michaelson1996.
 
 ```{r}
 study <- ISCN3.ls$study %>% 
@@ -214,7 +215,6 @@ ggplot(data = layer %>%
                  group = paste(dataset_name_sub, site_name, profile_name))) +
   #coord_flip() +
   facet_wrap(~variable,scales = 'free')
-
 
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) &
@@ -315,7 +315,6 @@ ggplot(data = layer %>%
                  group = paste(dataset_name_sub, site_name, profile_name))) +
   #coord_flip() +
   facet_wrap(~variable,scales = 'free')
-
 
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) &
