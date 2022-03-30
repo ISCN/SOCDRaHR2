@@ -412,11 +412,6 @@ The layer depth plots show
 print(temp.outputs$depthValuePlots) 
 ```
 
-### Changes from ISCN3 to ISCN3.3
-
-    - 
-
-
 ## Myers Smith
 
 ```{r}
