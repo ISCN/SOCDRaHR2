@@ -91,7 +91,17 @@ knitr::kable(study,
 This data set is located in the United States and has 405 layer-level observations and 137 profile-level observations of 1 unique latitude-longitude location.
 
 ```{r}
-knitr::kable(profile %>% select_if(is.factor))
+profile %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
+```
+
+```{r}
+layer %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
@@ -184,10 +194,20 @@ knitr::kable(study,
   kable_styling()
 ```
 
-This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of r nrow(locations)` unique latitude-longitude location.
+This data set is located in the United States and has 103 layer level observations and 14 profile-level observations of 19 unique latitude-longitude locations.
 
 ```{r}
-knitr::kable(profile %>% select_if(is.factor))
+profile %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
+```
+
+```{r}
+layer %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
@@ -284,10 +304,20 @@ knitr::kable(study,
   kable_styling()
 ```
 
-This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of r nrow(locations)` unique latitude-longitude location.
+This data set is located in the United States and has 153 layer level observations and 4 profile-level observations of 1 unique latitude-longitude location.
 
 ```{r}
-knitr::kable(profile %>% select_if(is.factor))
+profile %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
+```
+
+```{r}
+layer %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
@@ -383,14 +413,20 @@ knitr::kable(study,
   kable_styling()
 ```
 
-The `Lu_PIMA` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+This data set is located in the United States and has 69 layer level observations and 2 profile-level observations of 11 unique latitude-longitude locations.
 
 ```{r}
-knitr::kable(summary(profile %>% select_if(is.factor)))
+profile %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
-knitr::kable(summary(layer %>% select_if(is.factor)))
+layer %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
@@ -426,10 +462,10 @@ ggplot(data = layer %>%
   #coord_flip() +
   facet_wrap(~variable,scales = 'free')
 ```
+
 ### Fixed Issues
 
-The `Lu_PIMA` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
-Soil carbon columns were all calculated by ISCN3, thus these columns were removed in ISCN3.5 but no other manipulation was required.
+  + Soil carbon columns were all calculated by ISCN3, thus these columns were removed in ISCN3.5 but no other manipulation was required
 
 ### Future Issues
 
