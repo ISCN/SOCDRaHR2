@@ -94,11 +94,17 @@ knitr::kable(study,
 This data set is located in the United States and has 405 layer level observations and 137 profile-level observations of 1 unique latitude-longitude location.
 
 ```{r}
-knitr::kable(summary(layer %>% select_if(is.factor)))
+layer %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
-knitr::kable(summary(profile %>% select_if(is.factor)))
+profile %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
@@ -113,6 +119,7 @@ ggplot(locations) +
 ```
 
 ### Figures
+
 ```{r}
 
 ggplot(data = layer %>%
@@ -150,7 +157,7 @@ Below is a list of known issues that were addressed between ISCN 3 and ISCN 3.3
 
 ## Lu_LTER(`Lu_LTER`)
 
-Please see @Ping2000, @Ping2002, @Ping2004, @Ping2005, and @Michaelson1996 for additional details and if you are using ISCN3 please cite.
+The Lu_LTER data set references @Ping2000, @Ping2002, @Ping2004, @Ping2005, and @Michaelson1996.
 
 ```{r}
 study <- ISCN3.ls$study %>% 
@@ -190,14 +197,20 @@ knitr::kable(study,
   kable_styling()
 ```
 
-This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of `r nrow(locations)` unique latitude-longitude location.
+This data set is located in the United States and has 103 layer level observations and 14 profile-level observations of 19 unique latitude-longitude locations.
 
 ```{r}
-knitr::kable(summary(layer %>% select_if(is.factor)))
+layer %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
-knitr::kable(summary(profile %>% select_if(is.factor)))
+profile %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
@@ -212,6 +225,7 @@ ggplot(locations) +
 ```
 
 ### Figures
+
 ```{r}
 
 ggplot(data = layer %>%
@@ -251,7 +265,7 @@ X Commit and link the commit to the issue
 
 ## Lu_PIMA
 
-Please see @Ping2010 for additional details and if you are using ISCN3 please cite.
+The Lu_PIMA data set references @Ping2010.
 
 ```{r}
 study <- ISCN3.ls$study %>% 
@@ -291,14 +305,20 @@ knitr::kable(study,
   kable_styling()
 ```
 
-The `Lu_PIMA` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+The `Lu_PIMA` data set in ISCN3 contains 69 layer-level information and 2 profile-level information after cleaning for ISCN3.5.
 
 ```{r}
-knitr::kable(summary(layer %>% select_if(is.factor)))
+layer %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
-knitr::kable(summary(profile %>% select_if(is.factor)))
+profile %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
@@ -335,7 +355,7 @@ ggplot(data = layer %>%
 ```
 ### Fixed Issues
 
-The `Lu_PIMA` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+The `Lu_PIMA` data set in ISCN3 contains 69 layer-level information and 2 profile-level information after cleaning for ISCN3.5.
 Soil carbon columns were all calculated by ISCN3, thus these columns were removed in ISCN3.5 but no other manipulation was required.
 
 ### Future Issues
@@ -343,7 +363,7 @@ Soil carbon columns were all calculated by ISCN3, thus these columns were remove
 
 ## Schuur
 
-Please see @Schuur2007 for additional details and if you are using ISCN3 please cite.
+The Schuur data set references @Schuur2007.
 
 ```{r}
 study <- ISCN3.ls$study %>% 
@@ -383,14 +403,20 @@ knitr::kable(study,
   kable_styling()
 ```
 
-The `Schuur` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+The `Schuur` data set in ISCN3 contains 153 layer-level information and 4 profile-level information after cleaning for ISCN3.5.
 
 ```{r}
-knitr::kable(summary(layer %>% select_if(is.factor)))
+layer %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
-knitr::kable(summary(profile %>% select_if(is.factor)))
+profile %>% select_if(is.factor) %>%
+  mutate(across(.fns = droplevels)) %>%
+  summary() %>%
+  knitr::kable()
 ```
 
 ```{r}
