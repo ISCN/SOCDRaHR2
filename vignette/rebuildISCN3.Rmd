@@ -17,7 +17,7 @@ library(ggmap)
 library(kableExtra)
 dataDir <- '~/Documents/Datasets/ISCN'
 
-knitr::opts_chunk$set(eval=FALSE, echo=FALSE)
+knitr::opts_chunk$set(eval=TRUE, echo=FALSE)
 ```
 
 ```{r load}
