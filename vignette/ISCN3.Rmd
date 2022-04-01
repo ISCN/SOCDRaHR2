@@ -16,9 +16,16 @@ Purpose: *This vignette describes the ISCN3 data contributions.*
 library(tidyverse)
 library(SOCDRaH2)
 library(ggplot2)
+
+library(kableExtra)
 dataDir <- '~/Desktop/datasets/ISCN'
 
-knitr::opts_chunk$set(eval=FALSE)
+library(ggmap)
+library(kableExtra)
+dataDir <- '~/Documents/Datasets/ISCN'
+
+
+knitr::opts_chunk$set(eval=TRUE)
 ```
 
 The ISCN database is a compilation of research and survey layer-level soil data and observations.
@@ -47,7 +54,7 @@ List data contributions from largest to smallest.
 ISCN is large and will take a minute to download and load.
 ISCNv3.3 does not add any new data to ISCN3 however it correct several known data short comings.
 
-```{r load, message=FALSE, warning=FALSE}
+```{r load}
 ISCN3.ls <- ISCN3_3(data_dir = dataDir) #this will throw an NA coercion warning that you can ignore
 ```
 
@@ -127,7 +134,7 @@ knitr::kable(study,
   kable_styling()
 ```
 
-This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of `r nrow(locations)` unique latitude-longitude location.
+This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of r nrow(locations)` unique latitude-longitude location.
 
 ```{r}
 ggplot(locations) +
@@ -139,7 +146,6 @@ ggplot(locations) +
 #select all numerical data, pivot and histogram
 #select all factor data and tally
 ```
-
 
 ### Fixed issues
 
@@ -210,7 +216,6 @@ print(temp.outputs$depthValuePlots)
 
 A citation was pulled regarding the unpublished dataset and placed in the bibliography but should be revisted in ISCN 4.
 
-<<<<<<< HEAD
 # Heckman lithosequence
 
 ```{r warning=FALSE, message=FALSE}
@@ -239,14 +244,10 @@ profile <- ISCN3.ls$profile %>%
 
 layer <- ISCN3.ls$layer %>%
   filter(dataset_name_sub == datasetName) %>%
-=======
+
 ## Heckman lithosequence
 
-The Heckman lithosequence ('Heckman lithosequence') data set is cited.
-
-```{r}
-temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Heckman lithosequence')
-```
+The Heckman lithosequence references @Heckman2009.
 
 ```{r}
 study <- ISCN3.ls$study %>% 
@@ -260,7 +261,7 @@ profile <- ISCN3.ls$profile %>%
 
 layer <- ISCN3.ls$layer %>%
   filter(dataset_name_sub == "Heckman lithosequence") %>%
->>>>>>> origin/MT_dev
+
   select(where(~any(!is.na(.))))
 
 locations <- profile %>% 
@@ -269,107 +270,28 @@ locations <- profile %>%
               select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
   unique() %>%
   filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
-```
 
-<<<<<<< HEAD
+#Check to see if there is different/new information in the layer table that is not in the profile
+#profile_info_layer <- layer %>%
+#  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
+#  unique()
+#
+#series <- profile_info_layer %>% 
+#  select(profile_name, soil_taxon, soil_series) %>% 
+#  unique() %>%
+#  anti_join(profile)
+````
+
 The `Heckman lithosequence` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
 In ISCN3 the country was not set to United states originally dispite the state being identified as Arizona, ISCN3.5 now identifies this as `'United States'`.
 ISCN3 also filled in the soil carbon stocks where bulk density and organic carbon was provided, this was removed for ISCN3.5.
-
-```{r message=FALSE, warning=FALSE}
-knitr::kable(t(study))
-```
-
-
-There are the following factors in the profile:
-
-```{r}
-knitr::kable(summary(profile %>% select_if(is.factor)))
-```
-
-And the following factors in the layers:
-```{r}
-knitr::kable(summary(layer %>% select_if(is.factor)))
-```
-
-
-## Location
-
-```{r}
-ggplot(data =  map_data('state') %>%
-         full_join(profile %>% 
-                     mutate(region = 
-                              tolower(`state (state_province)`), by = 'region') %>%
-                     group_by(region) %>% 
-                     tally, by='region')) + 
-  geom_polygon(aes(x=long, y = lat, group=group, fill = n), 
-               color = 'black') +
-  coord_fixed(1.3) + 
-  theme_nothing() 
-
-ggplot(data =  map_data('state') %>% 
-         filter(region %in% c("arizona", "utah", "new mexico", "colorado"))) + 
-  geom_polygon(aes(x=long, y = lat, group = group), 
-               fill = 'grey', color = 'black') + 
-  geom_point(data=profile, 
-             aes(x = `long (dec. deg)`, y = `lat (dec. deg)`),
-             shape = 'x', color = 'red') +
-  coord_fixed(1.3) +
-  theme_nothing() 
-
-```
-
-```{r eval=FALSE}
-#this is useful to see for the analysis but we don't want it in the report
-layer %>%
-  pivot_longer(cols = intersect(names(.), type_cols$num_cols), values_drop_na = TRUE) %>%
-  group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) %>%
-  bind_rows(
-    layer %>%
-      pivot_longer(cols = intersect(names(.), type_cols$factor_cols), values_drop_na = TRUE) %>%
-      group_by(name) %>% summarize(n = length(value), unique_n = length(unique(value))) ) %>%
-  arrange(n) %>%
-  knitr::kable()
-```
-
-
-
-## Profile histograms
-
-```{r}
-ggplot(profile %>%
-         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
-                      values_to = 'measurement', names_to = 'type')) +
-  geom_histogram(aes(x=measurement)) +
-  facet_wrap(~type, scales='free') +
-  theme_bw()
-```
-
-## Depth plots
-
-```{r}
-ggplot(layer %>% 
-         pivot_longer(cols=c('layer_top (cm)', 'layer_bot (cm)'),
-                       values_to='depth') %>%
-         pivot_longer(cols = intersect(names(.), type_cols$num_cols), 
-                      values_to = 'measurement', names_to = 'type')) +
-         geom_line(aes(x=depth, y= measurement, group = profile_name)) +
-  facet_wrap(~type, scales='free')
-```
-
-## TODO
-
-- Follow up with Heckman to get key for `root_quant_size` and `color`.
-
-## Citations
-
-Please see @Heckman2009 for additional details and if you are using ISCN3 please cite.
 =======
 ```{r}
 knitr::kable(study,
   caption = 'Citations for the Heckman lithosequence data set.') %>%
   kable_styling()
 ```
+>>>>>>> ISCN3_datareport
 
 ```{r}
 ggplot(locations) +
@@ -379,6 +301,103 @@ ggplot(locations) +
 ```
 
 ### Figures
+
+The soil data in this data set were sampled from Arizona (see figure below)
+
+```{r}
+knitr::kable(study,
+  caption = 'Citations for the Heckman lithosequence data set.') %>%
+  kable_styling()
+```
+
+### Changes from ISCN3 to ISCN3.3
+
+The `Heckman lithosequence` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+In ISCN3 the country was not set to United states originally dispite the state being identified as Arizona, ISCN3.5 now identifies this as `'United States'`.
+ISCN3 also filled in the soil carbon stocks where bulk density and organic carbon was provided, this was removed for ISCN3.5.
+
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+```
+
+
+### Figures
+
+The soil data in this data set were sampled from Arizona (see figure below)
+
+There are the following factors in the profile:
+
+
+```{r}
+print(temp.outputs$layerMap) 
+```
+
+The profile level map shows
+
+```{r}
+print(temp.outputs$profileMap) 
+```
+
+A summary of the data set and its contacts are shown below.
+
+```{r}
+temp.outputs$summaryStudyTable%>%
+  kable_styling()
+```
+
+The layer data shows 
+
+```{r}
+temp.outputs$layerTable%>%
+  kable_styling()
+```
+
+The profile data shows 
+
+```{r}
+temp.outputs$profileTable%>%
+  kable_styling()
+```
+
+The histograms for the data set show 
+
+
+```{r}
+knitr::kable(study,
+  caption = 'Citations for the Heckman lithosequence data set.') %>%
+  kable_styling()
+```
+
+This data set is located in the United States and has `r nrow(layer)` layer level observations and `r nrow(profile)` profile-level observations of `r nrow(locations)` unique latitude-longitude location.
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+
+#remove data from the layer that appears in the profile that is not the top/bottom/soc
+#select all numerical data, pivot and histogram
+#select all factor data and tally
+```
+
+### Fixed issues
+
+Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
+
+  + The `Heckman lithosequence` data set in ISCN3 contains `r nrow(layer)` layer-level information and `r nrow(profile)` profile-level information after cleaning for ISCN3.5.
+  + In ISCN3 the country was not set to United states originally despite the state being identified as Arizona, ISCN3.5 now identifies this as `'United States'`.
+  + ISCN3 also filled in the soil carbon stocks where bulk density and organic carbon was provided, this was removed for ISCN3.5.
+  
+### Future issues
+
+  + 
+  
+### Figrues
 
 The soil data in this data set were sampled from Arizona (see figure below)
 
@@ -425,14 +444,10 @@ The layer depth plots show
 print(temp.outputs$depthValuePlots) 
 ```
 
-### Changes from ISCN3 to ISCN3.3
-
->>>>>>> origin/MT_dev
-
 ## Myers Smith
 
 ```{r}
-temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Myers-Smith')
+#temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Myers-Smith')
 ```
 
 The Myers Smith data set is published and cited.
@@ -481,7 +496,7 @@ The profile data shows
 
 ```{r}
 temp.outputs$profileTable%>%
-  kable_styling()
+  kableExtra::kable_styling()
 ```
 
 The histograms for the data set show 
