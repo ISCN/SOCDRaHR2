@@ -5,7 +5,10 @@ date: "3/17/2022"
 output: html_document
 ---
 
-```{r setup}
+
+Purpose: *This vignette describes the ISCN3 data contributions.*
+
+```{r setup, message=FALSE, warning=FALSE}
 library(SOCDRaH2)
 library(tidyverse)
 library(knitr)
@@ -14,7 +17,7 @@ library(ggmap)
 library(kableExtra)
 dataDir <- '~/Documents/Datasets/ISCN'
 
-#knitr::opts_chunk$set(eval=TRUE)
+knitr::opts_chunk$set(eval=FALSE, echo=FALSE)
 ```
 
 ```{r load}
@@ -91,7 +94,7 @@ locations <- profile %>%
 #  anti_join(profile)
 ```
 
-### Tables
+
 
 ```{r eval=FALSE}
 study %>%
@@ -110,7 +113,7 @@ profile %>% select_if(is.factor) %>%
   knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
 
-### Figures
+
 
 
 ```{r eval=FALSE}
@@ -201,7 +204,7 @@ locations <- profile %>%
 #  anti_join(profile)
 ```
 
-### Tables
+
 
 ```{r}
 study %>%
@@ -220,7 +223,7 @@ profile %>% select_if(is.factor) %>%
   knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
 
-### Figures
+
 
 
 ```{r}
@@ -307,7 +310,7 @@ locations <- profile %>%
 #  anti_join(profile)
 ```
 
-### Tables
+
 
 ```{r}
 study %>%
@@ -326,7 +329,7 @@ profile %>% select_if(is.factor) %>%
   knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
 
-### Figures
+
 
 
 ```{r}
@@ -408,7 +411,7 @@ locations <- profile %>%
 #  anti_join(profile)
 ```
 
-### Tables
+
 
 ```{r}
 study %>%
@@ -427,7 +430,7 @@ profile %>% select_if(is.factor) %>%
   knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
 
-### Figures
+
 
 
 ```{r}
@@ -470,31 +473,9 @@ In profile, the ISCN SOC to 1m computation rows were removed, getting rid of dup
 
 None that we are aware of
 
-## Lu_PIMA
+## Lu_PIMA (`Lu_PIMA`)
 
-The Lu_PIMA data set references @Ping2010.
-
-The `Lu_PIMA` data set in ISCN3 contains 69 layer-level information and 2 profile-level information after cleaning for ISCN3.5.
-Soil carbon columns were all calculated by ISCN3, thus these columns were removed in ISCN3.5 but no other manipulation was required.
->>>>>>> origin/MT_dev
-
-Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
-
-  + The layer tables were adjusted to reassign the value "NA" to a column with "?".
-  + The clean layer and clean profile table were checked for accuracy of information.
-  + A citation was added to the bibliography file.
-  + Four columns were removed from the original dataset that remove the soc columns from both the dataset_layer table and dataset_profile table.
-  
-### Future issues
-  + Cite a database referenced in the dataset_study table
-      The url links provided lead to a 404 error page.
-        The correct url for dataone: https://search.dataone.org/view/knb-lter-bnz.366.16
-        The datasite download link provided: http://www.lter.uaf.edu/404.php
-          This link leads to a 404 error, contacting the researchers is necessary.
-
-## LuPima ('Lu_PIMA')
-
-The Lu-PIMA dataset is cited @Ping2010.
+The `Lu_PIMA` data set (@Ping2010) in ISCN3 contains 69 layer-level information and 2 profile-level information after cleaning for ISCN3.5.
 This data set is located in the United States and has 69 layer level observations and 0 profile-level observations of 11 unique latitude-longitude locations in the layer-level table.
 
 ```{r }
@@ -534,7 +515,7 @@ locations <- #profile %>%
 #  anti_join(profile)
 ```
 
-### Tables
+
 
 ```{r}
 study %>%
@@ -553,7 +534,7 @@ layer %>% select_if(is.factor) %>%
 #  knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
 
-### Figures
+
 
 
 ```{r}
@@ -589,9 +570,15 @@ ggplot(data = layer %>%
 
 ### Fixed issues
 
-
-In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data.
-
+  + In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data.
+  + The layer tables were adjusted to reassign the value "NA" to a column with "?".
+  + The clean layer and clean profile table were checked for accuracy of information.
+  + A citation was added to the bibliography file.
+  + Four columns were removed from the original dataset that remove the soc columns from both the dataset_layer table and dataset_profile table.
+  
 ### Future issues
-
-None that we are aware of
+  + Cite a database referenced in the dataset_study table
+      The url links provided lead to a 404 error page.
+        The correct url for dataone: https://search.dataone.org/view/knb-lter-bnz.366.16
+        The datasite download link provided: http://www.lter.uaf.edu/404.php
+          This link leads to a 404 error, contacting the researchers is necessary.
