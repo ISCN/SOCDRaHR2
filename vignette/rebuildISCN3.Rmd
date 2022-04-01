@@ -2,7 +2,9 @@
 title: "ISCN3 Rebuild"
 author: "Kathe Todd-Brown [[your name here]]]"
 date: "3/17/2022"
-output: html_document
+output: 
+  html_document: 
+    toc: yes
 ---
 
 
