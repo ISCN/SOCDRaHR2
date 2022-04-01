@@ -16,8 +16,14 @@ Purpose: *This vignette describes the ISCN3 data contributions.*
 library(tidyverse)
 library(SOCDRaH2)
 library(ggplot2)
+
 library(kableExtra)
 dataDir <- '~/Desktop/datasets/ISCN'
+
+library(ggmap)
+library(kableExtra)
+dataDir <- '~/Documents/Datasets/ISCN'
+
 
 knitr::opts_chunk$set(eval=TRUE)
 ```
@@ -212,11 +218,7 @@ A citation was pulled regarding the unpublished dataset and placed in the biblio
 
 ## Heckman lithosequence
 
-The Heckman lithosequence ('Heckman lithosequence') data set is cited.
-
-```{r}
-temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Heckman lithosequence')
-```
+The Heckman lithosequence references @Heckman2009.
 
 ```{r}
 study <- ISCN3.ls$study %>% 
@@ -238,6 +240,16 @@ locations <- profile %>%
               select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
   unique() %>%
   filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+#Check to see if there is different/new information in the layer table that is not in the profile
+#profile_info_layer <- layer %>%
+#  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
+#  unique()
+#
+#series <- profile_info_layer %>% 
+#  select(profile_name, soil_taxon, soil_series) %>% 
+#  unique() %>%
+#  anti_join(profile)
 ```
 
 ```{r}
@@ -256,6 +268,34 @@ ggplot(locations) +
 ### Figures
 
 The soil data in this data set were sampled from Arizona (see figure below)
+
+```{r}
+knitr::kable(study,
+  caption = 'Citations for the Heckman lithosequence data set.') %>%
+  kable_styling()
+```
+
+### Changes from ISCN3 to ISCN3.3
+
+The `Heckman lithosequence` data set in ISCN3 contains `r nrow(dataset_layer)` layer-level information and `r nrow(dataset_profile)` profile-level information after cleaning for ISCN3.5.
+In ISCN3 the country was not set to United states originally dispite the state being identified as Arizona, ISCN3.5 now identifies this as `'United States'`.
+ISCN3 also filled in the soil carbon stocks where bulk density and organic carbon was provided, this was removed for ISCN3.5.
+
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+```
+
+
+### Figures
+
+The soil data in this data set were sampled from Arizona (see figure below)
+
+There are the following factors in the profile:
+
 
 ```{r}
 print(temp.outputs$layerMap) 
@@ -289,50 +329,6 @@ temp.outputs$profileTable%>%
 ```
 
 The histograms for the data set show 
-
-```{r}
-print(temp.outputs$profileValueHistograms) 
-```
-
-The layer depth plots show 
-
-```{r}
-print(temp.outputs$depthValuePlots) 
-```
-
-### Changes from ISCN3 to ISCN3.3
-
-
-## Heckman Lithosequence
-
-```{r}
-temp.outputs <- plotISCN3(ISCN3 = ISCN3.ls, 'Heckman lithosequence')
-```
-
-The Heckman lithosequence references @Heckman2009.
-
-```{r}
-study <- ISCN3.ls$study %>% 
-  filter(dataset_name == "Heckman lithosequence") %>%
-  select(where(~any(!is.na(.)))) %>%
-  t()
-
-profile <- ISCN3.ls$profile %>%
-  filter(dataset_name_sub == "Heckman lithosequence")%>%
-  select(where(~any(!is.na(.))))
-
-layer <- ISCN3.ls$layer %>%
-  filter(dataset_name_sub == "Heckman lithosequence") %>%
-  select(where(~any(!is.na(.))))
-
-locations <- profile %>% 
-  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
-  bind_rows(layer %>%
-              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
-  unique() %>%
-  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
-
-```
 
 ```{r}
 knitr::kable(study,
@@ -411,6 +407,9 @@ The layer depth plots show
 ```{r}
 print(temp.outputs$depthValuePlots) 
 ```
+=======
+Please see @Heckman2009 for additional details and if you are using ISCN3 please cite.
+>>>>>>> origin/MT_dev
 
 ## Myers Smith
 
@@ -464,7 +463,7 @@ The profile data shows
 
 ```{r}
 temp.outputs$profileTable%>%
-  kable_styling()
+  kableExtra::kable_styling()
 ```
 
 The histograms for the data set show 
