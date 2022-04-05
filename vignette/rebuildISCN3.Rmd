@@ -11,15 +11,14 @@ library(ggplot2)
 library(kableExtra)
 dataDir <- '~/Desktop/datasets/ISCN'
 
-#knitr::opts_chunk$set(eval=FALSE)
+#knitr::opts_chunk$set(eval=TRUE)
 ```
 
 ```{r load}
 ISCN3.ls <- ISCN3_3(data_dir = dataDir) #this will throw an NA coercion warning that you can ignore
 ```
 
-```{r sites}
-
+```{r summaries}
 profile_summary <- ISCN3.ls$profile %>%
   select(dataset_name_sub, site_name) %>%
   unique()%>%
