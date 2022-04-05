@@ -18,7 +18,7 @@ library(knitr)
 library(ggplot2)
 library(ggmap)
 library(kableExtra)
-dataDir <- '~/Documents/Datasets/ISCN'
+dataDir <- '~/Desktop/Datasets/ISCN'
 
 knitr::opts_chunk$set(eval=TRUE, echo=FALSE)
 ```
@@ -53,7 +53,6 @@ knitr::kable(table_summary %>%
 ```
 
 # Data Contributions
-
 
 ## TEMPLATE (`data_name_sub identifier`)
 
@@ -98,7 +97,6 @@ locations <- profile %>%
 ```
 
 
-
 ```{r eval=FALSE}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
@@ -115,8 +113,6 @@ profile %>% select_if(is.factor) %>%
   tally() %>%
   knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
-
-
 
 
 ```{r eval=FALSE}
@@ -144,11 +140,6 @@ ggplot(data = layer %>%
 ### Fixed issues
 
 *Copy this from the data report*
-
-Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
-
-
-  + In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data
   
 ### Future issues
 
@@ -160,9 +151,7 @@ None we are aware of
 
 The University of Michigan Biological Station Forest Accelerated Succession Experiment (`UMBS_FASET`) data set is uncited and unpublished.
 
-
 This data set is located in the United States and has 405 layer-level observations and 137 profile-level observations of 1 unique latitude-longitude location.
-
 
 ```{r}
 #subset the data
@@ -224,7 +213,6 @@ ggplot(locations) +
   geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
   theme(axis.title = element_blank())
 
-
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) &
                         !ends_with('(dec. deg)'), #pull out the numerics that aren't lat/long
@@ -246,8 +234,11 @@ ggplot(data = layer %>%
   geom_line(aes(x = depth, y = measurements,
                  group = paste(dataset_name_sub, site_name, profile_name))) +
   facet_wrap(~variable,scales = 'free')
-```
 
+#remove data from the layer that appears in the profile that is not the top/bottom/soc
+#select all numerical data, pivot and histogram
+#select all factor data and tally
+```
 
 ### Fixed issues
 
@@ -364,7 +355,6 @@ None we are aware of
 
 The Schuur data set references @Schuur2007.
 
-
 ```{r}
 current_dataset <- "Schuur"
 
@@ -417,8 +407,6 @@ profile %>% select_if(is.factor) %>%
 ```
 
 
-
-
 ```{r}
 ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
@@ -448,10 +436,7 @@ ggplot(data = layer %>%
   facet_wrap(~variable,scales = 'free')
 ```
 
-
-
 ### Fixed issues
-
 
 In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data.
 
@@ -502,7 +487,6 @@ locations <- #profile %>%
 ```
 
 
-
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
@@ -519,8 +503,6 @@ layer %>% select_if(is.factor) %>%
 #  tally() %>%
 #  knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
-
-
 
 
 ```{r}
@@ -550,8 +532,6 @@ ggplot(data = layer %>%
   geom_line(aes(x = depth, y = measurements,
                  group = paste(dataset_name_sub, site_name, profile_name))) +
   facet_wrap(~variable,scales = 'free')
-
-
 ```
 
 ### Fixed issues
@@ -568,3 +548,194 @@ ggplot(data = layer %>%
         The correct url for dataone: https://search.dataone.org/view/knb-lter-bnz.366.16
         The datasite download link provided: http://www.lter.uaf.edu/404.php
           This link leads to a 404 error, contacting the researchers is necessary.
+
+
+## USGS Muhs (`USGS Muhs`)
+
+The USGS Muhs dataset references @Muhs2003.
+This data set is located in the United States and has 395 layer level observations and YYY profile-level observations of 4 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
+
+```{r}
+#subset the data
+current_dataset <- "USGS Muhs"
+
+study <- ISCN3.ls$study %>% 
+  filter(dataset_name == current_dataset) %>%
+  select(where(~any(!is.na(.)))) %>%
+  t()
+
+profile <- ISCN3.ls$profile %>%
+  filter(dataset_name_sub == current_dataset)%>%
+  select(where(~any(!is.na(.))))
+
+layer <- ISCN3.ls$layer %>%
+  filter(dataset_name_sub == current_dataset) %>%
+  select(where(~any(!is.na(.))))
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+#Check to see if there is different/new information in the layer table that is not in the profile
+#profile_info_layer <- layer %>%
+#  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
+#  unique()
+#
+#series <- profile_info_layer %>% 
+#  select(profile_name, soil_taxon, soil_series) %>% 
+#  unique() %>%
+#  anti_join(profile)
+```
+
+
+```{r}
+study %>%
+  knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
+
+layer %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Layer-level catagorical variable counts.')
+
+profile %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Profile-level catagorical variable counts.')
+```
+
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+
+ggplot(data = layer %>%
+         pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
+                        !starts_with('layer') & #as long as they aren't layer bounds
+                        !ends_with('(dec. deg)'), #and aren't lat/lon
+                      #create the paired measurement-variable tables
+                      values_to = 'measurements', names_to = 'variable') %>%
+         pivot_longer(cols = c('layer_top (cm)',
+                               'layer_bot (cm)',), #pull out the layers
+                      #create a paired depth-variable
+                      values_to='depth', names_to = 'layer_variable')) +
+  #make nifty line plots that span the layer boundaries
+  geom_line(aes(x = depth, y = measurements,
+                 group = paste(dataset_name_sub, site_name, profile_name))) +
+  facet_wrap(~variable,scales = 'free')
+```
+
+### Fixed issues
+
+Repeated information on soil carbon stocks was removed from the layer and profile information of the data set.
+There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning.
+In addition, the site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
+  
+### Future issues
+
+None we are aware of
+
+
+## USGS Harden Yazoo (`USGS Harden Yazoo`)
+
+The USGS Harden Yazoo dataset references @Harden1999 and @Huntington1998.
+This data set is located in the United States and has 234 layer level observations and 17 profile-level observations of 4 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
+
+*To use this section remove the code chunk eval arguments and set the current_dataset to the right identifier.*
+
+```{r}
+#subset the data
+current_dataset <- "USGS Harden Yazoo"
+
+study <- ISCN3.ls$study %>% 
+  filter(dataset_name == current_dataset) %>%
+  select(where(~any(!is.na(.)))) %>%
+  t()
+
+profile <- ISCN3.ls$profile %>%
+  filter(dataset_name_sub == current_dataset)%>%
+  select(where(~any(!is.na(.))))
+
+layer <- ISCN3.ls$layer %>%
+  filter(dataset_name_sub == current_dataset) %>%
+  select(where(~any(!is.na(.))))
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+#Check to see if there is different/new information in the layer table that is not in the profile
+#profile_info_layer <- layer %>%
+#  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
+#  unique()
+#
+#series <- profile_info_layer %>% 
+#  select(profile_name, soil_taxon, soil_series) %>% 
+#  unique() %>%
+#  anti_join(profile)
+```
+
+
+```{r}
+study %>%
+  knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
+
+layer %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Layer-level catagorical variable counts.')
+
+profile %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Profile-level catagorical variable counts.')
+```
+
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+
+ggplot(data = layer %>%
+         pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
+                        !starts_with('layer') & #as long as they aren't layer bounds
+                        !ends_with('(dec. deg)'), #and aren't lat/lon
+                      #create the paired measurement-variable tables
+                      values_to = 'measurements', names_to = 'variable') %>%
+         pivot_longer(cols = c('layer_top (cm)',
+                               'layer_bot (cm)',), #pull out the layers
+                      #create a paired depth-variable
+                      values_to='depth', names_to = 'layer_variable')) +
+  #make nifty line plots that span the layer boundaries
+  geom_line(aes(x = depth, y = measurements,
+                 group = paste(dataset_name_sub, site_name, profile_name))) +
+  facet_wrap(~variable,scales = 'free')
+```
+
+### Fixed issues
+
+Half of the rows (234) of dataset_layer were removed from ISCN3 because they were repetitive entries from ISCN stock computation.
+3 columns of dataset_layer were removed from ISCN3 because they were determined using soc.
+17 rows of dataset_profile were removed from ISCN3 because they were filled using ISCN stock computation.
+5 columns of dataset_profile were removed from ISCN 3 because they were determined using soc.
+Values in column  country (country) were reassigned to "united States" in the dataset_layer and dataset_profile tables because it was the known location of the collection state.
+Values in the "hzn" column of the dataset_layer table were reassigned to an NA character from "?", a nonspecific character.
+Ggplot maps were modified to ensure datasets accurately focused on Southeastern United States.
+Cryptic site notes in dataset_profile table were resolved to contain full citations.
+  
+### Future issues
+
+Fix remaining SOC column in Dataset_layer table?

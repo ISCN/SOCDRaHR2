@@ -29,8 +29,9 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
 
   ##Dev comments
   # data_dir <- 'ISCN3' #change to location of ISCN3
-  # data_dir <- '~/Documents/Datasets/ISCN' #change to location of ISCN3
-  # datasets_exclude <- c() #c('NRCS Sept/2014', 'NRCS 2014:2011 name aliasing')
+  #library(SOCDRaH2)
+  #data_dir <- '~/Documents/Datasets/ISCN' #change to location of ISCN3
+  # datasets_exclude <- c('NRCS Sept/2014', 'NRCS 2014:2011 name aliasing')
   # verbose <- TRUE
   
   
@@ -122,10 +123,11 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
                                 'dataset_name_sub'),
                     noAction_cols = c("ISCN 1-1 (2015-12-10)", "locator_alias", "locator_parent_alias", "dataset_name_soc"))
   
+  ## Checking to see if we got all the columns in the tables
   #missingCols <- setdiff(unique(c(names(citation_raw), names(dataset_raw), names(profile_raw), names(layer_raw))), unlist(type_cols))
   #if(length(missingCols) > 0){
   #  cat(paste('Column names unspecified:', paste(missingCols, collapse = '", "')))
- # }
+  #}
   
   
   
@@ -142,8 +144,8 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   standardCast <- function(data, column_types = type_cols){
     return(data %>%
              dplyr::select(where(function(xx){!all(is.na(xx))})) %>%
-             dplyr::mutate_at(dplyr::intersect(c(column_types$num_cols, column_types$date_cols),
-                                 names(.)), as.numeric) %>%
+             dplyr::mutate(dplyr::across(dplyr::intersect(c(column_types$num_cols, column_types$date_cols),
+                                 names(.)), as.numeric)) %>%
              dplyr::mutate_at(dplyr::intersect(column_types$factor_cols, names(.)), as.factor) %>%
              dplyr::mutate_at(dplyr::intersect(column_types$date_cols, names(.)), function(xx){
                ##Both conditions will be run but things throw warnings for the wrong conditional... supressing this function
