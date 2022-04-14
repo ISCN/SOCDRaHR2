@@ -81,12 +81,19 @@ layer <- ISCN3.ls$layer %>%
   filter(dataset_name_sub == current_dataset) %>%
   select(where(~any(!is.na(.))))
 
-locations <- profile %>% 
-  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
-  bind_rows(layer %>%
-              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+locations <- layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)%>% #) %>%
   unique() %>%
   filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(locations) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+}
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -110,6 +117,8 @@ layer %>% select_if(is.factor) %>%
   group_by_all() %>%
   tally() %>%
   knitr::kable(caption = 'Layer-level catagorical variable counts.')
+
+if (nrow(profile) != 0){
 
 profile %>% select_if(is.factor) %>%
   pivot_longer(cols = everything(), names_to = 'column_name') %>%
@@ -570,3 +579,221 @@ ggplot(data = layer %>%
         The correct url for dataone: https://search.dataone.org/view/knb-lter-bnz.366.16
         The datasite download link provided: http://www.lter.uaf.edu/404.php
           This link leads to a 404 error, contacting the researchers is necessary.
+
+## Boby_Mack (`Boby_Mack`)
+
+ See @Boby2010 for additional details and if you are using ISCN3 please cite.
+This data set is located in the United States and has XXX layer level observations and YYY profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
+
+```{r}
+#subset the data
+current_dataset <- "Boby_Mack"
+
+study <- ISCN3.ls$study %>% 
+  filter(dataset_name == current_dataset) %>%
+  select(where(~any(!is.na(.)))) %>%
+  t()
+
+profile <- ISCN3.ls$profile %>%
+  filter(dataset_name_sub == current_dataset)%>%
+  select(where(~any(!is.na(.))))
+
+layer <- ISCN3.ls$layer %>%
+  filter(dataset_name_sub == current_dataset) %>%
+  select(where(~any(!is.na(.))))
+
+locations <- layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)%>% #) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(locations) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+}
+#Check to see if there is different/new information in the layer table that is not in the profile
+#profile_info_layer <- layer %>%
+#  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
+#  unique()
+#
+#series <- profile_info_layer %>% 
+#  select(profile_name, soil_taxon, soil_series) %>% 
+#  unique() %>%
+#  anti_join(profile)
+```
+
+
+
+```{r}
+study %>%
+  knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
+
+layer %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Layer-level catagorical variable counts.')
+
+if (nrow(profile) != 0){
+
+profile %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Profile-level catagorical variable counts.')
+}
+```
+
+
+
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+
+ggplot(data = layer %>%
+         pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
+                        !starts_with('layer') & #as long as they aren't layer bounds
+                        !ends_with('(dec. deg)'), #and aren't lat/lon
+                      #create the paired measurement-variable tables
+                      values_to = 'measurements', names_to = 'variable') %>%
+         pivot_longer(cols = c('layer_top (cm)',
+                               'layer_bot (cm)',), #pull out the layers
+                      #create a paired depth-variable
+                      values_to='depth', names_to = 'layer_variable')) +
+  #make nifty line plots that span the layer boundaries
+  geom_line(aes(x = depth, y = measurements,
+                 group = paste(dataset_name_sub, site_name, profile_name))) +
+  facet_wrap(~variable,scales = 'free')
+```
+
+### Fixed issues
+
+Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
+
+  + Repeated information on soil carbon stocks was removed from the layer and profile information of the data set. 
+  + There are no duplicate rows that needed to be removed, however, the soil carbon stock columns gap filled by ISCN were removed by ISCN3.5 cleaning. 
+  + The site note in the data set profile was expanded to a formal citation and added to the ISCN bib file.
+  + Note that data recorded as "Unknown" or "?" was left as is and NOT shifted to an NA value.
+  + In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data
+  
+### Future issues
+
+None we are aware of
+
+## Kane (`Kane`)
+
+Please see @Kane2004, @Kane2005, @Kane2009, and @Valentine2004 for additional details.
+
+This data set is located in the United States and has 574 layer level observations and 144 profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
+
+*To use this section remove the code chunk eval arguments and set the current_dataset to the right identifier.*
+
+```{r}
+#subset the data
+current_dataset <- "Kane"
+
+study <- ISCN3.ls$study %>% 
+  filter(dataset_name == current_dataset) %>%
+  select(where(~any(!is.na(.)))) %>%
+  t()
+
+profile <- ISCN3.ls$profile %>%
+  filter(dataset_name_sub == current_dataset)%>%
+  select(where(~any(!is.na(.))))
+
+layer <- ISCN3.ls$layer %>%
+  filter(dataset_name_sub == current_dataset) %>%
+  select(where(~any(!is.na(.))))
+
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+#Check to see if there is different/new information in the layer table that is not in the profile
+#profile_info_layer <- layer %>%
+#  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
+#  unique()
+#
+#series <- profile_info_layer %>% 
+#  select(profile_name, soil_taxon, soil_series) %>% 
+#  unique() %>%
+#  anti_join(profile)
+```
+
+
+
+```{r}
+study %>%
+  knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
+
+layer %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Layer-level catagorical variable counts.')
+
+profile %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Profile-level catagorical variable counts.')
+```
+
+
+
+
+```{r}
+ggplot(locations) +
+  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+  theme(axis.title = element_blank())
+
+ggplot(data = layer %>%
+         pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
+                        !starts_with('layer') & #as long as they aren't layer bounds
+                        !ends_with('(dec. deg)'), #and aren't lat/lon
+                      #create the paired measurement-variable tables
+                      values_to = 'measurements', names_to = 'variable') %>%
+         pivot_longer(cols = c('layer_top (cm)',
+                               'layer_bot (cm)',), #pull out the layers
+                      #create a paired depth-variable
+                      values_to='depth', names_to = 'layer_variable')) +
+  #make nifty line plots that span the layer boundaries
+  geom_line(aes(x = depth, y = measurements,
+                 group = paste(dataset_name_sub, site_name, profile_name))) +
+  facet_wrap(~variable,scales = 'free')
+```
+
+### Fixed issues
+
+Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
+
+  + Rows weren't removed from ISCN3 because there were no duplicated entries within the layer-level and profile-level information.
+  + Columns were removed from ISCN3 where information was not available throughout the data set.
+  + Unclear information on vegetation remains in the `vegclass_local` section of the layer-level and profile-level information.
+  + This data set required the use of a map centered around Alaska. 
+  + In profile, the ISCN SOC to 1m computation rows were removed, getting rid of duplicate data
+  
+### Future issues
+
+  + Inquire about cryptic vegetation information located in the `vegclass_local` columns
+  + Include the two data citations
+    The two urls provided lead to 404 error pages.
+    citation [2]: https://search.dataone.org/view/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fmetadata%2Feml%2Fknb-lter-bnz%2F133%2F19
+                  or
+                  https://search.dataone.org/view/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fmetadata%2Feml%2Fknb-lter-bnz%2F133%2F18
+                    Looks like same datasets with two different DOI's - contact repository to see if they want this handled a certain way
+    citation [4]: https://search.dataone.org/view/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fmetadata%2Feml%2Fknb-lter-bnz%2F132%2F18
+          Download URL: https://pasta.lternet.edu/package/data/eml/knb-lter-bnz/132/18/e9bb75742dedc686e224c41ea6e33ad8   - the twelve pits data
+                        AND
+                        https://pasta.lternet.edu/package/data/eml/knb-lter-bnz/132/18/fc7153b558a9fa8d1f02ff61f8231fde   - biophysical data and GPS coordinates
