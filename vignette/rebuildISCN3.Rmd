@@ -738,16 +738,20 @@ if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
+
 layer %>% select_if(is.factor) %>%
   pivot_longer(cols = everything(), names_to = 'column_name') %>%
   group_by_all() %>%
   tally() %>%
   knitr::kable(caption = 'Layer-level catagorical variable counts.')
-profile %>% select_if(is.factor) %>%
-  pivot_longer(cols = everything(), names_to = 'column_name') %>%
-  group_by_all() %>%
-  tally() %>%
-  knitr::kable(caption = 'Profile-level catagorical variable counts.')
+
+if(nrow(profile) != 0) {
+  profile %>% select_if(is.factor) %>%
+    pivot_longer(cols = everything(), names_to = 'column_name') %>%
+    group_by_all() %>%
+    tally() %>%
+    knitr::kable(caption = 'Profile-level catagorical variable counts.')
+}
 ```
 
 ```{r}
@@ -1177,11 +1181,13 @@ layer %>% select_if(is.factor) %>%
   tally() %>%
   knitr::kable(caption = 'Layer-level catagorical variable counts.')
 
-profile %>% select_if(is.factor) %>%
-  pivot_longer(cols = everything(), names_to = 'column_name') %>%
-  group_by_all() %>%
-  tally() %>%
-  knitr::kable(caption = 'Profile-level catagorical variable counts.')
+if(nrow(profile) != 0) {
+  profile %>% select_if(is.factor) %>%
+    pivot_longer(cols = everything(), names_to = 'column_name') %>%
+    group_by_all() %>%
+    tally() %>%
+    knitr::kable(caption = 'Profile-level catagorical variable counts.')
+}
 ```
 
 ```{r}
