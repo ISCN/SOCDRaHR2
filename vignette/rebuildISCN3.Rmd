@@ -601,6 +601,7 @@ ggplot(data = layer %>%
 ## Boby_Mack (`Boby_Mack`)
  See @Boby2010 for additional details and if you are using ISCN3 please cite.
 This data set is located in the United States and has XXX layer level observations and YYY profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
+
 ```{r}
 #subset the data
 current_dataset <- "Boby_Mack"
@@ -635,6 +636,7 @@ locations <- profile %>%
 #  unique() %>%
 #  anti_join(profile)
 ```
+
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
@@ -651,6 +653,7 @@ profile %>% select_if(is.factor) %>%
   knitr::kable(caption = 'Profile-level catagorical variable counts.')
 }
 ```
+
 ```{r}
 ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
@@ -671,6 +674,7 @@ ggplot(data = layer %>%
                  group = paste(dataset_name_sub, site_name, profile_name))) +
   facet_wrap(~variable,scales = 'free')
 ```
+
 ### Fixed issues
 Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
   + Repeated information on soil carbon stocks was removed from the layer and profile information of the data set. 
@@ -715,6 +719,7 @@ locations <- profile %>%
 #  unique() %>%
 #  anti_join(profile)
 ```
+
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
@@ -729,6 +734,7 @@ profile %>% select_if(is.factor) %>%
   tally() %>%
   knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
+
 ```{r}
 ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
