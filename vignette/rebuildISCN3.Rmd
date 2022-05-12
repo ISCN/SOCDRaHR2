@@ -196,26 +196,23 @@ study <- ISCN3.ls$study %>%
   filter(dataset_name == current_dataset) %>%
   select(where(~any(!is.na(.)))) %>%
   t()
-
 profile <- ISCN3.ls$profile %>%
   filter(dataset_name_sub == current_dataset)%>%
   select(where(~any(!is.na(.))))
-
 layer <- ISCN3.ls$layer %>%
   filter(dataset_name_sub == current_dataset) %>%
   select(where(~any(!is.na(.))))
-
-locations <- layer %>% 
-    select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
-    unique() %>%
-    filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+locations <- layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)%>% #) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 
 if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
-  locations <- profile %>% 
-    select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
-    bind_rows(locations) %>%
-    unique() %>%
-    filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(locations) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -231,7 +228,6 @@ if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
-
 layer %>% select_if(is.factor) %>%
   pivot_longer(cols = everything(), names_to = 'column_name') %>%
   group_by_all() %>%
@@ -252,14 +248,6 @@ ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
   geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
   theme(axis.title = element_blank())
-
-ggplot(data = layer %>%
-         pivot_longer(cols = where(is.numeric) &
-                        !ends_with('(dec. deg)'), #pull out the numerics that aren't lat/long
-                      values_to = 'measurements', names_to = 'variable')) +
-  geom_histogram(aes(x = measurements)) + #make a histrogram
-  facet_wrap(~variable,scales = 'free')
-
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
                         !starts_with('layer') & #as long as they aren't layer bounds
@@ -294,6 +282,7 @@ None we are aware of
 
 ## USGS_Harden
 
+
 ## Bonanza_LTER (`Bonanza LTER`)
 
 The Bonanza_LTER dataset references @Cleve1993 and @Yarie2013.
@@ -316,18 +305,13 @@ layer <- ISCN3.ls$layer %>%
   filter(dataset_name_sub == current_dataset) %>%
   select(where(~any(!is.na(.))))
 
-locations <- layer %>% 
-    select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
-    unique() %>%
-    filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 
-if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
-  locations <- profile %>% 
-    select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
-    bind_rows(locations) %>%
-    unique() %>%
-    filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
-}
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -340,6 +324,8 @@ if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
 #  anti_join(profile)
 ```
 
+
+
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
@@ -350,27 +336,21 @@ layer %>% select_if(is.factor) %>%
   tally() %>%
   knitr::kable(caption = 'Layer-level catagorical variable counts.')
 
-if(nrow(profile) != 0) {
-  profile %>% select_if(is.factor) %>%
-    pivot_longer(cols = everything(), names_to = 'column_name') %>%
-    group_by_all() %>%
-    tally() %>%
-    knitr::kable(caption = 'Profile-level catagorical variable counts.')
-}
+profile %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
+
+
+
 
 ```{r}
 ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
   geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
   theme(axis.title = element_blank())
-
-ggplot(data = layer %>%
-         pivot_longer(cols = where(is.numeric) &
-                        !ends_with('(dec. deg)'), #pull out the numerics that aren't lat/long
-                      values_to = 'measurements', names_to = 'variable')) +
-  geom_histogram(aes(x = measurements)) + #make a histrogram
-  facet_wrap(~variable,scales = 'free')
 
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
@@ -518,23 +498,19 @@ study <- ISCN3.ls$study %>%
   filter(dataset_name == current_dataset) %>%
   select(where(~any(!is.na(.)))) %>%
   t()
-
 profile <- ISCN3.ls$profile %>%
   filter(dataset_name_sub == current_dataset)%>%
   select(where(~any(!is.na(.))))
 
-locations <- layer %>% 
-    select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
-    unique() %>%
-    filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
-
-if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
-  locations <- profile %>% 
-    select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
-    bind_rows(locations) %>%
-    unique() %>%
-    filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
-}
+layer <- ISCN3.ls$layer %>%
+  filter(dataset_name_sub == current_dataset) %>%
+  select(where(~any(!is.na(.))))
+locations <- profile %>% 
+  select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+  bind_rows(layer %>%
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+  unique() %>%
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -550,20 +526,16 @@ if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
-
 layer %>% select_if(is.factor) %>%
   pivot_longer(cols = everything(), names_to = 'column_name') %>%
   group_by_all() %>%
   tally() %>%
   knitr::kable(caption = 'Layer-level catagorical variable counts.')
-
-if(nrow(profile) != 0) {
-  profile %>% select_if(is.factor) %>%
-    pivot_longer(cols = everything(), names_to = 'column_name') %>%
-    group_by_all() %>%
-    tally() %>%
-    knitr::kable(caption = 'Profile-level catagorical variable counts.')
-}
+profile %>% select_if(is.factor) %>%
+  pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  group_by_all() %>%
+  tally() %>%
+  knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
 
 ```{r}
@@ -571,14 +543,6 @@ ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
   geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
   theme(axis.title = element_blank())
-
-ggplot(data = layer %>%
-         pivot_longer(cols = where(is.numeric) &
-                        !ends_with('(dec. deg)'), #pull out the numerics that aren't lat/long
-                      values_to = 'measurements', names_to = 'variable')) +
-  geom_histogram(aes(x = measurements)) + #make a histrogram
-  facet_wrap(~variable,scales = 'free')
-
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
                         !starts_with('layer') & #as long as they aren't layer bounds
@@ -615,7 +579,6 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
           Download URL: https://pasta.lternet.edu/package/data/eml/knb-lter-bnz/132/18/e9bb75742dedc686e224c41ea6e33ad8   - the twelve pits data
                         AND
                         https://pasta.lternet.edu/package/data/eml/knb-lter-bnz/132/18/fc7153b558a9fa8d1f02ff61f8231fde   - biophysical data and GPS coordinates
-  
 
 
 ## Lu_PIMA (`Lu_PIMA`)
@@ -642,6 +605,10 @@ layer <- ISCN3.ls$layer %>%
 
 locations <- layer %>% 
     select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+
+    bind_rows(layer %>%
+                select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 
@@ -732,6 +699,7 @@ ggplot(data = layer %>%
 The USGS Harden Yazoo dataset references @Harden1999 and @Huntington1998.
 This data set is located in the United States and has 234 layer level observations and 17 profile-level observations of 4 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
+
 ```{r}
 #subset the data
 current_dataset <- "USGS Harden Yazoo"
@@ -750,10 +718,11 @@ layer <- ISCN3.ls$layer %>%
 
 locations <- layer %>% 
     select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+    bind_rows(layer %>%
+                select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
-
-if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
+if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
   locations <- profile %>% 
     select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
     bind_rows(locations) %>%
@@ -804,6 +773,12 @@ ggplot(data = layer %>%
   geom_histogram(aes(x = measurements)) + #make a histrogram
   facet_wrap(~variable,scales = 'free')
 
+ggplot(data = layer %>%
+         pivot_longer(cols = where(is.numeric) &
+                        !ends_with('(dec. deg)'), #pull out the numerics that aren't lat/long
+                      values_to = 'measurements', names_to = 'variable')) +
+  geom_histogram(aes(x = measurements)) + #make a histrogram
+  facet_wrap(~variable,scales = 'free')
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
                         !starts_with('layer') & #as long as they aren't layer bounds
@@ -863,7 +838,8 @@ locations <- layer %>%
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 
-if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
+
+if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
   locations <- profile %>% 
     select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
     bind_rows(locations) %>%
@@ -882,6 +858,8 @@ if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
 #  anti_join(profile)
 ```
 
+
+
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
@@ -892,7 +870,9 @@ layer %>% select_if(is.factor) %>%
   tally() %>%
   knitr::kable(caption = 'Layer-level catagorical variable counts.')
 
-if (nrow(profile) != 0) {
+
+if (nrow(profile) != 0)
+{
   profile %>% select_if(is.factor) %>%
     pivot_longer(cols = everything(), names_to = 'column_name') %>%
     group_by_all() %>%
@@ -901,18 +881,15 @@ if (nrow(profile) != 0) {
 }
 ```
 
+
+
+
 ```{r}
 ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
   geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
   theme(axis.title = element_blank())
 
-ggplot(data = layer %>%
-         pivot_longer(cols = where(is.numeric) &
-                        !ends_with('(dec. deg)'), #pull out the numerics that aren't lat/long
-                      values_to = 'measurements', names_to = 'variable')) +
-  geom_histogram(aes(x = measurements)) + #make a histrogram
-  facet_wrap(~variable,scales = 'free')
 
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
@@ -941,7 +918,6 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 ### Future issues
 
   + Find out where temperature and precipitation data is (currently not on ISCN)
-
 
 ## USGS Muhs (`USGS Muhs`)
 
@@ -1049,7 +1025,12 @@ None we are aware of
 
 ## HeckmanLithosequence
 
+
+## HeckmanLithosequence
+
+
 ## Schuur (`Schuur`)
+
 
 The Schuur data set references @Schuur2007.
 This data set is located in the United States and has 153 layer-level observations and 4 profile-level observations of 1 unique latitude-longitude location in the layer-level table and AAA in the profile-level table.
@@ -1157,6 +1138,7 @@ None that we are aware of
 
 ## OakRidgeNationalLab_TDE
 
+
 ## University of Michigan Biological Station Forest Accelerated Succession ExperimenT (`UMBS_FASET`)
 
 The University of Michigan Biological Station Forest Accelerated Succession Experiment (`UMBS_FASET`) data set is uncited and unpublished.
@@ -1182,6 +1164,9 @@ layer <- ISCN3.ls$layer %>%
 
 locations <- layer %>% 
     select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
+    bind_rows(layer %>%
+                select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
+
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 
