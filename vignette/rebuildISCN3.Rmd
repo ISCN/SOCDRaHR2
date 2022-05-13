@@ -1017,7 +1017,7 @@ Please see @Harden2012 for additional details and if you are using ISCN3 please 
 Cite the individual author if using their data, in addition cite Harden if using that data as part of the broader Permafrost RCN dataset.
 This data set is located in the United States and has 3696 layer-level observations and 0 profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
-```{r}
+```{r eval=FALSE}
 #subset the data
 current_dataset <- "Permafrost_RCN"
 
