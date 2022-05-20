@@ -128,5 +128,5 @@ Five ways consortia can catalyse open science, [Nature, 2017](http://www.nature.
 
 [National Data Service](http://www.nationaldataservice.org/)
 
-[NCSS database description](https://ncss-tech.github.io/lab-data-delivery/SDA.html)
+[NCSS-USDA database description](https://ncss-tech.github.io/lab-data-delivery/SDA.html)
 
