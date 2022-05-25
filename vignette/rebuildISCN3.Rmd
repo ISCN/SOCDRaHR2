@@ -1197,20 +1197,20 @@ ggplot(data = layer %>%
   geom_histogram(aes(x = measurements)) + #make a histrogram
   facet_wrap(~variable,scales = 'free')
 
-ggplot(data = layer %>%
-         pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
-                        !starts_with('layer') & #as long as they aren't layer bounds
-                        !ends_with('(dec. deg)'), #and aren't lat/lon
-                      #create the paired measurement-variable tables
-                      values_to = 'measurements', names_to = 'variable') %>%
-         pivot_longer(cols = c('layer_top (cm)',
-                               'layer_bot (cm)',), #pull out the layers
-                      #create a paired depth-variable
-                      values_to='depth', names_to = 'layer_variable')) +
-  #make nifty line plots that span the layer boundaries
-  geom_line(aes(x = depth, y = measurements,
-                 group = paste(dataset_name_sub, site_name, profile_name))) +
-  facet_wrap(~variable,scales = 'free')
+# ggplot(data = layer %>%
+#          pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
+#                         !starts_with('layer') & #as long as they aren't layer bounds
+#                         !ends_with('(dec. deg)'), #and aren't lat/lon
+#                       #create the paired measurement-variable tables
+#                       values_to = 'measurements', names_to = 'variable') %>%
+#          pivot_longer(cols = c('layer_top (cm)',
+#                                'layer_bot (cm)',), #pull out the layers
+#                       #create a paired depth-variable
+#                       values_to='depth', names_to = 'layer_variable')) +
+#   #make nifty line plots that span the layer boundaries
+#   geom_line(aes(x = depth, y = measurements,
+#                  group = paste(dataset_name_sub, site_name, profile_name))) +
+#   facet_wrap(~variable,scales = 'free')
 ```
 
 ### Fixed issues
@@ -1407,20 +1407,20 @@ ggplot(data = layer %>%
   geom_histogram(aes(x = measurements)) + #make a histrogram
   facet_wrap(~variable,scales = 'free')
 
-ggplot(data = layer %>%
-         pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
-                        !starts_with('layer') & #as long as they aren't layer bounds
-                        !ends_with('(dec. deg)'), #and aren't lat/lon
-                      #create the paired measurement-variable tables
-                      values_to = 'measurements', names_to = 'variable') %>%
-         pivot_longer(cols = c('layer_top (cm)',
-                               'layer_bot (cm)',), #pull out the layers
-                      #create a paired depth-variable
-                      values_to='depth', names_to = 'layer_variable')) +
-  #make nifty line plots that span the layer boundaries
-  geom_line(aes(x = depth, y = measurements,
-                 group = paste(dataset_name_sub, site_name, profile_name))) +
-  facet_wrap(~variable,scales = 'free')
+# ggplot(data = layer %>%
+#          pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
+#                         !starts_with('layer') & #as long as they aren't layer bounds
+#                         !ends_with('(dec. deg)'), #and aren't lat/lon
+#                       #create the paired measurement-variable tables
+#                       values_to = 'measurements', names_to = 'variable') %>%
+#          pivot_longer(cols = c('layer_top (cm)',
+#                                'layer_bot (cm)',), #pull out the layers
+#                       #create a paired depth-variable
+#                       values_to='depth', names_to = 'layer_variable')) +
+#   #make nifty line plots that span the layer boundaries
+#   geom_line(aes(x = depth, y = measurements,
+#                  group = paste(dataset_name_sub, site_name, profile_name))) +
+#   facet_wrap(~variable,scales = 'free')
 ```
 
 ### Fixed issues
