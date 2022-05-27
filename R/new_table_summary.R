@@ -43,13 +43,16 @@ temp <- ISCN3.ls$layer %>%
 
 temp2 <- ISCN3.ls$layer %>%
   select(dataset_name_sub, site_name, `lat (dec. deg)`, `long (dec. deg)`) %>%
-  unique()
-#%>%
+  unique()%>%
   #filter(is.na(`lat (dec. deg)`) && is.na(`long (dec. deg)`))
+  mutate(has_lat_long = is.finite(`lat (dec. deg)` + `long (dec. deg)`)) %>%
+  group_by(dataset_name_sub, has_lat_long) %>%
+  tally()%>%
+  mutate(my_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer"))%>%
+  select(-has_lat_long)%>%
+  pivot_wider(names_from = my_label, values_from = n)
   
   
-
-
 temp1 <- ISCN3.ls$profile %>%
   select(dataset_name_profile = dataset_name_sub) %>%
   unique() %>%
