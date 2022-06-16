@@ -41,6 +41,7 @@ temp <- ISCN3.ls$layer %>%
   group_by(dataset_name_sub)%>%
   tally(name = 'Lat/Long count')
 
+# layer table for unique lat/long counts
 temp2 <- ISCN3.ls$layer %>%
   select(dataset_name_sub, site_name, `lat (dec. deg)`, `long (dec. deg)`) %>%
   unique()%>%
@@ -51,7 +52,46 @@ temp2 <- ISCN3.ls$layer %>%
   mutate(my_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer"))%>%
   select(-has_lat_long)%>%
   pivot_wider(names_from = my_label, values_from = n)
-  
+
+# profile table for unique lat/long counts
+temp3 <- ISCN3.ls$profile %>%
+  select(dataset_name_sub, site_name, `lat (dec. deg)`, `long (dec. deg)`) %>%
+  unique()%>%
+  #filter(is.na(`lat (dec. deg)`) && is.na(`long (dec. deg)`))
+  mutate(has_lat_long = is.finite(`lat (dec. deg)` + `long (dec. deg)`)) %>%
+  group_by(dataset_name_sub, has_lat_long) %>%
+  tally()%>%
+  mutate(my_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer"))%>%
+  select(-has_lat_long)%>%
+  pivot_wider(names_from = my_label, values_from = n)
+
+# combined table of above layer and profile lat/long count tables
+temp4 <- temp2 %>%
+  full_join(temp3, by = "dataset_name_sub") %>%
+  rename("unlocated_layer_layer" = "unlocated_layer.x", "geolocated_layer_layer" = "geolocated_layer.x", "unlocated_layer_profile" = "unlocated_layer.y", "geolocated_layer_profile" = "geolocated_layer.y")
+
+# same as temp4 but does not rely on previously created data frames
+temp5 <- ISCN3.ls$layer %>%
+  select(dataset_name_sub, site_name, `lat (dec. deg)`, `long (dec. deg)`) %>%
+  unique()%>%
+  #filter(is.na(`lat (dec. deg)`) && is.na(`long (dec. deg)`))
+  mutate(has_lat_long = is.finite(`lat (dec. deg)` + `long (dec. deg)`)) %>%
+  group_by(dataset_name_sub, has_lat_long) %>%
+  tally()%>%
+  mutate(my_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer"))%>%
+  select(-has_lat_long)%>%
+  pivot_wider(names_from = my_label, values_from = n) %>%
+  full_join(ISCN3.ls$profile %>%
+              select(dataset_name_sub, site_name, `lat (dec. deg)`, `long (dec. deg)`) %>%
+              unique()%>%
+              #filter(is.na(`lat (dec. deg)`) && is.na(`long (dec. deg)`))
+              mutate(has_lat_long = is.finite(`lat (dec. deg)` + `long (dec. deg)`)) %>%
+              group_by(dataset_name_sub, has_lat_long) %>%
+              tally()%>%
+              mutate(my_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer"))%>%
+              select(-has_lat_long)%>%
+              pivot_wider(names_from = my_label, values_from = n), by = "dataset_name_sub")%>%
+  rename("unlocated_layer_layer" = "unlocated_layer.x", "geolocated_layer_layer" = "geolocated_layer.x", "unlocated_layer_profile" = "unlocated_layer.y", "geolocated_layer_profile" = "geolocated_layer.y")
   
 temp1 <- ISCN3.ls$profile %>%
   select(dataset_name_profile = dataset_name_sub) %>%
