@@ -3,8 +3,10 @@ title: "ISCN3 Rebuild"
 author: "Kathe Todd-Brown, Michael"
 date: "3/17/2022"
 output: 
-  html_document: 
+  bookdown::html_document2: default
     toc: yes
+bibliography: ISCN3_bibliography.bib
+link-citations: yes
 ---
 
 #knitr::opts_chunk$set(eval=TRUE)
@@ -28,26 +30,48 @@ ISCN3.ls <- ISCN3_3(data_dir = dataDir) #this will throw an NA coercion warning 
 ```
 
 ```{r summaries}
-profile_summary <- ISCN3.ls$profile %>%
-  select(dataset_name_sub, site_name) %>%
-  unique()%>%
-  group_by(dataset_name_sub) %>% 
-  tally(name = 'profile_site_count')
 
-layer_summary <- ISCN3.ls$layer %>%
-  select(dataset_name_sub, site_name) %>%
-  unique()%>%
-  group_by(dataset_name_sub) %>% 
-  tally(name = 'layer_site_count')
+site_locations <- ISCN3.ls$layer %>%
+  #reduce size of dataset by only looking at necessary columns
+  select(dataset_name_sub, site_name, #site identifiers
+         `lat (dec. deg)`, `long (dec. deg)`) %>% #location information
+  #remove duplicate entries of multiple layer observations at a given site
+  unique() %>% 
+  #create column as flag for lat/long entries to create counting groups that partitions locations into geolocated vs unlocated layers
+  mutate(has_lat_long = is.finite(`lat (dec. deg)` + `long (dec. deg)`)) %>% 
+  #for each of the datasets, count number of sites that are geolocated vs unlocated
+  group_by(dataset_name_sub, has_lat_long) %>%
+  tally() %>%
+  #create informative column names and move tallies into appropriate columns
+  mutate(my_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer")) %>%
+  #remove unneeded column
+  select(-has_lat_long) %>%
+  #make the table more human readable
+  pivot_wider(names_from = my_label, values_from = n) %>% 
+  #do the same thing for profile and join
+  full_join(ISCN3.ls$profile %>%
+              select(dataset_name_sub, site_name, `lat (dec. deg)`, `long (dec. deg)`) %>%
+              unique() %>%
+              mutate(has_lat_long = is.finite(`lat (dec. deg)` + `long (dec. deg)`)) %>%
+              group_by(dataset_name_sub, has_lat_long) %>%
+              tally() %>%
+              mutate(my_label = if_else(has_lat_long, "geolocated_profile", "unlocated_profile")) %>% 
+              select(-has_lat_long) %>%
+              pivot_wider(names_from = my_label, values_from = n), by = "dataset_name_sub")
 
 table_summary <- ISCN3.ls$study %>% 
-  select(dataset_name, `dataset_type (dataset_type)`, dataset_description) %>%
-  unique() %>%
-  right_join(profile_summary %>%
-              full_join(layer_summary, by = 'dataset_name_sub'), by=c('dataset_name' = 'dataset_name_sub'))
+  #reduce size of dataset by only looking at necessary columns
+  select(dataset_name, `dataset_type (dataset_type)`, dataset_description) %>% 
+  #remove duplicate entries of datasets
+  unique() %>% 
+  #combine lat/long counts from site_locations table with respective datasets
+  right_join(site_locations, by=c('dataset_name' = 'dataset_name_sub')) %>% 
+  #create column showing total layer site count
+  mutate(layer_site_count = sum(unlocated_layer, geolocated_layer, na.rm = TRUE)) %>% 
+    #sort rows in ascending order based on layer site count
+    arrange(layer_site_count) 
 
-knitr::kable(table_summary %>%
-    arrange(layer_site_count), 
+knitr::kable(table_summary, 
   caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile and layer data table.')%>%
   kable_styling()
 ```
@@ -160,34 +184,44 @@ ggplot(data = layer %>%
 
 None we are aware of
 
-##  National Cooperative Soil Characterization Database (version date: 11 September 2014)(`NRCS Sept/2014`)
+##  National Cooperative Soil Characterization Database (11 September 2014)(`NRCS Sept/2014`)
 
-Please see [bibtex citation here] for additional details and if you are using ISCN3 please cite.
-This data set is located in the United States and has 373326 layer-level observations and 26096 profile-level observations of 44896 unique latitude-longitude locations in the layer-level table and 13016 in the profile-level table.
+Pedon-level soils data from the NRCS-Soil Survey Lab, National Cooperative Soil Characterization Database (version date: 11 September 2014).
+Sites are distributed across all 50 states, with some data also originating from U.S. Territories and foreign countries.
+`NRCS Sept/2014` has 373326 layer-level and 26096 profile-level observations across 44896 and 13016 sites, respectively.
+Please see @Nrcs2014a and @Nrcs2014b for additional details and if you are using ISCN3 please cite.
 
 ```{r}
 #subset the data
 current_dataset <- "NRCS Sept/2014"
 
 study <- ISCN3.ls$study %>% 
+  #select current dataset from study table
   filter(dataset_name == current_dataset) %>%
+  #remove columns with no information
   select(where(~any(!is.na(.)))) %>%
+  #flip table to make more readable
   t()
 
 profile <- ISCN3.ls$profile %>%
-  filter(dataset_name_sub == current_dataset)%>%
+  #select current dataset from profile table
+  filter(dataset_name_sub == current_dataset)%>% 
+  #remove columns with no information
   select(where(~any(!is.na(.))))
 
-layer <- ISCN3.ls$layer %>%
+layer <- ISCN3.ls$layer %>% 
   filter(dataset_name_sub == current_dataset) %>%
   select(where(~any(!is.na(.))))
 
 locations <- layer %>%
-              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)%>% #) %>%
+  #reduce size of dataset by only looking at necessary columns
+              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>% 
+  #remove duplicate lat/long entries
   unique() %>%
-  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+  #remove entries with no information
+  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`)) 
 
-if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
+if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) { #if profile data exists, assign locations using profile data instead
   locations <- profile %>% 
     select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`) %>%
     bind_rows(locations) %>%
@@ -196,27 +230,31 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
 }
 
 #Check to see if there is different/new information in the layer table that is not in the profile
-#profile_info_layer <- layer %>%
+# profile_info_layer <- layer %>%
 #  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
 #  unique()
-#
-#series <- profile_info_layer %>% 
-#  select(profile_name, soil_taxon, soil_series) %>% 
+# 
+# series <- profile_info_layer %>%
+#  select(profile_name, soil_taxon, soil_series) %>%
 #  unique() %>%
 #  anti_join(profile)
 ```
 
 ```{r}
 study %>%
-  knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
+  knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.')) 
 
-layer %>% select_if(is.factor) %>%
+#create factor table for layer data
+layer %>% select_if(is.factor) %>% 
+  #modify to be more readable
   pivot_longer(cols = everything(), names_to = 'column_name') %>%
+  #count number of entries for all columns
   group_by_all() %>%
-  tally() %>%
+  tally() %>% 
   knitr::kable(caption = 'Layer-level catagorical variable counts.')
 
-if(nrow(profile) != 0) {
+#if profile data exists, generate factor table with profile data
+if(nrow(profile) != 0) { 
   profile %>% select_if(is.factor) %>%
     pivot_longer(cols = everything(), names_to = 'column_name') %>%
     group_by_all() %>%
@@ -226,12 +264,18 @@ if(nrow(profile) != 0) {
 ```
 
 ```{r}
+
+subset_site <- sample(x = unique(c(layer$site_name, profile$site_name)), size = 1000)
+#temp <- layer %>%
+#  filter(site_name %in% subset_site)
+
 ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
   geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
   theme(axis.title = element_blank())
 
 ggplot(data = layer %>%
+  filter(site_name %in% subset_site) %>%
          pivot_longer(cols = where(is.numeric) &
                         !ends_with('(dec. deg)'), #pull out the numerics that aren't lat/long
                       values_to = 'measurements', names_to = 'variable')) +
@@ -239,6 +283,7 @@ ggplot(data = layer %>%
   facet_wrap(~variable,scales = 'free')
 
 ggplot(data = layer %>%
+         filter(site_name %in% subset_site) %>%
          pivot_longer(cols = where(is.numeric) & #pull out all the numerical colums
                         !starts_with('layer') & #as long as they aren't layer bounds
                         !ends_with('(dec. deg)'), #and aren't lat/lon
@@ -263,15 +308,16 @@ ggplot(data = layer %>%
 
 ### Future issues
 
-- We need to revisit datasets with rows removed and reaccess the function.
 - Max/min bounds need to be worked out for this data.
 - Should also add an evaluation of the number of georeferenced layers
+- Profile information in layer table does not match all of the profile information in profile table
 
 
 ## Worldwide soil carbon and nitrogen data(`Worldwide soil carbon and nitrogen data`)
 
+This data set is located in the United States.
+`Worldwide soil carbon and nitrogen data` has 21972 layer-level and 7423 profile-level observations across 1931 and 1835 sites, respectively.
 Please see @Zinke1986 for additional details and if you are using ISCN3 please cite.
-This data set is located in the United States and has 21972 layer-level observations and 7423 profile-level observations of 1931 unique latitude-longitude locations in the layer-level table and 1835 in the profile-level table.
 
 ```{r}
 #subset the data
@@ -374,8 +420,9 @@ ggplot(data = layer %>%
 
 ## USGS Site-specific soil C (`USGS_S3C`)
 
+This data set is located in the United States.
+`USGS_S3C` has 10434 layer-level and 1674 profile-level observations across 1069 and 749 sites, respectively.
 Please see @Buell2004 for additional details.
-This data set is located in the United States and has 10434 layer-level observations and 1674 profile-level observations of 1069 unique latitude-longitude locations in the layer-level table and 749 in the profile-level table.
 
 ```{r}
 #subset the data
@@ -484,8 +531,9 @@ ggplot(data = layer %>%
 
 ## Alaska Deep Soil Carbon Project (`AK DSC Project SOC stock computation`)
 
-Please see @Johnson2011 for additional details
-This data set is located in the United States and has 9002 layer-level observations and 3159 profile-level observations of 743 unique latitude-longitude locations in the layer-level table and 743 in the profile-level table.
+This data set is located in the United States.
+`AK DSC Project SOC stock computation` has 9002 layer-level and 3159 profile-level observations across 743 and 743 sites, respectively.
+Please see @Johnson2011 for additional details.
 
 ```{r}
 #subset the data
@@ -593,8 +641,9 @@ ggplot(data = layer %>%
 
 ## Jorgensen_NPS (`Jorgensen_NPS`)
 
+This data set is located in the United States.
+`Jorgensen_NPS` has 2531 layer-level and 0 profile-level observations across 530 and 0 sites, respectively.
 Please see @Jorgenson2008 for additional details and if you are using ISCN3 please cite.
-This data set is located in the United States and has 2531 layer-level observations and 0 profile-level observations of 530 unique latitude-longitude locations in the layer-level table and 0 in the profile-level table.
 
 ```{r}
 #subset the data
@@ -698,8 +747,9 @@ ggplot(data = layer %>%
 
 ## Northern Circumpolar Soil Carbon Database (`Northern Circumpolar Soil Carbon Database (NCSCD)`)
 
+This data set is located in the United States.
+`Northern Circumpolar Soil Carbon Database (NCSCD)` has 1907 layer-level and 1020 profile-level observations across 476 and 471 sites, respectively.
 Please see @Hugelius2013 for additional details and if you are using ISCN3 please cite.
-This data set is located in the United States and has 1907 layer-level observations and 1020 profile-level observations of 476 unique latitude-longitude locations in the layer-level table and 471 in the profile-level table.
 
 ```{r}
 #subset the data
@@ -803,8 +853,9 @@ ggplot(data = layer %>%
 
 ## Jorgensen_ARCN (`Jorgensen_ARCN`)
 
+This data set is located in the United States.
+`Jorgensen_ARCN` has 1108 layer-level and 0 profile-level observations across 316 and 0 sites, respectively.
 Please see @Jorgenson2008 for additional details.
-This data set is located in the United States and has 1108 layer-level observations and 0 profile-level observations of 316 unique latitude-longitude locations in the layer-level table and 0 in the profile-level table.
 
 ```{r}
 #subset the data
@@ -908,8 +959,9 @@ ggplot(data = layer %>%
 
 ## Bockheim (`Bockheim`)
 
-Please see Bockheim1998, Bockheim1999, Bockheim2001, Bockheim2003 and Bockheim2004 for additional details.
-This data set is located in the United States and has 1611 layer-level observations and 46 profile-level observations of 127 unique latitude-longitude locations in the layer-level table and 24 in the profile-level table.
+Please see @Bockheim1998, @Bockheim1999, @Bockheim2001, @Bockheim2003 and @Bockheim2004 for additional details.
+This data set is located in the United States.
+`Bockheim` has 1611 layer-level and 46 profile-level observations across 127 and 24 sites, respectively.
 
 ```{r}
 #subset the data
@@ -1013,9 +1065,10 @@ ggplot(data = layer %>%
 
 ## Permafrost_RCN (`Permafrost_RCN`)
 
+This data set is located in the United States.
+`Permafrost_RCN` has 3696 layer-level and 0 profile-level observations across ZZZ and AAA sites, respectively.
 Please see @Harden2012 for additional details and if you are using ISCN3 please cite.
 Cite the individual author if using their data, in addition cite Harden if using that data as part of the broader Permafrost RCN dataset.
-This data set is located in the United States and has 3696 layer-level observations and 0 profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r eval=FALSE}
 #subset the data
@@ -1118,10 +1171,11 @@ ggplot(data = layer %>%
 - address elevation being incorrect
 
 
-## Lehmann_NE_US_soils
+## Lehmann_NE_US_soils (`Lehmann NE US soils`)
 
+This data set is located in the United States.
+`Lehmann NE US soils` has 172 layer-level and 0 profile-level observations across 172 and 0 sites, respectively.
 The Lehmann NE US soils dataset references @Schmidt2000.
-This data set is located in the United States and has 172 layer-level observations and YYY profile-level observations of 172 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -1222,10 +1276,11 @@ ggplot(data = layer %>%
 
 None we are aware of
 
-## USDA-FS_NRS_LandscapeCarbonInventory
+## USDA-FS_NRS_LandscapeCarbonInventory (`USDA-FS NRS Landscape Carbon Inventory`)
 
+This data set is located in the United States.
+`USDA-FS NRS Landscape Carbon Inventory` has 1510 layer-level and 0 profile-level observations across 144 and 0 sites, respectively.
 The USDA-FS NRS Landscape Carbon Inventory dataset references @Cole2013.
-This data set is located in the United States and has 1510 layer-level observations and YYY profile-level observations of 143 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -1328,10 +1383,11 @@ ggplot(data = layer %>%
 
 None we are aware of
 
-## Jorgensen_YKDE
+## Jorgensen_YKDE (`Jorgensen_YKDE`)
 
+This data set is located in the United States.
+`Jorgensen_YKDE` has 697 layer-level and 0 profile-level observations across 61 and 0 sites, respectively.
 The Jorgensen_YKDE dataset references @Jorgenson2000.
-This data set is located in the United States and has 697 layer-level observations and YYY profile-level observations of 60 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -1436,8 +1492,9 @@ ggplot(data = layer %>%
 
 ## Boby_Mack (`Boby_Mack`)
 
+This data set is located in the United States.
+`Boby_Mack` has 482 layer-level and 0 profile-level observations across 38 and 0 sites, respectively.
 See @Boby2010 for additional details and if you are using ISCN3 please cite.
-This data set is located in the United States and has XXX layer level observations and YYY profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -1539,10 +1596,11 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 
 None we are aware of
 
-## Lehmann_Soil_CBC_1
+## Lehmann_Soil_CBC_1 (`Lehmann Soil C&BC #1`)
 
+This data set is located in the United States.
+`Lehmann Soil C&BC #1` has 139 layer-level and 0 profile-level observations across 31 and 0 sites, respectively.
 The Lehmann Soil C&BC #1 dataset references @Schmidt2000.
-This data set is located in the United States and has 139 layer-level observations and YYY profile-level observations of 31 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -1644,10 +1702,11 @@ ggplot(data = layer %>%
 
 None we are aware of
 
-## USGS_Harden
+## USGS_Harden (`USGS Harden`)
 
-The USGS Harden dataset is references @Harden2008a, @ODonnell2011, @Manies204, @Harden2008b, @Harden2006 and @Neff2005.
-This data set is located in the United States and has 1203 layer-level observations and 18 profile-level observations of 23 unique latitude-longitude locations in the layer-level table and 6 in the profile-level table.
+This data set is located in the United States.
+`USGS Harden` has 1203 layer-level and 18 profile-level observations across 23 and 6 sites, respectively.
+The USGS Harden dataset is references @Harden2008a, @ODonnell2011, @Manies2004, @Harden2008b, @Harden2006 and @Neff2005.
 
 ```{r}
 #subset the data
@@ -1760,8 +1819,9 @@ ggplot(data = layer %>%
 
 ## Bonanza_LTER (`Bonanza LTER`)
 
+This data set is located in the United States.
+`Bonanza LTER` has 583 layer-level and 44 profile-level observations across 20 and 15 sites, respectively.
 The Bonanza_LTER dataset references @Cleve1993 and @Yarie2013.
-This data set is located in the United States and has 583 layer level observations and 44 profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -1817,9 +1877,6 @@ profile %>% select_if(is.factor) %>%
   knitr::kable(caption = 'Profile-level catagorical variable counts.')
 ```
 
-
-
-
 ```{r}
 ggplot(locations) +
   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
@@ -1863,8 +1920,8 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 
 ## Lu_LTER(`Lu_LTER`)
 
-The Lu_LTER data set references @Ping2000, @Ping2002, @Ping2004, @Ping2005, and @Michaelson1996.
 The `Lu_LTER` data set in ISCN3 contains 103 layer-level observations and 14 profile-level observations after cleaning for ISCN3.5.
+The Lu_LTER data set references @Ping2000, @Ping2002, @Ping2004, @Ping2005, and @Michaelson1996.
 
 ```{r}
 current_dataset <- "Lu_LTER"
@@ -1967,10 +2024,11 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 None we are aware of
 
 
-## HeckmanSwanstonBiscuitBurn
+## HeckmanSwanstonBiscuitBurn (`Heckman/Swanston Biscuit Burn`)
 
+This data set is located in the United States.
+`Heckman/Swanston Biscuit Burn` has 28 layer-level and 0 profile-level observations across 14 and 0 sites, respectively.
 The Heckman/Swanston Biscuit Burn dataset references @Heckman2013.
-This data set is located in the United States and has 28 layer-level observations and YYY profile-level observations of 14 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -2074,8 +2132,10 @@ ggplot(data = layer %>%
   + Follow up with Heckman about curator name discrepancy (101 says Kate but this document, 102, says Katherine)
 
 ## Kane (`Kane`)
+
+This data set is located in the United States.
+`Kane` has 574 layer-level and 144 profile-level observations across 12 and AAA sites, respectively.
 Please see @Kane2004, @Kane2005, @Kane2009, and @Valentine2004 for additional details.
-This data set is located in the United States and has 574 layer level observations and 144 profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -2191,8 +2251,8 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 
 ## Lu_PIMA (`Lu_PIMA`)
 
-The `Lu_PIMA` data set references @Ping2010.
 This dataset contains 69 layer-level information and 0 profile-level observations of 11 unique latitude-longitude locations in the layer-level table.
+The `Lu_PIMA` data set references @Ping2010.
 
 ```{r}
 #subset the data
@@ -2301,8 +2361,9 @@ ggplot(data = layer %>%
 
 ## USGS Harden Yazoo (`USGS Harden Yazoo`)
 
+This data set is located in the United States.
+`USGS Harden Yazoo` has 234 layer-level and 17 profile-level observations across 4 and 3 sites, respectively.
 The USGS Harden Yazoo dataset references @Harden1999 and @Huntington1998.
-This data set is located in the United States and has 234 layer level observations and 17 profile-level observations of 4 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -2412,8 +2473,9 @@ ggplot(data = layer %>%
 
 ## Vogel (`Vogel`)
 
+This data set is located in the United States.
+`Vogel` has 230 layer-level and 0 profile-level observations across 8 and 0 sites, respectively.
 The Vogel dataset references @Kane2009, @Vogel2007, and @Vogel2008.
-This data set is located in the United States and has 230 layer level observations and YYY profile-level observations of ZZZ unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -2456,8 +2518,6 @@ if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
 #  anti_join(profile)
 ```
 
-
-
 ```{r}
 study %>%
   knitr::kable(caption = paste('Citations for the ', current_dataset, ' data set.'))
@@ -2477,9 +2537,6 @@ if (nrow(profile) != 0)
     knitr::kable(caption = 'Profile-level catagorical variable counts.')
 }
 ```
-
-
-
 
 ```{r}
 ggplot(locations) +
@@ -2524,8 +2581,9 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 
 ## USGS Muhs (`USGS Muhs`)
 
+This data set is located in the United States.
+`USGS Muhs` has 395 layer-level and 0 profile-level observations across 6 and 0 sites, respectively.
 The USGS Muhs dataset references @Muhs2003.
-This data set is located in the United States and has 395 layer level observations and YYY profile-level observations of 4 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -2628,10 +2686,11 @@ ggplot(data = layer %>%
 None we are aware of
 
 
-## HeckmanLithosequence
+## HeckmanLithosequence (`Heckman lithosequence`)
 
+This data set is located in the United States.
+`Heckman lithosequence` has 46 layer-level and 12 profile-level observations across 4 and 4 sites, respectively.
 The Heckman lithosequence dataset is references @Heckman2009.
-This data set is located in the United States and has 46 layer-level observations and 12 profile-level observations of 4 unique latitude-longitude locations in the layer-level table and 4 in the profile-level table.
 
 ```{r}
 #subset the data
@@ -2734,8 +2793,9 @@ ggplot(data = layer %>%
 
 ## Schuur (`Schuur`)
 
+This data set is located in the United States.
+`Schuur` has 153 layer-level and 4 profile-level observations across 1 and 1 sites, respectively.
 The Schuur data set references @Schuur2007.
-This data set is located in the United States and has 153 layer-level observations and 4 profile-level observations of 1 unique latitude-longitude location in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 current_dataset <- "Schuur"
@@ -2836,10 +2896,11 @@ In profile, the ISCN SOC to 1m computation rows were removed, getting rid of dup
 None that we are aware of
 
 
-## Myers_Smith
+## Myers_Smith (`Myers-Smith`)
 
+This data set is located in the United States.
+`Myers-Smith` has 231 layer-level and 0 profile-level observations across 1 and 0 sites, respectively.
 The Myers-Smith dataset references @MyersSmithHarden2007 and @MyersSmithMcGuire2007.
-This data set is located in the United States and has 231 layer-level observations and YYY profile-level observations of 1 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -2941,10 +3002,11 @@ ggplot(data = layer %>%
 
   + This dataset contains an actual data citation to be re-ingested in next ISCN update
 
-## OakRidgeNationalLab_Loblolly_DWJ
+## OakRidgeNationalLab_Loblolly_DWJ (`Oak Ridge National Lab_Loblolly_DWJ`)
 
 The Oak Ridge National Lab_Loblolly_DWJ dataset references @Parr2006.
-This data set is located in the United States and has 102 layer-level observations and YYY profile-level observations of 1 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
+This data set is located in the United States.
+`Oak Ridge National Lab_Loblolly_DWJ` has 102 layer-level and 0 profile-level observations across 1 and 0 sites, respectively.
 
 ```{r}
 #subset the data
@@ -3046,10 +3108,11 @@ ggplot(data = layer %>%
 
   + reformat graphs and rest of document
 
-## OakRidgeNationalLab_TDE
+## OakRidgeNationalLab_TDE (`Oak Ridge National Lab_TDE`)
 
+This data set is located in the United States.
+`Oak Ridge National Lab_TDE` has 1176 layer-level and 0 profile-level observations across 1 and 0 sites, respectively.
 The Oak Ridge National Lab_TDE dataset references @Froberg2008.
-This data set is located in the United States and has 1176 layer-level observations and YYY profile-level observations of 1 unique latitude-longitude locations in the layer-level table and AAA in the profile-level table.
 
 ```{r}
 #subset the data
@@ -3153,9 +3216,9 @@ None that we are aware of
 
 ## University of Michigan Biological Station Forest Accelerated Succession ExperimenT (`UMBS_FASET`)
 
+This data set is located in the United States.
+`UMBS_FASET` has 405 layer-level and 137 profile-level observations across 1 and 1 sites, respectively.
 The University of Michigan Biological Station Forest Accelerated Succession Experiment (`UMBS_FASET`) data set is uncited and unpublished.
-
-This data set is located in the United States and has 405 layer-level observations and 137 profile-level observations of 1 unique latitude-longitude location.
 
 ```{r}
 #subset the data
