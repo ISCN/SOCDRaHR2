@@ -148,7 +148,7 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
                                  names(.)), as.numeric)) %>%
              dplyr::mutate_at(dplyr::intersect(column_types$factor_cols, names(.)), as.factor) %>%
              dplyr::mutate_at(dplyr::intersect(column_types$date_cols, names(.)), function(xx){
-               ##Both conditions will be run but things throw warnings for the wrong conditional... supressing this function
+               ##Both conditions will be run but things throw warnings for the wrong conditional... suppressing this function
                suppressWarnings(
                  ans <- case_when(is.na(xx) ~ lubridate::NA_Date_,
                                   as.numeric(xx) < 2020 ~ lubridate::ymd(paste0(xx, '-01-01')),
