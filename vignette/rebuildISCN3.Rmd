@@ -811,7 +811,7 @@ ggplot(data = layer %>%
 
 This data set is located in the United States.
 `Jorgensen_NPS` has 2531 layer-level and 0 profile-level observations across 530 and 0 sites, respectively.
-Please see @Jorgenson2008 for additional details and if you are using ISCN3 please cite.
+Please see @Jorgenson2008 for additional details and cite.
 
 ### ISCN 3 to 3.3 changes
 
