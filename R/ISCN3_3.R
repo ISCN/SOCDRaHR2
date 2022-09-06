@@ -26,6 +26,7 @@ ISCN3_3 <- function(data_dir, datasets_exclude = c(), verbose = FALSE){
   # TODO: Specify in function description where ISCN data comes from
   # TODO: Clean up thaw-depth profile to remove coercion NA
   # TODO: Remove repeated information that is repeated in the layer from the profile that are not ids.
+  # TODO: NRCS data has 45704 profile information in the layer table that is not shared with the profile table.
 
   ##Dev comments
   # data_dir <- 'ISCN3' #change to location of ISCN3
