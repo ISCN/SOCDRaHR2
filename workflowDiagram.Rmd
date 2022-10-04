@@ -1,0 +1,30 @@
+---
+title: "Workflow Diagram"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(DiagrammeR)
+
+grViz(diagram = "digraph flowchart {
+  graph[layout = dot, color = blue]
+
+  node [shape = box, color = steelblue, fillcolor = lightblue, style = filled]
+  '@@1' -> '@@2' -> '@@3' -> '@@4' [color = steelblue]
+  '@@4' -> '@@2' [color = steelblue]
+
+}
+  
+  [1]: 'Read in Data from Online Sources\\n - Download files from Study URL to local files\\n - Read Data from files into R environment\\n - Manually enter metadata\\n - Repository metadata annotations (three distinct tables/keys)'
+  [2]: 'Transform Data into ISCN Data Tables\\n - Rename columns\\n - Pivot data tables\\n - Merge or separate tables'    
+  [3]: 'Clean and Produce ISCN Database\\n - Replace NA markers\\n - Prune extraneous data\\n - Fill any gaps QA/QC (quality assurance/quality control)'
+  [4]: 'Summarize Data\\n - Present study and observation information\\n - Create tables that summarize data for each dataset\\n - Output HTML file'
+
+")
+
+```
+

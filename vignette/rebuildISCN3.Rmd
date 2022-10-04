@@ -7,6 +7,7 @@ author:
     Gainesville, FL, USA
 - name: Michael Tang
 - name: Louis Graham
+- name: Ursa Pillay
 - name: M Younger
 - name: L Heran
 - name: J Bielecki
@@ -15,7 +16,6 @@ author:
 - name: K Frederick
 - name: A Davin
 - name: K Dodson
-- name: U Pillay
 date: '2022'
 output:
   bookdown::html_document2: default
@@ -41,15 +41,12 @@ library(knitr)
 library(ggplot2)
 library(ggmap)
 library(kableExtra)
-dataDir <- '~/Documents/Datasets/ISCN'
+dataDir <- '~/Desktop/Datasets/ISCN'
 
 knitr::opts_chunk$set(eval=TRUE, echo=FALSE)
 ```
 
 ```{r load, warning=FALSE}
-#compare and confirm changes that cleaning things up did
-ISCN_old <- ISCN3(dataDir=dataDir, orginalFormat = TRUE)
-
 #read in the 'new' clean data set that we are basing these figures on
 ISCN3.ls <- ISCN3_3(data_dir = dataDir)
 ```
