@@ -113,10 +113,11 @@ Please see @Nrcs2014a and @Nrcs2014b for additional details.
 
 ### ISCN vs 3 to 3.3 changes
 
-+ After cleaning for ISCN 3.3 there were no reduction in the number of layer level observations, please note that there are some layers (525) with multiple rows many of which represent different organic carbon processing codes (`cNRCS_prep`).
-+ In the profile tables 14,756 rows were removed from ISCN3 that match the count of the `ISCN SOC stock to 1m computation` flag in the `dataset_name_soc` column implying that when that 1m computation was calculated, the other values in the ISCN contribution rows were duplicated from the other row in this orgnial dataset.
-+ In the layer tables no rows were removed. 
-+ Columns were with soil organic carbon density (volume and area) were removed in the profile and layer datasets since they were entirely filled in by ISCN.  
++ Columns were with soil organic carbon density (volume and area) were removed in the profile and layer tables since they were entirely filled in by ISCN.
++ In the profile tables 14,756 rows were removed from ISCN3 that match the count of the `ISCN SOC stock to 1m computation` flag in the `dataset_name_soc` column implying that when that 1m computation was calculated, the other values in the ISCN contribution rows were duplicated from the other row in this original dataset.
++ After cleaning for ISCN 3.3 there were no reduction in the number of layer level observations.
++ There are some layers (525) with multiple rows many of which represent different organic carbon processing codes (`cNRCS_prep`).
+
 
 ### Future issues
 
