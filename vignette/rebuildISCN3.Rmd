@@ -16,10 +16,12 @@ author:
 - name: A Davin
 - name: K Dodson
 - name: U Pillay
+- name: V Marupaka
 date: '2022'
 output:
-  bookdown::html_document2: default
-  toc: yes
+    html_document: 
+      number_sections: yes
+      toc: yes
 bibliography: ISCN3_bibliography.bib
 link-citations: yes
 ---
@@ -28,7 +30,7 @@ link-citations: yes
 # Purpose: 
 
 The International Soil Carbon Network Database vs 3.1 (ISCN3.1) is a collection of layer-level soil observations pulled together to explain and investigate soil carbon stocks world wide.
-ISCN 3.0 was published in 2015 (archived with EDI 2022), vs 3.1 adresed some known shortcomings and removed the ISCN inferred soil organic carbon to emphasize fit-for-purpose decisions needed for end use.
+ISCN 3.0 was published in 2015 (archived with EDI 2022), vs 3.1 addressed some known shortcomings and removed the ISCN inferred soil organic carbon to emphasize fit-for-purpose decisions needed for end use.
 
 There are 29 contributing data sets with 434,119 layer-level observations across 56,926 geo-referenced locations and 10,934 un-referenced locations.
 
@@ -97,29 +99,29 @@ table_summary <- ISCN3.ls$study %>%
     #sort rows in ascending order based on layer site count
     arrange(layer_site_count) 
 
+
+# sum(table_summary$geolocated_layer, na.rm = TRUE)
+# sum(table_summary$unlocated_layer, na.rm = TRUE)
+
 knitr::kable(table_summary, 
-  caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile and layer data table.')%>%
-  kable_styling()
+  caption = 'Site counts for each contributing dataset submision (dataname_sub) in the profile and layer data table.')
 ```
 
-# Data Contributions
-
-## National Cooperative Soil Characterization Database (11 September 2014) (`NRCS Sept/2014`)
+# National Cooperative Soil Characterization Database (11 September 2014) (`NRCS Sept/2014`)
 
 Layer-level soils data of pedons from the NRCS-Soil Survey Lab, National Cooperative Soil Characterization Database (version date: 11 September 2014).
 Sites are concentrated in the United states with a smaller number of international sites.
 `NRCS Sept/2014` has 373,326 layer-level and 26,096 profile-level observations across 44,896 and 13,016 sites, respectively.
 Please see @Nrcs2014a and @Nrcs2014b for additional details.
 
-### ISCN vs 3 to 3.3 changes
+## ISCN vs 3 to 3.3 changes
 
 + Columns were with soil organic carbon density (volume and area) were removed in the profile and layer tables since they were entirely filled in by ISCN.
 + In the profile tables 14,756 rows were removed from ISCN3 that match the count of the `ISCN SOC stock to 1m computation` flag in the `dataset_name_soc` column implying that when that 1m computation was calculated, the other values in the ISCN contribution rows were duplicated from the other row in this original dataset.
 + After cleaning for ISCN 3.3 there were no reduction in the number of layer level observations.
 + There are some layers (525) with multiple rows many of which represent different organic carbon processing codes (`cNRCS_prep`).
 
-
-### Future issues
+## Future issues
 
 - Max/min bounds need to be worked out for this data.
 - Profile information in layer table does not match all of the profile information in profile table
@@ -149,6 +151,16 @@ layer <- ISCN3.ls$layer %>%
   filter(dataset_name_sub == current_dataset) %>%
   select(where(~any(!is.na(.))))
 
+##Pull out layers with more then one row
+# duplicate_layers <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  # filter(length(layer_name) >= 2)
+
+#random_slice <- layer %>%
+#  slice_sample(n=100)
+
+#ordered_slice <- layer[200:240,]
+
 ##Check to see if there is different/new information in the layer table that is not in the profile
 ##This code is left in for manual checks
 # profile_info_layer <- layer %>%
@@ -159,6 +171,13 @@ layer <- ISCN3.ls$layer %>%
 #  select(profile_name, soil_taxon, soil_series) %>%
 #  unique() %>%
 #  anti_join(profile)
+
+
+
+# layer_sites <- ISCN3.ls$layer %>% 
+# filter(dataset_name_sub == current_dataset) %>%
+# select(site_name)
+# layer_sites_unique <- unique(layer_sites)
 ```
 
 ```{r}
@@ -194,7 +213,7 @@ if(nrow(profile) != 0) {
     arrange(-n) %>%
     #this is over 17000 rows so trimming this down a bit
     slice_head(n = 3) %>%
-    knitr::kable(caption = 'Profile-level catagorical variable counts.')
+    knitr::kable(caption = 'Profile-level catagorical variable counts (subset of all catagories).')
 }
 ```
 
@@ -340,8 +359,10 @@ Please see @Zinke1986 for additional details and if you are using ISCN3 please c
 
 ### ISCN 3 to 3.3
 
-+ Rows were removed from ISCN3 due to being duplicates (a unique function was applied).
-+ Columns were removed from ISCN3 if they were SOC calculated.
++ 2401 rows were removed between ISCN3 and ISCN3.3 due to ??duplication??
++ SOC calculation from ISCN were removed. (total of 3353 observations are SOC stock computation by ISCN )
++ 466 duplicate observations with multiple rows of different organic carbon %, BD, pH, CEC values in the layer table
++ 3296 observations in the profile table were duplicates => resulting in 4127 observations in profile table after removing the duplicates with 26 variables 
 
 ### Future issues
 
@@ -377,6 +398,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_WSCN <- layer %>%
+# group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+# filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -469,6 +495,10 @@ Please see @Buell2004 for additional details.
 ### ISCN vs 3 to 3.3 changes
 
 + ISCN calculated soil organic carbon stocks were removed and duplicate data entries collapsed.
++ 729 observations in the profile table were duplicates => resulting in 945 observations in profile table after removing the duplicates with 16 variables 
++ the ISCN SOC stock to 1m computation were found in the profile datatable 
++ No layer duplicates with length >= 2 were found 
+
 
 ### Future issues
 
@@ -505,6 +535,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+##Pull out layers with more then one row
+# duplicate_layers_usgs <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -593,7 +628,10 @@ Please see @Johnson2011 for additional details.
 
 ### ISCN 3 to 3.3 changes
 
-+ ISCN calculated soil organic carbon stocks were removed and the resulting duplicates removed.
++ ISCN calculated soil organic carbon stocks were removed and the resulting duplicates removed. ?
++ 1095 observations in the profile table were duplicates => resulting in 2064 observations in profile table after removing the duplicates with 26 variables
++ No layer duplicates with length >= 2 were found
+
   
 ### Future issues
 
@@ -630,6 +668,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+##Pull out layers with more then one row
+# duplicate_layers_akdsc <- layer %>%
+ # group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+ # filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -712,12 +755,13 @@ ggplot(data = layer %>%
 ## Jorgensen_NPS (`Jorgensen_NPS`)
 
 This data set is located in the United States.
-`Jorgensen_NPS` has 2531 layer-level and 0 profile-level observations across 530 and 0 sites, respectively.
+`Jorgensen_NPS` has 2531 layer-level and 0 profile-level observations across 529 and 0 sites, respectively.
 Please see @Jorgenson2008 for additional details and cite.
 
 ### ISCN 3 to 3.3 changes
 
 + No changes noted from 3 to 3.3
++ No layer duplicates with length >= 2 were found
   
 ### Future issues
 
@@ -753,6 +797,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+##Pull out layers with more then one row
+# duplicate_layers_j_nps <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -835,6 +884,14 @@ ggplot(data = layer %>%
 
 This data set is located in the United States.
 `Northern Circumpolar Soil Carbon Database (NCSCD)` has 1907 layer-level and 1020 profile-level observations across 476 and 471 sites, respectively.
+
+## obs
+
++ 510 observations in the profile table were duplicates => resulting in 510 observations in profile table after removing the duplicates with 22 variables 
++ 21 layer duplicates with length >= 2 were found in layer table 
++ 1875 missing rows in the layer table in ISCN3.3
+
+
 Please see @Hugelius2013 for additional details and if you are using ISCN3 please cite.
 
 ```{r}
@@ -866,6 +923,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_ncscd <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >=2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -943,6 +1005,8 @@ This data set is located in the United States.
 `Jorgensen_ARCN` has 1108 layer-level and 0 profile-level observations across 316 and 0 sites, respectively.
 Please see @Jorgenson2008 for additional details.
 
++ No layer duplicates with length >= 2 were found
+
 ```{r}
 #subset the data
 current_dataset <- "Jorgensen_ARCN"
@@ -972,6 +1036,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_j_arcn <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -1040,14 +1109,17 @@ ggplot(data = layer %>%
   
 ### Future issues
 
-- Go to https://www.nps.gov/im/vmi-wrst.htm and reingest the associated soil data.
+- Go to https://www.nps.gov/im/vmi-wrst.htm and re-ingest the associated soil data.
 
 
 ## Bockheim (`Bockheim`)
 
 Please see @Bockheim1998, @Bockheim1999, @Bockheim2001, @Bockheim2003 and @Bockheim2004 for additional details.
 This data set is located in the United States.
-`Bockheim` has 1611 layer-level and 46 profile-level observations across 127 and 24 sites, respectively.
+`Bockheim` has 1611 layer-level and 46 profile-level observations across 126 and 24 sites, respectively.
+
++ 20 observations in the profile table were duplicates => resulting in 26 observations in profile table after removing the duplicates with 22 variables 
++ No layer duplicates with length >= 2 were found
 
 ```{r}
 #subset the data
@@ -1078,6 +1150,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_bock <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -1152,9 +1229,15 @@ ggplot(data = layer %>%
 ## Permafrost_RCN (`Permafrost_RCN`)
 
 This data set is located in the United States.
-`Permafrost_RCN` has 3696 layer-level and 0 profile-level observations across ZZZ and AAA sites, respectively.
+`Permafrost_RCN` has 3696 layer-level and 0 profile-level observations across XX and 0 sites, respectively.
 Please see @Harden2012 for additional details and if you are using ISCN3 please cite.
 Cite the individual author if using their data, in addition cite Harden if using that data as part of the broader Permafrost RCN dataset.
+
++ No profile level observations are recorded for this dataset 
++ Consider site names instead for counting the number of sites for layer level observations (== 211 sites for layer level data?) 
++ No layer duplicates with length >= 2 were found
++ No lat and long values are provided 
+
 
 ```{r eval=FALSE}
 #subset the data
@@ -1173,10 +1256,10 @@ layer <- ISCN3.ls$layer %>%
   filter(dataset_name_sub == current_dataset) %>%
   select(where(~any(!is.na(.))))
 
-locations <- layer %>%
-              select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)%>%
-  unique() %>%
-  filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+# locations <- layer %>%
+#               select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)%>%
+#   unique() %>%
+#   filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 
 if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
   locations <- profile %>% 
@@ -1185,6 +1268,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_p_rcn <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -1217,10 +1305,10 @@ if(nrow(profile) != 0) {
 ```
 
 ```{r}
-ggplot(locations) +
-  geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
-  geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
-  theme(axis.title = element_blank())
+# ggplot(locations) +
+#   geom_polygon(data = map_data('world'), aes(x=long, y = lat, group = group)) +
+#   geom_point(aes(x=`long (dec. deg)`, y = `lat (dec. deg)`), color = 'red', size = 3) +
+#   theme(axis.title = element_blank())
 
 ggplot(data = layer %>%
          pivot_longer(cols = where(is.numeric) &
@@ -1263,6 +1351,9 @@ This data set is located in the United States.
 `Lehmann NE US soils` has 172 layer-level and 0 profile-level observations across 172 and 0 sites, respectively.
 The Lehmann NE US soils dataset references @Schmidt2000.
 
++ No layer duplicates with length >= 2 were found
+
+
 ```{r}
 #subset the data
 current_dataset <- "Lehmann NE US soils"
@@ -1293,6 +1384,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_leh_ne <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -1365,8 +1461,10 @@ None we are aware of
 ## USDA-FS_NRS_LandscapeCarbonInventory (`USDA-FS NRS Landscape Carbon Inventory`)
 
 This data set is located in the United States.
-`USDA-FS NRS Landscape Carbon Inventory` has 1510 layer-level and 0 profile-level observations across 144 and 0 sites, respectively.
+`USDA-FS NRS Landscape Carbon Inventory` has 1510 layer-level and 0 profile-level observations across 143 and 0 sites, respectively.
 The USDA-FS NRS Landscape Carbon Inventory dataset references @Cole2013.
+
++ No layer duplicates with length >= 2 were found
 
 ```{r}
 #subset the data
@@ -1398,6 +1496,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_fs_nrs <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -1462,7 +1565,7 @@ ggplot(data = layer %>%
 
   + Rows weren't removed from ISCN3 because there were no duplicated entries within the layer-level and profile-level information.
   + Columns were removed from ISCN3 in places where information was marked as 'NA' throughout the entirety of the column.
-  + Values in the `country (country)` column of the layer-level and profile-level rows were replaced with 'United States', as they were previously marked as unknown. Values in the `hzn` and `hzn_desgn` columns of the profile level rows were originally filled with '?' and therefore, were replaced with a NA_character.
+  + Values in the `country (country)` column of the layer-level and profile-level rows were replaced with 'United States', as they were previously marked as unknown (it is not observed in this ISCN3.3 version!). Values in the `hzn` and `hzn_desgn` columns of the profile level rows were originally filled with '?' and therefore, were replaced with a NA_character.
   + Ggplot maps were modified to display a map centered around the North America and a second map focusing on the data collection sites in the United States.
   
 ### Future issues
@@ -1472,8 +1575,10 @@ None we are aware of
 ## Jorgensen_YKDE (`Jorgensen_YKDE`)
 
 This data set is located in the United States.
-`Jorgensen_YKDE` has 697 layer-level and 0 profile-level observations across 61 and 0 sites, respectively.
+`Jorgensen_YKDE` has 697 layer-level and 0 profile-level observations across 60 and 0 sites, respectively.
 The Jorgensen_YKDE dataset references @Jorgenson2000.
+
++ No layer duplicates with length >= 2 were found
 
 ```{r}
 #subset the data
@@ -1505,6 +1610,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_j_ykde <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -1582,6 +1692,9 @@ This data set is located in the United States.
 `Boby_Mack` has 482 layer-level and 0 profile-level observations across 38 and 0 sites, respectively.
 See @Boby2010 for additional details and if you are using ISCN3 please cite.
 
++ No layer duplicates with length >= 2 were found
++ ? is not replaced by NA in the hzn column of the layer table  
+
 ```{r}
 #subset the data
 current_dataset <- "Boby_Mack"
@@ -1611,6 +1724,12 @@ locations <- profile %>%
   unique() %>%
   filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_boby_mack <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
+
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
 #  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
@@ -1688,6 +1807,8 @@ This data set is located in the United States.
 `Lehmann Soil C&BC #1` has 139 layer-level and 0 profile-level observations across 31 and 0 sites, respectively.
 The Lehmann Soil C&BC #1 dataset references @Schmidt2000.
 
++ No layer duplicates with length >= 2 were found
+
 ```{r}
 #subset the data
 current_dataset <- "Lehmann Soil C&BC #1"
@@ -1718,6 +1839,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_leh_cbc <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -1794,6 +1920,10 @@ This data set is located in the United States.
 `USGS Harden` has 1203 layer-level and 18 profile-level observations across 23 and 6 sites, respectively.
 The USGS Harden dataset is references @Harden2008a, @ODonnell2011, @Manies2004, @Harden2008b, @Harden2006 and @Neff2005.
 
++ 8 observations in the profile table were duplicates => resulting in 10 observations in profile table after removing the duplicates with 21 variables 
++ No layer duplicates with length >= 2 were found
+
+
 ```{r}
 #subset the data
 current_dataset <- "USGS Harden"
@@ -1824,6 +1954,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_usgs_harden <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -1909,6 +2044,9 @@ This data set is located in the United States.
 `Bonanza LTER` has 583 layer-level and 44 profile-level observations across 20 and 15 sites, respectively.
 The Bonanza_LTER dataset references @Cleve1993 and @Yarie2013.
 
++ No layer duplicates with length >= 2 were found
+
+
 ```{r}
 #subset the data
 current_dataset <- "Bonanza LTER"
@@ -1932,6 +2070,11 @@ locations <- profile %>%
               select(`lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`)) %>%
   unique() %>%
   filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
+
+# #Pull out layers with more then one row
+# duplicate_layers_bonanza_lter <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -2009,6 +2152,8 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 The `Lu_LTER` data set in ISCN3 contains 103 layer-level observations and 14 profile-level observations after cleaning for ISCN3.5.
 The Lu_LTER data set references @Ping2000, @Ping2002, @Ping2004, @Ping2005, and @Michaelson1996.
 
++ No layer duplicates with length >= 2 were found  
+
 ```{r}
 current_dataset <- "Lu_LTER"
 
@@ -2039,6 +2184,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_lu_lter <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) > 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -2103,7 +2253,7 @@ ggplot(data = layer %>%
 
 Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 
-  + In profile, the ISCN SOC to 1m computation rows were removed, as well as any resulting duplicate data.
+  + In profile, the ISCN SOC to 1m computation rows were removed, as well as any resulting duplicate data. (it is actually the other way round, the ISCN SOC to 1m computation rows were kept!) confirm again(vm)
   
 ### Future issues
 
@@ -2113,8 +2263,11 @@ None we are aware of
 ## HeckmanSwanstonBiscuitBurn (`Heckman/Swanston Biscuit Burn`)
 
 This data set is located in the United States.
-`Heckman/Swanston Biscuit Burn` has 28 layer-level and 0 profile-level observations across 14 and 0 sites, respectively.
+`Heckman/Swanston Biscuit Burn` has 28 layer-level and 0 profile-level observations across 13 and 0 sites, respectively.
 The Heckman/Swanston Biscuit Burn dataset references @Heckman2013.
+
++ No layer duplicates with length >= 2 were found
++ ? in hzn column has not been replaced with NA 
 
 ```{r}
 #subset the data
@@ -2146,6 +2299,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_heck_swanston <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -2220,8 +2378,10 @@ ggplot(data = layer %>%
 ## Kane (`Kane`)
 
 This data set is located in the United States.
-`Kane` has 574 layer-level and 144 profile-level observations across 12 and AAA sites, respectively.
+`Kane` has 574 layer-level and 0 profile-level observations across 12 and 0 sites, respectively.
 Please see @Kane2004, @Kane2005, @Kane2009, and @Valentine2004 for additional details.
+
++ No layer duplicates with length >= 2 were found
 
 ```{r}
 #subset the data
@@ -2254,6 +2414,12 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_kane <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
+
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
 #  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
@@ -2337,8 +2503,10 @@ Below is a list of know issues that were addressed between ISCN 3 and ISCN 3.3
 
 ## Lu_PIMA (`Lu_PIMA`)
 
-This dataset contains 69 layer-level information and 0 profile-level observations of 11 unique latitude-longitude locations in the layer-level table.
+This dataset contains 69 layer-level information and 2 profile-level observations of 11 and 2 unique latitude-longitude locations in the layer-level and profile-level tables.
 The `Lu_PIMA` data set references @Ping2010.
+
++ No layer duplicates with length >= 2 were found
 
 ```{r}
 #subset the data
@@ -2371,6 +2539,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_lu_pima <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -2451,6 +2624,9 @@ This data set is located in the United States.
 `USGS Harden Yazoo` has 234 layer-level and 17 profile-level observations across 4 and 3 sites, respectively.
 The USGS Harden Yazoo dataset references @Harden1999 and @Huntington1998.
 
++ No layer duplicates with length >= 2 were found
++ In layer table, the 234 rows of the data are categorized based upon the USGS Harden Yazoo calculated SOC data 
+
 ```{r}
 #subset the data
 current_dataset <- "USGS Harden Yazoo"
@@ -2482,6 +2658,12 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_usgs_yazoo <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
+
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
 #  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
@@ -2547,8 +2729,8 @@ ggplot(data = layer %>%
   + 3 columns of dataset_layer were removed from ISCN3 because they were determined using soc.
   + 17 rows of dataset_profile were removed from ISCN3 because they were filled using ISCN stock computation.
   + 5 columns of dataset_profile were removed from ISCN 3 because they were determined using soc.
-  + Values in column  country (country) were reassigned to "united States" in the dataset_layer and dataset_profile tables because it was the known location of the collection state.
-  + Values in the "hzn" column of the dataset_layer table were reassigned to an NA character from "?", a nonspecific character.
+  + Values in column  country (country) were reassigned to "united States" in the dataset_layer and dataset_profile tables because it was the known location of the collection state. (it is not updated in the layer table - vm)
+  + Values in the "hzn" column of the dataset_layer table were reassigned to an NA character from "?", a nonspecific character. (hzn column is actually missing in this dataset! - vm)
   + Ggplot maps were modified to ensure datasets accurately focused on Southeastern United States.
   + Cryptic site notes in dataset_profile table were resolved to contain full citations.
   
@@ -2562,6 +2744,9 @@ ggplot(data = layer %>%
 This data set is located in the United States.
 `Vogel` has 230 layer-level and 0 profile-level observations across 8 and 0 sites, respectively.
 The Vogel dataset references @Kane2009, @Vogel2007, and @Vogel2008.
+
++ No layer duplicates with length >= 2 were found
++ ? is not replaced with NA in the hzn column in the layer table 
 
 ```{r}
 #subset the data
@@ -2592,6 +2777,11 @@ if (any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_vogel <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -2671,6 +2861,9 @@ This data set is located in the United States.
 `USGS Muhs` has 395 layer-level and 0 profile-level observations across 6 and 0 sites, respectively.
 The USGS Muhs dataset references @Muhs2003.
 
++ No layer duplicates with length >= 2 were found
++ ? is not replaced with NA in the hzn column in the layer table 
+
 ```{r}
 #subset the data
 current_dataset <- "USGS Muhs"
@@ -2702,6 +2895,12 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_usgs_muhs <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
+
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
 #  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
@@ -2809,6 +3008,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
 
+# #Pull out layers with more then one row
+# duplicate_layers_heck_lith <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
+
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
 #  select(any_of(setdiff(names(profile), c("layer_top (cm)", "layer_bot (cm)", "soc (g cm-2)")))) %>%
@@ -2883,6 +3087,10 @@ This data set is located in the United States.
 `Schuur` has 153 layer-level and 4 profile-level observations across 1 and 1 sites, respectively.
 The Schuur data set references @Schuur2007.
 
++ No layer duplicates with length >= 2 were found
++ 2 observations in the profile table were duplicates => resulting in 2 observations in profile table after removing the duplicates with 19 variables 
++ ? is not replaced with NA in the hzn column in the layer table 
+
 ```{r}
 current_dataset <- "Schuur"
 
@@ -2913,6 +3121,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_schuur <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -2988,6 +3201,8 @@ This data set is located in the United States.
 `Myers-Smith` has 231 layer-level and 0 profile-level observations across 1 and 0 sites, respectively.
 The Myers-Smith dataset references @MyersSmithHarden2007 and @MyersSmithMcGuire2007.
 
++ No layer duplicates with length >= 2 were found
+
 ```{r}
 #subset the data
 current_dataset <- "Myers-Smith"
@@ -3017,6 +3232,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_myer_smith <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -3094,6 +3314,9 @@ The Oak Ridge National Lab_Loblolly_DWJ dataset references @Parr2006.
 This data set is located in the United States.
 `Oak Ridge National Lab_Loblolly_DWJ` has 102 layer-level and 0 profile-level observations across 1 and 0 sites, respectively.
 
++ No layer duplicates with length >= 2 were found
+
+
 ```{r}
 #subset the data
 current_dataset <- "Oak Ridge National Lab_Loblolly_DWJ"
@@ -3123,6 +3346,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_oak_ridge <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -3200,6 +3428,9 @@ This data set is located in the United States.
 `Oak Ridge National Lab_TDE` has 1176 layer-level and 0 profile-level observations across 1 and 0 sites, respectively.
 The Oak Ridge National Lab_TDE dataset references @Froberg2008.
 
++ No layer duplicates with length >= 2 were found
++ ? in the hzn column needs to be replaced with NA
+
 ```{r}
 #subset the data
 current_dataset <- "Oak Ridge National Lab_TDE"
@@ -3229,6 +3460,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)){
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_oak_tde <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
@@ -3306,6 +3542,10 @@ This data set is located in the United States.
 `UMBS_FASET` has 405 layer-level and 137 profile-level observations across 1 and 1 sites, respectively.
 The University of Michigan Biological Station Forest Accelerated Succession Experiment (`UMBS_FASET`) data set is uncited and unpublished.
 
++ No layer duplicates with length >= 2 were found
++ 364 duplicates were found in the layer table in ISCN3 
++ 
+
 ```{r}
 #subset the data
 current_dataset <- "UMBS_FASET"
@@ -3338,6 +3578,11 @@ if(any(ISCN3.ls$profile$dataset_name_sub == current_dataset)) {
     unique() %>%
     filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`))
 }
+
+# #Pull out layers with more then one row
+# duplicate_layers_umbs <- layer %>%
+#  group_by(dataset_name_sub, site_name, profile_name, layer_name) %>%
+#  filter(length(layer_name) >= 2)
 
 #Check to see if there is different/new information in the layer table that is not in the profile
 #profile_info_layer <- layer %>%
