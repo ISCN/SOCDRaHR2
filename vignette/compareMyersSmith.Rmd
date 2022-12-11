@@ -1,0 +1,157 @@
+---
+title: "Myers Smith data comparison"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(SOCDRaH2)
+dataDir <- '~/Documents/Datasets/ISCN'
+
+ISCN3.ls <- ISCN3_3(data_dir = dataDir)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+*Goal:* read in the original/available data contribution and compare it with the ISCN3 data. What are the differences and can we replace ISCN3 data with the archived copy. We want to track how that data changed from the original 'source' to the final ISCN data product. We also want to prototype our data transformation function.
+
+Read function copied from readMyersSmith2005.R
+- changed read_csv to read_tsv
+
+```{r}
+#' Raw read for Myers-Smith (2005)
+#' 
+#' Download and read in raw data from Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data/data-detail/id/192. doi:10.6073/pasta/b0e9120983438c27bf1a30f37f0e5200
+#' 
+#' This is not post-processed or QA/QCed by this package.
+#'
+#' @param dataDir filename for download directory
+#' @param download boolean that will download the files from repository 
+#'
+#' @return a list with meta data and raw table reads. This will be 67 KB in size.
+#' @export
+#' @importFrom readr read_tsv
+readMyersSmith2005 <- function(dataDir, download=TRUE, verbose=FALSE){
+  
+  urlTable <- data.frame(fileName = c(file.path(dataDir, 'bog_soil_data.txt'),
+                                      file.path(dataDir, 'BNZeml192.xml')),
+                         downloadURL = c('https://www.lter.uaf.edu/php/download_data.php?f=/data_files/ascii/files/bog_soil_data.txt',
+                                         'http://www.lter.uaf.edu/eml/BNZeml192.xml'))
+  
+  #for loop to read in data from urlTable if it does not exist in local repository
+  for(ii in 1:nrow(urlTable)){
+    #dataFile <- file.path(dataDir, urlTable$fileName[ii])
+    dataFile <- urlTable$fileName[ii]
+    if(!(file.exists(dataFile))){
+      download.file(urlTable$downloadURL[ii], destfile= dataFile, quiet=FALSE)
+    }
+  }
+  
+  # #this code was not used as it requires additional package dependency
+  # plyr::d_ply(
+  #   urlTable,
+  #   c('downloadURL','fileBase'),
+  #   function(xx){
+  #     dataFile <- file.path(dataDir, xx$fileBase)
+  #     if(!(file.exists(dataFile))){
+  #     download.file(xx$downloadURL, destfile= dataFile, quiet=FALSE)
+  #     }
+  #     }
+  #   )
+  
+  
+  #reading in data
+  readSchuurlayerData <- readr::read_tsv(urlTable$fileName[1])
+  
+  #ans and its return
+  ans <- list(downloadFiles = c(urlTable$fileName[1],
+                                urlTable$fileName[2]),
+              bog_soil_data.txt = readSchuurlayerData,
+              licenseShort = "",
+              licenseFull = "",
+              citation = "Myers-Smith, Isla. 2005. Soil data for cores from a transect from the center of the BBC collapse scar into the surrounding burn, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:192, http://www.lter.uaf.edu/data/data-detail/id/192. doi:10.6073/pasta/b0e9120983438c27bf1a30f37f0e5200",
+              abstract = "This data set contains soil data for cores from a transect from the center of the BBC collapse scar (0 m) into the surrounding burn (30 m). Thirty-five cores were collected soil cores along the transect in March 2003. We drilled cores using a gasoline powered, permafrost corer while soils were frozen. Two to four cores were drilled every 3 m along the transect, yielding a total of 35 cores. We stored cores frozen and cut sample sections using a radial saw. Cores were sampled at the interfaces between different soil layers. We classified soils using the Canadian Soil Classification system (Soil Classification Working Group 1998) identifying fibric, mesic, and humic organic horizions and the A and C mineral horizons. Nine cores were sampled only to the mineral boundary. We measured bulk density, %C and %N for all soil samples. The pH of sample was determined using litmus paper. We oven-dried at 50 - 65°C and ground all samples before analysis. We analyzed samples for %C and %N using a Carlo Erba EA1108 CHNS analyzer (CE Instruments, Milan, Italy) and a COSTECH ECS 4010 CHNS-O analyzer (Costech Analytical Technologies Inc., Valencia, CA,USA). Sample standard errors were ± 0.01% for nitrogen, ± 0.45% for carbon. To indicate fire events in the surrounding ecosystem, charcoal layers in the cores were quantified. We estimated charcoal by emptying dried samples of a known volume and depth (on mean 4.5 cm3) over a 10 cm x 10 cm grid and counting macroscopic charcoal fragments (greater than 0.05 mm in diameter) in each cm grid cell.",
+              publications = c("Myers-Smith, I., A.D. McGuire, J.W. Harden, and F.S. Chapin III. 2007. The influence of disturbance on carbon exchange in a permafrost collapse and adjacent burned forest. Journal of Geophysical Research - Biosciences 112, G04017, doi:10.1029 2007JG000423.",
+                               "Myers-Smith, I. H., Harden, J. W., Wilmking, M., Fuller, C. C., McGuire, A. D., and Chapin III, F. S.: Wetland succession in a permafrost collapse: interactions between fire and thermokarst, Biogeosciences, 5, 1273–1286, https://doi.org/10.5194/bg-5-1273-2008, 2008."))
+  
+  return(ans)
+}
+```
+
+Modifications made to original data table to match ISCN format:
+ - mapped corresponding column names by comparing data entries
+ - renamed original data columns to ISCN equivalent
+ - changed data types of 2 columns (ph_other and observation_date) to match
+ - replaced all -9999 values with NA
+ - joined original data with ISCN by matching columns
+ - replaced less precise ISCN data with original data in joined table
+ - determined the entries that were exclusive to the original data set (entries with hzn_desgn of L or I)
+
+```{r}
+#load the cited data contribution
+
+OrgMySm_data <- readMyersSmith2005(dataDir)
+OrgMySm_table <- OrgMySm_data$bog_soil_data.txt
+
+#filter the corresponding ISCN3 data set
+
+ISCNMySm_data <- ISCN3.ls$layer %>% 
+  filter(dataset_name_sub == 'Myers-Smith') %>%
+  select(where(~any(!is.na(.))))
+
+# rename column names in original dataset to match ISCN - rename function
+
+NewOrgMySm <- rename(OrgMySm_table, 
+                     `layer_name` = `Sample ID`,
+                     `layer_bot` = `Depth (cm)`,
+                     `hzn_desgn` = `Field Horizon Code (Canadian Soil Classification)`,
+                     `layer_note` = `Field Description`,
+                     `observation_date (YYYY-MM-DD)` = `Date Sampled`,
+                     `bd_samp (g cm-3)` = `Bulk Density (g/cm3)`,
+                     `n_tot (percent)` = `% Nitrogen`,
+                     `c_tot (percent)` = `% Carbon`,
+                     `ph_other` = `pH`
+                     ) %>%
+  # use mutate function to change date and ph data types
+  # change -9999 values to NA
+  mutate(`ph_other` = as.numeric(`ph_other`), `observation_date (YYYY-MM-DD)` = as.Date(`observation_date (YYYY-MM-DD)`),
+         `ph_other` = na_if(`ph_other`, -9999), 
+         `c_tot (percent)` = na_if(`c_tot (percent)`, -9999),
+         `n_tot (percent)` = na_if(`n_tot (percent)`, -9999),
+         `bd_samp (g cm-3)` = na_if(`bd_samp (g cm-3)`, -9999),
+         `Carbon:Nitrogen` = na_if(`Carbon:Nitrogen`, -9999),
+         `Carbon Content (gC/cm3)` = na_if(`Carbon Content (gC/cm3)`, -9999),
+         `Charcoal (bits/cm3)` = na_if(`Charcoal (bits/cm3)`, -9999),
+         `Volumetric Field Moisture (volume %)` = na_if(`Volumetric Field Moisture (volume %)`, -9999),
+         `Ground Sample Mass (g)` = na_if(`Ground Sample Mass (g)`, -9999),
+         `Field Weight (g)` = na_if(`Field Weight (g)`, -9999),
+         `Sample Volume (cm3)` = na_if(`Sample Volume (cm3)`, -9999),
+         `Volume Method` = na_if(`Volume Method`, -9999))
+
+# sharedEntries table inclues all unique columns from both datasets; certain ISCN columns were replaced with the original dataset columns due to rounding precision
+
+# note columns not in ISCN, think about expanding ISCN data table to account for these
+
+sharedEntries <- inner_join(ISCNMySm_data, NewOrgMySm, by = c('layer_name', 'layer_note', 'c_tot (percent)')) %>% 
+  # modify ISCN columns to more precise original data
+  mutate(`observation_date (YYYY-MM-DD).x` = `observation_date (YYYY-MM-DD).y`, `n_tot (percent).x` = `n_tot (percent).y`, `bd_samp (g cm-3).x` = `bd_samp (g cm-3).y`, `ph_other.x` = `ph_other.y`, 
+         # set repeat columns to NULL to remove from table
+         `observation_date (YYYY-MM-DD).y` = NULL, `n_tot (percent).y` = NULL, `bd_samp (g cm-3).y` = NULL, `ph_other.y` = NULL) %>% 
+  # remove '.x' table identifier from repeated column names
+  rename(`observation_date (YYYY-MM-DD)` = `observation_date (YYYY-MM-DD).x`, `n_tot (percent)` = `n_tot (percent).x`, `bd_samp (g cm-3)` = `bd_samp (g cm-3).x`, `ph_other` = `ph_other.x`)
+
+# identify entries that are exclusive to the original dataset
+onlyOrgMySm <- anti_join(NewOrgMySm, ISCNMySm_data, by = c('layer_name'))
+
+# ISCN dataset does not include entries that have hzn_desgn of L or I
+hznDesgn <- NewOrgMySm %>%
+  select(c('hzn_desgn'))
+
+# ISCN dataset does not have any exclusive data entries
+onlyISCNMySm <- anti_join(ISCNMySm_data, NewOrgMySm, by = c('layer_name'))
+
+```
+
+To do:
+ - think about how to generalize this process using metadata instead of mapping/coding columns by hand 
+ 
