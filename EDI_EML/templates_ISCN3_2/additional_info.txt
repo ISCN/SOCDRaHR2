@@ -1,9 +1,0 @@
-Funding and Acknowledgements
-
-The ISCN 3.1 data product was developed with financial support from the following grants:
-1. Carbon cycle research, coordination, and outreach through the National Soil Carbon Network. PIs C. Swanston, M. Kramer, M. Waldrop, J. Lehmann, R. Kolka. USDA-NIFA AFRI MICR-2009-02612.
-2. Purchase and installation of the Network Attached Storage Server for ISCN. PIs C. Swanston, D. Agarwal. USDA-FS 14-IA-11242306-136.
-3. International Soil Carbon Network. PIs C. Swanston, L. Nave. USDA-FS 16-CR11242306-071.
-The USDA Natural Resources Conservation Service, National Cooperative Soil Survey and the U.S. Geological Survey also made extensive data contributions to the International Soil Carbon Network.
-
-For the publication of ISCN 3.2, the Environmental Data Initiative Summer Fellowship Program and University of Tennessee Informatics Practicum provided additional annotation support.
