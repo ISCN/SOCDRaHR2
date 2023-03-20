@@ -1,0 +1,49 @@
+---
+title: "Example of merging data files"
+author: "Kathe Todd-Brown <ktoddbrown@ufl.edu>"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+#download from EDI
+ISCN3Datafile <- '~/Documents/Datasets/ISCN_new/ISCN3_layer.csv'
+
+#Download url from Erin
+FIADBDatafile <- '~/Documents/Datasets/USDA_FIADB_RMRS/soils_lab_CO.csv'
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+#read in and simplify the files to only look at bulk density
+
+ISCN.df <- read_delim(file = ISCN3Datafile, 
+                    col_types = cols(.default =col_character()),
+                    delim = ';') %>%
+  slice_sample(n =100) %>%
+  select("dataset_name_sub", "site_name", "profile_name", "layer_name", #ID columns
+         #"soc (g cm-2)", "soc_carbon_flag", "soc_method",
+         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code")# SOC columns
+
+FIA.df <- read_csv(file = FIADBDatafile,
+                    col_types = cols(.default =col_character())) %>%
+  select("CN", "STATECD", "COUNTYCD", "PLOT", "SMPLNNBR", "VSTNBR", "LAYER_TYPE", #ID columns
+         "BULK_DENSITY") 
+         #"COARSE_FRACTION_PCT", "C_ORG_PCT")
+
+```
+
+```{r}
+
+#Transform the data into a set of id-variable-value-unit-method 
+
+data1.df <- FIA.df %>%
+  pivot_longer(cols = c(BULK_DENSITY), names_to = 'variable', values_to = 'value') %>%
+  mutate(unit = 'g cm^-3',
+         method = 'mass per volume of oven-dry soil inclusive of coarse fraction')
+
+```
