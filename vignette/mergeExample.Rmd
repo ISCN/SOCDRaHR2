@@ -38,13 +38,53 @@ FIA.df <- read_csv(file = FIADBDatafile,
 
 ```
 
+# Method 1
+
+Assign everything in line via scripts and use the code as documentation.
+
 ```{r}
 
 #Transform the data into a set of id-variable-value-unit-method 
 
+FIA.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'with_entry',
+         'FIADB_RMRS', 'Soils_Lab',	'BULK_DENSITY', 'unit', 'g cm^-3',
+'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY', 'method','mass per volume of oven-dry soil inclusive of coarse fraction') %>%
+  pivot_wider(names_from = is_type, values_from = with_entry)
+
 data1.df <- FIA.df %>%
-  pivot_longer(cols = c(BULK_DENSITY), names_to = 'variable', values_to = 'value') %>%
+  mutate(study_id = 'FIADB_RMRS', table_id = 'Soils_Lab') %>%
+  pivot_longer(cols = c(BULK_DENSITY), names_to = 'column_id', 
+               values_to = 'value', values_drop_na = TRUE) %>%
+  left_join(FIA.dataDescription, by = join_by(study_id, table_id, column_id))
+  
+
+data2.df <- ISCN.df %>%
+  pivot_longer(cols = c("bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)"),
+               names_to = 'variable', 
+               values_to = 'value', , values_drop_na = TRUE) %>%
   mutate(unit = 'g cm^-3',
-         method = 'mass per volume of oven-dry soil inclusive of coarse fraction')
+         metaDataMethod = case_when(variable == 'bd_samp (g cm-3)' ~ 'Fine earth bulk density',
+                                    variable == "bd_tot (g cm-3)" ~ 'Whole soil bulk density',
+                                    variable == 'bd_whole (g cm-3)' ~ 'Fine earth (estimated coarse fraction correction) bulk density',
+                                    variable == "bd_other (g cm-3)" ~ 'method no specified',
+                                    TRUE ~ 'bulk density method not recognized'))
+
+data2.df$method <- paste0('bdNRCS_prep_code:', data2.df$bdNRCS_prep_code, "; ", 
+                         'bd_method:', data2.df$bd_method,  "; ", 
+                         'metadata_method:', data2.df$metaDataMethod)
+
+data2.df <- data2.df %>%
+  select(c("dataset_name_sub", "site_name", "profile_name", "layer_name", 'variable', 'value', 'method', 'unit'))
+
+dataFull.df <- data1.df %>%
+  bind_rows(data2.df)
+
+```
+
+# Method 2
+
+Leveraging meta data annoations more generally to document tranformations.
+
+```{r}
 
 ```
