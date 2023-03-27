@@ -55,11 +55,13 @@ FIA.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type
 'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY', 'method','mass per volume of oven-dry soil inclusive of coarse fraction') %>%
   pivot_wider(names_from = is_type, values_from = with_entry)
 
-valueCols <- FIA.dataStructure[FIA.dataStructure$is_type == 'value',]$column_id
+valueCols <- FIA.dataStructure %>%
+  filter(is_type == 'value')
 
 data1.df <- FIA.df %>%
   mutate(study_id = 'FIADB_RMRS', table_id = 'Soils_Lab') %>%
-  pivot_longer(cols = valueCols, names_to = 'column_id', 
+  #pivot the values longer
+  pivot_longer(cols = valueCols$column_id, names_to = 'column_id', 
                values_to = 'value', values_drop_na = TRUE) %>%
   left_join(FIA.dataDescription, by = join_by(study_id, table_id, column_id))
   
