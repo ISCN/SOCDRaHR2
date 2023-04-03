@@ -38,25 +38,14 @@ FIA.df <- read_csv(file = FIADBDatafile,
 
 ```
 
-# Method 1
+# Method 1: no metadata
 
 Assign everything in line via scripts and use the code as documentation.
 
-```{r}
-
+```{r eval=FALSE}
+##RESCUE OLD CODE Do not refer to the dataStructure nor dataDescriptions here
 #Transform the data into a set of id-variable-value-unit-method 
 
-FIA.dataStructure <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~of_variable,
-  'FIADB_RMRS', 'Soils_Lab', 'BULK_DENSITY', 'value', 'Bulk_density'
-)
-
-FIA.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'with_entry',
-         'FIADB_RMRS', 'Soils_Lab',	'BULK_DENSITY', 'unit', 'g cm^-3',
-'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY', 'method','mass per volume of oven-dry soil inclusive of coarse fraction') %>%
-  pivot_wider(names_from = is_type, values_from = with_entry)
-
-valueCols <- FIA.dataStructure %>%
-  filter(is_type == 'value')
 
 data1.df <- FIA.df %>%
   mutate(study_id = 'FIADB_RMRS', table_id = 'Soils_Lab') %>%
@@ -67,30 +56,6 @@ data1.df <- FIA.df %>%
   mutate(variable = 'bulk_density')
   
 
-ISCN.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id',~'is_type', ~'with_entry',
-                              'ISCN3',	'layer',	'bd_method',	'description',	"Method used to determine bulk density",
-'ISCN3',	'layer',	'bd_samp (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed',
-'ISCN3',	'layer',	'bd_samp (g cm-3)',	'unit',	'g cm-3',
-'ISCN3',	'layer',	'bd_samp (g cm-3)',	'method',	'Fine earth bulk density',
-'ISCN3',	'layer',	'bd_tot (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter included',
-'ISCN3',	'layer',	'bd_tot (g cm-3)',	'unit',	'g cm-3',
-'ISCN3',	'layer',	'bd_tot (g cm-3)',	'method',	'Whole soil bulk density',
-'ISCN3',	'layer',	'bd_whole (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with the content of soil particles >2mm and roots >1cm diameter estimated and subtracted',
-'ISCN3',	'layer',	'bd_whole (g cm-3)',	'unit',	'g cm-3',
-'ISCN3',	'layer',	'bd_whole (g cm-3)',	'method',	'Fine earth (estimated coarse fraction correction) bulk density',
-'ISCN3',	'layer',	'bd_other (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, method used in the associated Bulk Density Method, soil particle fraction used',
-'ISCN3',	'layer',	'bd_other (g cm-3)',	'unit',	'g cm-3',
-'ISCN3',	'layer',	'bdNRCS_prep_code',	'description',	'NRCS bulk density method code',
-'ISCN3',	'layer',	'bdNRCS_prep_code',	'control_vocabulary',	'NRCS_bulk_density_code')
-
-ISCN.dataStructure <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'of_variable',
-  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density',
-'ISCN3',	'layer',	'bd_samp (g cm-3)',	'value',	'bulk_density',
-'ISCN3',	'layer',	'bd_tot (g cm-3)',	'value',	'bulk_density',
-'ISCN3',	'layer',	'bd_whole (g cm-3)',	'value',	'bulk_density',
-'ISCN3',	'layer',	'bd_other (g cm-3)',	'value',	'bulk_density',
-'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density'
-)
 
 ISCN.dataDescription <- ISCN.dataDescription %>%
   pivot_wider(names_from = is_type, values_from=with_entry)
@@ -139,4 +104,75 @@ Leveraging meta data annotions more generally to document tranformations.
 
 ```{r}
 
+#Transform the data into a set of id-variable-value-unit-method 
+
+FIA.dataStructure <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~of_variable,
+  'FIADB_RMRS', 'Soils_Lab', 'BULK_DENSITY', 'value', 'Bulk_density'
+)
+
+FIA.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'with_entry',
+         'FIADB_RMRS', 'Soils_Lab',	'BULK_DENSITY', 'unit', 'g cm^-3',
+'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY', 'method','mass per volume of oven-dry soil inclusive of coarse fraction') 
+
+
+data1.df <- FIA.df %>%
+  mutate(study_id = 'FIADB_RMRS', table_id = 'Soils_Lab') %>%
+  #pivot the values longer
+  pivot_longer(cols = FIA.dataStructure$column_id, names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  left_join(FIA.dataStructure, by = join_by(study_id, table_id, column_id)) %>%
+  pivot_wider(names_from = is_type, values_from = with_entry) %>%
+  left_join(FIA.dataDescription %>%
+              pivot_wider(names_from = 'is_type', values_from = 'with_entry'), 
+            by = join_by(study_id, table_id, column_id))
+  
 ```
+
+```{r}
+ISCN.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id',~'is_type', ~'with_entry',
+                              'ISCN3',	'layer',	'bd_method',	'description',	"Method used to determine bulk density",
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed',
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'unit',	'g cm-3',
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'method',	'Fine earth bulk density',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter included',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'unit',	'g cm-3',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'method',	'Whole soil bulk density',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with the content of soil particles >2mm and roots >1cm diameter estimated and subtracted',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'unit',	'g cm-3',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'method',	'Fine earth (estimated coarse fraction correction) bulk density',
+'ISCN3',	'layer',	'bd_other (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, method used in the associated Bulk Density Method, soil particle fraction used',
+'ISCN3',	'layer',	'bd_other (g cm-3)',	'unit',	'g cm-3',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'description',	'NRCS bulk density method code',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'control_vocabulary',	'NRCS_bulk_density_code')
+
+ISCN.dataStructure <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'of_variable',
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density',
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'value',	'bulk_density',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'value',	'bulk_density',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'value',	'bulk_density',
+'ISCN3',	'layer',	'bd_other (g cm-3)',	'value',	'bulk_density',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density'
+)
+
+#pull the identifying columns
+#
+
+temp1 <- ISCN.df %>%
+  mutate(study_id = 'ISCN3', table_id = 'layer')  %>%
+  #pivot the values longer
+  pivot_longer(cols = ISCN.dataDescription$column_id, names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) 
+
+data2 <- temp1 %>%
+  left_join(ISCN.dataStructure) 
+  
+data2a <- temp1 %>% select(-with_entry) %>%
+  left_join(ISCN.dataDescription) 
+  
+dataFull.df <- data2 %>%
+  bind_rows(data2a) %>%
+  arrange(study_id, table_id, column_id,
+          dataset_name_sub, site_name, profile_name, layer_name)
+
+```
+
