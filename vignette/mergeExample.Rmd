@@ -115,7 +115,7 @@ FIA.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type
 'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY', 'method','mass per volume of oven-dry soil inclusive of coarse fraction') 
 
 
-data1.df <- FIA.df %>%
+FIA_long.df <- FIA.df %>%
   mutate(study_id = 'FIADB_RMRS', table_id = 'Soils_Lab') %>%
   #pivot the values longer
   pivot_longer(cols = FIA.dataStructure$column_id, names_to = 'column_id', 
@@ -211,3 +211,125 @@ ISCN_long.df <- ISCN.df %>%
 
 ```
 
+# Adding Identifying Columns
+
+
+```{r}
+
+#Transform the data into a set of id-variable-value-unit-method 
+
+FIA.dataStructure <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~of_variable,
+  'FIADB_RMRS', 'Soils_Lab', 'BULK_DENSITY', 'value', 'Bulk_density',
+  'FIADB_RMRS', 'Soils_Lab', 'CN', 'identifier', 'code', 
+ 'FIADB_RMRS', 'Soils_Lab', 'STATECD', 'identifier', 'state', 
+ 'FIADB_RMRS', 'Soils_Lab', 'COUNTYCD', 'identifier', 'county', 
+ 'FIADB_RMRS', 'Soils_Lab', 'PLOT', 'identifier', 'plot', 
+ 'FIADB_RMRS', 'Soils_Lab', 'SMPLNNBR', 'identifier', 'sample_number', 
+ 'FIADB_RMRS', 'Soils_Lab', 'VSTNBR', 'identifier', 'station_number'
+)
+
+FIA.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'with_entry',
+         'FIADB_RMRS', 'Soils_Lab',	'BULK_DENSITY', 'unit', 'g cm^-3',
+'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY', 'method','mass per volume of oven-dry soil inclusive of coarse fraction') 
+
+
+FIA_long.df <- FIA.df %>%
+  mutate(study_id = 'FIADB_RMRS', 
+         table_id = 'Soils_Lab',
+         row_num = 1:n()) %>%
+  pivot_longer(cols = any_of(FIA.dataStructure$column_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  left_join(FIA.dataStructure, 
+            by = join_by(study_id, table_id, column_id), multiple = 'all') %>%
+  left_join(FIA.dataDescription, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', '.meta'), multiple = 'all') %>%
+  reframe(
+    with_entry =c(with_entry.meta, with_entry.data),
+    is_type =  c(is_type.meta, is_type.data),
+    .by = c(study_id, table_id, row_num, of_variable)
+  ) %>%
+  filter(!is.na(with_entry)) %>%
+  unique() 
+  
+```
+
+```{r}
+ISCN.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id',~'is_type', ~'with_entry',
+'ISCN3',	'layer',	'bd_method',	'description',	"Method used to determine bulk density",
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed',
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'unit',	'g cm-3',
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'method',	'Fine earth bulk density',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter included',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'unit',	'g cm-3',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'method',	'Whole soil bulk density',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with the content of soil particles >2mm and roots >1cm diameter estimated and subtracted',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'unit',	'g cm-3',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'method',	'Fine earth (estimated coarse fraction correction) bulk density',
+'ISCN3',	'layer',	'bd_other (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, method used in the associated Bulk Density Method, soil particle fraction used',
+'ISCN3',	'layer',	'bd_other (g cm-3)',	'unit',	'g cm-3',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'description',	'NRCS bulk density method code',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'control_vocabulary',	'NRCS_bulk_density_code')
+
+ISCN.dataStructure <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'of_variable',
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density_sample',
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density_total',
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density_whole',
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density_other',
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'value',	'bulk_density_sample',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'value',	'bulk_density_total',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'value',	'bulk_density_whole',
+'ISCN3',	'layer',	'bd_other (g cm-3)',	'value',	'bulk_density_other',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density_sample',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density_total',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density_whole',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density_other',
+'ISCN3', 'layer',	'dataset_name_sub',	'identifier',	'data_source',
+'ISCN3',	'layer',	'dataset_name_soc',	'identifier',	'soil_organic_carbon',
+'ISCN3',	'layer',	'site_name',	'identifier',	'site',
+'ISCN3',	'layer',	'profile_name',	'identifier',	'profile',
+'ISCN3',	'layer',	'layer_name',	'identifier',	'layer'
+)
+
+
+ISCN_long.df <- ISCN.df %>%
+  mutate(study_id = 'ISCN3',
+         table_id = 'layer',
+         row_num = 1:n())  %>%
+  pivot_longer(cols = any_of(ISCN.dataStructure$column_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  left_join(ISCN.dataStructure, 
+            by = join_by(study_id, table_id, column_id), multiple = 'all') %>%
+  left_join(ISCN.dataDescription, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', '.meta'), multiple = 'all') %>%
+  reframe(
+    with_entry =c(with_entry.meta, with_entry.data),
+    is_type =  c(is_type.meta, is_type.data),
+    .by = c(study_id, table_id, row_num, of_variable)
+  ) %>%
+  filter(!is.na(with_entry)) %>%
+  unique() 
+
+ISCN_wide_values.df <- ISCN_long.df %>%
+  filter(is_type %in% c('identifier', 'value')) %>%
+  select(-is_type) %>%
+  ##pull out the tuple
+  pivot_wider(names_from=of_variable, 
+              values_from=with_entry)
+
+
+
+```
+
+```{r}
+bigData <- FIA_long.df %>%
+  bind_rows(ISCN_long.df)
+
+bigData %>%
+  select(study_id, table_id, of_variable, is_type, with_entry) %>%
+  filter(is_type %in% c('unit', 'method')) %>%
+  unique()
+
+select(variable, with_entry, is_tyle)
+```
