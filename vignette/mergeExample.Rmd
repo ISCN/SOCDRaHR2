@@ -130,7 +130,7 @@ data1.df <- FIA.df %>%
 
 ```{r}
 ISCN.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id',~'is_type', ~'with_entry',
-                              'ISCN3',	'layer',	'bd_method',	'description',	"Method used to determine bulk density",
+'ISCN3',	'layer',	'bd_method',	'description',	"Method used to determine bulk density",
 'ISCN3',	'layer',	'bd_samp (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed',
 'ISCN3',	'layer',	'bd_samp (g cm-3)',	'unit',	'g cm-3',
 'ISCN3',	'layer',	'bd_samp (g cm-3)',	'method',	'Fine earth bulk density',
@@ -146,33 +146,68 @@ ISCN.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id',~'is_type
 'ISCN3',	'layer',	'bdNRCS_prep_code',	'control_vocabulary',	'NRCS_bulk_density_code')
 
 ISCN.dataStructure <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'of_variable',
-  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density',
-'ISCN3',	'layer',	'bd_samp (g cm-3)',	'value',	'bulk_density',
-'ISCN3',	'layer',	'bd_tot (g cm-3)',	'value',	'bulk_density',
-'ISCN3',	'layer',	'bd_whole (g cm-3)',	'value',	'bulk_density',
-'ISCN3',	'layer',	'bd_other (g cm-3)',	'value',	'bulk_density',
-'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density'
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density_sample',
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density_total',
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density_whole',
+  'ISCN3',	'layer',	'bd_method',	'method',	'bulk_density_other',
+'ISCN3',	'layer',	'bd_samp (g cm-3)',	'value',	'bulk_density_sample',
+'ISCN3',	'layer',	'bd_tot (g cm-3)',	'value',	'bulk_density_total',
+'ISCN3',	'layer',	'bd_whole (g cm-3)',	'value',	'bulk_density_whole',
+'ISCN3',	'layer',	'bd_other (g cm-3)',	'value',	'bulk_density_other',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density_sample',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density_total',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density_whole',
+'ISCN3',	'layer',	'bdNRCS_prep_code',	'method',	'bulk_density_other'
 )
 
-#pull the identifying columns
-#
+fullMeta <- ISCN.dataStructure  %>% select(-is_type) %>%
+  full_join(ISCN.dataDescription, multiple = 'all') %>%
+  full_join(ISCN.df %>%
+              mutate(study_id = 'ISCN3', table_id = 'layer') %>%
+              pivot_longer(cols = ISCN.dataDescription$column_id, names_to = 'column_id', 
+                           values_to = 'with_entry', values_drop_na = TRUE)%>% 
+              select(study_id, table_id, column_id, 
+                     dataset_name_sub, site_name, profile_name, layer_name) %>%
+              unique())
 
-temp1 <- ISCN.df %>%
+ISCN_long.df <- ISCN.df %>%
   mutate(study_id = 'ISCN3', table_id = 'layer')  %>%
-  #pivot the values longer
   pivot_longer(cols = ISCN.dataDescription$column_id, names_to = 'column_id', 
-               values_to = 'with_entry', values_drop_na = TRUE) 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  #workflow 1
+  left_join(ISCN.dataStructure, by = join_by(study_id, table_id, column_id), multiple = 'all') %>%
+  bind_rows(fullMeta) %>%
+  select(-column_id) %>%
+  ##pull out the tuple
+  pivot_wider(names_from=is_type, values_from='with_entry', values_fn = function(...) paste(..., sep = ',', collapse = ';')) %>%
+  filter(!is.na(value))
+  
+   
 
-data2 <- temp1 %>%
-  left_join(ISCN.dataStructure) 
-  
-data2a <- temp1 %>% select(-with_entry) %>%
-  left_join(ISCN.dataDescription) 
-  
-dataFull.df <- data2 %>%
-  bind_rows(data2a) %>%
-  arrange(study_id, table_id, column_id,
-          dataset_name_sub, site_name, profile_name, layer_name)
+ISCN_long.df <- ISCN.df %>%
+  mutate(study_id = 'ISCN3', table_id = 'layer')  %>%
+  pivot_longer(cols = ISCN.dataDescription$column_id, names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  #work flow 2
+  left_join(ISCN.dataStructure, 
+            by = join_by(study_id, table_id, column_id), multiple = 'all') %>%
+  left_join(ISCN.dataDescription, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', '.meta'), multiple = 'all') %>%
+  reframe(
+    with_entry = c(with_entry.meta, with_entry.data),
+    is_type = c(is_type.meta, is_type.data),
+    .by = c(dataset_name_sub, site_name, profile_name, layer_name, 
+           study_id, table_id, of_variable)
+  ) %>%
+  unique() %>%
+  ##pull out the tuple
+  pivot_wider(names_from=is_type, 
+              values_from='with_entry', 
+              values_fn = function(...) paste(..., sep = ',', collapse = ';')) %>%
+  filter(!is.na(value))
+
+
 
 ```
 
