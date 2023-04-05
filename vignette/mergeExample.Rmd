@@ -229,7 +229,7 @@ FIA.dataStructure <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type',
 )
 
 FIA.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id', ~'is_type', ~'with_entry',
-         'FIADB_RMRS', 'Soils_Lab',	'BULK_DENSITY', 'unit', 'g cm^-3',
+         'FIADB_RMRS', 'Soils_Lab',	'BULK_DENSITY', 'unit', 'g cm-3',
 'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY', 'method','mass per volume of oven-dry soil inclusive of coarse fraction') 
 
 
@@ -255,6 +255,14 @@ FIA_long.df <- FIA.df %>%
 ```
 
 ```{r}
+
+ISCN.df <- read_delim(file = ISCN3Datafile, 
+                    col_types = cols(.default =col_character()),
+                    delim = ';', n_max = 1e4) %>% #row number = 445829 actually not a bad one-off runtime, a few minutes
+  select("dataset_name_sub", "site_name", "profile_name", "layer_name", #ID columns
+         #"soc (g cm-2)", "soc_carbon_flag", "soc_method",
+         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code")# SOC columns
+
 ISCN.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id',~'is_type', ~'with_entry',
 'ISCN3',	'layer',	'bd_method',	'description',	"Method used to determine bulk density",
 'ISCN3',	'layer',	'bd_samp (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed',
@@ -322,6 +330,8 @@ ISCN_wide_values.df <- ISCN_long.df %>%
 
 ```
 
+# Pulling things together
+
 ```{r}
 bigData <- FIA_long.df %>%
   bind_rows(ISCN_long.df)
@@ -329,7 +339,35 @@ bigData <- FIA_long.df %>%
 bigData %>%
   select(study_id, table_id, of_variable, is_type, with_entry) %>%
   filter(is_type %in% c('unit', 'method')) %>%
+  unique() %>% print
+
+newData.df <- bigData %>%
+  mutate(of_variable = recode(of_variable, 
+                           'Bulk_density' = 'bulk_density_whole'))
+
+data_wide_values.df <- newData.df %>%
+  filter(is_type %in% c('identifier', 'value')) %>%
+  select(-is_type) %>%
+  ##pull out the tuple
+  pivot_wider(names_from=of_variable, 
+              values_from=with_entry) %>%
+  mutate(across(.cols = starts_with('bulk_density'), as.numeric))
+
+meta_data <- newData.df %>%
+  filter(!is_type %in% c('identifier', 'value')) %>%
+  select(study_id, table_id, of_variable, is_type, with_entry) %>%
   unique()
 
-select(variable, with_entry, is_tyle)
+ggplot(data_wide_values.df) +
+  geom_histogram(aes(x=bulk_density_whole)) +
+  facet_wrap(~study_id, scales='free_y') +
+  scale_x_log10()
+
+ggplot(data_wide_values.df %>%
+         pivot_longer(cols = c(bulk_density_whole, bulk_density_sample, bulk_density_other))) +
+  geom_histogram(aes(x=value, fill = study_id)) +
+  facet_grid(study_id~name, scales = 'free_y') +
+  scale_x_log10() +
+  scale_y_log10()
+
 ```
