@@ -2,40 +2,35 @@
 title: "Example of merging data files"
 author: "Kathe Todd-Brown <ktoddbrown@ufl.edu>"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document: 
+    toc: yes
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
 library(tidyverse)
 
-#download from EDI
-ISCN3Datafile <- '~/Documents/Datasets/ISCN_new/ISCN3_layer.csv'
-
-#Download url from Erin
-#co_soils_visit <- read.csv('https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_VISIT.csv')
-#co_soils_lab <- read.csv('https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_LAB.csv')
-FIADBDatafile <- '~/Documents/Datasets/USDA_FIADB_RMRS/soils_lab_CO.csv'
-
-knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r downloadData}
+#download and simplify the files to only look at bulk density
 
-#read in and simplify the files to only look at bulk density
-
-ISCN.df <- read_delim(file = ISCN3Datafile, 
+#ISCN3Datafile <- '~/Documents/Datasets/ISCN_new/ISCN3_layer.csv'
+ISCN.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253',
                     col_types = cols(.default =col_character()),
-                    delim = ';', n_max = 500) %>%
+                    delim = ';',
+                    n_max = Inf)  %>%
   select("dataset_name_sub", "site_name", "profile_name", "layer_name", #ID columns
-         #"soc (g cm-2)", "soc_carbon_flag", "soc_method",
-         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code")# SOC columns
+         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code")# bulk density columns
 
-FIA.df <- read_csv(file = FIADBDatafile,
+#Download url
+#co_soils_visit <- read.csv('https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_VISIT.csv')
+#co_soils_lab <- read.csv('https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_LAB.csv')
+
+FIA.df <- read_csv(file = 'https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_LAB.csv',
                     col_types = cols(.default =col_character())) %>%
   select("CN", "STATECD", "COUNTYCD", "PLOT", "SMPLNNBR", "VSTNBR", "LAYER_TYPE", #ID columns
-         "BULK_DENSITY") 
-         #"COARSE_FRACTION_PCT", "C_ORG_PCT")
-
+         "BULK_DENSITY") # bulk density columns
 ```
 
 # Method 1: no metadata
@@ -256,13 +251,6 @@ FIA_long.df <- FIA.df %>%
 
 ```{r}
 
-ISCN.df <- read_delim(file = ISCN3Datafile, 
-                    col_types = cols(.default =col_character()),
-                    delim = ';', n_max = 1e4) %>% #row number = 445829 actually not a bad one-off runtime, a few minutes
-  select("dataset_name_sub", "site_name", "profile_name", "layer_name", #ID columns
-         #"soc (g cm-2)", "soc_carbon_flag", "soc_method",
-         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code")# SOC columns
-
 ISCN.dataDescription <- tribble(~'study_id', ~'table_id', ~'column_id',~'is_type', ~'with_entry',
 'ISCN3',	'layer',	'bd_method',	'description',	"Method used to determine bulk density",
 'ISCN3',	'layer',	'bd_samp (g cm-3)',	'description',	'Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed',
@@ -330,20 +318,59 @@ ISCN_wide_values.df <- ISCN_long.df %>%
 
 ```
 
-# Pulling things together
+# Pulling things together: 
 
 ```{r}
 bigData <- FIA_long.df %>%
   bind_rows(ISCN_long.df)
 
-bigData %>%
-  select(study_id, table_id, of_variable, is_type, with_entry) %>%
-  filter(is_type %in% c('unit', 'method')) %>%
-  unique() %>% print
+```
+
+## Method 1: harmonizing data types
+
+```{r}
+
 
 newData.df <- bigData %>%
   mutate(of_variable = recode(of_variable, 
                            'Bulk_density' = 'bulk_density_whole'))
+
+```
+
+```{r}
+
+#bigData %>%
+#  select(study_id, table_id, of_variable, is_type, with_entry) %>%
+#  filter(is_type %in% c('unit', 'method')) %>%
+#  unique() %>% write.csv(row.names = FALSE)
+
+variableMap <- tribble(~"study_id", ~"table_id", ~"of_variable", ~'target_variable', 
+"FIADB_RMRS","Soils_Lab","Bulk_density", 'bulk_density_whole_soil',
+"ISCN3","layer","bulk_density_sample", 'bulk_density_fine_earth',
+"ISCN3","layer","bulk_density_other",'bulk_density_unknown',
+"ISCN3","layer","bulk_density_total", 'bulk_density_whole_soil',
+"ISCN3","layer","bulk_density_whole", 'bulk_density_whole_soil',
+ "FIADB_RMRS", "Soils_Lab", "code", "code", 
+ "FIADB_RMRS", "Soils_Lab", "state", "state", 
+ "FIADB_RMRS", "Soils_Lab", "county", "county", 
+ "FIADB_RMRS", "Soils_Lab", "plot", "plot", 
+ "FIADB_RMRS", "Soils_Lab", "sample_number", "sample_number", 
+ "FIADB_RMRS", "Soils_Lab", "station_number", "station_number", 
+ "ISCN3", "layer", "data_source", "data_source", 
+ "ISCN3", "layer", "site", "site", 
+ "ISCN3", "layer", "profile", "profile", 
+ "ISCN3", "layer", "layer", "layer", )
+
+newData.df <- bigData %>%
+  left_join(variableMap, by = join_by(study_id, table_id, of_variable)) %>%
+  select(-of_variable) %>%
+  rename(of_variable = target_variable)
+  
+```
+
+
+# Plot it
+```{r}
 
 data_wide_values.df <- newData.df %>%
   filter(is_type %in% c('identifier', 'value')) %>%
@@ -359,12 +386,12 @@ meta_data <- newData.df %>%
   unique()
 
 ggplot(data_wide_values.df) +
-  geom_histogram(aes(x=bulk_density_whole)) +
+  geom_histogram(aes(x=bulk_density_whole_soil)) +
   facet_wrap(~study_id, scales='free_y') +
   scale_x_log10()
 
 ggplot(data_wide_values.df %>%
-         pivot_longer(cols = c(bulk_density_whole, bulk_density_sample, bulk_density_other))) +
+         pivot_longer(cols = c(bulk_density_whole_soil, bulk_density_fine_earth, bulk_density_unknown))) +
   geom_histogram(aes(x=value, fill = study_id)) +
   facet_grid(study_id~name, scales = 'free_y') +
   scale_x_log10() +
