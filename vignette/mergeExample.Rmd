@@ -39,8 +39,6 @@ Assign everything in line via scripts and use the code as documentation.
 
 ```{r}
 
-
-
 FIA_long.df <- FIA.df %>%
   mutate(study_id = 'FIADB_RMRS',
          table_id = 'Soils_Lab',
@@ -131,12 +129,10 @@ ISCN_long.df <- ISCN.df %>%
 
 ```
 
-# Method 2
-
-
+# Method 2: data annotations
 
 Leveraging meta data annotations more to document transformations with the data structures and description tables combined.
-We want to be able to specify things like the download url or doi for the table/study with the url/doi being a `of_variable` instead of a `is_type`
+
 
 ```{r}
 
