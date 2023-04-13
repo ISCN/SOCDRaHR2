@@ -49,18 +49,37 @@ FIA_long.df <- FIA.df %>%
   #pivot the values longer
   pivot_longer(cols = -c(study_id, table_id, observation_id), 
                names_to = 'column_id', 
-               values_to = 'with_entry', values_drop_na = TRUE) %>%
-  mutate(of_type = 'value') %>%
-  mutate(variable = case_when(column_id == 'BULK_DENSITY' ~ 'bulk_density',
+               values_to = 'with_entry', 
+               values_drop_na = TRUE) %>%
+  mutate(of_variable = case_when(column_id == 'BULK_DENSITY' ~ 'bulk_density',
                               column_id == 'STATECD' ~ 'state',
                               column_id == 'COUNTYCD' ~ 'county',
                               column_id == 'PLOT' ~ 'plot_id',
                               column_id == 'SMPLNNBR' ~ 'sample_number',
                               column_id == 'VSTNBR' ~ 'station_number',
                               column_id == 'LAYER_TYPE' ~ 'layer_type',
+                              column_id == 'CN' ~ 'control_number',
                               TRUE ~ NA)) %>%
-  reframe()
-  
+ mutate(is_type = case_when(column_id == 'BULK_DENSITY' ~ 'value',
+                              column_id == 'STATECD' ~ 'value',
+                              column_id == 'COUNTYCD' ~ 'value',
+                              column_id == 'PLOT' ~ 'identifier',
+                              column_id == 'SMPLNNBR' ~ 'identifier',
+                              column_id == 'VSTNBR' ~ 'identifier',
+                              column_id == 'LAYER_TYPE' ~ 'value',
+                            column_id == 'CN' ~ 'identifier',
+                              TRUE ~ NA))  
+
+FIA_bdMethod <- FIA_long.df %>%
+  filter(of_variable == 'bulk_density') %>%
+  reframe(
+    is_type = c('method', 'unit'),
+    with_entry = c('Whole soil bulk density', 'g cm-3'),
+    .by = c(study_id, table_id, observation_id, column_id, of_variable))
+
+FIA_long.df <- FIA_long.df %>%
+  bind_rows(FIA_bdMethod) %>%
+  arrange(observation_id)
 
 ISCN_long.df <- ISCN.df %>%
   mutate(study_id = 'ISCN3',
@@ -74,6 +93,10 @@ ISCN_long.df <- ISCN.df %>%
                              column_id %in% c("bd_method","bdNRCS_prep_code") ~ 'method',
                              TRUE~NA)) %>%
   left_join(tribble(~column_id, ~ of_variable,
+                    "dataset_name_sub", 'source',
+                    "site_name", "site",
+                    "profile_name", "profile",
+                    "layer_name", "layer",
                     "bd_samp (g cm-3)", "bulk_density_sample",
                     "bd_tot (g cm-3)", "bulk_density_total",
                     "bd_whole (g cm-3)", "bulk_density_whole",
@@ -86,7 +109,8 @@ ISCN_long.df <- ISCN.df %>%
                     "bdNRCS_prep_code", "bulk_density_total",
                     "bdNRCS_prep_code", "bulk_density_whole",
                     "bdNRCS_prep_code", "bulk_density_other"),
-            by = join_by(column_id)) %>%
+            by = join_by(column_id),
+             multiple = 'all') %>%
    left_join(tribble(~column_id, ~unit, ~method,
                     "bd_samp (g cm-3)", "g cm-3", "Fine earth bulk density",
                     "bd_tot (g cm-3)",  "g cm-3", "Whole soil bulk density",
@@ -95,7 +119,14 @@ ISCN_long.df <- ISCN.df %>%
                pivot_longer(cols = c('unit', 'method'), 
                             names_to = 'is_type.meta', values_to  = 'with_entry.meta',
                             values_drop_na=TRUE),
-             by = join_by(column_id)) 
+             by = join_by(column_id),
+             multiple = 'all') %>%
+  reframe(
+    is_type = c(is_type, is_type.meta),
+    with_entry = c(with_entry, with_entry.meta), 
+    .by = c(study_id, table_id, observation_id, column_id, of_variable)) %>%
+  unique() %>%
+  filter(!is.na(is_type))
   
 
 ```
