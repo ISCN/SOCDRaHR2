@@ -138,24 +138,46 @@ Leveraging meta data annotations more to document transformations with the data 
 
 #Transform the data into a set of id-variable-value-unit-method 
 
-FIA.dataAnnotaiton <- tribble(
+FIA.dataAnnotation <- tribble(
   ~'study_id', ~'table_id', ~'column_id',  ~'is_type', ~'of_variable', ~'with_entry',
   'FIADB_RMRS', 'Soils_Lab', NA, 'vaule', 'download_url', 'https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_LAB.csv',
   'FIADB_RMRS', 'Soils_Lab', 'BULK_DENSITY', 'value', 'Bulk_density', NA,
   'FIADB_RMRS', 'Soils_Lab', 'BULK_DENSITY', 'unit', 'Bulk_density', 'g cm^-3',
-'FIADB_RMRS','Soils_Lab',    'BULK_DENSITY',  'method', 'Bulk_density', 'mass per volume of oven-dry soil inclusive of coarse fraction'
+  'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY',  'method', 'Bulk_density', 'mass per volume of oven-dry soil inclusive of coarse fraction',
+  'FIADB_RMRS','Soils_Lab', 'CN', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'STATECD', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'COUNTYCD', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'PLOT', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'SMPLNNBR', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'VSTNBR', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'LAYER_TYPE', 'identifier', NA, NA
 )
 
+id_var_names <- FIA.dataAnnotation %>%
+  filter(is_type == 'identifier')
 
+#id_var_names$column_id
 FIA_long.df <- FIA.df %>%
+  #add the study and table id manually
   mutate(study_id = 'FIADB_RMRS', 
-         table_id = 'Soils_Lab',
-         row_num = 1:n()) %>% #add the group number instead
-  pivot_longer(cols = -c(study_id, table_id, row_num), names_to = 'column_id', 
-               values_to = 'with_entry', values_drop_na = TRUE) %>%
-  full_join(FIA.dataAnnotaiton, 
+         table_id = 'Soils_Lab') %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of(id_var_names$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  #shoe string the data
+  pivot_longer(cols = -c(study_id, table_id, observation_id),
+               names_to = 'column_id', 
+               values_to = 'with_entry',
+               values_drop_na = TRUE) %>%
+  #annotate so that we can also have the 'meta' data
+  full_join(FIA.dataAnnotation, 
             by = join_by(study_id, table_id, column_id),
-            suffix = c('.data', ''), multiple = 'all') %>%
+            suffix = c('.data', ''),
+            multiple = 'all') %>%
+  #deal with entries from both the meta and data tables
   mutate(
     with_entry = if_else(is.na(with_entry), with_entry.data, with_entry)) %>%
   select(-with_entry.data)
@@ -204,12 +226,24 @@ ISCN.dataAnnotation <- tribble(~"study_id",~"table_id",~"column_id",~"of_variabl
 "ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","description","Grams of oven-dried soil per cubic centimeter, with the content of soil particles >2mm and roots >1cm diameter estimated and subtracted",
 "ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","unit","g cm-3",
 "ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","method","Fine earth (estimated coarse fraction correction) bulk density",
-"ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","value",NA)
+"ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","value",NA,
+"ISCN3","layer","dataset_name_sub", 'source', 'identifier', NA,
+"ISCN3","layer", "site_name", "site",'identifier', NA,
+"ISCN3","layer", "profile_name", "profile",'identifier', NA,
+"ISCN3","layer", "layer_name", "layer", 'identifier',NA)
 
 
 ISCN_long.df <- ISCN.df %>%
-  mutate(study_id = 'ISCN3', table_id = 'layer', row_num = 1:n())  %>%
-  pivot_longer(cols = -c(study_id, table_id, row_num), names_to = 'column_id', 
+  mutate(study_id = 'ISCN3', 
+         table_id = 'layer')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
                values_to = 'with_entry', values_drop_na = TRUE) %>%
   full_join(ISCN.dataAnnotation, 
             by = join_by(study_id, table_id, column_id),
