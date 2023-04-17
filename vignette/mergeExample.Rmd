@@ -259,9 +259,9 @@ ISCN_long.df <- ISCN.df %>%
 
 ```{r}
 bigData <- FIA_long.df %>%
-  select(study_id, table_id, row_num, of_variable, is_type, with_entry) %>%
+  select(study_id, table_id, observation_id, of_variable, is_type, with_entry) %>%
   bind_rows(ISCN_long.df %>%
-              select(study_id, table_id, row_num, of_variable, is_type, with_entry)) %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
   unique() #remove duplicates from repeated methods applying to multiple colums
 
 ```
@@ -315,17 +315,12 @@ newData.df <- bigData %>%
 ```{r}
 
 data_wide_values.df <- newData.df %>%
-  filter(is_type %in% c('identifier', 'value')) %>%
+  filter(is_type %in% c('value')) %>%
   select(-is_type) %>%
   ##pull out the tuple
   pivot_wider(names_from=of_variable, 
               values_from=with_entry) %>%
   mutate(across(.cols = starts_with('bulk_density'), as.numeric))
-
-meta_data <- newData.df %>%
-  filter(!is_type %in% c('identifier', 'value')) %>%
-  select(study_id, table_id, of_variable, is_type, with_entry) %>%
-  unique()
 
 ggplot(data_wide_values.df) +
   geom_histogram(aes(x=bulk_density_whole_soil)) +
