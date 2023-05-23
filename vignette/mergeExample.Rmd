@@ -1,0 +1,338 @@
+---
+title: "Example of merging data files"
+author: "Kathe Todd-Brown <ktoddbrown@ufl.edu>"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    toc: yes
+---
+
+```{r setup}
+library(tidyverse)
+
+```
+
+```{r downloadData}
+#download and simplify the files to only look at bulk density
+
+#ISCN3Datafile <- '~/Documents/Datasets/ISCN_new/ISCN3_layer.csv'
+ISCN.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253',
+                    col_types = cols(.default =col_character()),
+                    delim = ';',
+                    n_max = 1e4)  %>%
+  select("dataset_name_sub", "site_name", "profile_name", "layer_name", #ID columns
+         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code")# bulk density columns
+
+#Download url
+#co_soils_visit <- read.csv('https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_VISIT.csv')
+#co_soils_lab <- read.csv('https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_LAB.csv')
+
+FIA.df <- read_csv(file = 'https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_LAB.csv',
+                    col_types = cols(.default =col_character())) %>%
+  select("CN", "STATECD", "COUNTYCD", "PLOT", "SMPLNNBR", "VSTNBR", "LAYER_TYPE", #ID columns
+         "BULK_DENSITY") # bulk density columns
+```
+
+# Method 1: no metadata
+
+Assign everything in line via scripts and use the code as documentation.
+
+```{r}
+
+FIA_long.df <- FIA.df %>%
+  mutate(study_id = 'FIADB_RMRS',
+         table_id = 'Soils_Lab',
+         observation_id = unclass(factor(paste(CN, STATECD, COUNTYCD, PLOT, 
+           SMPLNNBR, VSTNBR, LAYER_TYPE)))) %>%
+  #pivot the values longer
+  pivot_longer(cols = -c(study_id, table_id, observation_id), 
+               names_to = 'column_id', 
+               values_to = 'with_entry', 
+               values_drop_na = TRUE) %>%
+  mutate(of_variable = case_when(column_id == 'BULK_DENSITY' ~ 'bulk_density',
+                              column_id == 'STATECD' ~ 'state',
+                              column_id == 'COUNTYCD' ~ 'county',
+                              column_id == 'PLOT' ~ 'plot_id',
+                              column_id == 'SMPLNNBR' ~ 'sample_number',
+                              column_id == 'VSTNBR' ~ 'station_number',
+                              column_id == 'LAYER_TYPE' ~ 'layer_type',
+                              column_id == 'CN' ~ 'control_number',
+                              TRUE ~ NA)) %>%
+ mutate(is_type = case_when(column_id == 'BULK_DENSITY' ~ 'value',
+                              column_id == 'STATECD' ~ 'value',
+                              column_id == 'COUNTYCD' ~ 'value',
+                              column_id == 'PLOT' ~ 'identifier',
+                              column_id == 'SMPLNNBR' ~ 'identifier',
+                              column_id == 'VSTNBR' ~ 'identifier',
+                              column_id == 'LAYER_TYPE' ~ 'value',
+                            column_id == 'CN' ~ 'identifier',
+                              TRUE ~ NA))  
+
+FIA_bdMethod <- FIA_long.df %>%
+  filter(of_variable == 'bulk_density') %>%
+  reframe(
+    is_type = c('method', 'unit'),
+    with_entry = c('Whole soil bulk density', 'g cm-3'),
+    .by = c(study_id, table_id, observation_id, column_id, of_variable))
+
+FIA_long.df <- FIA_long.df %>%
+  bind_rows(FIA_bdMethod) %>%
+  arrange(observation_id)
+
+ISCN_long.df <- ISCN.df %>%
+  mutate(study_id = 'ISCN3',
+         table_id = 'layer',
+         observation_id = unclass(factor(paste(dataset_name_sub, site_name, profile_name, layer_name)))) %>%
+  pivot_longer(-c(study_id, table_id, observation_id),
+               names_to = 'column_id',
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  mutate(is_type = case_when(column_id %in% c("dataset_name_sub", "site_name", "profile_name", "layer_name") ~ 'identifier',
+                             column_id %in% c("bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)") ~ 'value',
+                             column_id %in% c("bd_method","bdNRCS_prep_code") ~ 'method',
+                             TRUE~NA)) %>%
+  left_join(tribble(~column_id, ~ of_variable,
+                    "dataset_name_sub", 'source',
+                    "site_name", "site",
+                    "profile_name", "profile",
+                    "layer_name", "layer",
+                    "bd_samp (g cm-3)", "bulk_density_sample",
+                    "bd_tot (g cm-3)", "bulk_density_total",
+                    "bd_whole (g cm-3)", "bulk_density_whole",
+                    "bd_other (g cm-3)", "bulk_density_other",
+                    "bd_method", "bulk_density_sample",
+                    "bd_method", "bulk_density_total",
+                    "bd_method", "bulk_density_whole",
+                    "bd_method", "bulk_density_other",
+                    "bdNRCS_prep_code",  "bulk_density_sample",
+                    "bdNRCS_prep_code", "bulk_density_total",
+                    "bdNRCS_prep_code", "bulk_density_whole",
+                    "bdNRCS_prep_code", "bulk_density_other"),
+            by = join_by(column_id),
+             multiple = 'all') %>%
+   left_join(tribble(~column_id, ~unit, ~method,
+                    "bd_samp (g cm-3)", "g cm-3", "Fine earth bulk density",
+                    "bd_tot (g cm-3)",  "g cm-3", "Whole soil bulk density",
+                    "bd_whole (g cm-3)",  "g cm-3", "Fine earth (estimated coarse fraction correction) bulk density",
+                    "bd_other (g cm-3)",  "g cm-3", NA) %>%
+               pivot_longer(cols = c('unit', 'method'), 
+                            names_to = 'is_type.meta', values_to  = 'with_entry.meta',
+                            values_drop_na=TRUE),
+             by = join_by(column_id),
+             multiple = 'all') %>%
+  reframe(
+    is_type = c(is_type, is_type.meta),
+    with_entry = c(with_entry, with_entry.meta), 
+    .by = c(study_id, table_id, observation_id, column_id, of_variable)) %>%
+  unique() %>%
+  filter(!is.na(is_type))
+  
+
+```
+
+# Method 2: data annotations
+
+Leveraging meta data annotations more to document transformations with the data structures and description tables combined.
+
+
+```{r}
+
+#Transform the data into a set of id-variable-value-unit-method 
+
+FIA.dataAnnotation <- tribble(
+  ~'study_id', ~'table_id', ~'column_id',  ~'is_type', ~'of_variable', ~'with_entry',
+  'FIADB_RMRS', 'Soils_Lab', NA, 'vaule', 'download_url', 'https://apps.fs.usda.gov/fia/datamart/CSV/CO_SOILS_LAB.csv',
+  'FIADB_RMRS', 'Soils_Lab', 'BULK_DENSITY', 'value', 'Bulk_density', NA,
+  'FIADB_RMRS', 'Soils_Lab', 'BULK_DENSITY', 'unit', 'Bulk_density', 'g cm^-3',
+  'FIADB_RMRS','Soils_Lab', 'BULK_DENSITY',  'method', 'Bulk_density', 'mass per volume of oven-dry soil inclusive of coarse fraction',
+  'FIADB_RMRS','Soils_Lab', 'CN', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'STATECD', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'COUNTYCD', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'PLOT', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'SMPLNNBR', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'VSTNBR', 'identifier', NA, NA,
+  'FIADB_RMRS','Soils_Lab', 'LAYER_TYPE', 'identifier', NA, NA
+)
+
+id_var_names <- FIA.dataAnnotation %>%
+  filter(is_type == 'identifier')
+
+#id_var_names$column_id
+FIA_long.df <- FIA.df %>%
+  #add the study and table id manually
+  mutate(study_id = 'FIADB_RMRS', 
+         table_id = 'Soils_Lab') %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of(id_var_names$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  #shoe string the data
+  pivot_longer(cols = -c(study_id, table_id, observation_id),
+               names_to = 'column_id', 
+               values_to = 'with_entry',
+               values_drop_na = TRUE) %>%
+  #annotate so that we can also have the 'meta' data
+  full_join(FIA.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''),
+            multiple = 'all') %>%
+  #deal with entries from both the meta and data tables
+  mutate(
+    with_entry = if_else(is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+  
+```
+
+```{r}
+
+#ISCN.dataAnnotation <- ISCN.dataStructure  %>% select(-is_type) %>%
+#  full_join(ISCN.dataDescription, multiple = 'all') %>%
+#  bind_rows(ISCN.dataStructure) %>%
+#  arrange(column_id)
+
+ISCN.dataAnnotation <- tribble(~"study_id",~"table_id",~"column_id",~"of_variable",~"is_type",~"with_entry",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_sample","description","NRCS bulk density method code",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_sample","control_vocabulary","NRCS_bulk_density_code",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_total","description","NRCS bulk density method code",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_total","control_vocabulary","NRCS_bulk_density_code",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_whole","description","NRCS bulk density method code",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_whole","control_vocabulary","NRCS_bulk_density_code",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_other","description","NRCS bulk density method code",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_other","control_vocabulary","NRCS_bulk_density_code",
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_sample","method",NA,
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_total","method",NA,
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_whole","method",NA,
+"ISCN3","layer","bdNRCS_prep_code","bulk_density_other","method",NA,
+"ISCN3","layer","bd_method","bulk_density_sample","description","Method used to determine bulk density",
+"ISCN3","layer","bd_method","bulk_density_total","description","Method used to determine bulk density",
+"ISCN3","layer","bd_method","bulk_density_whole","description","Method used to determine bulk density",
+"ISCN3","layer","bd_method","bulk_density_other","description","Method used to determine bulk density",
+"ISCN3","layer","bd_method","bulk_density_sample","method",NA,
+"ISCN3","layer","bd_method","bulk_density_total","method",NA,
+"ISCN3","layer","bd_method","bulk_density_whole","method",NA,
+"ISCN3","layer","bd_method","bulk_density_other","method",NA,
+"ISCN3","layer","bd_other (g cm-3)","bulk_density_other","description","Grams of oven-dried soil per cubic centimeter, method used in the associated Bulk Density Method, soil particle fraction used",
+"ISCN3","layer","bd_other (g cm-3)","bulk_density_other","unit","g cm-3",
+"ISCN3","layer","bd_other (g cm-3)","bulk_density_other","value",NA,
+"ISCN3","layer","bd_samp (g cm-3)","bulk_density_sample","description","Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed",
+"ISCN3","layer","bd_samp (g cm-3)","bulk_density_sample","unit","g cm-3",
+"ISCN3","layer","bd_samp (g cm-3)","bulk_density_sample","method","Fine earth bulk density",
+"ISCN3","layer","bd_samp (g cm-3)","bulk_density_sample","value",NA,
+"ISCN3","layer","bd_tot (g cm-3)","bulk_density_total","description","Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter included",
+"ISCN3","layer","bd_tot (g cm-3)","bulk_density_total","unit","g cm-3",
+"ISCN3","layer","bd_tot (g cm-3)","bulk_density_total","method","Whole soil bulk density",
+"ISCN3","layer","bd_tot (g cm-3)","bulk_density_total","value",NA,
+"ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","description","Grams of oven-dried soil per cubic centimeter, with the content of soil particles >2mm and roots >1cm diameter estimated and subtracted",
+"ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","unit","g cm-3",
+"ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","method","Fine earth (estimated coarse fraction correction) bulk density",
+"ISCN3","layer","bd_whole (g cm-3)","bulk_density_whole","value",NA,
+"ISCN3","layer","dataset_name_sub", 'source', 'identifier', NA,
+"ISCN3","layer", "site_name", "site",'identifier', NA,
+"ISCN3","layer", "profile_name", "profile",'identifier', NA,
+"ISCN3","layer", "layer_name", "layer", 'identifier',NA)
+
+
+ISCN_long.df <- ISCN.df %>%
+  mutate(study_id = 'ISCN3', 
+         table_id = 'layer')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(ISCN.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else(is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+   
+```
+
+
+# Pulling things together: 
+
+```{r}
+bigData <- FIA_long.df %>%
+  select(study_id, table_id, observation_id, of_variable, is_type, with_entry) %>%
+  bind_rows(ISCN_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  unique() #remove duplicates from repeated methods applying to multiple colums
+
+```
+
+## Method 1: harmonizing data types
+
+```{r}
+
+
+newData.df <- bigData %>%
+  mutate(of_variable = recode(of_variable, 
+                           'Bulk_density' = 'bulk_density_whole'))
+
+```
+
+## Method 2: annotations harmonziation
+
+```{r}
+
+#bigData %>%
+#  select(study_id, table_id, of_variable, is_type, with_entry) %>%
+#  filter(is_type %in% c('unit', 'method')) %>%
+#  unique() %>% write.csv(row.names = FALSE)
+
+variableMap <- tribble(~"study_id", ~"table_id", ~"of_variable", ~'target_variable', 
+"FIADB_RMRS","Soils_Lab","Bulk_density", 'bulk_density_whole_soil',
+"ISCN3","layer","bulk_density_sample", 'bulk_density_fine_earth',
+"ISCN3","layer","bulk_density_other",'bulk_density_unknown',
+"ISCN3","layer","bulk_density_total", 'bulk_density_whole_soil',
+"ISCN3","layer","bulk_density_whole", 'bulk_density_whole_soil',
+ "FIADB_RMRS", "Soils_Lab", "code", "code", 
+ "FIADB_RMRS", "Soils_Lab", "state", "state", 
+ "FIADB_RMRS", "Soils_Lab", "county", "county", 
+ "FIADB_RMRS", "Soils_Lab", "plot", "plot", 
+ "FIADB_RMRS", "Soils_Lab", "sample_number", "sample_number", 
+ "FIADB_RMRS", "Soils_Lab", "station_number", "station_number", 
+ "ISCN3", "layer", "data_source", "data_source", 
+ "ISCN3", "layer", "site", "site", 
+ "ISCN3", "layer", "profile", "profile", 
+ "ISCN3", "layer", "layer", "layer" )
+
+newData.df <- bigData %>%
+  left_join(variableMap, by = join_by(study_id, table_id, of_variable)) %>%
+  select(-of_variable) %>%
+  rename(of_variable = target_variable)
+  
+```
+
+
+# Plot it
+```{r}
+
+data_wide_values.df <- newData.df %>%
+  filter(is_type %in% c('value')) %>%
+  select(-is_type) %>%
+  ##pull out the tuple
+  pivot_wider(names_from=of_variable, 
+              values_from=with_entry) %>%
+  mutate(across(.cols = starts_with('bulk_density'), as.numeric))
+
+ggplot(data_wide_values.df) +
+  geom_histogram(aes(x=bulk_density_whole_soil)) +
+  facet_wrap(~study_id, scales='free_y') +
+  scale_x_log10() +
+  scale_y_log10()
+
+ggplot(data_wide_values.df %>%
+         pivot_longer(cols = c(bulk_density_whole_soil, bulk_density_fine_earth, bulk_density_unknown))) +
+  geom_histogram(aes(x=value, fill = study_id)) +
+  facet_grid(study_id~name, scales = 'free_y') +
+  scale_x_log10() +
+  scale_y_log10()
+
+```
