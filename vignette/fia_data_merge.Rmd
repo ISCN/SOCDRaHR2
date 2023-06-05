@@ -17,15 +17,34 @@ library(googlesheets4)
 
 ```{r downloadData}
 
-##Download ISCN and FIA tables (layer and Soils_Lab)
+##Download ISCN and FIA tables (layer, profile, citation, dataset and Soils_Lab, Soils_Sample_Location)
 
-ISCN.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253',
+ISCN_layer.df <- read_delim(file = "https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253",
+                    col_types = cols(.default =col_character()),
+                    delim = ';',
+                    n_max = 1e4)
+
+ISCN_profile.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=40527580cc045d33d9a5aaf728bf204e',
+                    col_types = cols(.default =col_character()),
+                    delim = ';',
+                    n_max = 1e4)
+
+ISCN_citation.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=320e31ca911f187550ca2143c31fd408',
+                    col_types = cols(.default =col_character()),
+                    delim = ';',
+                    n_max = 1e4)
+
+ISCN_dataset.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=cdd0c7a4cac3f28d6d788c91f506775f',
                     col_types = cols(.default =col_character()),
                     delim = ';',
                     n_max = 1e4)
 
 
-FIA.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_LAB.csv", col_types = cols(.default =col_character()),
+FIA_lab.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_LAB.csv", col_types = cols(.default =col_character()),
+                    delim = ',',
+                    n_max = 1e4)
+
+FIA_loc.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_SAMPLE_LOC.csv", col_types = cols(.default =col_character()),
                     delim = ',',
                     n_max = 1e4)
   
@@ -34,14 +53,37 @@ FIA.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_LAB.csv", col_types = cols
 ```{r}
 
 #retrieve FIA annotations from datakeys sheet
-FIA.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'FIADB_RMRS') %>% filter(table_id == "Soils_Lab")
+FIA_lab.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'FIADB_RMRS') %>% filter(table_id == "Soils_Lab")
 
-FIA_long.df <- FIA.df %>%
+
+FIA_lab_long.df <- FIA_lab.df %>%
+  mutate(study_id = 'FIADB_RMRS', 
+         table_id = 'Soils_Lab')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((FIA_lab.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(FIA_lab.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else(is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+
+
+FIA_loc.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'FIADB_RMRS') %>% filter(table_id == "Soils_Sample_Location")
+
+FIA_loc_long.df <- FIA_loc.df %>%
   #add the study and table id manually
   mutate(study_id = 'FIADB_RMRS', 
-         table_id = 'Soils_Lab') %>%
+         table_id = 'Soils_Sample_Location') %>%
   #Group by the columns that are identifiers
-  group_by(across(all_of((FIA.dataAnnotation %>%
+  group_by(across(all_of((FIA_loc.dataAnnotation %>%
                            filter(is_type == 'identifier'))$column_id))) %>%
   #Pull the current group index or id 
   mutate(observation_id = cur_group_id()) %>%
@@ -53,7 +95,7 @@ FIA_long.df <- FIA.df %>%
                values_to = 'with_entry',
                values_drop_na = TRUE) %>%
   #annotate so that we can also have the 'meta' data
-  full_join(FIA.dataAnnotation, 
+  full_join(FIA_loc.dataAnnotation, 
             by = join_by(study_id, table_id, column_id),
             suffix = c('.data', ''),
             multiple = 'all') %>%
@@ -66,14 +108,14 @@ FIA_long.df <- FIA.df %>%
 
 ```{r}
 
-#retrieve FIA annotations from datakeys sheet
-ISCN.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "layer")
+#retrieve ISCN annotations from datakeys sheet
+ISCN_layer.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "layer")
 
-ISCN_long.df <- ISCN.df %>%
+ISCN_layer_long.df <- ISCN_layer.df %>%
   mutate(study_id = 'ISCN3', 
          table_id = 'layer')  %>%
   #Group by the columns that are identifiers
-  group_by(across(all_of((ISCN.dataAnnotation %>%
+  group_by(across(all_of((ISCN_layer.dataAnnotation %>%
                            filter(is_type == 'identifier'))$column_id))) %>%
   #Pull the current group index or id 
   mutate(observation_id = cur_group_id()) %>%
@@ -81,11 +123,79 @@ ISCN_long.df <- ISCN.df %>%
   ungroup() %>%
   pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
                values_to = 'with_entry', values_drop_na = TRUE) %>%
-  full_join(ISCN.dataAnnotation, 
+  full_join(ISCN_layer.dataAnnotation, 
             by = join_by(study_id, table_id, column_id),
             suffix = c('.data', ''), multiple = 'all') %>%
   mutate(
-    with_entry = if_else(is.na(with_entry), with_entry.data, with_entry)) %>%
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+
+
+#retrieve ISCN annotations from datakeys sheet
+ISCN_profile.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "profile")
+
+ISCN_profile_long.df <- ISCN_profile.df %>%
+  mutate(study_id = 'ISCN3', 
+         table_id = 'profile')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN_profile.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(ISCN_profile.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+
+
+#retrieve ISCN annotations from datakeys sheet
+ISCN_citation.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "citation")
+
+ISCN_citation_long.df <- ISCN_citation.df %>%
+  mutate(study_id = 'ISCN3', 
+         table_id = 'citation')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN_citation.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(ISCN_citation.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+   
+#retrieve ISCN annotations from datakeys sheet
+ISCN_dataset.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "dataset")
+
+ISCN_dataset_long.df <- ISCN_dataset.df %>%
+  mutate(study_id = 'ISCN3', 
+         table_id = 'dataset')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN_dataset.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(ISCN_dataset.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
   select(-with_entry.data)
    
 ```
@@ -94,9 +204,17 @@ ISCN_long.df <- ISCN.df %>%
 # Pulling things together
 
 ```{r}
-bigData <- FIA_long.df %>%
+bigData <- FIA_loc_long.df %>%
   select(study_id, table_id, observation_id, of_variable, is_type, with_entry) %>%
-  bind_rows(ISCN_long.df %>%
+  bind_rows(FIA_lab_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  bind_rows(ISCN_layer_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  bind_rows(ISCN_profile_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  bind_rows(ISCN_citation_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  bind_rows(ISCN_dataset_long.df %>%
               select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
   unique() #remove duplicates from repeated methods applying to multiple columns
 ```
@@ -104,28 +222,10 @@ bigData <- FIA_long.df %>%
 # Annotations harmonization
 
 ```{r}
-#bigData %>%
-#  select(study_id, table_id, of_variable, is_type, with_entry) %>%
-#  filter(is_type %in% c('unit', 'method')) %>%
-#  unique() %>% write.csv(row.names = FALSE)
+#retrieve variable map
+variableMap <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "variableMap", range = "variableMap!A:D")
 
-variableMap <- tribble(~"study_id", ~"table_id", ~"of_variable", ~'target_variable', 
-"FIADB_RMRS","Soils_Lab","Bulk_density", 'bulk_density_whole_soil',
-"ISCN3","layer","bulk_density_sample", 'bulk_density_fine_earth',
-"ISCN3","layer","bulk_density_other",'bulk_density_unknown',
-"ISCN3","layer","bulk_density_total", 'bulk_density_whole_soil',
-"ISCN3","layer","bulk_density_whole", 'bulk_density_whole_soil',
- "FIADB_RMRS", "Soils_Lab", "code", "code", 
- "FIADB_RMRS", "Soils_Lab", "state", "state", 
- "FIADB_RMRS", "Soils_Lab", "county", "county", 
- "FIADB_RMRS", "Soils_Lab", "plot", "plot", 
- "FIADB_RMRS", "Soils_Lab", "sample_number", "sample_number", 
- "FIADB_RMRS", "Soils_Lab", "station_number", "station_number", 
- "ISCN3", "layer", "data_source", "data_source", 
- "ISCN3", "layer", "site", "site", 
- "ISCN3", "layer", "profile", "profile", 
- "ISCN3", "layer", "layer", "layer")
-
+#rename variables based on map
 newData.df <- bigData %>%
   left_join(variableMap, by = join_by(study_id, table_id, of_variable)) %>%
   select(-of_variable) %>%
@@ -143,6 +243,7 @@ data_wide_values.df <- newData.df %>%
   pivot_wider(names_from=of_variable, 
               values_from=with_entry) %>%
   mutate(across(.cols = starts_with('bulk_density'), as.numeric))
+
 ggplot(data_wide_values.df) +
   geom_histogram(aes(x=bulk_density_whole_soil)) +
   facet_wrap(~study_id, scales='free_y') +
