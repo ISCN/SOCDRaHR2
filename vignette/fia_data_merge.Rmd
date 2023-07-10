@@ -22,35 +22,48 @@ library(googlesheets4)
 ISCN_layer.df <- read_delim(file = "https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253",
                     col_types = cols(.default =col_character()),
                     delim = ';',
-                    n_max = 1e3)
+                    n_max = 1e5)
 
 ISCN_profile.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=40527580cc045d33d9a5aaf728bf204e',
                     col_types = cols(.default =col_character()),
                     delim = ';',
-                    n_max = 1e3)
+                    n_max = 1e5)
 
 ISCN_citation.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=320e31ca911f187550ca2143c31fd408',
                     col_types = cols(.default =col_character()),
                     delim = ';',
-                    n_max = 1e3)
+                    n_max = 1e5)
 
 ISCN_dataset.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=cdd0c7a4cac3f28d6d788c91f506775f',
                     col_types = cols(.default =col_character()),
                     delim = ';',
-                    n_max = 1e3)
+                    n_max = 1e5)
 
 
 FIA_lab.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_LAB.csv", col_types = cols(.default =col_character()),
                     delim = ',',
-                    n_max = 1e3)
+                    n_max = 1e5)
 
 FIA_loc.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_SAMPLE_LOC.csv", col_types = cols(.default =col_character()),
                     delim = ',',
-                    n_max = 1e3)
+                    n_max = 1e5)
   
 ```
 
+
 ```{r}
+#Concatenate citations for same datasets
+ISCN_citation.df <- ISCN_citation.df %>% 
+  group_by(dataset_name) %>% 
+  mutate(citation = paste0(citation, collapse = "; ")) %>%
+  distinct(dataset_name, .keep_all = TRUE)
+
+ISCN_layer.df <- ISCN_layer.df %>% distinct(dataset_name_sub, dataset_name_soc, site_name, profile_name, layer_name, .keep_all = TRUE)
+
+```
+
+```{r}
+#Create long table of each FIA dataset
 
 #retrieve FIA annotations from datakeys sheet
 FIA_lab.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'FIADB_RMRS') %>% filter(table_id == "Soils_Lab")
@@ -72,7 +85,7 @@ FIA_lab_long.df <- FIA_lab.df %>%
             by = join_by(study_id, table_id, column_id),
             suffix = c('.data', ''), multiple = 'all') %>%
   mutate(
-    with_entry = if_else(is.na(with_entry), with_entry.data, with_entry)) %>%
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
   select(-with_entry.data)
 
 
@@ -101,12 +114,13 @@ FIA_loc_long.df <- FIA_loc.df %>%
             multiple = 'all') %>%
   #deal with entries from both the meta and data tables
   mutate(
-    with_entry = if_else(is.na(with_entry), with_entry.data, with_entry)) %>%
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
   select(-with_entry.data)
 
 ```
 
 ```{r}
+#Create long table of each ISCN dataset
 
 #retrieve ISCN annotations from datakeys sheet
 ISCN_layer.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "layer")
@@ -204,6 +218,8 @@ ISCN_dataset_long.df <- ISCN_dataset.df %>%
 # Pulling things together
 
 ```{r}
+#Bind all long tables together
+
 bigData <- FIA_loc_long.df %>%
   select(study_id, table_id, observation_id, of_variable, is_type, with_entry) %>%
   bind_rows(FIA_lab_long.df %>%
@@ -215,8 +231,8 @@ bigData <- FIA_loc_long.df %>%
   bind_rows(ISCN_citation_long.df %>%
               select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
   bind_rows(ISCN_dataset_long.df %>%
-              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
-  unique() #remove duplicates from repeated methods applying to multiple columns
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) #%>%
+  #unique() #remove duplicates from repeated methods applying to multiple columns
 ```
 
 # Annotations harmonization
@@ -229,20 +245,26 @@ variableMap <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6
 newData.df <- bigData %>%
   left_join(variableMap, by = join_by(study_id, table_id, of_variable)) %>%
   select(-of_variable) %>%
-  rename(of_variable = target_variable)
+  rename(of_variable = ISCN3_target_variable)
+
+#remove entries with no variable specified
+newData.df <- newData.df[!grepl('--|NA', newData.df$of_variable),]
+
+#newData.df <- newData.df[!duplicated(newData.df[ , c("study_id","table_id", "observation_id", "is_type", "of_variable")]),]
   
 ```
 
 # Plot it
 
 ```{r}
+#pivot out data
 data_wide_values.df <- newData.df %>%
-  filter(is_type %in% c('value')) %>%
+  filter(is_type %in% c('value', 'identifier')) %>%
   select(-is_type) %>%
-  group_by(of_variable) %>%
-  mutate(row = row_number()) %>%
   pivot_wider(names_from=of_variable, 
-              values_from=with_entry) %>%
+              values_from=with_entry)
+
+data_wide_values.df <- data_wide_values.df %>%
   mutate(across(.cols = starts_with('bulk_density'), as.numeric))
 
 ggplot(data_wide_values.df) +
@@ -260,89 +282,10 @@ ggplot(data_wide_values.df %>%
 ```
 
 
-#Test combining layer and soils_lab tables only looking at soil organic carbon
+#Test comparing raw data to combined by plots (organic carbon)
 ```{r}
-
-ISCN_layer.df <- read_delim(file = "https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253",
-                    col_types = cols(.default =col_character()),
-                    delim = ';',
-                    n_max = 1e3) %>%
-  select("dataset_name_sub", "dataset_name_soc", "site_name", "profile_name", "layer_name", #ID columns
-         "oc (percent)", "cNRCS_prep_code", "c_method") #organic carbon
-
-
-FIA_lab.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_LAB.csv", col_types = cols(.default =col_character()),
-                    delim = ',',
-                    n_max = 1e3) %>%
-  select("CN", "PLT_CN", "INVYR", "STATECD", "COUNTYCD", "PLOT", "CREATED_BY", "CREATED_DATE", "CREATED_IN_INSTANCE", "MODIFIED_BY", "MODIFIED_DATE", "MODIFIED_IN_INSTANCE", "SAMPLE_DATE", "SAMPLE_ID", #ID columns
-         "C_ORG_PCT") # organic carbon
-
-
-FIA_lab.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'FIADB_RMRS') %>% filter(table_id == "Soils_Lab")
-
-FIA_lab_long.df <- FIA_lab.df %>%
-  mutate(study_id = 'FIADB_RMRS', 
-         table_id = 'Soils_Lab')  %>%
-  #Group by the columns that are identifiers
-  group_by(across(all_of((FIA_lab.dataAnnotation %>%
-                           filter(is_type == 'identifier'))$column_id))) %>%
-  #Pull the current group index or id 
-  mutate(observation_id = cur_group_id()) %>%
-  #and then remove the grouping so we can move on
-  ungroup() %>%
-  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
-               values_to = 'with_entry', values_drop_na = TRUE) %>%
-  full_join(FIA_lab.dataAnnotation, 
-            by = join_by(study_id, table_id, column_id),
-            suffix = c('.data', ''), multiple = 'all') %>%
-  mutate(
-    with_entry = if_else(is.na(with_entry), with_entry.data, with_entry)) %>%
-  select(-with_entry.data)
-
-
-ISCN_layer.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "layer")
-
-ISCN_layer_long.df <- ISCN_layer.df %>%
-  mutate(study_id = 'ISCN3', 
-         table_id = 'layer')  %>%
-  #Group by the columns that are identifiers
-  group_by(across(all_of((ISCN_layer.dataAnnotation %>%
-                           filter(is_type == 'identifier'))$column_id))) %>%
-  #Pull the current group index or id 
-  mutate(observation_id = cur_group_id()) %>%
-  #and then remove the grouping so we can move on
-  ungroup() %>%
-  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
-               values_to = 'with_entry', values_drop_na = TRUE) %>%
-  full_join(ISCN_layer.dataAnnotation, 
-            by = join_by(study_id, table_id, column_id),
-            suffix = c('.data', ''), multiple = 'all') %>%
-  mutate(
-    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
-  select(-with_entry.data)
-
-
-bigData <- FIA_lab_long.df %>%
-  select(study_id, table_id, observation_id, of_variable, is_type, with_entry) %>%
-  bind_rows(ISCN_layer_long.df %>%
-              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
-  unique()
-
-
-variableMap <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "variableMap", range = "variableMap!A:D")
-
-newData.df <- bigData %>%
-  left_join(variableMap, by = join_by(study_id, table_id, of_variable)) %>%
-  select(-of_variable) %>%
-  rename(of_variable = target_variable)
-
-
-data_wide_values.df <- newData.df %>%
-  filter(is_type %in% c('value')) %>%
-  select(-is_type) %>%
-  pivot_wider(names_from=of_variable, 
-              values_from=with_entry) %>%
-  mutate(organic_carbon = as.numeric(organic_carbon))
+data_wide_values.df <- data_wide_values.df %>%
+  mutate(across(.cols = starts_with('organic_carbon'), as.numeric))
 
 ggplot(data_wide_values.df) +
   geom_histogram(aes(x=organic_carbon)) +
@@ -366,5 +309,71 @@ ggplot(FIA_lab.df) +
   #facet_wrap(scales='free_y') +
   #scale_x_log10() +
   #scale_y_log10()
+
+
+```
+
+#Tests comparing raw data to combined by exact values (organic carbon in layer and soil lab)
+```{r}
+data_wide_values.df <- data_wide_values.df %>%
+  mutate(across(.cols = starts_with('organic_carbon'), as.numeric))
+
+organic_carbon_ISCN <- ISCN_layer.df$`oc (percent)`
+
+organic_carbon_ISCN_merged <- data_wide_values.df %>% filter(table_id == "layer") %>% filter(row_number() <= n()-1)
+
+organic_carbon_ISCN_merged <- organic_carbon_ISCN_merged$organic_carbon
+
+identical(organic_carbon_ISCN, organic_carbon_ISCN_merged)
+
+
+
+organic_carbon_FIA <- FIA_lab.df$C_ORG_PCT
+
+organic_carbon_FIA <- as.numeric(organic_carbon_FIA)
+
+organic_carbon_FIA <- organic_carbon_FIA[!is.na(organic_carbon_FIA)]
+
+organic_carbon_FIA_merged <- data_wide_values.df %>% filter(table_id == "Soils_Lab")
+
+organic_carbon_FIA_merged <- organic_carbon_FIA_merged$organic_carbon
+
+organic_carbon_FIA_merged <- organic_carbon_FIA_merged[!is.na(organic_carbon_FIA_merged)]
+
+identical(organic_carbon_FIA, organic_carbon_FIA_merged)
+
+```
+#Tests comparing raw data to combined by exact values (profile, citation, dataset)
+```{r}
+data_wide_values.df %>% 
+  drop_na(-c("study_id", "table_id"))
+
+landform_ISCN <- ISCN_profile.df$`landform (landform)`
+
+landform_ISCN_merged <- data_wide_values.df %>% filter(table_id == "profile") %>% filter(row_number() <= n()-1)
+
+landform_ISCN_merged <- landform_ISCN_merged$landform
+
+identical(landform_ISCN, landform_ISCN_merged)
+
+
+
+citation_ISCN <- ISCN_citation.df$citation
+
+citation_ISCN_merged <- data_wide_values.df %>% filter(table_id == "citation")
+
+citation_ISCN_merged <- citation_ISCN_merged$citation
+
+identical(citation_ISCN, citation_ISCN_merged)
+
+
+
+curator_name_ISCN <- ISCN_dataset.df$curator_name
+
+curator_name_ISCN_merged <- data_wide_values.df %>% filter(table_id == "dataset")
+
+curator_name_ISCN_merged <- curator_name_ISCN_merged$curator_name
+
+identical(curator_name_ISCN, curator_name_ISCN_merged)
 
 ```
