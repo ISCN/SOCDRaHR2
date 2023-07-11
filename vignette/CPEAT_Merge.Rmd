@@ -82,18 +82,17 @@ PAGES_Geochemistry_data <- data.frame()
 #   PAGES_Geochemistry_data <- as.data.frame(bind_rows(PAGES_Geochemistry_data, all_Geochemistry_data))
 # }
 
-write.table(PAGES_Geochemistry_data, file=paste0(datapath,"PAGES_Geochemistry_CPEAT.txt"), row.names = FALSE, quote = FALSE, sep = "\t", na = "")
+#write.table(PAGES_Geochemistry_data, file=file.path(folderpath,"PAGES_Geochemistry_CPEAT.txt"), row.names = FALSE, quote = FALSE, sep = "\t", na = "")
 
 
 
-
-allData.ls <- plyr::dlply(PAGES_Geochemistry[1:nrow(PAGES_Geochemistry),], c("doi"), .fun = function(xx) {
-  all_Geo_data <- pg_data(doi = xx$doi, 
-                          overwrite = FALSE) # difficult to interpret if using the column indexing with number 
-  all_Geo_data <- all_Geo_data[[1]]
-  # add columns identifying unique source of data for further attribution
-  return(all_Geo_data)
-}) 
+#Pull into a list, all the data from the files the specified dois in the search results 
+allData.ls <- plyr::dlply(PAGES_Geochemistry, #search results
+                          c("doi"), #grouping on unique identifer
+                          .fun = function(xx) { #defining our fetch function
+                            #the pg_data returns a list of a single item, remove that from the parent list
+                            return(pg_data(doi = xx$doi, overwrite = FALSE)[[1]])
+                          }) 
 
 allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
   return(xx$data)
