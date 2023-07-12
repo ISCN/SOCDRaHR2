@@ -31,11 +31,11 @@ pages.df <- pg_search("project:label:PAGES_C-PEAT", count = 500) %>%
  mutate(fullDOI = paste0("PANGAEA, https://doi.org/", doi))
 
 
-PAGES_Geochemistry <- filter(PAGES, grepl("Geochemistry", citation))
+#PAGES_Geochemistry <- filter(PAGES, grepl("Geochemistry", citation))
 
-PAGES_AgeDetermination <- filter(PAGES, grepl("Age determinatio", citation))
+#PAGES_AgeDetermination <- filter(PAGES, grepl("Age determinatio", citation))
 
-PAGES_CalibratedAges <- filter(PAGES, grepl("Calibrated ages", citation))
+#PAGES_CalibratedAges <- filter(PAGES, grepl("Calibrated ages", citation))
 
 ```
 
@@ -61,33 +61,9 @@ pg_cache$cache_path_set(full_path = folderpath)
 
 
 ```{r}
-#running loops for the three distinctive classes 
-
-# loop for the Geochemistry classification of C-PEAT Data 
-#PAGES_Geochemistry_data <- data.frame()
-
-# for (i in 1:nrow(PAGES_Geochemistry)) {
-#   # using pg_data will automatically download the .tab format of the datasets (metadata + data) in the cache folder
-#   all_Geochemistry_data <- pg_data(doi=PAGES_Geochemistry[i,2]) 
-#   #print(pg_data(doi=PAGES_Geochemistry[i,2]))
-#   print(all_Geochemistry_data)
-#   print(i)
-#   all_Geochemistry_data <- all_Geochemistry_data[[1]]$data 
-#   if (is.character(all_Geochemistry_data$Peat)) {
-#    all_Geochemistry_data <- rename(all_Geochemistry_data, `Peat(species)` = Peat)
-#   }
-#   # add columns identifying unique source of data for further attribution
-#   all_Geochemistry_data$DOI <- as.character(PAGES_Geochemistry[i,2])
-#   all_Geochemistry_data$citation <- as.character(PAGES_Geochemistry[i,5])
-#   PAGES_Geochemistry_data <- as.data.frame(bind_rows(PAGES_Geochemistry_data, all_Geochemistry_data))
-# }
-
-#write.table(PAGES_Geochemistry_data, file=file.path(folderpath,"PAGES_Geochemistry_CPEAT.txt"), row.names = FALSE, quote = FALSE, sep = "\t", na = "")
-
-
 
 #Pull into a list, all the data from the files the specified dois in the search results 
-allData.ls <- plyr::dlply(PAGES_Geochemistry, #search results
+allData.ls <- plyr::dlply(PAGES_AgeDetermination, #search results
                           c("doi"), #grouping on unique identifer
                           .fun = function(xx) { #defining our fetch function
                             #the pg_data returns a list of a single item, remove that from the parent list
@@ -96,7 +72,20 @@ allData.ls <- plyr::dlply(PAGES_Geochemistry, #search results
 
 #Pull the core information by accessing the data item in the lists
 allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
-  return(xx$data)
+  print(xx$doi)
+  if(xx$doi %in% c("10.1594/PANGAEA.934281")){
+    names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+  }
+  
+   if(xx$doi %in% c("10.1594/PANGAEA.934343")){
+     names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+   }
+  
+  if(xx$doi %in% c("10.1594/PANGAEA.941094")){
+     names(xx$data)[10] <- 'Age [a AD/CE] alt.'
+   }
+  
+  return(mutate(.data = xx$data, across(.cols = everything(),  as.character)))
 }) 
 
 #Pull the study information
@@ -159,9 +148,31 @@ allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
 
 allParameters.df <-  plyr::ldply(allData.ls, .fun = function(xx) {
   
+  if(xx$doi %in% c("10.1594/PANGAEA.934281")){
+    names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+  }
+  
+   if(xx$doi %in% c("10.1594/PANGAEA.934343")){
+     names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+   }
+  
+  if(xx$doi %in% c("10.1594/PANGAEA.941094")){
+     names(xx$data)[10] <- 'Age [a AD/CE] alt.'
+   }
+  
+  colHeader <- names(xx$data)
+  colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = " "))
+  
+  if(xx$doi == "10.1594/PANGAEA.934274"){
+    colDescript <- c(colDescript[1:4], 
+                     paste(colDescript[5], ';', colDescript[6]),
+                     colDescript[7:9])
+  }
+  
   #pull the parameter descriptions in and append them to the headers in the data
-  ParametersGeo <- data.frame(header = names(xx$data), 
-                              description = unlist(lapply(xx$metadata$parameters, paste, collapse = " "))) %>%
+  ParametersGeo <- data.frame(header = colHeader, 
+                              description = colDescript, 
+                              stringsAsFactors = FALSE) %>%
     #add in a column index
     mutate(column_index = 1:ncol(xx$data))
   
