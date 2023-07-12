@@ -64,7 +64,7 @@ pg_cache$cache_path_set(full_path = folderpath)
 #running loops for the three distinctive classes 
 
 # loop for the Geochemistry classification of C-PEAT Data 
-PAGES_Geochemistry_data <- data.frame()
+#PAGES_Geochemistry_data <- data.frame()
 
 # for (i in 1:nrow(PAGES_Geochemistry)) {
 #   # using pg_data will automatically download the .tab format of the datasets (metadata + data) in the cache folder
@@ -94,35 +94,50 @@ allData.ls <- plyr::dlply(PAGES_Geochemistry, #search results
                             return(pg_data(doi = xx$doi, overwrite = FALSE)[[1]])
                           }) 
 
+#Pull the core information by accessing the data item in the lists
 allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
   return(xx$data)
 }) 
 
-
+#Pull the study information
 allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
+  #list out all the possible names for the study info, be sure to update
+  #...this list manually if the warning is thrown.
   primaryNames <- intersect(names(xx), c('parent_doi', 'doi', 'citation', 
                                          'url', 'path'))
+  
+  #There shouldn't be any names that we don't include above.
   if(any( ! (names(xx) %in% c(primaryNames, 'metadata', 'data')))){
     warning(paste('possible missing informatin at primary level for', xx$doi,
                   setdiff(names(xx), c(primaryNames, 'metadata', 'data'))))
   }
+  
+  #access the study information in the primary list
   ans.ls <- xx[primaryNames]
   
+  #deal with the information in the metadata, again we name each possible
+  #...list item here and if there are new names this needs to be updated.
   metaNames <- intersect(names(xx$metadata), c("citation", "related_to", "further_details",
                                                "projects" , "coverage",
                                                "abstract", "keywords",
                                                "status",
                                                "license", "size", "comment"))
-   if(any( ! (names(xx$metadata) %in% c(metaNames, 'events', 'parameters')))){
+  if(any( ! (names(xx$metadata) %in% c(metaNames, 'events', 'parameters')))){
     warning(paste('possible missing informatin at metadata level for', xx$doi))
-   }
-   ans.ls <- c(ans.ls, xx$metadata[metaNames])
+  }
   
-   eventsNames <- intersect(names(xx$metadata$events), c("LATITUDE", "LONGITUDE",
+  #append the metadata items to the items from the primary list
+  ans.ls <- c(ans.ls, xx$metadata[metaNames])
+  
+  #Pull in the study information from the 'events' item in the list
+  #...again there should be no items that are not matching the manual array here
+  eventsNames <- intersect(names(xx$metadata$events), c("LATITUDE", "LONGITUDE",
                                                          "ELEVATION", "ELEVATION START", "ELEVATION END",
                                                          "Penetration", "Recovery",
                                                          "LOCATION", "METHOD/DEVICE", 
                                                          "COMMENT"))
+  
+  #Take out the first item of the list which is actually the core name itself.
    if(any( ! (names(xx$metadata$events)[-1] %in%  
               c("LATITUDE", "LONGITUDE", "ELEVATION",
                 "ELEVATION START", "ELEVATION END", 
@@ -131,35 +146,27 @@ allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
     warning(paste('possible missing informatin at metadata-events level for', xx$doi))
    }
    
+  #The core name is a special case where the information is in the name and not
+  #...in the list values. Deal with that and append the events information.
    ans.ls <- c(list(core_name = names(xx$metadata$events)[1]),
                ans.ls, 
                xx$metadata$events[eventsNames])
    
-  # add columns identifying unique source of data for further attribution
+  # change everything to a data frame to make it easier to read
   return(as.data.frame(ans.ls, stringsAsFactors = FALSE))
 })
 
-allMeta.df <- plyr::ldply(allData.ls, .fun = function(xx) {
-  characterNames <- intersect(names(xx), c('parent_doi', 'doi', 'citation', 'url', 'path'))
-  ans <- as.data.frame(xx[characterNames], stringsAsFactors = FALSE)
-  # add columns identifying unique source of data for further attribution
-  return(ans)
-})
-
-# try using one dataset as a test; merging the parameters 
-test <- data.frame(header = names(allData.ls[['10.1594/PANGAEA.928065']]$data), description = unlist(lapply(allData.ls[['10.1594/PANGAEA.928065']]$metadata$parameters, paste, collapse = " ")), 
-                    allData.ls[['10.1594/PANGAEA.928065']]$doi)
 
 allParameters.df <-  plyr::ldply(allData.ls, .fun = function(xx) {
-             ParametersGeo <- data.frame(header = names(xx$data), 
-            description = unlist(lapply(xx$metadata$parameters, paste, collapse = " "))) #%>%
-               #group_by(xx$doi) %>%
-             #mutate(ParametersGeo = cur_group_id())  #this is not working as data masking verbs such as 'group-by' is missing
-                    #xx$doi
+  
+  #pull the parameter descriptions in and append them to the headers in the data
+  ParametersGeo <- data.frame(header = names(xx$data), 
+                              description = unlist(lapply(xx$metadata$parameters, paste, collapse = " "))) %>%
+    #add in a column index
+    mutate(column_index = 1:ncol(xx$data))
+  
+  return(ParametersGeo)
 })
-
-# if we were to index the parameters of respective datasets; use "arrange" function?
-
 
 
 ```
