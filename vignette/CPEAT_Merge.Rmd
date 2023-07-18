@@ -89,16 +89,46 @@ allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
   if(xx$doi %in% c("10.1594/PANGAEA.929068")){
     names(xx$data)[5:7] <- paste(names(xx$data)[5:7], 'alt.') #true replicates??
   }
+
+  if(identical(names(xx$data)[c(2:4, 6:8)], 
+                    c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                    "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                    "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                    "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                    "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                    "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+     xx$doi %in% c("10.1594/PANGAEA.929655")){
+    names(xx$data)[c(2:4, 6:8)] <- c(
+                        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+                        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+                        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+                        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+                        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+                        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
+  }
   
-  if(xx$doi %in% c("10.1594/PANGAEA.929003", '10.1594/PANGAEA.929011', "10.1594/PANGAEA.929064")){
-    names(xx$data) <- c('Depth sed [m] (Sample midpoint depth)', #keep the orginal name
-                        'Cal age [ka BP] (OxCal 4.2.4)', 
-                        'Cal age max [ka BP] (OxCal 4.2.4)', 'Cal age min [ka BP] (OxCal 4.2.4)',
-                        'Cal age [ka BP] (Bacon 2.2)', 
-                        'Cal age max [ka BP] (Bacon 2.2)', 'Cal age min [ka BP] (Bacon 2.2)') #add the methods that are dropped here
+  if(identical(names(xx$data)[2:7], 
+                    c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                    "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                    "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                    "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                    "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                    "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+     xx$doi %in% c("10.1594/PANGAEA.930030")){
+    
+    names(xx$data)[2:7] <- c(
+                        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+                        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+                        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+                        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+                        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+                        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
   }
   
   
+  if(length(names(xx$data)) > length(unique(names(xx$data)))){
+    print(names(xx$data))
+  }
   return(mutate(.data = xx$data, across(.cols = everything(),  as.character)))
 }) 
 
