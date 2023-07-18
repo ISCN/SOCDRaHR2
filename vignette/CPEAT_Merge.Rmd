@@ -73,56 +73,56 @@ allData.ls <- plyr::dlply(pages.df, #search results
 
 #Pull the core information by accessing the data item in the lists
 allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
-  print(xx$doi)
+  #print(xx$doi)
   if(xx$doi %in% c("10.1594/PANGAEA.934281")){
     names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
   }
   
-   if(xx$doi %in% c("10.1594/PANGAEA.934343")){
-     names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
-   }
+  if(xx$doi %in% c("10.1594/PANGAEA.934343")){
+    names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+  }
   
   if(xx$doi %in% c("10.1594/PANGAEA.941094")){
-     names(xx$data)[10] <- 'Age [a AD/CE] alt.'
+    names(xx$data)[10] <- 'Age [a AD/CE] alt.'
   }
   
   if(xx$doi %in% c("10.1594/PANGAEA.929068")){
     names(xx$data)[5:7] <- paste(names(xx$data)[5:7], 'alt.') #true replicates??
   }
-
+  
   if(identical(names(xx$data)[c(2:4, 6:8)], 
-                    c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
-                    "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                    "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                    "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
-                    "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
-                    "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
-     xx$doi %in% c("10.1594/PANGAEA.929655")){
+               c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                 "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                 "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                 "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                 "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                 "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+     xx$doi %in% c("10.1594/PANGAEA.929655", "10.1594/PANGAEA.930133")){
     names(xx$data)[c(2:4, 6:8)] <- c(
-                        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
-                        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
-                        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
-                        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
-                        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
-                        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
+      'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+      'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+      'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+      'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+      'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+      'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
   }
   
   if(identical(names(xx$data)[2:7], 
-                    c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
-                    "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                    "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                    "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
-                    "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
-                    "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+               c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                 "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                 "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                 "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                 "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                 "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
      xx$doi %in% c("10.1594/PANGAEA.930030")){
     
     names(xx$data)[2:7] <- c(
-                        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
-                        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
-                        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
-                        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
-                        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
-                        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
+      'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+      'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+      'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+      'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+      'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+      'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
   }
   
   
@@ -165,26 +165,26 @@ allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
   #Pull in the study information from the 'events' item in the list
   #...again there should be no items that are not matching the manual array here
   eventsNames <- intersect(names(xx$metadata$events), c("LATITUDE", "LONGITUDE",
-                                                         "ELEVATION", "ELEVATION START", "ELEVATION END",
-                                                         "Penetration", "Recovery",
-                                                         "LOCATION", "METHOD/DEVICE", 
-                                                         "COMMENT"))
+                                                        "ELEVATION", "ELEVATION START", "ELEVATION END",
+                                                        "Penetration", "Recovery",
+                                                        "LOCATION", "METHOD/DEVICE", 
+                                                        "COMMENT"))
   
   #Take out the first item of the list which is actually the core name itself.
-   if(any( ! (names(xx$metadata$events)[-1] %in%  
-              c("LATITUDE", "LONGITUDE", "ELEVATION",
-                "ELEVATION START", "ELEVATION END", 
-                "Penetration","Recovery",
-                "LOCATION", "METHOD/DEVICE", "COMMENT")))){
+  if(any( ! (names(xx$metadata$events)[-1] %in%  
+             c("LATITUDE", "LONGITUDE", "ELEVATION",
+               "ELEVATION START", "ELEVATION END", 
+               "Penetration","Recovery",
+               "LOCATION", "METHOD/DEVICE", "COMMENT")))){
     warning(paste('possible missing informatin at metadata-events level for', xx$doi))
-   }
-   
+  }
+  
   #The core name is a special case where the information is in the name and not
   #...in the list values. Deal with that and append the events information.
-   ans.ls <- c(list(core_name = names(xx$metadata$events)[1]),
-               ans.ls, 
-               xx$metadata$events[eventsNames])
-   
+  ans.ls <- c(list(core_name = names(xx$metadata$events)[1]),
+              ans.ls, 
+              xx$metadata$events[eventsNames])
+  
   # change everything to a data frame to make it easier to read
   return(as.data.frame(ans.ls, stringsAsFactors = FALSE))
 })
@@ -192,17 +192,57 @@ allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
 
 allParameters.df <-  plyr::ldply(allData.ls, .fun = function(xx) {
   
+  ##Copy-paste (sigh... yes I know) from allCores.df construction
   if(xx$doi %in% c("10.1594/PANGAEA.934281")){
     names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
   }
   
-   if(xx$doi %in% c("10.1594/PANGAEA.934343")){
-     names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
-   }
+  if(xx$doi %in% c("10.1594/PANGAEA.934343")){
+    names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+  }
   
   if(xx$doi %in% c("10.1594/PANGAEA.941094")){
-     names(xx$data)[10] <- 'Age [a AD/CE] alt.'
-   }
+    names(xx$data)[10] <- 'Age [a AD/CE] alt.'
+  }
+  
+  if(xx$doi %in% c("10.1594/PANGAEA.929068")){
+    names(xx$data)[5:7] <- paste(names(xx$data)[5:7], 'alt.') #true replicates??
+  }
+  
+  if(identical(names(xx$data)[c(2:4, 6:8)], 
+               c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                 "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                 "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                 "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                 "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                 "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+     xx$doi %in% c("10.1594/PANGAEA.929655", "10.1594/PANGAEA.930133")){
+    names(xx$data)[c(2:4, 6:8)] <- c(
+      'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+      'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+      'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+      'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+      'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+      'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
+  }
+  
+  if(identical(names(xx$data)[2:7], 
+               c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                 "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                 "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                 "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                 "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                 "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+     xx$doi %in% c("10.1594/PANGAEA.930030")){
+    
+    names(xx$data)[2:7] <- c(
+      'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+      'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+      'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+      'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+      'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+      'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
+  }
   
   colHeader <- names(xx$data)
   colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = " "))
