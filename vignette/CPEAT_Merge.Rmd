@@ -17,18 +17,18 @@ library(dplyr) # set of tools for data manipulation, see details at https://dply
 # Website: https://www.pangaea.de/?q=project:label:PAGES_C-PEAT
 # search with pg_search: maximum = 500 records (set with count, continue with offset to add additional record beyond 500) 
 # 2022-11: There are 875 datasets PUBLISHED
-PAGES <- pg_search("project:label:PAGES_C-PEAT", count = 500)
+#PAGES <- pg_search("project:label:PAGES_C-PEAT", count = 500)
 
 # download all dataset citations:
 # rbind function: joins 2 or more dataframes
-PAGES <- rbind(PAGES, pg_search("project:label:PAGES_C-PEAT", count = 500, offset = 500))
+#PAGES <- rbind(PAGES, pg_search("project:label:PAGES_C-PEAT", count = 500, offset = 500))
 # create a column with full citations
-PAGES$fullcitation <- paste0(PAGES$citation, ". PANGAEA, https://doi.org/", PAGES$doi)
+#PAGES$fullcitation <- paste0(PAGES$citation, ". PANGAEA, https://doi.org/", PAGES$doi)
 
 pages.df <- pg_search("project:label:PAGES_C-PEAT", count = 500) %>% 
   bind_rows(pg_search("project:label:PAGES_C-PEAT", count = 500, offset = 500)) %>% #the output will contain all columns that appear in any of the inputs
-  mutate(fullcitation = paste0(citation, ". PANGAEA, https://doi.org/", doi)) %>% # adds additional column 
- mutate(fullDOI = paste0("PANGAEA, https://doi.org/", doi))
+  mutate(fullcitation = paste0(citation, ". PANGAEA, https://doi.org/", doi)) #%>% # adds additional column 
+ #mutate(fullDOI = paste0("PANGAEA, https://doi.org/", doi))
 
 
 #PAGES_Geochemistry <- filter(PAGES, grepl("Geochemistry", citation))
@@ -46,12 +46,13 @@ pages.df <- pg_search("project:label:PAGES_C-PEAT", count = 500) %>%
 # check the location of the cache path for pangaear
 pg_cache$cache_path_get()
 
+
 # create a folder for download - a warning appears if the directory already exists
-getwd()
-dir.create(path=paste0(getwd(),"/Downloads"))
+#getwd()
+#dir.create(path=paste0(getwd(),"/Downloads"))
 #folderpath <- (paste0(getwd(),"/Downloads"))
 
-folderpath <- (file.path(getwd(),"/Downloads")) # used file.path function
+folderpath <- (file.path(getwd(),"Downloads")) # used file.path function
 
 # set the location of the cache path for pangaear 
 pg_cache$cache_path_set(full_path = folderpath)
@@ -63,7 +64,7 @@ pg_cache$cache_path_set(full_path = folderpath)
 ```{r}
 
 #Pull into a list, all the data from the files the specified dois in the search results 
-allData.ls <- plyr::dlply(PAGES_AgeDetermination, #search results
+allData.ls <- plyr::dlply(pages.df, #search results
                           c("doi"), #grouping on unique identifer
                           .fun = function(xx) { #defining our fetch function
                             #the pg_data returns a list of a single item, remove that from the parent list
@@ -83,7 +84,20 @@ allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
   
   if(xx$doi %in% c("10.1594/PANGAEA.941094")){
      names(xx$data)[10] <- 'Age [a AD/CE] alt.'
-   }
+  }
+  
+  if(xx$doi %in% c("10.1594/PANGAEA.929068")){
+    names(xx$data)[5:7] <- paste(names(xx$data)[5:7], 'alt.') #true replicates??
+  }
+  
+  if(xx$doi %in% c("10.1594/PANGAEA.929003", '10.1594/PANGAEA.929011', "10.1594/PANGAEA.929064")){
+    names(xx$data) <- c('Depth sed [m] (Sample midpoint depth)', #keep the orginal name
+                        'Cal age [ka BP] (OxCal 4.2.4)', 
+                        'Cal age max [ka BP] (OxCal 4.2.4)', 'Cal age min [ka BP] (OxCal 4.2.4)',
+                        'Cal age [ka BP] (Bacon 2.2)', 
+                        'Cal age max [ka BP] (Bacon 2.2)', 'Cal age min [ka BP] (Bacon 2.2)') #add the methods that are dropped here
+  }
+  
   
   return(mutate(.data = xx$data, across(.cols = everything(),  as.character)))
 }) 
