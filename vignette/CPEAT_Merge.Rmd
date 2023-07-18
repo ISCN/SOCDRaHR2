@@ -266,6 +266,12 @@ allParameters.df <-  plyr::ldply(allData.ls, .fun = function(xx) {
 
 ```
 
+```{r}
+allCores.df %>%# mutate(across(.cols = everything(), function(xx){!is.na(xx)})) %>%
+  reframe(across(.cols = everything(), function(xx){sum(!is.na(xx))})) %>%
+  t() 
+```
+
 
 ```{r}
 #loop for the Age determination classification 
