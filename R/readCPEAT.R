@@ -2,223 +2,243 @@
 #' 
 #' This reads in records of the CPEAT project from PANGAEA. 
 #'
-#' @param dataDir identify the download directory
-#' @param workLocal flag to ignore any files you don't have locally (don't download)
-#' @param verbose flag to print out verbose debugging messages 
 #'
-#' @return a list of data frames, the first data frame with the meta data and
-#'  a second data frame with the records
-#'  @import magrittr
-#'  @importFrom dplyr select mutate vars starts_with select if_else recode filter full_join
-#'  @importFrom readr read_file read_tsv cols
-#'  @importFrom plyr ddply
-#'  @importFrom tidyr separate gather spread
-#' @export
-#'
-readCPEAT <- function(dataDir, workLocal = FALSE, verbose=FALSE){
+readCPEAT <- function(dataDir, format=c('byCore', 'byDataType')[1], verbose=FALSE){
+  library(pangaear)
+  library(tidyverse)
+  
+  pages.df <- pg_search("project:label:PAGES_C-PEAT", count = 500) %>% 
+    bind_rows(pg_search("project:label:PAGES_C-PEAT", count = 500, offset = 500)) %>% #the output will contain all columns that appear in any of the inputs
+    mutate(fullcitation = paste0(citation, ". PANGAEA, https://doi.org/", doi)) #%>% # adds additional column 
+  #mutate(fullDOI = paste0("PANGAEA, https://doi.org/", doi))
+  
+  #Keep the old cache directory so that we can reset it
+  oldCache <- pg_cache$cache_path_get()
+  
   #create a new directory for all the CPEAT downloads
   if(!file.exists(file.path(dataDir, 'CPEAT'))){
     dir.create(file.path(dataDir, 'CPEAT'))
   }
   dataDir <- file.path(dataDir, 'CPEAT')
   
-  downloadDOI <- read.csv(text=gsub(' ', '', gsub(' core ', '_c', 'URL,Author,Site_core,orgFile,extra
-https://doi.org/10.1594/PANGAEA.890471,Garneau,Aero,Aero.csv,
-https://doi.org/10.1594/PANGAEA.890528,Yu,Altay core 1,Altay.csv,
-https://doi.org/10.1594/PANGAEA.890198,Nichols,Bear core 1,Bear.csv,
-https://doi.org/10.1594/PANGAEA.890472,Charman,Burnt Village core 1,Burnt_Village.csv,
-https://doi.org/10.1594/PANGAEA.890473,Lavoie,Covey Hill,Covey_Hill. csv,
-https://doi.org/10.1594/PANGAEA.890474,MacDonald,D127 core 1,D127.csv,
-https://doi.org/10.1594/PANGAEA.890475,MacDonald,E110 core 1,E110.csv,
-https://doi.org/10.1594/PANGAEA.890345,Sannel,Ennadai core 1,Ennadai.csv,
-https://doi.org/10.1594/PANGAEA.890529,Anderson,Glen Carron core 1,Glen_Carron.csv,
-https://doi.org/10.1594/PANGAEA.890530,Anderson,Glen Torridon core 1,Glen_Torridon.csv,
-https://doi.org/10.1594/PANGAEA.890346,Yu,Goldeye fen,Goldeye.csv,
-https://doi.org/10.1594/PANGAEA.890397,Packalen,HL02,HL02.csv,
-https://doi.org/10.1594/PANGAEA.890531,Large,Hongyuan core HYLK1,Hongyuan.csv,
-https://doi.org/10.1594/PANGAEA.890199,Jones,Horse Trail core 1,Horse_Trail.csv,
-https://doi.org/10.1594/PANGAEA.890398,Holmquist,JBL1,JBL1.csv,
-https://doi.org/10.1594/PANGAEA.890399,Holmquist,JBL2,JBL2.csv,
-https://doi.org/10.1594/PANGAEA.890400,Holmquist,JBL3,JBL3.csv,
-https://doi.org/10.1594/PANGAEA.890401,Holmquist,JBL4,JBL4.csv,
-https://doi.org/10.1594/PANGAEA.890402,Holmquist,JBL5,JBL5.csv,
-https://doi.org/10.1594/PANGAEA.890403,Holmquist,JBL7,JBL7.csv,
-https://doi.org/10.1594/PANGAEA.890404,Holmquist,JBL8,JBL8.csv,
-https://doi.org/10.1594/PANGAEA.890405,Camill,Joey core 12,Joey.csv,
-https://doi.org/10.1594/PANGAEA.890406,Camill,Joey core 15,Joey.csv,
-https://doi.org/10.1594/PANGAEA.890407,Camill,Joey core 17,Joey.csv,
-https://doi.org/10.1594/PANGAEA.890408,Camill,Joey core 2,Joey.csv,
-https://doi.org/10.1594/PANGAEA.890409,Camill,Joey core 5,Joey.csv,
-https://doi.org/10.1594/PANGAEA.890410,Camill,Joey core 7,Joey.csv,
-https://doi.org/10.1594/PANGAEA.890532,Loisel,KAM core C1,KAM12-C1.csv,
-https://doi.org/10.1594/PANGAEA.890533,Bochicchio,KAM core C4,KAM12-C4.csv,
-https://doi.org/10.1594/PANGAEA.890200,Yu,Kenai Gasfield,Kenai_Gasfield.csv,
-https://doi.org/10.1594/PANGAEA.890411,Packalen,KJ2-3,KJ2-3.csv,
-https://doi.org/10.1594/PANGAEA.890412,Lamarre,KUJU,KUJU.csv,
-https://doi.org/10.1594/PANGAEA.890527,Borren,Kvartal core Zh0,86-Kvartal.csv,
-https://doi.org/10.1594/PANGAEA.890413,Garneau,La Grande core L2T2C2-2,La_Grande2.csv,
-https://doi.org/10.1594/PANGAEA.890414,Garneau,La Grande core L3T1C2,La_Grande3.csv,
-https://doi.org/10.1594/PANGAEA.890476,van Bellen,Lac Le Caron ,Lac_Le_Caron.csv,
-https://doi.org/10.1594/PANGAEA.890415,Camill,Lake 396 core 3,Lake396.csv,
-https://doi.org/10.1594/PANGAEA.890416,Camill,Lake 785 core 4,Lake785.csv,
-https://doi.org/10.1594/PANGAEA.890477,Magnan,Lebel core 1,Lebel.csv,
-https://doi.org/10.1594/PANGAEA.890478,Mathijssen,Lompolojankka core 1,Lompolojankka.csv,
-https://doi.org/10.1594/PANGAEA.890347,Yu,Mariana core 1,Mariana.csv,
-https://doi.org/10.1594/PANGAEA.890348,Yu,Mariana core 2,Mariana.csv,
-https://doi.org/10.1594/PANGAEA.890349,Yu,Mariana core 3,Mariana.csv,
-https://doi.org/10.1594/PANGAEA.890350,Robinson,Martin core 1,Martin.csv,
-https://doi.org/10.1594/PANGAEA.890479,van Bellen,Mosaik core Central,Mosaik.csv,
-https://doi.org/10.1594/PANGAEA.890201,Yu,No Name Creek,No_Name_Creek.csv,
-https://doi.org/10.1594/PANGAEA.890186,Yu,Nuikluk core 10-1,Nuikluk.csv,
-https://doi.org/10.1594/PANGAEA.890202,Yu,Nuikluk core 10-2,Nuikluk.csv,
-https://doi.org/10.1594/PANGAEA.890203,Tarnocai,NW-BG core 10,NW-BG.csv,
-https://doi.org/10.1594/PANGAEA.890204,Tarnocai,NW-BG core 2,NW-BG.csv,
-https://doi.org/10.1594/PANGAEA.890205,Tarnocai,NW-BG core 3,NW-BG.csv,
-https://doi.org/10.1594/PANGAEA.890206,Tarnocai,NW-BG core 8,NW-BG.csv,
-https://doi.org/10.1594/PANGAEA.890480,Garneau,Ours core 1,Ours.csv,
-https://doi.org/10.1594/PANGAEA.890481,Garneau,Ours core 4,Ours.csv,
-https://doi.org/10.1594/PANGAEA.890482,Garneau,Ours core 5,Ours.csv,
-https://doi.org/10.1594/PANGAEA.890351,Yu,Patuanak core 1,Patuanak.csv,
-https://doi.org/10.1594/PANGAEA.890208,Loisel,Petersville,Petersville.csv,
-https://doi.org/10.1594/PANGAEA.890534,Charman,Petite Bog core 1,Petite_Bog.csv,
-https://doi.org/10.1594/PANGAEA.890483,Magnan,Plaine core 1,Plaine.csv,
-https://doi.org/10.1594/PANGAEA.890484,Oksanen,Rogovaya core 2,Rogovaya.csv,
-https://doi.org/10.1594/PANGAEA.890485,Oksanen,Rogovaya core 3,Rogovaya.csv,
-https://doi.org/10.1594/PANGAEA.890486,Makila,Saarisuo core B800,Saarisuo.csv,
-https://doi.org/10.1594/PANGAEA.890352,Sannel,Selwyn Lake,Selwyn.csv,
-https://doi.org/10.1594/PANGAEA.890417,Camill,Shuttle core 2,Shuttle.csv,
-https://doi.org/10.1594/PANGAEA.890535,MacDonald,SIB06 core 1,SIB06.csv,
-https://doi.org/10.1594/PANGAEA.890487,Charman,Sidney core 1,Sidney.csv,
-https://doi.org/10.1594/PANGAEA.890488,Mathijssen,Siikavena core 1,Siikavena.csv,
-https://doi.org/10.1594/PANGAEA.890353,Kuhry,Slave Lake ,Slave.csv,
-https://doi.org/10.1594/PANGAEA.890489,van Bellen,Sterne,Sterne.csv,
-https://doi.org/10.1594/PANGAEA.890490,Kokfelt,Stordalen,Stordalen.csv,
-https://doi.org/10.1594/PANGAEA.890354,Yu,Sundance core 2,Sundance.csv,
-https://doi.org/10.1594/PANGAEA.890355,Yu,Sundance core 3,Sundance.csv,
-https://doi.org/10.1594/PANGAEA.889936,Jones,Swanson Fen,Swanson.csv,
-https://doi.org/10.1594/PANGAEA.890356,Tarnocai,T1 core 1,T1.csv,
-https://doi.org/10.1594/PANGAEA.890418,Camill,Unit core 4,Unit.csv,
-https://doi.org/10.1594/PANGAEA.890357,Yu,Upper Pinto,Upper_Pinto.csv,
-https://doi.org/10.1594/PANGAEA.890536,Oksanen,Usinsk core USI1,Usinsk.csv,
-https://doi.org/10.1594/PANGAEA.890358,Yu,Utikuma core 1,Utikuma.csv,
-https://doi.org/10.1594/PANGAEA.890537,MacDonald,V34 core 1,V34.csv,
-https://doi.org/10.1594/PANGAEA.890538,Borren,Vasyugan core V21,Vasyugan.csv,
-https://doi.org/10.1594/PANGAEA.890539,Bunbury,VC04-06 core 1,VC04-06.csv,
-https://doi.org/10.1594/PANGAEA.890540,Zhao,Zoige core 1,Zoige.csv,')),
-                          stringsAsFactors = FALSE)  %>%
-    dplyr::select(-extra) %>%
-    dplyr::mutate(downloadURL = gsub('\\s+$', '', gsub('^\\s+', '', 
-                                                       paste(gsub('doi.org', 'doi.pangaea.de', URL),
-                                                             '?format=textfile', sep=''))),
-                  ##prototype provided as csv files, actually downloading as tsv
-                  localFile = file.path(dataDir, paste0(Site_core, '.tab'))) 
+  #set the cache, we reset back to the oldCache at the end of this function
+  pg_cache$cache_path_set(full_path = dataDir)
   
-  ##Download the specified files above if you don't have them
-  if(any(!file.exists(downloadDOI$localFile)) & !workLocal){
-    if(verbose) print(paste('downloading:', 
-                            downloadDOI$localFile[!file.exists(downloadDOI$localFile)]))
-    for(ii in which(!file.exists(downloadDOI$localFile))){ #does not always 
-      download.file(downloadDOI$downloadURL[ii], downloadDOI$localFile[ii])
+  #Pull into a list, all the data from the files the specified dois in the search results 
+  allData.ls <- plyr::dlply(pages.df, #search results
+                            c("doi"), #grouping on unique identifer
+                            .fun = function(xx) { #defining our fetch function
+                              #the pg_data returns a list of a single item, remove that from the parent list
+                              return(pg_data(doi = xx$doi, overwrite = FALSE)[[1]])
+                            }) 
+  
+  if(format == 'byCore'){
+    return(allData.ls)
+  }
+  
+  #Pull the core information by accessing the data item in the lists
+  allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
+    #print(xx$doi)
+    if(xx$doi %in% c("10.1594/PANGAEA.934281")){
+      names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
     }
-  }
+    
+    if(xx$doi %in% c("10.1594/PANGAEA.934343")){
+      names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+    }
+    
+    if(xx$doi %in% c("10.1594/PANGAEA.941094")){
+      names(xx$data)[10] <- 'Age [a AD/CE] alt.'
+    }
+    
+    if(xx$doi %in% c("10.1594/PANGAEA.929068")){
+      names(xx$data)[5:7] <- paste(names(xx$data)[5:7], 'alt.') # unknown
+    }
+    
+    if(identical(names(xx$data)[c(2:4, 6:8)], 
+                 c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                   "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                   "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                   "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                   "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                   "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+       xx$doi %in% c("10.1594/PANGAEA.929655", "10.1594/PANGAEA.930133")){
+      #The method note (OxCal & Bacon) were dropped from the Median Age, so we are adding them back in
+      names(xx$data)[c(2:4, 6:8)] <- c(
+        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') 
+    }
+    
+    if(identical(names(xx$data)[2:7], 
+                 c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                   "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                   "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                   "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                   "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                   "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+       xx$doi %in% c("10.1594/PANGAEA.930030")){
+      
+      names(xx$data)[2:7] <- c(
+        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
+    }
+    
+    
+    if(length(names(xx$data)) > length(unique(names(xx$data)))){
+      print(names(xx$data))
+    }
+    return(mutate(.data = xx$data, across(.cols = everything(),  as.character)))
+  }) 
   
-  ##Trim out any files that failed to download
-  if(workLocal){
-    downloadDOI <- downloadDOI %>% 
-      filter(file.exists(localFile))
-  }
-  
-  ##Grab the tabiluar data from all the files
-  allData <- plyr::ddply(downloadDOI, c('Site_core'), function(xx){
-    if(verbose) {paste('processing data table:', xx$localFile)}
-    readText <- readr::read_file(xx$localFile)
-    #header <- regmatches(readText, regexpr('/\\* .*\n\\*/', readText))
-    ##Trim the header between /* and \*
-    return(readr::read_tsv(gsub('/\\* .*\n\\*/\n', '', readText), col_types=readr::cols(.default = "c")))
-  }) %>% dplyr::mutate(layer_name = paste(Site_core, `Depth [m]`, sep='_'))
-  
-  ##Grab the header text
-  allheader <- plyr::ddply(downloadDOI, c('Site_core'), function(xx){
-    if(verbose) print(paste('processing data table:', xx$localFile))
-    readText <- readr::read_file(xx$localFile)
-    header <- regmatches(readText, regexpr('/\\* .*\n\\*/', readText))
-    ans <- unlist(strsplit(x=header, split='\n.+:\t', perl=TRUE))
-    ans <- ans[-1] #pop off the header
-    names(ans) <- gsub('\\n|\\t|:', '', 
-                               unlist(regmatches(header, gregexpr('\n.+:\t', header, perl=TRUE))))
-    return(as.data.frame(as.list(ans)))
+  #Pull the study information
+  allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
+    #list out all the possible names for the study info, be sure to update
+    #...this list manually if the warning is thrown.
+    primaryNames <- intersect(names(xx), c('parent_doi', 'doi', 'citation', 
+                                           'url', 'path'))
+    
+    #There shouldn't be any names that we don't include above.
+    if(any( ! (names(xx) %in% c(primaryNames, 'metadata', 'data')))){
+      warning(paste('possible missing informatin at primary level for', xx$doi,
+                    setdiff(names(xx), c(primaryNames, 'metadata', 'data'))))
+    }
+    
+    #access the study information in the primary list
+    ans.ls <- xx[primaryNames]
+    
+    #deal with the information in the metadata, again we name each possible
+    #...list item here and if there are new names this needs to be updated.
+    metaNames <- intersect(names(xx$metadata), c("citation", "related_to", "further_details",
+                                                 "projects" , "coverage",
+                                                 "abstract", "keywords",
+                                                 "status",
+                                                 "license", "size", "comment"))
+    if(any( ! (names(xx$metadata) %in% c(metaNames, 'events', 'parameters')))){
+      warning(paste('possible missing informatin at metadata level for', xx$doi))
+    }
+    
+    #append the metadata items to the items from the primary list
+    ans.ls <- c(ans.ls, xx$metadata[metaNames])
+    
+    #Pull in the study information from the 'events' item in the list
+    #...again there should be no items that are not matching the manual array here
+    eventsNames <- intersect(names(xx$metadata$events), c("LATITUDE", "LONGITUDE",
+                                                          "ELEVATION", "ELEVATION START", "ELEVATION END",
+                                                          "Penetration", "Recovery",
+                                                          "LOCATION", "METHOD/DEVICE", 
+                                                          "COMMENT"))
+    
+    #Take out the first item of the list which is actually the core name itself.
+    if(any( ! (names(xx$metadata$events)[-1] %in%  
+               c("LATITUDE", "LONGITUDE", "ELEVATION",
+                 "ELEVATION START", "ELEVATION END", 
+                 "Penetration","Recovery",
+                 "LOCATION", "METHOD/DEVICE", "COMMENT")))){
+      warning(paste('possible missing informatin at metadata-events level for', xx$doi))
+    }
+    
+    #The core name is a special case where the information is in the name and not
+    #...in the list values. Deal with that and append the events information.
+    ans.ls <- c(list(core_name = names(xx$metadata$events)[1]),
+                ans.ls, 
+                xx$metadata$events[eventsNames])
+    
+    # change everything to a data frame to make it easier to read
+    return(as.data.frame(ans.ls, stringsAsFactors = FALSE))
   })
   
   
-  ##I really hate this bit of code. It feels like there should be 
-  ##...an elegant parsing solution but I can't find it in time alotted. Very sad.
-  #This pangaear solution was never quite there. but leaving it here for future tinkering
-  #devtools::install_github("ropensci/pangaear@cache-path", force=TRUE)
-  #tester <- pangaear::pg_data('10.1594/PANGAEA.890471')
-  #tester[[1]]$metadata$events
-  #record_test <- pangaear::pg_get_record('oai:pangaea.de:doi:10.1594/PANGAEA.890471')
-  metaData <- allheader %>% 
-    dplyr::mutate(Size = as.numeric(gsub(' data points\n\\*/', '', Size))) %>%
-    dplyr::mutate_at(dplyr::vars(License), as.factor) %>%
-    tidyr::separate(Coverage, into=paste('section', 1:4),
-                    sep='(\\s+\\*\\s+)|\t') %>%
-    tidyr::gather(key='key', value='parseME', dplyr::starts_with('section')) %>%
-    dplyr::select(-key) %>%
-    tidyr::separate(parseME, into=c('header', 'value'), sep=':') %>%
-    dplyr::mutate(header = dplyr::if_else(grepl(' m$', value), paste(header, '[m]'), header),
-                  value = gsub(' m$', '', value)) %>%
-    ##trim spaces
-    dplyr::mutate(header=gsub('\\s+$', '', gsub('^\\s+', '', header)),
-                  value=gsub('\\s+$', '', gsub('^\\s+', '', value))) %>%
-    tidyr::spread(key='header', value='value') %>%
-    tidyr::separate(col=Event.s., into=c('Space', 'StudyComments'), sep=' \\* COMMENT: ')
+  allParameters.df <-  plyr::ldply(allData.ls, .fun = function(xx) {
+    
+    ##Copy-paste (sigh... yes I know) from allCores.df construction
+    if(xx$doi %in% c("10.1594/PANGAEA.934281")){
+      names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+    }
+    
+    if(xx$doi %in% c("10.1594/PANGAEA.934343")){
+      names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+    }
+    
+    if(xx$doi %in% c("10.1594/PANGAEA.941094")){
+      names(xx$data)[10] <- 'Age [a AD/CE] alt.'
+    }
+    
+    if(xx$doi %in% c("10.1594/PANGAEA.929068")){
+      names(xx$data)[5:7] <- paste(names(xx$data)[5:7], 'alt.') #true replicates??
+    }
+    
+    if(identical(names(xx$data)[c(2:4, 6:8)], 
+                 c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                   "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                   "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                   "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                   "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                   "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+       xx$doi %in% c("10.1594/PANGAEA.929655", "10.1594/PANGAEA.930133")){
+      names(xx$data)[c(2:4, 6:8)] <- c(
+        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
+    }
+    
+    if(identical(names(xx$data)[2:7], 
+                 c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
+                   "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                   "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
+                   "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
+                   "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
+                   "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
+       xx$doi %in% c("10.1594/PANGAEA.930030")){
+      
+      names(xx$data)[2:7] <- c(
+        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
+        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
+        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
+        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
+        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
+        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
+    }
+    
+    colHeader <- names(xx$data)
+    colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = " "))
+    
+    if(xx$doi == "10.1594/PANGAEA.934274"){
+      colDescript <- c(colDescript[1:4], 
+                       paste(colDescript[5], ';', colDescript[6]),
+                       colDescript[7:9])
+    }
+    
+    #pull the parameter descriptions in and append them to the headers in the data
+    ParametersGeo <- data.frame(header = colHeader, 
+                                description = colDescript, 
+                                stringsAsFactors = FALSE) %>%
+      #add in a column index
+      mutate(column_index = 1:ncol(xx$data))
+    
+    return(ParametersGeo)
+  })
   
-  space_DF <- metaData %>% dplyr::select(Space) %>% unique %>%
-    tidyr::separate(col=Space, into=c('core_name', paste0('parse_string', 1:6)), sep='\\*', remove=FALSE) %>%
-    tidyr::gather(key='segment', value='parseME', dplyr::starts_with('parse_string'), na.rm=TRUE) %>%
-    dplyr::select(-segment) %>%
-    tidyr::separate(parseME, into=c('header', 'value'), sep=': ') %>%
-    dplyr::mutate(header=dplyr::recode(header, ' Penetration' = " Recovery")) %>%
-    dplyr::mutate(header = gsub('\\s$', '', gsub('^\\s+', '', header)),
-                  value = gsub('\\s$', '', gsub('^\\s+', '', value))) %>%
-    dplyr::mutate(header = dplyr::if_else(grepl('cm$', value),
-                                          paste(header,'[cm]'), 
-                                          dplyr::if_else(grepl(' m$', value), paste(header, '[m]'), header)),
-                  value = gsub(' c?m$', '', value)) %>%
-    tidyr::spread(key='header', value='value') 
+  # include a read function for the data annotations associated with CPEAT
+  #... check that there isn't new columns
   
-  comments_DF <- metaData %>% dplyr::select(StudyComments) %>% unique %>%
-    dplyr::mutate(parse_String = dplyr::if_else(grepl('^[^;]+:[^;]+:', StudyComments),
-                                                gsub('^[^:]+: ?', '', StudyComments), StudyComments)) %>%
-    tidyr::separate(parse_String, into=paste0('x', 1:11), sep='(;)|(.,) ') %>%
-    tidyr::gather(key='position', value='parse_string', dplyr::starts_with('x'), na.rm=TRUE) %>% 
-    dplyr::select(-position) %>%
-    dplyr::mutate(parse_string = dplyr::recode(parse_string, 
-                                               `carbon rate site Y3` = 'carbon rate site: Y3',
-                                               ` basal age 14065 calBP` ='basal age: 14065 calBP')) %>%
-    tidyr::separate(parse_string, into=c('label', 'value'), sep=': ', remove=FALSE) %>%
-    dplyr::mutate(value=dplyr::if_else(grepl('uncal', value), paste0(gsub('uncal.*$', '',value), 'uncal'), value)) %>%
-    ##Deal with units
-    dplyr::mutate(label=tolower(gsub('^\\s+', '',
-                                     dplyr::if_else(grepl('\\d+ \\w+\\.?$', value), 
-                                       sprintf('%s [%s]', label, gsub('^(\\d|\\.)+ ', '', value)), label)) ))%>%
-    dplyr::mutate(value=dplyr::if_else(grepl('\\d+ \\w+\\.?$', value), 
-                                     gsub(' \\D+$', '', value), value)) %>%
-    dplyr::filter(!is.na(value)) %>%
-    dplyr::select(-parse_string) %>%
-    tidyr::spread(key='label', value='value') %>%
-    dplyr::mutate(`peat properties sample size` = gsub(' ?cm.*', '', `peat properties sample size`)) %>%
-    dplyr::rename('peat properties sample size [cm^3]' = `peat properties sample size`)
+  #reset the orginal cache directory
+  pg_cache$cache_path_set(full_path = oldCache)
   
-  temp <- metaData %>% 
-    dplyr::full_join(space_DF) %>% 
-    dplyr::full_join(comments_DF) %>%
-    dplyr::select(-Space, -StudyComments) %>%
-    dplyr::mutate_all(as.character)
   
-  return(list(site=data.table::as.data.table(temp),
-              sample=data.table::as.data.table(allData), 
-              files=data.table::as.data.table(downloadDOI)))
+  return(list(core=allCores.df,
+              study=allStudy.df, 
+              parameters=allParameters.df))
   
-
+  
 }
