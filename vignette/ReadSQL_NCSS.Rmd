@@ -1,0 +1,173 @@
+---
+title: "NCSS SQL file read"
+author: "Vaasuki Marupaka"
+date: "2023-07-17"
+output: html_document
+---
+
+```{r}
+# install packages 
+#install.packages("RSQLite")
+
+# libraries
+library(RSQLite)
+library(DBI)
+library(dplyr)
+library(tidyverse)
+
+```
+
+
+```{r}
+# connection to a database
+connection <- dbConnect (
+  drv = SQLite(),
+  dbname =  "~/Documents/datasets/USDA-NRCS NCSS July 2023/NCSSLabDataMartSQLite.sqlite3"
+)
+
+ncss <- src_sqlite("~/Documents/datasets/USDA-NRCS NCSS July 2023/NCSSLabDataMartSQLite.sqlite3")
+
+tbl(connection, "lab_analysis_procedure_vw") %>%
+  collect() -> lab_analysis_procedure_data
+
+tbl(connection, "lab_analyte") %>%
+  collect() -> lab_analyte_data
+
+tbl(connection, "lab_area") %>%
+  collect() -> lab_area_data
+
+tbl(connection, "lab_physical_properties_vw") %>%
+  collect() -> lab_physical_properties_data
+
+tbl(connection, "lab_chemical_properties_vw") %>%
+  collect() -> lab_chemical_prop_data
+
+
+# put the string in an array (with all the tables) and maybe try exporting into a csv file?
+# get the table names out 
+# loop through in for loop for the string -> using tbl and connect functions for each of the values in the string 
+# and give a file name and export that as a csv file with that file name 
+
+
+```
+
+
+```{r}
+# make a data frame for physical properties data table 
+lab_physical_properties_data.df <- lab_physical_properties_data %>%
+  select(labsampnum, bulk_density_tenth_bar, bulk_density_third_bar, bulk_density_oven_dry, bulk_density_lt_2_mm_air_dry,  bd_third_bar_lt2_reconstituted, bulk_den_ovendry_reconstituted, bulk_density_field_moist ) %>% # select bulk_density variable for test
+  pivot_longer(cols = c(bulk_density_tenth_bar, bulk_density_third_bar,  bulk_density_oven_dry, bulk_density_lt_2_mm_air_dry,  bd_third_bar_lt2_reconstituted, bulk_den_ovendry_reconstituted, bulk_density_field_moist), names_to = 'phy_variable', values_to = 'phy_value', values_drop_na = TRUE) 
+
+# make a data frame for chemical properties data table 
+lab_chemical_prop_data.df <- lab_chemical_prop_data %>%
+  select(labsampnum, total_carbon_ncs, organic_carbon_walkley_black) %>% # select carbon quantification for test
+  pivot_longer(cols = c(total_carbon_ncs, organic_carbon_walkley_black), names_to = 'variable', values_to = 'value', values_drop_na = TRUE) %>%
+  full_join(lab_physical_properties_data.df)
+
+
+```
+
+
+```{r}
+# take the data tabel and pipe into a reframe 
+lab_physical_properties_data.df <- lab_physical_properties_data %>%
+  reframe(across(.cols = everything(), .fns = function(xx){
+    ans <- paste(unique(xx[!is.na(xx)])[1:10], collapse = '; ')
+    return(ans) 
+  })) %>% 
+  pivot_longer(cols = everything(), names_to = "col_name", values_to = "example_value") %>%
+  mutate(table_name = "lab_physical_properties_data")
+  
+
+
+# list_DB - this is the function to access the list of the datatables [ignore]
+# DB
+
+lab_physical_properties_data.df <- lab_physical_properties_data %>%
+  reframe(across(.cols = everything(), .fns = function(xx){
+    ans <- paste(unique(xx[!is.na(xx)])[1:10], collapse = '; ')
+    return(ans) 
+  })) %>% 
+  pivot_longer(cols = everything(), names_to = "col_name", values_to = "example_value") %>%
+  mutate(table_name = "lab_physical_properties_data")
+
+
+dbTable.df <- data.frame(table_name = dbListTables(connection)) %>%
+  # how to do this in a for loop
+  # also maybe in reframe function 
+  # pipe it into a reframe, inside which read the df [nested reframe?!]
+
+
+```
+
+ 
+```{r SQL_csv} 
+ncss_tables <- dbListTables(connection) # gives the list of tables in the sqlite file 
+# create a list  store the dataframes 
+tables_df <- list()
+# loop through the tables and read them into dataframes 
+for (table in ncss_tables){
+  print(table)
+  tables_df[[table]] <- dbReadTable(connection, table)
+  file_name <- file.path("data01", paste0(table, ".csv"))
+  write.csv(tables_df[[table]], file_name)
+}
+# close the connection to the database
+dbDisconnect(connection)
+```
+
+
+```{r}
+# print the first dataframe 
+print(tables_df[[1]])
+
+# create s string with names of all tables 
+ncss_string <- ("lab_analysis_procedure_vw,lab_analyte,lab_area,lab_calculations_including_estimates_and_default_values_vw,lab_chemical_properties_vw,lab_column_descriptions,lab_combine_nasis_ncss,lab_constraints,lab_layer,lab_major_and_trace_elements_and_oxides_vw,lab_method_code_vw,lab_mineralogy_glass_count_vw,lab_mir_vw,lab_mir_wavelength_string_d,lab_pedon,lab_physical_properties_vw,lab_relationships,lab_rosetta_key,lab_site,lab_table_descriptions,lab_webmap_vw,lab_xray_and_thermal_vw")     
+
+# create an array 
+ncss_array <- strsplit(ncss_string, ",")[[1]]
+
+# export the array into a csv file
+write.csv(ncss_array, "ncss.csv")
+
+# loop through the tables in the array
+for (dataTable in ncss_array){
+  con <- dbConnect(RSQLite::SQLite(), "NCSSLabDataMartSQLite.sqlite3")
+  getdata <- dbReadTable(con, dataTable)
+  file_name <- paste(dataTable, ".csv", sep = "")
+  write.csv(getdata, file_name)
+  dbDisconnect(con)
+}
+
+
+# try using reframe function for the above dataframes
+
+
+
+
+```
+
+
+```{r}
+# pulling the header names for each of the csv files
+headers.df <- tibble(file_name = unlist(list.files("data01", pattern = ".csv"))) %>%
+  mutate(table_name = str_remove(file_name, pattern = "\\.csv"))  %>%  # "\\" used to match period instead of as a wildcard in a regular expression
+  reframe(header_name = names(read_csv(file = file.path("data01", file_name), n_max = 1)), 
+          .by = everything()) 
+ 
+# this can give us a good start for data annotations 
+# ...1 are the row numbers in the csv file
+# start a spreadsheet, upload the csv to Google drive 
+# describe sample layers, locations, BD, OC fraction 
+
+
+```
+
+
+```{r}
+ncss <- src_sqlite("~/Documents/datasets/USDA-NRCS NCSS July 2023/NCSSLabDataMartSQLite.sqlite3")
+
+tbl(ncss, sql("FROM lab_analysis_procedure_vw"))
+
+```
+
