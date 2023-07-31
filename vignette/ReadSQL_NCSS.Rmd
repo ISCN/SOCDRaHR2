@@ -22,7 +22,7 @@ library(tidyverse)
 # connection to a database
 connection <- dbConnect (
   drv = SQLite(),
-  dbname =  "~/Documents/datasets/USDA-NRCS NCSS July 2023/NCSSLabDataMartSQLite.sqlite3"
+  dbname =  "~/Documents/datasets/USDA-NRCS NCSS July 2023/sourceData/NCSSLabDataMartSQLite.sqlite3"
 )
 
 ncss <- src_sqlite("~/Documents/datasets/USDA-NRCS NCSS July 2023/NCSSLabDataMartSQLite.sqlite3")
