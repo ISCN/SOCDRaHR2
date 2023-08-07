@@ -19,10 +19,20 @@ library(googlesheets4)
 
 ##Download ISCN and FIA tables (layer, profile, citation, dataset and Soils_Lab, Soils_Sample_Location)
 
-ISCN_layer.df <- read_delim(file = "https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253",
+#download from edi
+ISCN_layer_old.df <- read_delim(file = "https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253",
                     col_types = cols(.default =col_character()),
                     delim = ';',
-                    n_max = 1e5)
+                    n_max = 1e6)
+
+#download using read script to fix errors
+ISCN_layer.df <- ISCN3_3(data_dir = '~/Desktop/datasets/ISCN')
+ISCN_layer.df <- as.data.frame(do.call(cbind, ISCN_layer.df[3]))
+
+colnames(ISCN_layer.df) <- sub("layer.","", colnames(ISCN_layer.df))
+
+
+
 
 ISCN_profile.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=40527580cc045d33d9a5aaf728bf204e',
                     col_types = cols(.default =col_character()),
@@ -58,7 +68,37 @@ ISCN_citation.df <- ISCN_citation.df %>%
   mutate(citation = paste0(citation, collapse = "; ")) %>%
   distinct(dataset_name, .keep_all = TRUE)
 
-ISCN_layer.df <- ISCN_layer.df %>% distinct(dataset_name_sub, dataset_name_soc, site_name, profile_name, layer_name, .keep_all = TRUE)
+
+#try to fix duplicate layer names in northern circumpolar dataset
+ISCN3_layer.df <- ISCN3_layer.df %>% mutate(layer_name = if_else(dataset_name_sub == "Northern Circumpolar Soil Carbon Database (NCSCD)" & grepl("^200", layer_name), paste(gsub("\\.\\d+$", "", layer_name), `layer_bot (cm)`, sep = "."), layer_name))
+
+northern <- ISCN_layer.df$layer_name[ISCN_layer.df$dataset_name_sub == "Northern Circumpolar Soil Carbon Database (NCSCD)" & ISCN_layer.df$dataset_name_soc == "ISCN No SOC stock computation" & grepl("^200", ISCN_layer.df$layer_name)]
+
+northern2 <- ISCN_layer.df$layer_name[ISCN_layer.df$dataset_name_sub == "Northern Circumpolar Soil Carbon Database (NCSCD)" & ISCN_layer.df$dataset_name_soc == "Northern Circumpolar Soil Carbon Database (NCSCD)" & grepl("^200", ISCN_layer.df$layer_name)]
+
+#give each row a unique id if still duplicates
+ISCN_layer.df <- ISCN_layer.df %>% distinct() %>% mutate(observation_id = row_number())
+
+```
+
+```{r}
+
+#find duplicate samples in layer table
+ISCN_layer.df <- ISCN_layer.df %>%
+  group_by(dataset_name_sub, site_name, profile_name, layer_name, `layer_top (cm)`, `layer_bot (cm)`) %>%
+  mutate(id = cur_group_id()) %>%
+  ungroup()
+
+ISCN_duplicated.df <- ISCN_layer.df[duplicated(ISCN_layer.df$id), ]
+
+all_duplicates <- ISCN_layer.df %>% filter(id %in% ISCN_duplicated.df$id)
+
+unique(all_duplicates$dataset_name_sub)
+
+NRCS_dup <- all_duplicates %>% subset(dataset_name_sub == 'NRCS Sept/2014')
+worldwide_dup <- all_duplicates %>% subset(dataset_name_sub == 'Worldwide soil carbon and nitrogen data')
+northern_dup <- all_duplicates %>% subset(dataset_name_sub == 'Northern Circumpolar Soil Carbon Database (NCSCD)')
+UMBS_dup <- all_duplicates %>% subset(dataset_name_sub == 'UMBS_FASET') %>% distinct()
 
 ```
 
@@ -126,6 +166,8 @@ FIA_loc_long.df <- FIA_loc.df %>%
 ISCN_layer.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "layer")
 
 ISCN_layer_long.df <- ISCN_layer.df %>%
+  #convert all columns to characters
+  mutate(across(everything(), as.character)) %>%
   mutate(study_id = 'ISCN3', 
          table_id = 'layer')  %>%
   #Group by the columns that are identifiers
@@ -262,7 +304,8 @@ data_wide_values.df <- newData.df %>%
   filter(is_type %in% c('value', 'identifier')) %>%
   select(-is_type) %>%
   pivot_wider(names_from=of_variable, 
-              values_from=with_entry)
+              values_from=with_entry,
+              values_fn = function(xx) {return(xx[1])}) #hack to make pivot work
 
 data_wide_values.df <- data_wide_values.df %>%
   mutate(across(.cols = starts_with('bulk_density'), as.numeric))
@@ -288,7 +331,7 @@ data_wide_values.df <- data_wide_values.df %>%
   mutate(across(.cols = starts_with('organic_carbon'), as.numeric))
 
 ggplot(data_wide_values.df) +
-  geom_histogram(aes(x=organic_carbon)) +
+  geom_histogram(aes(x=organic_carbon, fill = study_id)) +
   facet_wrap(~study_id, scales='free_y') #+
   #scale_x_log10() +
   #scale_y_log10()
@@ -297,7 +340,7 @@ ggplot(data_wide_values.df) +
 ISCN_layer.df <- ISCN_layer.df %>% mutate(`oc (percent)` = as.numeric(`oc (percent)`))
 
 ggplot(ISCN_layer.df) +
-  geom_histogram(aes(x=`oc (percent)`)) #+
+  geom_histogram(aes(x=`oc (percent)`), fill = "#00BFC4") #+
   #facet_wrap(scales='free_y') +
   #scale_x_log10() +
   #scale_y_log10()
@@ -305,7 +348,7 @@ ggplot(ISCN_layer.df) +
 FIA_lab.df <- FIA_lab.df %>% mutate(C_ORG_PCT = as.numeric(C_ORG_PCT))
 
 ggplot(FIA_lab.df) +
-  geom_histogram(aes(x=C_ORG_PCT)) #+
+  geom_histogram(aes(x=C_ORG_PCT), fill = "#F8766D") #+
   #facet_wrap(scales='free_y') +
   #scale_x_log10() +
   #scale_y_log10()
