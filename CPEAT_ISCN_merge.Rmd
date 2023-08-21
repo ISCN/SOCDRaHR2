@@ -1,0 +1,432 @@
+---
+title: "CPEAT and ISCN merge"
+author: "Vaasuki Marupaka"
+date: "2023-08-08"
+output: html_document
+---
+
+```{r}
+##Download ISCN and FIA tables (layer, profile, citation, dataset and Soils_Lab, Soils_Sample_Location)
+
+ISCN_layer.df <- read_delim(file = "https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=4af719a84f8981fcc63f1f92760cb253",
+                    col_types = cols(.default =col_character()),
+                    delim = ';',
+                    n_max = 1e5)
+
+ISCN_profile.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=40527580cc045d33d9a5aaf728bf204e',
+                    col_types = cols(.default =col_character()),
+                    delim = ';',
+                    n_max = 1e5)
+
+ISCN_citation.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=320e31ca911f187550ca2143c31fd408',
+                    col_types = cols(.default =col_character()),
+                    delim = ';',
+                    n_max = 1e5)
+
+ISCN_dataset.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=cdd0c7a4cac3f28d6d788c91f506775f',
+                    col_types = cols(.default =col_character()),
+                    delim = ';',
+                    n_max = 1e5)
+
+```
+
+
+```{r}
+#Concatenate citations for same datasets
+ISCN_citation.df <- ISCN_citation.df %>% 
+  group_by(dataset_name) %>% 
+  mutate(citation = paste0(citation, collapse = "; ")) %>%
+  distinct(dataset_name, .keep_all = TRUE)
+
+ISCN_layer.df <- ISCN_layer.df %>% distinct(dataset_name_sub, dataset_name_soc, site_name, profile_name, layer_name, .keep_all = TRUE)
+
+```
+
+
+```{r}
+#Create long table of each CPEAT dataset
+#retrieve CPEAT annotations (study table) from datakeys sheet
+CPEAT.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", 
+                                   sheet = "CPEAT_August2023", 
+                                   range = "CPEAT_August2023!A:F",
+                                   col_types = 'c') %>% # changes the structure to character 
+  filter(study_id == 'CPEAT', table_id == 'study') 
+
+temp.df <- 
+
+#allStudy.df$LONGITUDE <- as.character(allStudy.df$LONGITUDE)
+
+
+CPEAT_long_study.df <- allStudy.df %>%
+  mutate(study_id = 'CPEAT', 
+         table_id = 'study') %>%
+#Group by the columns that are identifiers
+   group_by(across(all_of((CPEAT.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  #allStudy.df$core_name <- as.numeric(allStudy.df$core_name) %>%
+  #allStudy.df$LONGITUDE <- as.character(allStudy.df$LONGITUDE) %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(CPEAT.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+
+
+```
+```{r}
+
+#Create long table of each CPEAT dataset
+#retrieve CPEAT annotations (core table) from datakeys sheet
+CPEAT.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", 
+                                   sheet = "CPEAT_August2023", 
+                                   range = "CPEAT_August2023!A:F",
+                                   col_types = "c") %>% 
+  filter(study_id == 'CPEAT', table_id == "core") 
+
+# fixing the structure of the column variables 
+allCores.df <- allCores.df %>%
+  mutate(across(.cols = everything(),  as.character))
+
+CPEAT_long_core.df <- allCores.df %>%
+  mutate(study_id = 'CPEAT', 
+         table_id = 'core') %>%
+#Group by the columns that are identifiers
+   #group_by(across(all_of((CPEAT.dataAnnotation %>%
+                           #filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id(), 
+         .by = (all_of((CPEAT.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #and then remove the grouping so we can move on
+  #ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(CPEAT.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+
+
+# clean up 
+# look at the methods for the 31 columns/varibales 
+# grouping the variables and look at thier methosd and find if they are interrelated or not 
+# look at the uniwue methods for age methodologies 
+# represent as a hybrid dataset? age-name, age-method, and age-unit column [how to standardize?]
+# method column for the variables which are not specified 
+
+```
+
+
+```{r}
+# plot depth 
+ggplot(data = allCores.df %>%
+         pivot_longer(cols = where(is.numeric) &
+                        !ends_with('(dec. deg)'), #pull out the numerics that aren't lat/long
+                      values_to = 'measurements', names_to = 'variable') %>%
+         filter(is.finite(measurements))) +
+  geom_histogram(aes(x = measurements), bins=20) + #make a histrogram
+  facet_wrap(~variable,scales = 'free') +
+  labs(title = 'Layer measurements')
+
+
+
+ggplot(data = allCores.df %>%
+         #pivot_longer(cols = where(is.numeric),  #pull out all the numerical colums
+                        #!starts_with('layer') & #as long as they aren't layer bounds
+                        #!ends_with('(dec. deg)'), #and aren't lat/lon
+                      #create the paired measurement-variable tables
+                      #values_to = 'measurements', names_to = 'variable') %>%
+         pivot_longer(cols = c('DBD [g/cm**3]'
+                               ), #pull out the layers
+                      #create a paired depth-variable
+                      values_to='bulk_density', names_to = 'CPEAT_variable')%>%
+         filter(is.finite(bulk_density))) +
+  #make nifty line plots that span the layer boundaries
+  geom_line(aes(x = bulk_density, y = ,
+                 group = paste(doi),
+                alpha = 0.5)) +
+  #facet_wrap(~variable,scales = 'free') +
+  labs(title = 'Dry Bulk Density')
+
+
+```
+
+
+```{r}
+#Create long table of each ISCN dataset
+
+#retrieve ISCN annotations from datakeys sheet
+ISCN_layer.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "layer")
+
+ISCN_layer_long.df <- ISCN_layer.df %>%
+  mutate(study_id = 'ISCN3', 
+         table_id = 'layer')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN_layer.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(ISCN_layer.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+
+
+#retrieve ISCN annotations from datakeys sheet
+ISCN_profile.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "profile")
+
+ISCN_profile_long.df <- ISCN_profile.df %>%
+  mutate(study_id = 'ISCN3', 
+         table_id = 'profile')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN_profile.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(ISCN_profile.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+
+#retrieve ISCN annotations from datakeys sheet
+ISCN_citation.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "citation")
+
+ISCN_citation_long.df <- ISCN_citation.df %>%
+  mutate(study_id = 'ISCN3', 
+         table_id = 'citation')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN_citation.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(ISCN_citation.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+   
+#retrieve ISCN annotations from datakeys sheet
+ISCN_dataset.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", sheet = "dataAnnotation", range = "dataAnnotation!A:F") %>% filter(study_id == 'ISCN3') %>% filter(table_id == "dataset")
+
+ISCN_dataset_long.df <- ISCN_dataset.df %>%
+  mutate(study_id = 'ISCN3', 
+         table_id = 'dataset')  %>%
+  #Group by the columns that are identifiers
+  group_by(across(all_of((ISCN_dataset.dataAnnotation %>%
+                           filter(is_type == 'identifier'))$column_id))) %>%
+  #Pull the current group index or id 
+  mutate(observation_id = cur_group_id()) %>%
+  #and then remove the grouping so we can move on
+  ungroup() %>%
+  pivot_longer(cols = -c(study_id, table_id, observation_id), names_to = 'column_id', 
+               values_to = 'with_entry', values_drop_na = TRUE) %>%
+  full_join(ISCN_dataset.dataAnnotation, 
+            by = join_by(study_id, table_id, column_id),
+            suffix = c('.data', ''), multiple = 'all') %>%
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
+
+
+```
+
+```{r}
+# Pulling things together
+
+#Bind all long tables together
+
+bigData <- CPEAT_long_study.df %>%
+  select(study_id, table_id, observation_id, of_variable, is_type, with_entry) %>%
+  bind_rows(CPEAT_long_core.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  bind_rows(ISCN_layer_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  bind_rows(ISCN_profile_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  bind_rows(ISCN_citation_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) %>%
+  bind_rows(ISCN_dataset_long.df %>%
+              select(study_id, table_id, observation_id, of_variable, is_type, with_entry)) #%>%
+  #unique() #remove duplicates from repeated methods applying to multiple columns
+
+
+```
+
+
+```{r}
+# plot locations for CPEAT and ISCN 
+
+# CPEAT locations 
+allStudy.df$LATITUDE <- as.numeric(allStudy.df$LATITUDE)
+allStudy.df$LONGITUDE <- as.numeric(allStudy.df$LONGITUDE)
+
+LOCATION <- allStudy.df %>%
+          select(LATITUDE, LONGITUDE, LOCATION) %>%
+ filter(is.finite(!is.na(LATITUDE) + is.na(LONGITUDE)))
+
+ggplot() +
+  geom_polygon(data = map_data('world'), aes(x = long, y = lat, group = group), fill = "lightgray") +
+  geom_point(data = LOCATION, aes(x = LONGITUDE, y = LATITUDE), color = "blue", size = 2) +
+  labs(x = "Longitude", y = "Latitude") +
+  ggtitle("Latitude and Longitude Points on World Map")
+
+# ISCN locations 
+Location_ISCN <- ISCN_profile.df %>%
+  select(`lat (dec. deg)`, `long (dec. deg)`, `state (state_province)`, `country (country)`) %>%
+ filter(is.finite(!is.na(`lat (dec. deg)`) + is.na(`long (dec. deg)`)))
+Location_ISCN$`long (dec. deg)` <- as.numeric(Location_ISCN$`long (dec. deg)`)
+Location_ISCN$`lat (dec. deg)` <- as.numeric(Location_ISCN$`lat (dec. deg)`)
+
+# Plot with both ISCN and CPEAT
+ggplot() +
+  geom_polygon(data = map_data('world'), aes(x = long, y = lat, group = group), fill = "lightgray") +
+  geom_point(data = LOCATION, aes(x = LONGITUDE, y = LATITUDE), color = "blue4", size = 2) +
+  geom_point(data = Location_ISCN, aes(x = `long (dec. deg)`, y = `lat (dec. deg)`), color = "darkorange2", size = 0.5) +
+  labs(x = "Longitude", y = "Latitude") +
+  ggtitle("Latitude and Longitude Points for ISCN and CPEAT collection")
+
+
+```
+
+```{r}
+# plot Bulk Density for CPEAT 
+
+allCores.df$`DBD [g/cm**3]` <- as.numeric(allCores.df$`DBD [g/cm**3]`)
+#allCores.df$`Depth top [m]` <- as.numeric(allCores.df$`Depth top [m]`)
+#allCores.df$`Depth bot [m]` <- as.numeric(allCores.df$`Depth bot [m]`)
+allCores.df$`Corg dens [g/cm**3]` <- as.numeric(allCores.df$`Corg dens [g/cm**3]`)
+#allCores.df$`TOC [%]` <- as.numeric(allCores.df$`TOC [%]`)
+
+oc_bd <- allCores.df %>%
+          select(doi, `DBD [g/cm**3]`, `Corg dens [g/cm**3]`) %>% #, `TOC [%]`
+ filter(is.finite(!is.na(`DBD [g/cm**3]` + !is.na(`Corg dens [g/cm**3]`)))) # + !is.na(`TOC [%]`
+
+
+plot.df <- oc_bd %>%
+         pivot_longer(cols = where(is.numeric), #pull out the numerics that aren't lat/long
+                      values_to = 'measurements', names_to = 'variable')
+
+ggplot(data = plot.df %>%
+         filter(is.finite(measurements))) +
+  geom_histogram(aes(x = measurements), bins = 30, color = "darkorange2", fill = "darkorange2", size = 0.2) + #make a histrogram
+  facet_wrap(~variable,scales = 'free')
+
+# ISCN & CPEAT
+#allISCN.plot.df <- ISCN_layer.df %>%
+  #mutate(across(.cols = everything(), as.numeric))
+
+ISCN_layer.df$`bd_samp (g cm-3)` <- as.numeric(ISCN_layer.df$`bd_samp (g cm-3)`)
+ISCN_layer.df$`bd_tot (g cm-3)` <- as.numeric(ISCN_layer.df$`bd_tot (g cm-3)`)
+ISCN_layer.df$`bd_whole (g cm-3)` <- as.numeric(ISCN_layer.df$`bd_whole (g cm-3)`)
+ISCN_layer.df$`bd_other (g cm-3)` <- as.numeric(ISCN_layer.df$`bd_other (g cm-3)`)
+  
+  
+oc_bd_ISCN <- ISCN_layer.df %>% 
+  select(dataset_name_sub, bd_method, `bd_samp (g cm-3)`, `bd_tot (g cm-3)`, `bd_whole (g cm-3)`, `bd_other (g cm-3)`) %>%
+   filter(is.finite(!is.na(`bd_samp (g cm-3)` + !is.na(`bd_tot (g cm-3)`) + !is.na(`bd_whole (g cm-3)` + !is.na(`bd_other (g cm-3)`)))))
+
+ISCNplot.df <- oc_bd_ISCN %>%
+         pivot_longer(cols = where(is.numeric), 
+                      values_to = 'measurements', names_to = 'variable')
+
+ggplot(data = ISCNplot.df %>%
+         filter(is.finite(measurements))) +
+  geom_histogram(aes(x = measurements), bins = 30, color = "blue4", fill = "blue4", size = 0.2) + #make a histrogram
+  geom_histogram(data = plot.df, aes((x = measurements), bins = 30, color = "darkorange2", fill = "darkorange2", size = 0.2)) +
+  facet_wrap(~variable, scales = 'free')
+
+
+```
+
+```{r}
+
+#allCores.df$`DBD [g/cm**3]` <- as.numeric(allCores.df$`DBD [g/cm**3]`)
+#allCores.df$`Depth top [m]` <- as.numeric(allCores.df$`Depth top [m]`)
+#allCores.df$`Depth bot [m]` <- as.numeric(allCores.df$`Depth bot [m]`)
+allCores.df$`Corg dens [g/cm**3]` <- as.numeric(allCores.df$`Corg dens [g/cm**3]`)
+allCores.df$`TOC [%]` <- as.numeric(allCores.df$`TOC [%]`)
+allCores.df$`TC [%]` <- as.numeric(allCores.df$`TC [%]`)
+allCores.df$`LOI [%]` <- as.numeric(allCores.df$`LOI [%]`)
+allCores.df$`OM [%]` <- as.numeric(allCores.df$`OM [%]`)
+allCores.df$`C [%]` <- as.numeric(allCores.df$`C [%]`)
+
+
+oc_new <- allCores.df %>%
+          select(doi, `TOC [%]`, `TC [%]`, `LOI [%]`) %>% #`Corg dens [g/cm**3]`,, `OM [%]`, `C [%]`
+ filter(is.finite(!is.na(`TC [%]` + !is.na(`TOC [%]` + !is.na(`LOI [%]`))))) # + !is.na(`Corg dens [g/cm**3]`)
+#+ !is.na(`OM [%]` + !is.na(`C [%]`
+
+plot.df <- oc_new %>%
+         pivot_longer(cols = where(is.numeric), #pull out the numerics that aren't lat/long
+                      values_to = 'measurements', names_to = 'variable')
+
+ggplot(data = plot.df %>%
+         filter(is.finite(measurements))) +
+  geom_histogram(aes(x = measurements), bins = 30, color = "darkorange2", fill = "darkorange2", size = 0.2) + #make a histrogram
+  facet_wrap(~variable,scales = 'free')
+
+# ISCN & CPEAT
+#allISCN.plot.df <- ISCN_layer.df %>%
+  #mutate(across(.cols = everything(), as.numeric))
+
+#ISCN_layer.df$`bd_samp (g cm-3)` <- as.numeric(ISCN_layer.df$`bd_samp (g cm-3)`)
+#ISCN_layer.df$`bd_tot (g cm-3)` <- as.numeric(ISCN_layer.df$`bd_tot (g cm-3)`)
+#ISCN_layer.df$`bd_whole (g cm-3)` <- as.numeric(ISCN_layer.df$`bd_whole (g cm-3)`)
+#ISCN_layer.df$`bd_other (g cm-3)` <- as.numeric(ISCN_layer.df$`bd_other (g cm-3)`)
+  
+ISCN_layer.df$`c_tot (percent)` <- as.numeric(ISCN_layer.df$`c_tot (percent)`)
+ISCN_layer.df$`oc (percent)` <- as.numeric(ISCN_layer.df$`oc (percent)`)
+ISCN_layer.df$`loi (percent)` <- as.numeric(ISCN_layer.df$`loi (percent)`)
+ISCN_layer.df$`soc (g cm-2)` <- as.numeric(ISCN_layer.df$`soc (g cm-2)`)
+ISCN_layer.df$`13c (‰)` <- as.numeric(ISCN_layer.df$`13c (‰)`)
+ISCN_layer.df$`14c (‰)` <- as.numeric(ISCN_layer.df$`14c (‰)`)
+
+
+
+oc_ISCN <- ISCN_layer.df %>% 
+  select(dataset_name_sub, `c_tot (percent)`, `oc (percent)`, `loi (percent)`) %>% #`14c (‰)`, `soc (g cm-2)` ) 
+   filter(is.finite(!is.na(`c_tot (percent)`) + !is.na(`oc (percent)`) + !is.na(`loi (percent)`))) #+ !is.na(`soc (g cm-2)`) + !is.na(`14c (‰)`)
+
+ISCNplot.df <- oc_ISCN %>%
+         pivot_longer(cols = where(is.numeric), 
+                      values_to = 'measurements', names_to = 'variable')
+
+ggplot(data = ISCNplot.df %>%
+         filter(is.finite(measurements))) +
+  geom_histogram(aes(x = measurements), bins = 30, color = "blue4", fill = "blue4", size = 0.2) + #make a histrogram
+  geom_histogram(data = plot.df, aes((x = measurements), bins = 30, color = "darkorange", fill = "darkorange", size = 0.2)) +
+  facet_wrap(~variable, scales = 'free')
+
+
+
+
+
+
+```
+
