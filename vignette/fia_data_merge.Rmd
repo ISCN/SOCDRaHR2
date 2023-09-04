@@ -12,6 +12,7 @@ library(tidyverse)
 library(dplyr)
 library(readr)
 library(googlesheets4)
+library(SOCDRaH2)
 
 ```
 
@@ -26,18 +27,15 @@ ISCN_layer_old.df <- read_delim(file = "https://portal.edirepository.org/nis/dat
                     n_max = 1e6)
 
 #download using read script to fix errors
-ISCN_layer.df <- ISCN3_3(data_dir = '~/Desktop/datasets/ISCN')
-ISCN_layer.df <- as.data.frame(do.call(cbind, ISCN_layer.df[3]))
+ISCN.ls <- ISCN3_3(data_dir = '~/Documents/datasets/ISCN')
 
-colnames(ISCN_layer.df) <- sub("layer.","", colnames(ISCN_layer.df))
+ISCN_layer.df <- ISCN.ls$layer
+ISCN_profile.df <- ISCN.ls$profile
 
-
-
-
-ISCN_profile.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=40527580cc045d33d9a5aaf728bf204e',
-                    col_types = cols(.default =col_character()),
-                    delim = ';',
-                    n_max = 1e5)
+# #ISCN_profile.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=40527580cc045d33d9a5aaf728bf204e',
+#                     col_types = cols(.default =col_character()),
+#                     delim = ';',
+#                     n_max = 1e5)
 
 ISCN_citation.df <- read_delim(file = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.1160.1&entityid=320e31ca911f187550ca2143c31fd408',
                     col_types = cols(.default =col_character()),
@@ -50,13 +48,17 @@ ISCN_dataset.df <- read_delim(file = 'https://portal.edirepository.org/nis/datav
                     n_max = 1e5)
 
 
-FIA_lab.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_LAB.csv", col_types = cols(.default =col_character()),
+FIA_lab.df <- read_delim("~/Desktop/Datasets/ENTIRE_SOILS_LAB.csv", col_types = cols(.default =col_character()),
                     delim = ',',
                     n_max = 1e5)
 
-FIA_loc.df <- read_delim("~/Desktop/datasets/ENTIRE_SOILS_SAMPLE_LOC.csv", col_types = cols(.default =col_character()),
+FIA_loc.df <- read_delim("~/Desktop/Datasets/ENTIRE_SOILS_SAMPLE_LOC.csv", col_types = cols(.default =col_character()),
                     delim = ',',
                     n_max = 1e5)
+
+# add ENTIRE_SURVEY.CSV and ENTIRE_PLOT.CSV from the fiadb
+# documentation available on the user guide [provide page number and citation for future reference]
+
   
 ```
 
