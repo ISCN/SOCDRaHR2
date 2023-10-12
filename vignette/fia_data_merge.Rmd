@@ -8,12 +8,20 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+install.packages("sf")
+install.packages("geojsonio")
+install.packages("choroplethr")
+
 library(tidyverse)
 library(dplyr)
 library(readr)
 library(googlesheets4)
 library(SOCDRaH2)
-
+library(sf)
+library(geojsonio)
+library(choroplethr)
+library(maps)
+library(tigris)
 ```
 
 # International Soil Carbon Network (ISCN) Database 
@@ -307,7 +315,7 @@ BD_optimum <-FIA_lab.df %>%
 
 BD_forest_floor <- BD_optimum %>% #this is litter layer + duff (humus) layer
   filter(!is.na(BULK_DENSITY), LAYER_TYPE == 'FF_TOTAL' ) %>% 
-  dplyr::mutate(BULK_DENSITY = as.numeric(BULK_DENSITY))
+  dplyr::mutate(BULK_DENSITY = as.numeric(BULK_DENSITY), C_ORG_PCT = as.numeric(C_ORG_PCT))
 
 BD_litter_layer <- FIA_lab.df %>% # this is the fresh litter layer; less decomposed
   filter(!is.na(BULK_DENSITY), LAYER_TYPE == 'L_ORG' ) %>% 
@@ -327,7 +335,7 @@ BD_mineral_soil_10 <- FIA_lab.df %>%
 
 BD_mineral_soil_20 <- FIA_lab.df %>% 
   filter(!is.na(BULK_DENSITY), LAYER_TYPE == 'MIN_2' ) %>% 
-  dplyr::mutate(BULK_DENSITY = as.numeric(BULK_DENSITY))
+  dplyr::mutate(BULK_DENSITY = as.numeric(BULK_DENSITY), C_ORG_PCT = as.numeric(C_ORG_PCT))
 
 ggplot(BD_forest_floor) +
   geom_point(aes(x = BULK_DENSITY, y = C_ORG_PCT))
@@ -338,6 +346,89 @@ FIA_lab.df$C_ORG_PCT <- as.numeric(FIA_lab.df$C_ORG_PCT)
 ggplot(FIA_lab.df %>% 
   filter(BULK_DENSITY < 4, LAYER_TYPE == 'FF_TOTAL')) +
   geom_point(aes(x = BULK_DENSITY, y = C_ORG_PCT)) 
+
+```
+```{r FIPS Maps}
+?county.fips
+?map.data
+
+states_US <- map_data("state")
+county_US <- map_data("county")
+
+# do not use this as fips.codes does not contain all US territories 
+data("county.fips")
+data("state.fips")
+# fips.codes <- county.fips %>%
+#   # create two new variables, splitting "polyname" on the comma
+#   separate(polyname, c("region", "subregion"), ",")
+# 
+# join_county_fips <- left_join(county_US, fips.codes, by=c("region","subregion")) %>%
+#   #select(region,subregion) %>%
+#   group_by(region,subregion) #%>%
+#   #dplyr::summarise(n())
+
+# use this instead!
+
+# fips_codes <- county.fips %>%
+#   # create two new variables, splitting "polyname" on the comma
+#   separate(polyname, c("region", "subregion"), ",")
+
+data("fips_codes")
+fips_codes <- fips_codes %>% 
+  mutate(STATECD = state_code, COUNTYCD = county_code) %>% 
+  select(-state_code) %>% 
+  select(-county_code)
+
+grouping_counties <- FIA_lab.df %>% 
+  dplyr::select(CN, PLT_CN, INVYR, STATECD,COUNTYCD, BULK_DENSITY, C_ORG_PCT) %>% 
+  dplyr::group_by(CN, STATECD) #%>% 
+  #dplyr::summarise(grouping_counties, datapoints = n())
+
+merge_fips_data <- left_join(grouping_counties, fips_codes, by=c("STATECD", "COUNTYCD"))  
+
+temp <- grouping_counties %>% 
+  #distinct(STATECD) %>% 
+  mutate(STATECD = sprintf('%02s', STATECD),
+         COUNTYCD = sprintf('%03s', COUNTYCD))
+  
+merge_fips_data2 <- left_join(temp, fips_codes, by=c("STATECD", "COUNTYCD"))  
+
+usa_state_shapefile <- st_read("~/Downloads/tl_2022_us_state/tl_2022_us_state.shp") %>% 
+  mutate(STATECD = STATEFP) %>% 
+  select(-STATEFP)
+
+usa_county_shapefile <- st_read("~/Downloads/tl_2022_us_county/tl_2022_us_county.shp") %>% 
+  mutate(STATECD = STATEFP,
+         COUNTYCD = COUNTYFP) %>% 
+  select(-STATEFP) %>% 
+  select(-COUNTYFP)
+
+
+# Download cb_2022_us_county_5m.zip under "County" from
+# https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html
+us_counties <- read_sf("~/Downloads/maps/cb_2022_us_county_5m/cb_2022_us_county_5m.shp")%>% 
+  mutate(STATECD = STATEFP,
+         COUNTYCD = COUNTYFP) %>% 
+  select(-STATEFP) %>% 
+  select(-COUNTYFP)
+st_crs(us_counties)
+
+ggplot(us_counties) +
+  geom_sf()
+
+shapefile <- st_read("~/Downloads/maps/cb_2022_us_county_5m/cb_2022_us_county_5m.shp")
+str(shapefile)
+head(shapefile)
+summary(shapefile)
+st_crs(shapefile)
+
+ggplot(shapefile) +
+  geom_sf()
+
+merge_shapefile <- left_join(temp, us_counties, by = join_by("COUNTYCD", "STATECD"))
+
+ggplot(merge_shapefile)+
+  geom_sf()
 
 ```
 
