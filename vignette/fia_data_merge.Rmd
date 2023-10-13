@@ -11,7 +11,9 @@ output:
 install.packages("sf")
 install.packages("geojsonio")
 install.packages("choroplethr")
+install_github("ISCN/SOCDRaHR2")
 
+library(devtools)
 library(tidyverse)
 library(dplyr)
 library(readr)
@@ -22,6 +24,8 @@ library(geojsonio)
 library(choroplethr)
 library(maps)
 library(tigris)
+library(ggplot2)
+library(plotly)
 ```
 
 # International Soil Carbon Network (ISCN) Database 
@@ -345,9 +349,12 @@ FIA_lab.df$C_ORG_PCT <- as.numeric(FIA_lab.df$C_ORG_PCT)
 
 ggplot(FIA_lab.df %>% 
   filter(BULK_DENSITY < 4, LAYER_TYPE == 'FF_TOTAL')) +
-  geom_point(aes(x = BULK_DENSITY, y = C_ORG_PCT)) 
+  geom_point(aes(x = BULK_DENSITY, y = C_ORG_PCT))
+
 
 ```
+
+
 ```{r FIPS Maps}
 ?county.fips
 ?map.data
@@ -380,9 +387,11 @@ fips_codes <- fips_codes %>%
   select(-county_code)
 
 grouping_counties <- FIA_lab.df %>% 
-  dplyr::select(CN, PLT_CN, INVYR, STATECD,COUNTYCD, BULK_DENSITY, C_ORG_PCT) %>% 
-  dplyr::group_by(CN, STATECD) #%>% 
-  #dplyr::summarise(grouping_counties, datapoints = n())
+  dplyr::select(PLT_CN, STATECD, COUNTYCD) %>% 
+  #dplyr::group_by(STATECD) %>% 
+  unique() %>% 
+  dplyr::reframe(plot_count = n(), .by = c(STATECD, COUNTYCD))
+# plot it on a log scale 
 
 merge_fips_data <- left_join(grouping_counties, fips_codes, by=c("STATECD", "COUNTYCD"))  
 
@@ -413,8 +422,26 @@ us_counties <- read_sf("~/Downloads/maps/cb_2022_us_county_5m/cb_2022_us_county_
   select(-COUNTYFP)
 st_crs(us_counties)
 
-ggplot(us_counties) +
-  geom_sf()
+merge_shapefile2 <- merge_shapefile 
+attr(merge_shapefile2, "sf_column") <- "geometry" # names and attr
+
+usamap <- map_data('usa')
+ggplot(usamap) +
+  geom_polygon( aes(x=long, y = lat, group=group), fill = 'white') +
+  #borders(usamap, fill = "black") +
+  geom_sf(merge_shapefile2, mapping = aes(geometry = geometry, fill = plot_count)) +
+  scale_fill_gradient(trans = 'log10', low = "orange", high = "blue") +
+  scale_fill_viridis_c(trans = 'log10') +
+  labs(x = "Latitude (in decimal degress)",
+       y = "Longitude (in decimal degrees)",
+       #title = "Map of the United States",
+       title = "FIA Data spread across the counties of the US",
+       subtitle = "County regions showing number of plot samples")
+
+ggplot(merge_shapefile2) +
+  geom_sf(mapping = aes(geometry = geometry, fill = plot_count))  +
+  scale_fill_gradient(trans = 'log10') +
+  scale_fill_viridis_b()
 
 shapefile <- st_read("~/Downloads/maps/cb_2022_us_county_5m/cb_2022_us_county_5m.shp")
 str(shapefile)
@@ -426,9 +453,26 @@ ggplot(shapefile) +
   geom_sf()
 
 merge_shapefile <- left_join(temp, us_counties, by = join_by("COUNTYCD", "STATECD"))
+# do a normal merge not the tidyverse one
+# FIPS 5 digit
+# merging shape files with dataframe in r?
+# averages? medians?
 
-ggplot(merge_shapefile)+
-  geom_sf()
+subset_merge <- merge_shapefile %>% 
+  filter(LAYER_TYPE != 'FF_TOTAL') %>%   # removing FF_TOTAL
+  group_by(LAYER_TYPE, STATECD, COUNTYCD, BULK_DENSITY) %>% 
+  summarise()
+
+new_merge <- merge(temp, us_counties, by.x = c("COUNTYCD", "STATECD"), by.y = c("COUNTYCD", "STATECD"))
+plot(new_merge)
+
+ggplot()+
+  geom_sf(subset_merge, mapping = aes(fill = C_ORG_PCT))
+
+ggplot() +
+  geom_sf(data = merge_shapefile, aes(fill = C_ORG_PCT))
+
+plot(merge_shapefile["geometry"], col = merge_shapefile$C_ORG_PCT)
 
 ```
 
