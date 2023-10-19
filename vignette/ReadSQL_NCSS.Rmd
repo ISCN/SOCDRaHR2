@@ -15,6 +15,10 @@ library(DBI)
 library(dplyr)
 library(tidyverse)
 
+
+sql_filename <- file.path('~/Dropbox (UFL)/Research/Datasets/NRCS_NCSS_20230922/ncss_labdata.sqlite')
+sql_filename <- file.path('~/Documents/datasets/USDA-NRCS NCSS July 2023/', 
+                          "NCSSLabDataMartSQLite.sqlite3")
 ```
 
 
@@ -22,10 +26,11 @@ library(tidyverse)
 # connection to a database
 connection <- dbConnect (
   drv = SQLite(),
-  dbname =  "~/Documents/datasets/USDA-NRCS NCSS July 2023/sourceData/NCSSLabDataMartSQLite.sqlite3"
+  dbname =  sql_filename
 )
 
-ncss <- src_sqlite("~/Documents/datasets/USDA-NRCS NCSS July 2023/NCSSLabDataMartSQLite.sqlite3")
+#dbListTables(connection)
+ncss <- src_sqlite(sql_filename)
 
 tbl(connection, "lab_analysis_procedure_vw") %>%
   collect() -> lab_analysis_procedure_data
