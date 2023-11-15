@@ -1,4 +1,4 @@
-#' Convert database into long format
+#' Convert database into long format by pivoting each data table and merging data with data annotations
 #' 
 #' @param data.ls is a list of tables in database
 #' @param annotations is data annotations from google sheet in dataframe
@@ -23,6 +23,7 @@ transformLong <- function(data.ls, annotations) {
   #                        "table2", "col2b", "value", "--",
   #                        "table1", "col2", "description", "clevernamehere",)
   
+  
   #pivot each dataframe longer and bind into one long table
   ans <- plyr::ldply(.data = data.ls, .fun = function(x) {
     
@@ -36,31 +37,30 @@ transformLong <- function(data.ls, annotations) {
       #convert all columns to character type
       mutate(across(.cols = everything(), .fns = as.character)) %>%
       
-      #give each row a unique number
+      #give each row a number as unique identifier
       ungroup() %>%
       mutate(row_number = 1:n()) %>%
       
-      #pivot longer
+      #pivot table longer
       pivot_longer(cols = -c(row_number), names_to = 'column_id',
                    values_to = 'with_entry', values_drop_na = TRUE)
       
       return(temp)
     }, .id = "table_id") %>%
     
-    #join long table with annotations
-    full_join(annotations, 
-            by = join_by(table_id, column_id),
-            suffix = c('.data', ''),
-            relationship = "many-to-many") %>%
-    
-    #replace value placeholders in with_entry column with values
-    mutate(
-      with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
-    select(-with_entry.data) %>%
-    
-    #remove rows with no row number
-    drop_na(row_number)
+  #join long table with annotations
+  full_join(annotations, 
+          by = join_by(table_id, column_id),
+          suffix = c('.data', ''),
+          relationship = "many-to-many") %>%
   
+  #replace value placeholders in with_entry column with values from data
+  mutate(
+    with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+  select(-with_entry.data) %>%
+  
+  #remove rows with no row number
+  drop_na(row_number)
   
   return(ans)
 }
