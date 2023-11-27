@@ -52,7 +52,11 @@ CPEAT.dataAnnotation <- read_sheet("https://docs.google.com/spreadsheets/d/1mllM
                                    col_types = 'c') %>% # changes the structure to character 
   filter(study_id == 'CPEAT', table_id == 'study') 
 
-temp.df <- 
+#download using read script to fix errors
+CPEAT <- readCPEAT(dataDir = "Downloads/", format = "byDataType")
+allCores.df <- CPEAT[['core']]
+allStudy.df <- CPEAT[['study']]
+allParameters.df  <- CPEAT[['parameters']]
 
 #allStudy.df$LONGITUDE <- as.character(allStudy.df$LONGITUDE)
 
@@ -80,6 +84,7 @@ CPEAT_long_study.df <- allStudy.df %>%
 
 
 ```
+
 ```{r}
 
 #Create long table of each CPEAT dataset
@@ -117,10 +122,10 @@ CPEAT_long_core.df <- allCores.df %>%
 
 
 # clean up 
-# look at the methods for the 31 columns/varibales 
-# grouping the variables and look at thier methosd and find if they are interrelated or not 
-# look at the uniwue methods for age methodologies 
-# represent as a hybrid dataset? age-name, age-method, and age-unit column [how to standardize?]
+# look at the methods for the 31 columns/variables 
+# grouping the variables and look at their methods and find if they are interrelated or not 
+# look at the unique methods for age methodologies 
+# represent as a hybrid data-set? age-name, age-method, and age-unit column [how to standardize?]
 # method column for the variables which are not specified 
 
 ```
@@ -322,9 +327,10 @@ allCores.df$`DBD [g/cm**3]` <- as.numeric(allCores.df$`DBD [g/cm**3]`)
 #allCores.df$`Depth bot [m]` <- as.numeric(allCores.df$`Depth bot [m]`)
 allCores.df$`Corg dens [g/cm**3]` <- as.numeric(allCores.df$`Corg dens [g/cm**3]`)
 #allCores.df$`TOC [%]` <- as.numeric(allCores.df$`TOC [%]`)
+#allCores.df$`Depth sed [m]` <- as.numeric(allCores.df$`Depth sed [m]`)
 
 oc_bd <- allCores.df %>%
-          select(doi, `DBD [g/cm**3]`, `Corg dens [g/cm**3]`) %>% #, `TOC [%]`
+          select(doi, `Depth sed [m]`, `DBD [g/cm**3]`, `Corg dens [g/cm**3]`) %>% #, `TOC [%]`
  filter(is.finite(!is.na(`DBD [g/cm**3]` + !is.na(`Corg dens [g/cm**3]`)))) # + !is.na(`TOC [%]`
 
 
@@ -360,7 +366,50 @@ ggplot(data = ISCNplot.df %>%
   geom_histogram(aes(x = measurements), bins = 30, color = "blue4", fill = "blue4", size = 0.2) + #make a histrogram
   geom_histogram(data = plot.df, aes((x = measurements), bins = 30, color = "darkorange2", fill = "darkorange2", size = 0.2)) +
   facet_wrap(~variable, scales = 'free')
+```
 
+```{r}
+new_allCores.df <- allCores.df %>% 
+  select(doi, `Depth sed [m]`, `DBD [g/cm**3]`, `OM [%]`,`OM dens [g/cm**3]`, `Corg dens [g/cm**3]`,`Samp thick [cm]`, Peat, `TC [%]`, `TN [%]`, `TOC [%]`, `LOI [%]`,`LOI [%] (weight-%)`, `Depth sed [m] (LOI sample depth)`, `TIC [%]`,`Depth top [m]`, `Depth bot [m]`)
+
+new_study <- allStudy.df %>% 
+  select(doi, core_name, LATITUDE, LONGITUDE)
+
+full_core_study <- left_join(new_allCores.df, new_study, by = join_by(doi)) 
+
+full_core_study$`Depth sed [m]` <- as.numeric(full_core_study$`Depth sed [m]`)
+
+# calculated and added SOC to the samples
+full_core_soc <- full_core_study %>% 
+  mutate(SOC = ((`Depth sed [m]`) * (`Corg dens [g/cm**3]`) * 100))
+
+
+# Locations and SOC plotting for CPEAT
+test_mapping <- full_core_soc %>%
+          select(doi, `Depth sed [m]`, LATITUDE, LONGITUDE, SOC) %>%
+ filter(is.finite(!is.na(LATITUDE) + !is.na(LONGITUDE) + !is.na(SOC)))
+
+ggplot() +
+  geom_polygon(data = map_data('world'), aes(x = long, y = lat, group = group), fill = "white") +
+  #geom_point(data = test_mapping, aes(x = LONGITUDE, y = LATITUDE), color = "green", size = 2) +
+  #labs(x = "Longitude", y = "Latitude") +
+  geom_tile(data = test_mapping, aes(x = LONGITUDE, y = LATITUDE, fill = `Depth sed [m]`), height = 1.5, width = 1.5) +
+  scale_fill_gradient(trans = "log10") 
+  #scale_fill_fermenter() 
+  
+oc_bd <- allCores.df %>%
+          select(doi, `Depth sed [m]`, `DBD [g/cm**3]`, `Corg dens [g/cm**3]`) %>% #, `TOC [%]`
+ filter(is.finite(!is.na(`DBD [g/cm**3]` + !is.na(`Corg dens [g/cm**3]`)))) # + !is.na(`TOC [%]`
+
+
+plot.df <- oc_bd %>%
+         pivot_longer(cols = where(is.numeric), #pull out the numerics that aren't lat/long
+                      values_to = 'measurements', names_to = 'variable')
+
+ggplot(data = plot.df %>%
+         filter(is.finite(measurements))) +
+  geom_histogram(aes(x = measurements), bins = 30, color = "darkorange2", fill = "darkorange2", size = 0.2) + #make a histrogram
+  facet_wrap(~variable,scales = 'free')
 
 ```
 
@@ -424,9 +473,14 @@ ggplot(data = ISCNplot.df %>%
   facet_wrap(~variable, scales = 'free')
 
 
+testDepth <- new_allCores.df %>% 
+  filter(!is.na(`Depth top [m]`)) #< 4.45
 
+testBD <- new_allCores.df %>% 
+  filter(!is.na(`DBD [g/cm**3]`)) 
 
-
+testTC <- new_allCores.df %>% 
+  filter(!is.na(`TOC [%]`))
 
 ```
 
